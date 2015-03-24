@@ -10,10 +10,34 @@
 	<name>intercloud</name>
 	<url>http://www.cit.tu-berlin.de</url>
 
+	<developers>
+		<developer>
+			<id>stanik</id>
+			<name>Alexander Stanik</name>
+			<email>alexander.stanik&lt;at&gt;tu-berlin.de</email>
+			<roles>
+				<role>Project leader</role>
+				<role>Java developer</role>
+			</roles>
+			<timezone>+1</timezone>
+			<organization>Technische Universität Berlin</organization>
+			<organizationUrl>http://www.cit.tu-berlin.de</organizationUrl>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
 	<modules>
 		<module>occi-core</module>
-		<module>occi-infrastructure</module>
 		<module>occi-text</module>
+		<module>occi-infrastructure</module>
+		<module>xmpp-core</module>
 	</modules>
 
 	<properties>
@@ -37,9 +61,20 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.6</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
