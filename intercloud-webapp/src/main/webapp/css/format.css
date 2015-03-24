@@ -1,0 +1,121 @@
+
+
+/* schriftstil,abst�nde */
+
+body
+{ color: #F5F5F5;  background-color:#033780; font-family: verdana,arial; font-size: 10pt;}
+
+
+table,tr,td
+{ color: #F5F5F5 ;font-family: verdana,arial; font-size: 10pt}
+
+table.rahmen {border:solid 1px #033780;}
+
+/* scrolleiste internet explorer ab vers.5.5 */
+
+body
+{scrollbar-arrow-color: #ffffff; scrollbar-base-color: #033780;
+scrollbar-highlight-color : #4e72a6; scrollbar-shadow-color : #4e72a6;
+SCROLLBAR-TRACK-COLOR: #074485;}
+
+
+/* menue linke seite */
+
+
+#menu a {display: block;
+background-color:094E99;
+color:#cccccc;text-decoration:none;font-family:verdana, sans-serif; font-size:10pt; width:170px;
+padding-left: 2px; padding-bottom: 3px; padding-top: 3px;margin: 0px auto;
+border:solid 1px #4e72a6;
+
+}
+
+#menu a:visited{
+background-color:094E99;
+color:#cccccc;text-decoration:none;font-family:verdana, sans-serif; font-size:10pt; width:170px;
+padding-left: 2px; padding-bottom: 3px; padding-top: 3px;margin: 0px auto;
+border:solid 1px #4e72a6;
+
+}
+
+#menu a:active {
+background-color:094E99;
+color:#cccccc;text-decoration:none;font-family:verdana, sans-serif; font-size:10pt; width:170px;
+padding-left: 2px; padding-bottom: 3px; padding-top: 3px;margin: 0px auto;
+border:solid 1px #4e72a6;
+
+}
+
+#menu a:hover {background-color:#0B60BD;
+color:#e6e6e6;text-decoration:none;font-family:verdana, sans-serif; font-size:10pt; width:170px;
+padding-left: 2px; padding-bottom: 3px; padding-top: 3px;margin: 0px auto;
+border:solid 1px #4e72a6;
+}
+
+
+/* allgemeine links im text */
+
+a:link{ color: white; text-decoration:underline;font-family: verdana; font-size: 10pt;}
+
+a:visited{color:white;text-decoration:underline;font-family: verdana; font-size: 10pt;}
+
+a:active{ color:white;text-decoration:underline;font-family: verdana; font-size: 10pt; }
+
+a:hover{ color: #000000;background-color:#4e72a6;  text-decoration:none;font-family: verdana; font-size: 10pt; }
+
+
+/* layout for tables (users, images, etc) */
+#table-horizontal
+{
+	font-family: Verdana, "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 10px;
+	width: auto;
+	border-collapse: collapse;
+	text-align: left;
+}
+#table-horizontal th
+{
+	font-size: 12px;
+	font-weight: bold;
+	padding: 8px;
+	background-color: #7DA3CE;
+	border-top: 4px solid #85B2E2;
+	border-bottom: 1px solid #fff;
+	color: #FFF;
+}
+#table-horizontal td
+{
+	padding: 3px 5px 3px 5px;
+	font-size: 10px;
+	background-color: #D0DAE5; 
+	border-bottom: 1px solid #fff;
+	color: #555;
+	border-top: 1px solid transparent;
+}
+#table-horizontal tbody tr:hover td
+{
+	background-color: #90AECE;
+	color: 000;
+}
+
+#table-horizontal a
+{
+	text-decoration: none;
+	color: #3d6db5;
+}
+
+#table-horizontal a:hover
+{
+	text-decoration: underline;
+	color: #3d6db5;
+	background-color: transparent;
+}
+
+.evaluationFormComponent {
+	
+}
+
+.evaluationFieldSet {
+	width: 350px;
+	margin-bottom: 10px;
+}

@@ -79,7 +79,6 @@ import de.tu_berlin.cit.intercloud.xmpp.core.util.XMPPConstants;
  * 
  * @author Guus der Kinderen, guus.der.kinderen@gmail.com
  */
-// TODO define JCIP annotation
 public abstract class AbstractComponent implements Component {
 	/**
 	 * The object that's responsible for logging.

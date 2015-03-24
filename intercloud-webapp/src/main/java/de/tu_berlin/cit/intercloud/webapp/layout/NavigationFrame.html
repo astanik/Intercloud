@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<head>
+    <title>Navigation Frame</title>
+	<link rel="stylesheet" href="css/format.css" type="text/css">
+
+<script>
+<!--
+function BlurLinks(){
+lnks=document.getElementsByTagName('a');
+for(i=0;i<lnks.length;i++){
+lnks[i].onfocus=new Function("if(this.blur)this.blur()");
+}
+}
+
+onload=BlurLinks;
+-->
+</script>
+
+</head>
+
+<body background="images/nav_back.jpg" bgcolor="#033780" text="white" topmargin="0" marginheight="0"  leftmargin="0" marginwidth="0" >
+
+<table border="0" cellpadding="0" cellspacing="0" width="221">
+<tr>
+<td><img src="images/nav_ob.jpg" width="221" height="29" border="0" alt="" /></td>
+</tr>
+<tr>
+<td valign="top"  align="center" background="images/nav_back.jpg" width="221" height="100%" >
+
+
+<span wicket:id="forAdminsAndUsersPanel">
+        panel for roles ADMIN and USER here
+</span>
+
+<span wicket:id="forAdminsPanel">
+        panel for only role ADMIN here
+</span>
+
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
