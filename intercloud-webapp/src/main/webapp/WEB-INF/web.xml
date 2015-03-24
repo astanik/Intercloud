@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 
-	<display-name>Themis</display-name>
+	<display-name>Intercloud</display-name>
 
 	<!--
 		There are three means to configure Wickets configuration mode and they 
@@ -17,16 +17,16 @@
 		"deployment". If no configuration is found, "development" is the default. -->
 
 	<filter>
-		<filter-name>cit.themis</filter-name>
+		<filter-name>cit.intercloud</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>de.tu_berlin.cit.slam.webapp.themis.ThemisWebApplication</param-value>
+			<param-value>de.tu_berlin.cit.intercloud.webapp.IntercloudWebApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter-mapping>
-		<filter-name>cit.themis</filter-name>
+		<filter-name>cit.intercloud</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 </web-app>

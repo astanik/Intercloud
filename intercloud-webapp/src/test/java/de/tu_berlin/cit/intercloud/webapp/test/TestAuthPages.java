@@ -4,7 +4,7 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.tu_berlin.cit.intercloud.webapp.ThemisWebApplication;
+import de.tu_berlin.cit.intercloud.webapp.IntercloudWebApplication;
 import de.tu_berlin.cit.intercloud.webapp.auth.OpenIdLoginPage;
 import de.tu_berlin.cit.intercloud.webapp.auth.UserRegistrationPage;
 
@@ -18,7 +18,7 @@ public class TestAuthPages
 	@Before
 	public void setUp()
 	{
-		tester = new WicketTester(new ThemisWebApplication());
+		tester = new WicketTester(new IntercloudWebApplication());
 	}
 
 

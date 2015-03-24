@@ -31,9 +31,9 @@ import de.tu_berlin.cit.intercloud.webapp.layout.Index;
  * @author Alexander Stanik
  *
  */
-public class ThemisWebApplication extends AuthenticatedWebApplication {
+public class IntercloudWebApplication extends AuthenticatedWebApplication {
 
-	public ThemisWebApplication() {
+	public IntercloudWebApplication() {
 		super();
 	}
 	
@@ -43,8 +43,8 @@ public class ThemisWebApplication extends AuthenticatedWebApplication {
     }
 
     @Override
-    protected Class<ThemisWebSession> getWebSessionClass() {
-        return ThemisWebSession.class;
+    protected Class<IntercloudWebSession> getWebSessionClass() {
+        return IntercloudWebSession.class;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ThemisWebApplication extends AuthenticatedWebApplication {
 
     @Override
     public Session newSession(Request request, Response response) {
-        return new ThemisWebSession(request);
+        return new IntercloudWebSession(request);
     }
     /**
      * @see org.apache.wicket.Application#init()

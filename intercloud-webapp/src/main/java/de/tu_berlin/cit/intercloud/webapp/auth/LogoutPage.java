@@ -16,7 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.webapp.auth;
 
-import de.tu_berlin.cit.intercloud.webapp.ThemisWebSession;
+import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 
 
 /**
@@ -32,7 +32,7 @@ public class LogoutPage extends AbstractAuthPage {
 	 * Constructor
 	 */
 	public LogoutPage() {
-		ThemisWebSession session = (ThemisWebSession) getSession();
+		IntercloudWebSession session = (IntercloudWebSession) getSession();
 		session.signOut();
 	}
 }

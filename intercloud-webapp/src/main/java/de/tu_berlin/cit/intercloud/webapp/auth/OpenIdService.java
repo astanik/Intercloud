@@ -272,7 +272,7 @@ public class OpenIdService {
 	 * @return String - the returnToUrl to be used for the authentication request.
 	 */
 	public static String getReturnToUrl() {
-		return "http://localhost:8080/wicket/bookmarkable/de.tu_berlin.cit.slam.webapp.themis.auth.UserRegistrationPage?is_return=true";
+		return "http://localhost:8080/wicket/bookmarkable/de.tu_berlin.cit.intercloud.webapp.auth.UserRegistrationPage?is_return=true";
 	}
 	
 }

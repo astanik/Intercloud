@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.validation.validator.PatternValidator;
 
-import de.tu_berlin.cit.intercloud.webapp.ThemisWebSession;
+import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.auth.User;
 import de.tu_berlin.cit.intercloud.webapp.layout.BasePage;
 
@@ -70,7 +70,7 @@ public class CredentialsPage extends BasePage {
 	 * @return the user of the current web session.
 	 */
 	private User getSessionUser() {
-		ThemisWebSession currentSession = (ThemisWebSession) ThemisWebSession.get();
+		IntercloudWebSession currentSession = (IntercloudWebSession) IntercloudWebSession.get();
 		return currentSession.getUser();
 	}
 

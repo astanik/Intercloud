@@ -31,7 +31,7 @@ import de.tu_berlin.cit.intercloud.webapp.auth.User;
  * 
  */
 @SuppressWarnings("serial")
-public class ThemisWebSession extends AbstractAuthenticatedWebSession {
+public class IntercloudWebSession extends AbstractAuthenticatedWebSession {
 
 	/**
 	 * User of this web session.
@@ -50,7 +50,7 @@ public class ThemisWebSession extends AbstractAuthenticatedWebSession {
 	 * @param request
 	 *            The current request object
 	 */
-	public ThemisWebSession(Request request) {
+	public IntercloudWebSession(Request request) {
 		super(request);
 	}
 

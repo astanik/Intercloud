@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.basic.Label;
 public class TopFrame extends WebPage {
 
 	public TopFrame() {
-		add(new Label("applicationtitle", "Themis: SLA Mediator Webapp"));
+		add(new Label("applicationtitle", "Intercloud SLA Mediator Webapp"));
 	}
 	
 }

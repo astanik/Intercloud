@@ -25,7 +25,7 @@ import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
 
-import de.tu_berlin.cit.intercloud.webapp.ThemisWebSession;
+import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 
 /**
  * Page that allows users to login into the website with their Open Id account.
@@ -73,7 +73,7 @@ public class OpenIdLoginPage extends AbstractAuthPage {
 							.performDiscoveryOnUserSuppliedIdentifier(formModel
 									.getOpenId());
 					// Store the discovery results in session.
-					ThemisWebSession session = (ThemisWebSession) this
+					IntercloudWebSession session = (IntercloudWebSession) this
 							.getSession();
 					session.setDiscoveryInformation(discoveryInformation);
 					// Create the AuthRequest

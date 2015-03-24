@@ -20,7 +20,7 @@ import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.openid4java.discovery.DiscoveryInformation;
 
-import de.tu_berlin.cit.intercloud.webapp.ThemisWebSession;
+import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 
 /**
  * This class represents the a registration page, which receives the
@@ -48,7 +48,7 @@ public class UserRegistrationPage extends AbstractAuthPage {
 	 */
 	public UserRegistrationPage(PageParameters pageParameters) {
 		super();
-		ThemisWebSession session = (ThemisWebSession) getSession();
+		IntercloudWebSession session = (IntercloudWebSession) getSession();
 		OpenIdUser user = null;
 
 		if (!pageParameters.isEmpty()) {
