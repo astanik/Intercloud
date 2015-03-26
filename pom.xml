@@ -8,7 +8,9 @@
 	<packaging>pom</packaging>
 
 	<name>intercloud</name>
-	<url>http://www.cit.tu-berlin.de</url>
+	<url>https://github.com/citlab/Intercloud</url>
+
+	<inceptionYear>2014</inceptionYear>
 
 	<developers>
 		<developer>
@@ -25,6 +27,24 @@
 		</developer>
 	</developers>
 
+	<mailingLists>
+		<mailingList>
+			<name>CIT Intercloud Developer Mailing List</name>
+			<subscribe>https://lists.tu-berlin.de/mailman/listinfo/cit-intercloud</subscribe>
+			<unsubscribe>https://lists.tu-berlin.de/mailman/listinfo/cit-intercloud</unsubscribe>
+			<archive>https://lists.tu-berlin.de/pipermail/cit-intercloud</archive>
+			<post>intercloud@cit.tu-berlin.de</post>
+		</mailingList>
+		<mailingList>
+			<name>IEEE Intercloud P2302 Standard Working Group Mailing List</name>
+			<post>p2302@mentor.ieee.org</post>
+		</mailingList>
+		<mailingList>
+			<name>OGF OCCI Working Group Mailing List</name>
+			<post>occi-wg@ogf.org</post>
+		</mailingList>
+	</mailingLists>
+	
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -55,8 +75,8 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -82,4 +102,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<organization>
+		<name>TU Berlin</name>
+		<url>http://www.cit.tu-berlin.de</url>
+	</organization>
 </project>

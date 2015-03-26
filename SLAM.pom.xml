@@ -1,0 +1,329 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.tu_berlin.cit.slam</groupId>
+	<artifactId>slam</artifactId>
+	<version>0.0.5-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>SLAM</name>
+	<description>SLAM Parent POM</description>
+
+	<properties>
+		<!-- dependecy versions -->
+		<spring-version>4.0.4.RELEASE</spring-version>
+		<cxf-version>2.6.0</cxf-version>
+		<!-- encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- github pages -->
+		<!--<project.url>http://citlab.github.io/SLAMediation/</project.url> -->
+	</properties>
+
+	<url>https://github.com/citlab/SLAMediation</url>
+
+	<distributionManagement>
+		<site>
+			<id>SLAM dokumentation</id>
+			<name>Deployment through GitHub's site deployment plugin</name>
+			<url>site</url>
+		</site>
+	</distributionManagement>
+
+	<modules>
+		<module>slam-types</module>
+		<module>slam-core</module>
+		<module>engine-eirene</module>
+		<module>evaluator-dike</module>
+		<module>registry-eunomia</module>
+		<module>webapp-themis</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>with-reporting</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>reporting.exec</name>
+				</property>
+			</activation>
+			<properties>
+				<site-with-reporting>true</site-with-reporting>
+			</properties>
+			<build>
+				<defaultGoal>clean install site:site</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<inherited>true</inherited>
+						<configuration>
+							<tags>
+								<tag>
+									<name>TODO</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>todo</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>generated</name>
+									<placement>X</placement>
+								</tag>
+							</tags>
+						</configuration>
+						<executions>
+							<execution>
+								<id>default</id>
+								<inherited>true</inherited>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>aggregated</id>
+								<inherited>false</inherited>
+								<goals>
+									<goal>aggregate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- 
+					In SLAM-types:  The parameters 'message' for goal com.github.github:site-maven-plugin:0.9:site are missing or invalid
+					Obwohl "<inherited>false</inherited>"
+					???
+					Mit "<inherited>true</inherited>" fehlt target/site innerhalb SLAM-types
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<version>0.9</version>
+						<inherited>false</inherited>
+						<configuration>
+							<repositoryName>SLAMediation</repositoryName>
+							<repositoryOwner>citlab</repositoryOwner>
+							<message>Creating site for SLAM</message>
+							<oauth2Token>b6a1102e27e9d5e378bc688ddeb9769390aeea86</oauth2Token>
+							<path>${project.distributionManagement.site.url}</path>
+							<merge>true</merge>
+						</configuration>
+						<executions>
+							<execution>
+								<id>github-site</id>
+								<phase>site</phase>
+								<goals>
+									<goal>site</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					-->
+				</plugins>
+			</build>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<tags>
+								<tag>
+									<name>TODO</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>todo</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>generated</name>
+									<placement>X</placement>
+								</tag>
+							</tags>
+						</configuration>
+						<reportSets>
+							<reportSet>
+								<id>default</id>
+								<reports>
+									<report>javadoc</report>
+								</reports>
+								<inherited>true</inherited>
+							</reportSet>
+							<reportSet>
+								<id>aggregate</id>
+								<reports>
+									<report>aggregate</report>
+								</reports>
+								<inherited>false</inherited>
+							</reportSet>
+						</reportSets>
+					</plugin>
+					<!-- The configuration of the following reporting plugins should be 
+						similar to that of the javadoc plugin. This would allow us to have one report 
+						per module and an aggregated report for the parent. -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-report-plugin</artifactId>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-pmd-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<targetJdk>1.5</targetJdk>
+							<aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jxr-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
+						<reportSets>
+							<reportSet>
+								<id>jxr-default</id>
+								<reports>
+									<report>jxr</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+	</profiles>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<!-- to generate javadoc report -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+				</plugin>
+				<plugin>
+					<!-- to generate xref report -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+				<plugin>
+					<!-- to generate surefire (test) report -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>2.15</version>
+				</plugin>
+				<plugin>
+					<!-- to generate PMD and DPD reports (code quality) -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>3.1</version>
+				</plugin>
+				<plugin>
+					<!-- to set version of standard plugin -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+			</plugins>
+			
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<!-- to set java version (i.e. in eclipse) -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- to manage the versions of artifacts in POM -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.3</version>
+				<inherited>false</inherited>
+				<configuration>
+					<skipDeploy>true</skipDeploy>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.9</version>
+				<inherited>false</inherited>
+				<configuration>
+					<repositoryName>SLAMediation</repositoryName>
+					<repositoryOwner>citlab</repositoryOwner>
+					<message>Creating site for SLAM</message>
+					<oauth2Token>b6a1102e27e9d5e378bc688ddeb9769390aeea86</oauth2Token>
+					<path>${project.distributionManagement.site.url}</path>
+					<merge>true</merge>
+				</configuration>
+				<executions>
+					<execution>
+						<id>github-site</id>
+						<phase>site-deploy</phase>
+						<goals>
+							<goal>site</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<excludeDefaults>true</excludeDefaults>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<inherited>false</inherited>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<inherited>true</inherited>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>true</inherited>
+						<reports>
+							<report>index</report>
+							<report>summary</report>
+							<report>cim</report>
+							<report>issue-tracking</report>
+							<report>distribution-management</report>
+							<report>mailing-list</report>
+							<report>license</report>
+							<report>project-team</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+
+</project>

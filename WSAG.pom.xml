@@ -1,0 +1,1018 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<groupId>net.sf.wsag</groupId>
+	<artifactId>wsag</artifactId>
+	<version>3.0.0-DEV-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>WSAG: Web Service Agreement Project</name>
+	<description>WSAG Parent POM</description>
+
+	<inceptionYear>2008</inceptionYear>
+
+	<url>http://wsag4j.sourceforge.net</url>
+
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
+
+	<licenses>
+		<license>
+			<name>BSD license</name>
+			<url>http://wsag4j.sourceforge.net/site/LICENSE.TXT</url>
+			<distribution>repo</distribution>
+			<comments>WSAG Project is released under the BSD license.</comments>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>owaeld</id>
+			<name>Oliver Waeldrich</name>
+			<email>owaeld&lt;at&gt;users.sourceforge.net</email>
+			<roles>
+				<role>Project leader</role>
+				<role>Java developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>stanik</id>
+			<name>Alexander Stanik</name>
+			<email>alexander.stanik&lt;at&gt;tu-berlin.de</email>
+			<roles>
+				<role>Java developer</role>
+			</roles>
+			<timezone>+1</timezone>
+			<organization>Technische Universität Berlin</organization>
+			<organizationUrl>http://www.cit.tu-berlin.de</organizationUrl>
+		</developer>
+		<developer>
+			<id>hrasheed</id>
+			<name>Hassan Rasheed</name>
+			<email>hassan.rasheed&lt;at&gt;scai.fraunhofer.de</email>
+			<roles>
+				<role>Java developer</role>
+			</roles>
+			<timezone>+1</timezone>
+			<organization>Fraunhofer SCAI</organization>
+			<organizationUrl>http://www.scai.fraunhofer.de</organizationUrl>
+		</developer>
+		<developer>
+			<id>weuffel</id>
+			<name>Thomas Weuffel</name>
+			<email>n/a</email>
+			<roles>
+				<role>Java developer</role>
+			</roles>
+			<properties>
+				<status>inactive</status>
+			</properties>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>flo-feigenbutz</id>
+			<name>Florian Feigenbutz</name>
+			<email>florian.feigenbutz&lt;at&gt;campus.tu-berlin.de</email>
+			<roles>
+				<role>Java developer</role>
+			</roles>
+			<timezone>+1</timezone>
+			<organization>Technische Universität Berlin</organization>
+		</developer>
+		<developer>
+			<id>fsander</id>
+			<name>Fridtjof Sander</name>
+			<email>fsander&lt;at&gt;campus.tu-berlin.de</email>
+			<roles>
+				<role>Java developer</role>
+			</roles>
+			<timezone>+1</timezone>
+			<organization>Technische Universität Berlin</organization>
+		</developer>
+	</developers>
+
+	<mailingLists>
+		<mailingList>
+			<name>WSAG4J User Mailing List</name>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/wsag4j-users</subscribe>
+			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/wsag4j-users</unsubscribe>
+			<archive>https://sourceforge.net/mailarchive/forum.php?forum_name=wsag4j-users</archive>
+			<post>wsag4j-users@lists.sourceforge.net</post>
+		</mailingList>
+		<mailingList>
+			<name>WSAG4J Development Mailing List</name>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/wsag4j-devel</subscribe>
+			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/wsag4j-devel</unsubscribe>
+			<archive>https://sourceforge.net/mailarchive/forum.php?forum_name=wsag4j-devel</archive>
+			<post>wsag4j-devel@lists.sourceforge.net</post>
+		</mailingList>
+	</mailingLists>
+
+	<!-- WSAG4J modules and properties -->
+	<modules>
+		<module>wsag4j</module>
+	</modules>
+
+	<properties>
+		<wsag4j-snapshots>http://sourceforge.net/projects/wsag4j/files/snapshots</wsag4j-snapshots>
+		<wsag4j-releases>http://sourceforge.net/projects/wsag4j/files/releases</wsag4j-releases>
+		<wsag4j-external>http://wsag4j.sourceforge.net/maven-external</wsag4j-external>
+		<wsag4j-version>3.0.0-DEV-SNAPSHOT</wsag4j-version>
+		<openjpa-version>2.0.1</openjpa-version>
+		<xerces-version>2.9.1</xerces-version>
+		<servlet-container-port>9000</servlet-container-port>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<!-- Repository , source code and distribution management, issue. Configuration 
+		of issue tracking and continuous integration. -->
+
+	<scm>
+		<url>https://svn.code.sf.net/p/wsag4j/code/framework/branches/wsag4j-3.0-dev</url>
+		<connection>scm:svn:https://svn.code.sf.net/p/wsag4j/code/framework/branches/wsag4j-3.0-dev</connection>
+		<developerConnection>scm:svn:https://svn.code.sf.net/p/wsag4j/code/framework/branches/wsag4j-3.0-dev</developerConnection>
+	</scm>
+
+	<distributionManagement>
+		<!-- Distribution repositories are configured in sonatype parent pom -->
+		<site>
+			<id>sf</id>
+			<name>SourceForge Site Repository</name>
+			<url>scpexe://shell.sourceforge.net/home/project-web/wsag4j/htdocs/site</url>
+		</site>
+	</distributionManagement>
+
+	<issueManagement>
+		<system>SourceForge</system>
+		<url>https://sourceforge.net/p/wsag4j/tickets</url>
+	</issueManagement>
+
+<!-- 	<ciManagement> -->
+<!-- 		<system>continuum</system> -->
+<!-- 		<url>http://packcs-e0.scai.fraunhofer.de/continuum</url> -->
+<!-- 		<notifiers> -->
+<!-- 			<notifier> -->
+<!-- 				<type>mail</type> -->
+<!-- 				<configuration> -->
+<!-- 					<address>owaeld@users.sourceforge.net</address> -->
+<!-- 				</configuration> -->
+<!-- 			</notifier> -->
+<!-- 		</notifiers> -->
+<!-- 	</ciManagement> -->
+
+	<profiles>
+		<profile>
+			<id>continuum</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<distributionManagement>
+				<site>
+					<id>sf</id>
+					<name>SourceForge Site Repository</name>
+					<url>scp://web.sourceforge.net/home/project-web/wsag4j/htdocs/site-snapshot</url>
+				</site>
+			</distributionManagement>
+		</profile>
+
+		<profile>
+			<id>with-reporting</id>
+
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>reporting.exec</name>
+				</property>
+			</activation>
+
+			<properties>
+				<site-with-reporting>true</site-with-reporting>
+			</properties>
+
+			<build>
+				<defaultGoal>clean install site:site</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<inherited>true</inherited>
+						<configuration>
+							<tags>
+								<tag>
+									<name>TODO</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>todo</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>generated</name>
+									<placement>X</placement>
+								</tag>
+							</tags>
+						</configuration>
+						<executions>
+							<execution>
+								<id>default</id>
+								<inherited>true</inherited>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>aggregated</id>
+								<inherited>false</inherited>
+								<goals>
+									<goal>aggregate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<tags>
+								<tag>
+									<name>TODO</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>todo</name>
+									<placement>a</placement>
+									<head>To Do:</head>
+								</tag>
+								<tag>
+									<name>generated</name>
+									<placement>X</placement>
+								</tag>
+							</tags>
+						</configuration>
+						<reportSets>
+							<reportSet>
+								<id>default</id>
+								<reports>
+									<report>javadoc</report>
+								</reports>
+								<inherited>true</inherited>
+							</reportSet>
+							<reportSet>
+								<id>aggregate</id>
+								<reports>
+									<report>aggregate</report>
+								</reports>
+								<inherited>false</inherited>
+							</reportSet>
+						</reportSets>
+					</plugin>
+
+					<!-- The configuration of the following reporting plugins should be 
+						similar to that of the javadoc plugin. This would allow us to have one report 
+						per module and an aggregated report for the parent. -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-report-plugin</artifactId>
+						<version>2.17</version>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-pmd-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<targetJdk>1.5</targetJdk>
+							<aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jxr-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
+						<reportSets>
+							<reportSet>
+								<id>jxr-default</id>
+								<reports>
+									<report>jxr</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+					</plugin>
+
+				</plugins>
+			</reporting>
+		</profile>
+
+		<profile>
+			<!-- generates a cobertura report -->
+			<!-- usage: -->
+			<!-- 1. mvn -Dcheckstyle.exec -->
+			<id>checkstyle</id>
+			<activation>
+				<property>
+					<name>checkstyle.exec</name>
+				</property>
+			</activation>
+
+			<build>
+				<defaultGoal>site</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+						<version>2.7</version>
+					</plugin>
+				</plugins>
+			</build>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+						<version>2.7</version>
+						<configuration>
+							<configLocation>checkstyle/checkstyle.xml</configLocation>
+							<headerLocation>checkstyle/LICENSE.TXT</headerLocation>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jxr-plugin</artifactId>
+						<version>2.3</version>
+						<reportSets>
+							<reportSet>
+								<id>jxr-default</id>
+								<reports>
+									<report>jxr</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+
+		<profile>
+			<!-- generates a cobertura report -->
+			<!-- usage: -->
+			<!-- 1. mvn -Dcobertura.exec -->
+			<id>cobertura</id>
+			<activation>
+				<property>
+					<name>cobertura.exec</name>
+				</property>
+			</activation>
+
+			<build>
+				<defaultGoal>site</defaultGoal>
+			</build>
+
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.5.1</version>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+
+		<profile>
+			<!-- generates a linkcheck report -->
+			<!-- usage: -->
+			<!-- 1. mvn clean site -P with-reporting -->
+			<!-- 2. mvn -Dlinkcheck.exec -->
+			<id>linkcheck</id>
+			<activation>
+				<property>
+					<name>linkcheck.exec</name>
+				</property>
+			</activation>
+
+			<build>
+				<defaultGoal>site</defaultGoal>
+			</build>
+
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-linkcheck-plugin</artifactId>
+						<version>1.1</version>
+						<inherited>false</inherited>
+						<configuration>
+							<excludedLinks>
+								<excludedLink>http://localhost:8080/*</excludedLink>
+								<excludedLink>http://127.0.0.1:8080/*</excludedLink>
+								<excludedLink>http://www.scai.fraunhofer.de</excludedLink>
+								<excludedLink>http://maven.apache.org</excludedLink>
+								<excludedLink>http://download.oracle.com</excludedLink>
+								<excludedLink>**/axis2-web/*</excludedLink>
+								<excludedLink>**/axis2-admin</excludedLink>
+								<excludedLink>**/services/listServices</excludedLink>
+							</excludedLinks>
+							<excludedPages>
+								<excludedPage>xref/**/*</excludedPage>
+								<excludedPage>apidocs/**/*</excludedPage>
+								<excludedPage>source-repository.html</excludedPage>
+								<excludedPage>dependency-convergence.html</excludedPage>
+							</excludedPages>
+							<forceSite>false</forceSite>
+							<linkcheckCache>${project.reporting.outputDirectory}</linkcheckCache>
+						</configuration>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+	</profiles>
+
+
+	<build>
+
+		<!-- Management of common plugins -->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>xmlbeans-maven-plugin</artifactId>
+					<version>2.3.3</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2.2</version>
+					<configuration>
+						<!-- During release:perform, enable the "with-reporting" profile -->
+						<releaseProfiles>with-reporting</releaseProfiles>
+						<preparationGoals>clean install</preparationGoals>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.3</version>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>2.17</version>
+				</plugin>
+      
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				
+
+				<!-- Below plugins configurations are used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[2.3,)</versionRange>
+										<goals>
+											<goal>unpack-dependencies</goal>
+											<goal>unpack</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>openjpa-maven-plugin</artifactId>
+										<versionRange>[1.2,)</versionRange>
+										<goals>
+											<goal>enhance</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+		<!-- Default plugin configuration -->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<message>Maven 2.x versions do not correctly inherit/overwrite repository urls.</message>
+									<version>3.0.4</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>create_site</id>
+						<phase>package</phase>
+						<goals>
+							<goal>site</goal>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-source</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!--<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/src/site/resources/server/xml/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/wsag4j-server-resources/src/main/resources/samples/</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin> -->
+		</plugins>
+	</build>
+
+	<reporting>
+		<excludeDefaults>true</excludeDefaults>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.3</version>
+				<inherited>false</inherited>
+			</plugin>
+			<!-- plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.4.3</version>
+			</plugin>
+      
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+			</plugin -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.4</version>
+				<inherited>true</inherited>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>true</inherited>
+						<reports>
+							<report>index</report>
+							<report>summary</report>
+							<report>cim</report>
+							<report>issue-tracking</report>
+							<report>distribution-management</report>
+							<report>mailing-list</report>
+							<report>license</report>
+							<report>project-team</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+		</plugins>
+	</reporting>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- wsag4j modules -->
+			<dependency>
+				<groupId>net.sf.wsag4j.types</groupId>
+				<artifactId>wsag4j-addressing-types</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j.types</groupId>
+				<artifactId>wsag4j-agreement-types</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j.types</groupId>
+				<artifactId>wsag4j-negotiation-types</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j.types</groupId>
+				<artifactId>wsag4j-common-types</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j.types</groupId>
+				<artifactId>wsag4j-jsdl-types</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j</artifactId>
+				<classifier>site</classifier>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-api</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-server</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-samples</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-pattern</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-it</artifactId>
+				<version>${wsag4j-version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-client-resources</artifactId>
+				<version>${wsag4j-version}</version>
+				<type>zip</type>
+				<classifier>resources</classifier>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-client-resources</artifactId>
+				<version>${wsag4j-version}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-server-resources</artifactId>
+				<version>${wsag4j-version}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j</groupId>
+				<artifactId>wsag4j-server-resources</artifactId>
+				<version>${wsag4j-version}</version>
+				<type>zip</type>
+				<classifier>resources</classifier>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- REST hosting environments -->
+			<dependency>
+				<groupId>net.sf.wsag4j.rest</groupId>
+				<artifactId>wsag4j-rest-api</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j.rest</groupId>
+				<artifactId>wsag4j-rest-client</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j.rest</groupId>
+				<artifactId>wsag4j-rest-server</artifactId>
+				<version>${wsag4j-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.wsag4j.rest</groupId>
+				<artifactId>wsag4j-rest-webapp</artifactId>
+				<version>${wsag4j-version}</version>
+				<type>war</type>
+			</dependency>
+
+
+			<!-- Common dependencies e.g. for Velocity, XmlBeans, Saxon, XmlResolver, 
+				Apache Commons, ... -->
+
+			<dependency>
+				<groupId>velocity</groupId>
+				<artifactId>velocity</artifactId>
+				<version>1.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.xmlbeans</groupId>
+				<artifactId>xmlbeans-xpath</artifactId>
+				<version>2.5.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>net.sf.saxon</groupId>
+						<artifactId>saxon</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.xmlbeans</groupId>
+				<artifactId>xmlbeans</artifactId>
+				<version>2.5.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sourceforge.saxon</groupId>
+				<artifactId>saxon</artifactId>
+				<version>9.1.0.8</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.saxon</groupId>
+				<artifactId>saxon</artifactId>
+				<classifier>dom</classifier>
+				<version>9.1.0.8</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.saxon</groupId>
+				<artifactId>saxon</artifactId>
+				<classifier>xpath</classifier>
+				<version>9.1.0.8</version>
+			</dependency>
+
+			<dependency>
+				<groupId>xml-resolver</groupId>
+				<artifactId>xml-resolver</artifactId>
+				<version>1.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>xalan</groupId>
+				<artifactId>xalan</artifactId>
+				<version>2.7.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>xerces</groupId>
+				<artifactId>xercesImpl</artifactId>
+				<version>${xerces-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.12</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.8.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-discovery</groupId>
+				<artifactId>commons-discovery</artifactId>
+				<version>0.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>3.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>stax</groupId>
+				<artifactId>stax-api</artifactId>
+				<version>1.0.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>3.8.1</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.3</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Module dependencies for Quartz Scheduler -->
+
+			<dependency>
+				<groupId>opensymphony</groupId>
+				<artifactId>quartz</artifactId>
+				<version>1.6.3</version>
+			</dependency>
+
+			<!-- Database persistence -->
+
+			<dependency>
+				<groupId>org.apache.openjpa</groupId>
+				<artifactId>openjpa-all</artifactId>
+				<version>${openjpa-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>8.4-701.jdbc3</version>
+			</dependency>
+
+			<!-- The path of the hsqldb database is specified via a system property. 
+				This requires a HSQLDB version >= 2.0.1. For Java 1.5 compatibility we need 
+				a specific HSQLDB version. -->
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb-j5</artifactId>
+				<version>2.2.4</version>
+			</dependency>
+
+			<!-- Manage version of bouncycastle to bcprov-jdk15, since Java 1.5 is 
+				required for this framework. -->
+			<dependency>
+				<groupId>bouncycastle</groupId>
+				<artifactId>bcprov-jdk15</artifactId>
+				<version>140</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
