@@ -7,7 +7,7 @@
 	<version>0.0.1</version>
 	<packaging>pom</packaging>
 
-	<name>intercloud</name>
+	<name>Intercloud</name>
 	<url>https://github.com/citlab/Intercloud</url>
 
 	<inceptionYear>2014</inceptionYear>
@@ -45,6 +45,20 @@
 		</mailingList>
 	</mailingLists>
 	
+	<organization>
+		<name>TU Berlin</name>
+		<url>http://www.cit.tu-berlin.de</url>
+	</organization>
+	<issueManagement>
+		<url>https://github.com/citlab/Intercloud/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<scm>
+		<url>https://github.com/citlab/Intercloud</url>
+		<connection>scm:git:git://github.com/citlab/Intercloud.git</connection>
+		<developerConnection>scm:git:git@github.com:citlab/Intercloud.git</developerConnection>
+	</scm>
+
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -79,6 +93,36 @@
 						<target>1.8</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<!-- to generate javadoc report -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+				</plugin>
+				<plugin>
+					<!-- to generate xref report -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+				<plugin>
+					<!-- to generate surefire (test) report -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>2.15</version>
+				</plugin>
+				<plugin>
+					<!-- to generate PMD and DPD reports (code quality) -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>3.1</version>
+				</plugin>
+				<plugin>
+					<!-- to set version of standard plugin -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -102,8 +146,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<organization>
-		<name>TU Berlin</name>
-		<url>http://www.cit.tu-berlin.de</url>
-	</organization>
 </project>

@@ -1,0 +1,35 @@
+ --------------------------
+Intercloud
+ --------------------------
+Alexander Stanik
+ --------------------------
+2015-04-21
+ --------------------------
+
+ 
+Architecture of the Intercloud Components
+
+  The CIT's Intercloud Project comprises the following components:
+
+  * <<Cirrocumulus (Root)>>
+
+    The Cirrocumulus component is an implementation of the Intercloud Root service whose main purpose 
+    is to provide services such as Naming Authority, Trust Authority, Directory Services and other
+    "root" capabilities similar to Domain Name System (DNS) root services.
+  
+  * <<Altocumulus (Exchange)>>
+
+    The Altocumulus component is an implementation of the Intercloud Exchange service whose main purpose
+    is to facilitate and mediate the zone internal intercloud negotiating process among clouds. 
+  
+  * <<Cumulus (Gateway)>>
+
+    The Cumulus component in an implementation of the Intercloud Gateway service whose main purpose 
+    is to provide an customized interface to a specific cloud provider. 
+  
+  * <<Cumulonimbus (Client)>>
+
+    The Cumulonimbus component is a web application that provides a web GUI allows to use the 
+    functionality of the overall Intercloud overlay network components.
+    
+    

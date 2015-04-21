@@ -1,0 +1,30 @@
+<project name="Intercloud">
+  
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>1.3.1</version>
+  </skin>
+  
+  <bannerLeft>
+    <!-- name>Project Name</name -->
+    <src>http://citlab.github.io/Intercloud/images/intercloud-logo-small.png</src>
+    <!-- href>http://maven.apache.org/</href -->
+  </bannerLeft>
+
+  <bannerRight>
+    <src>http://www.cit.tu-berlin.de/fileadmin/Aperto_design/img/logo_01.gif</src>
+  </bannerRight>
+  
+  <body>
+    
+	<menu name="Main">
+		<item name="Overview" href="index.html" />
+		<item name="Architecture" href="architecture.html" />
+	</menu>
+	<menu ref="reports"/>
+	
+	
+  </body>
+  
+</project>

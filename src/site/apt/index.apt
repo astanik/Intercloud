@@ -1,0 +1,30 @@
+ --------------------------
+Intercloud
+ --------------------------
+Alexander Stanik
+ --------------------------
+2015-04-21
+ --------------------------
+
+
+Welcome to CIT's Intercloud Project
+
+  The Intercloud project aims to provide an Extensible Messaging and Presence Protocol (XMPP) and
+  Open Cloud Computing Interface (OCCI) based network overlay for cloud to cloud interoperability.
+  It is an approaching implementation of the {{{http://www.intercloudtestbed.org/}IEEE Intercloud Testbed}}.
+  
+* Learn more about CIT's Intercloud Project
+
+  This site is structured in multiple sections to provide you with the all the 
+  required information about the Intercloud project depending on your needs.
+  
+  *  <<{{{./architecture.html}Architecture}}>>
+  
+    This section gives details about what components the Intercloud project consists of
+	and how they relate.
+   
+  *  <<{{{./installation.html}Installation}}>>
+  
+    This section describes how to setup and install an the Intercloud components.
+
+ 
