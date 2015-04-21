@@ -22,9 +22,9 @@ import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
 
 /**
  * An IQResultListener will be invoked when a previously IQ packet sent by the server was answered.
- * Use {@link IQRouter#addIQResultListener(String, IQResultListener)} to add a new listener that
+ * Use IQRouter.addIQResultListener(String, IQResultListener) to add a new listener that
  * will process the answer to the IQ packet being sent. The listener will automatically be
- * removed from the {@link IQRouter} as soon as a reply for the sent IQ packet is received. The
+ * removed from the IQRouter as soon as a reply for the sent IQ packet is received. The
  * reply can be of type RESULT or ERROR.
  *
  * @author Gaston Dombiak

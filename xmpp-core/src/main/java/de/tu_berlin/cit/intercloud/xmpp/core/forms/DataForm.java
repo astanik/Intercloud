@@ -126,7 +126,6 @@ public class DataForm extends PacketExtension {
      * Returns the type of this data form.
      *
      * @return the data form type.
-     * @see org.xmpp.forms.DataForm.Type
      */
     public DataForm.Type getType() {
         String type = element.attributeValue("type");
@@ -140,7 +139,7 @@ public class DataForm extends PacketExtension {
 
     /**
      * Sets the description of the data. It is similar to the title on a web page or an X window.
-     * You can put a <title/> on either a form to fill out, or a set of data results.
+     * You can put a title on either a form to fill out, or a set of data results.
      *
      * @param title description of the data.
      */
@@ -154,7 +153,7 @@ public class DataForm extends PacketExtension {
 
     /**
      * Returns the description of the data form. It is similar to the title on a web page or an X
-     * window.  You can put a <title/> on either a form to fill out, or a set of data results.
+     * window. You can put a title on either a form to fill out, or a set of data results.
      *
      * @return description of the data.
      */
@@ -182,7 +181,7 @@ public class DataForm extends PacketExtension {
      * Adds a new instruction to the list of instructions that explain how to fill out the form
      * and what the form is about. The dataform could include multiple instructions since each
      * instruction could not contain newlines characters.
-     * <p>
+     * 
      * Nothing will be set, if the provided argument is <tt>null</tt> or an empty String.
      *
      * @param instruction the new instruction that explain how to fill out the form.

@@ -47,10 +47,6 @@ import org.openid4java.message.sreg.SRegResponse;
  * 
  * Most of this code based on the openid4java sample code.
  * 
- * @see http://code.google.com/p/openid4java/wiki/SampleConsumer
- * @see http://code.google.com/p/openid4java/wiki/AttributeExchangeHowTo
- * @see http://code.google.com/p/openid4java/wiki/SRegHowTo
- * 
  * @author Alexander Stanik
  * 
  */
@@ -267,7 +263,7 @@ public class OpenIdService {
 	 * User Agent (i.e., the browser) will be directed to this page following
 	 * authentication.
 	 * 
-	 * @TODO Generate this url by passing a target wicket page.
+	 * @todo Generate this url by passing a target wicket page.
 	 *  
 	 * @return String - the returnToUrl to be used for the authentication request.
 	 */

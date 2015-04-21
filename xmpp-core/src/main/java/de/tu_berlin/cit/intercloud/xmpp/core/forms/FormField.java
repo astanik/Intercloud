@@ -41,7 +41,7 @@ public class FormField {
     /**
      * Adds a default value to the question if the question is part of a form to fill out.
      * Otherwise, adds an answered value to the question.
-     * <p>
+     * 
      * Nothing will be added if the provided argument is <tt>null</tt>.
      * 
      * @param value a default value or an answered value of the question.
@@ -67,7 +67,7 @@ public class FormField {
     /**
      * Adds an available option to the question that the user has in order to answer
      * the question.
-     * <p>
+     * 
      * If argument 'value' is <tt>null</tt> or an empty String, no option element 
      * will be added.
      * 
@@ -101,7 +101,7 @@ public class FormField {
 
     /**
      * Sets an indicative of the format for the data to answer. Valid formats are:
-     * <p/>
+     * 
      * <ul>
      * <li>text-single -> single line or word of text
      * <li>text-private -> instead of showing the user what they typed, you show ***** to
@@ -162,10 +162,10 @@ public class FormField {
     /**
      * Sets a description that provides extra clarification about the question. This information
      * could be presented to the user either in tool-tip, help button, or as a section of text
-     * before the question.<p>
-     * <p/>
+     * before the question.
+     * 
      * If the question is of type FIXED then the description should remain empty.
-     * <p>
+     * 
      * No new description will be set, if the provided argument is <tt>null</tt> or an empty 
      * String (although an existing description will be removed).
      * 
@@ -238,7 +238,7 @@ public class FormField {
     
     /**
      * Returns an indicative of the format for the data to answer. Valid formats are:
-     * <p/>
+     * 
      * <ul>
      * <li>text-single -> single line or word of text
      * <li>text-private -> instead of showing the user what they typed, you show ***** to
@@ -278,8 +278,8 @@ public class FormField {
     /**
      * Returns a description that provides extra clarification about the question. This information
      * could be presented to the user either in tool-tip, help button, or as a section of text
-     * before the question.<p>
-     * <p/>
+     * before the question.
+     * 
      * If the question is of type FIXED then the description should remain empty.
      *
      * @return description that provides extra clarification about the question.
@@ -329,7 +329,7 @@ public class FormField {
     }
 
     /**
-     * Type-safe enumeration to represent the field type of the Data forms.<p>
+     * Type-safe enumeration to represent the field type of the Data forms.
      *
      * Implementation note: XMPP error conditions use "-" characters in
      * their names such as "jid-multi". Because "-" characters are not valid

@@ -73,7 +73,7 @@ public class JID implements Comparable<JID>, Serializable {
     /**
      * Escapes the node portion of a JID according to "JID Escaping" (XEP-0106).
      * Escaping replaces characters prohibited by node-prep with escape sequences,
-     * as follows:<p>
+     * as follows:
      *
      * <table border="1">
      * <tr><td><b>Unescaped Character</b></td><td><b>Encoded Sequence</b></td></tr>
@@ -87,13 +87,13 @@ public class JID implements Comparable<JID>, Serializable {
      * <tr><td>&gt;</td><td>\3e</td></tr>
      * <tr><td>@</td><td>\40</td></tr>
      * <tr><td>\</td><td>\5c</td></tr>
-     * </table><p>
+     * </table>
      *
      * This process is useful when the node comes from an external source that doesn't
      * conform to nodeprep. For example, a username in LDAP may be "Joe Smith". Because
      * the &lt;space&gt; character isn't a valid part of a node, the username should
      * be escaped to "Joe\20Smith" before being made into a JID (e.g. "joe\20smith@example.com"
-     * after case-folding, etc. has been applied).<p>
+     * after case-folding, etc. has been applied).
      *
      * All node escaping and un-escaping must be performed manually at the appropriate
      * time; the JID class will not escape or un-escape automatically.
@@ -145,9 +145,9 @@ public class JID implements Comparable<JID>, Serializable {
     }
 
     /**
-     * Un-escapes the node portion of a JID according to "JID Escaping" (XEP-0106).<p>
+     * Un-escapes the node portion of a JID according to "JID Escaping" (XEP-0106).
      * Escaping replaces characters prohibited by node-prep with escape sequences,
-     * as follows:<p>
+     * as follows:
      *
      * <table border="1">
      * <tr><td><b>Unescaped Character</b></td><td><b>Encoded Sequence</b></td></tr>
@@ -161,13 +161,13 @@ public class JID implements Comparable<JID>, Serializable {
      * <tr><td>&gt;</td><td>\3e</td></tr>
      * <tr><td>@</td><td>\40</td></tr>
      * <tr><td>\</td><td>\5c</td></tr>
-     * </table><p>
+     * </table>
      *
      * This process is useful when the node comes from an external source that doesn't
      * conform to nodeprep. For example, a username in LDAP may be "Joe Smith". Because
      * the &lt;space&gt; character isn't a valid part of a node, the username should
      * be escaped to "Joe\20Smith" before being made into a JID (e.g. "joe\20smith@example.com"
-     * after case-folding, etc. has been applied).<p>
+     * after case-folding, etc. has been applied).
      *
      * All node escaping and un-escaping must be performed manually at the appropriate
      * time; the JID class will not escape or un-escape automatically.

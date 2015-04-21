@@ -29,14 +29,14 @@ import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
 /**
  * RoomConfiguration is a packet that helps to set the configuration of MUC rooms. RoomConfiguration
  * is a speacial IQ packet whose child element contains a data form. The data form holds the fields
- * to set together with a list of values.<p>
+ * to set together with a list of values.
  *
  * Code example:
  * <pre>
  * // Set the fields and the values.
- * Map<String,Collection<String>> fields = new HashMap<String,Collection<String>>();
+ * Map &lt; String,Collection &lt; String &gt; &gt; fields = new HashMap &lt; String,Collection &lt; String &gt; &gt; ();
  * // Make a non-public room
- * List<String> values = new ArrayList<String>();
+ * List &lt; String &gt; values = new ArrayList &lt; String &gt; ();
  * values.add("0");
  * fields.put("muc#roomconfig_publicroom", values);
  *

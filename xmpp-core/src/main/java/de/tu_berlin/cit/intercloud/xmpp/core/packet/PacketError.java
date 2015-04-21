@@ -257,7 +257,7 @@ public class PacketError {
 
     /**
      * Sets an application-specific error condition.     *      * @param name the name of the application-specific error condition.     */    public void setApplicationCondition(String name) {        setApplicationCondition(name, null);    }
-        /**     * Sets an application-specific error condition. Optionally, a     * application-specific namespace can be specified to define its     * own application-specific error .     *      * @param name the name of the application-specific error condition.     * @param namespaceURI the namespace of the application.     */    @SuppressWarnings("unchecked")    public void setApplicationCondition(String name, String namespaceURI) {        if (ERROR_NAMESPACE.equals(namespaceURI)) {            throw new IllegalArgumentException();        }
+        /**     * Sets an application-specific error condition. Optionally, a     * application-specific namespace can be specified to define its     * own application-specific error.     *      * @param name the name of the application-specific error condition.     * @param namespaceURI the namespace of the application.     */    @SuppressWarnings("unchecked")    public void setApplicationCondition(String name, String namespaceURI) {        if (ERROR_NAMESPACE.equals(namespaceURI)) {            throw new IllegalArgumentException();        }
         Element applicationError = null;        for (Iterator<Element> i=element.elementIterator(); i.hasNext(); ) {
             Element el = i.next();            if (!el.getNamespaceURI().equals(ERROR_NAMESPACE))            {                applicationError = el;            }        }
         if (applicationError != null) {            element.remove(applicationError);        }
@@ -297,7 +297,7 @@ public class PacketError {
     }
 
     /**
-     * Type-safe enumeration for the error condition.<p>
+     * Type-safe enumeration for the error condition.
      *
      * Implementation note: XMPP error conditions use "-" characters in
      * their names such as "bad-request". Because "-" characters are not valid

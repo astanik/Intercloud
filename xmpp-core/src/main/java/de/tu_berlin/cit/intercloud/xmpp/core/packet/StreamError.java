@@ -229,7 +229,7 @@ public class StreamError {
     }
 
     /**
-     * Type-safe enumeration for the error condition.<p>
+     * Type-safe enumeration for the error condition.
      *
      * Implementation note: XMPP error conditions use "-" characters in
      * their names such as "bad-request". Because "-" characters are not valid

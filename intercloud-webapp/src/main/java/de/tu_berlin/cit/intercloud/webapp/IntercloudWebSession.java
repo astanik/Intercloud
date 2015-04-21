@@ -56,7 +56,7 @@ public class IntercloudWebSession extends AbstractAuthenticatedWebSession {
 
 
 	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#getRoles()
+	 * Returns the roles of the user.
 	 */
 	@Override
 	public Roles getRoles() {

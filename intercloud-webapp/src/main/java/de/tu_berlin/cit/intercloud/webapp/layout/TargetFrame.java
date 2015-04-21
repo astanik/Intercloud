@@ -42,9 +42,8 @@ public final class TargetFrame implements IClusterable {
 	/**
 	 * Constructor.
 	 * 
-	 * @param <C>
-	 * 
-	 * @param frameClass
+	 * @param <C> Page class
+	 * @param frameClass class
 	 */
 	public <C extends Page> TargetFrame(Class<C> frameClass) {
 		this.frameClass = frameClass;
@@ -53,6 +52,7 @@ public final class TargetFrame implements IClusterable {
 	/**
 	 * Gets frame class.
 	 * 
+	 * @param <?> Page class
 	 * @return lefFrameClass
 	 */
 	public Class<? extends Page> getFrameClass() {
@@ -62,8 +62,8 @@ public final class TargetFrame implements IClusterable {
 	/**
 	 * Sets frame class.
 	 * 
-	 * @param <C>
 	 * 
+	 * @param <C> Page class
 	 * @param frameClass
 	 *            lefFrameClass
 	 */

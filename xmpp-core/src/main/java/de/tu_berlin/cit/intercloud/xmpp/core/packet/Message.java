@@ -27,7 +27,6 @@ import java.util.Iterator;
  * A message can have one of several {@link Type Types}. For each message type,
  * different message fields are typically used as follows:
  *
- * <p>
  * <table border="1">
  * <tr><td>&nbsp;</td><td colspan="5"><b>Message type</b></td></tr>
  * <tr><td><i>Field</i></td><td><b>Normal</b></td><td><b>Chat</b></td><td><b>Group Chat</b></td><td><b>Headline</b></td><td><b>Error</b></td></tr>

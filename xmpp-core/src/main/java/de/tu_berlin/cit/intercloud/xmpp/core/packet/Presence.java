@@ -25,7 +25,7 @@ import java.util.Iterator;
  * Presence packet. Presence packets are used to express an entity's current
  * network availability and to notify other entities of that availability.
  * Presence packets are also used to negotiate and manage subscriptions to the
- * presence of other entities.<p>
+ * presence of other entities.
  *
  * A presence optionally has a {@link Type}.
  *

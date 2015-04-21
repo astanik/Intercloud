@@ -36,7 +36,7 @@ public class ExtendedFrame extends WebComponent
 	private CharSequence url;
 
 	/**
-	 * @param id
+	 * @param id The id
 	 */
 	public ExtendedFrame(String id)
 	{
@@ -44,8 +44,8 @@ public class ExtendedFrame extends WebComponent
 	}
 
 	/**
-	 * @param id
-	 * @param requestHandler
+	 * @param id The id
+	 * @param requestHandler The request handler
 	 */
 	public ExtendedFrame(String id, IRequestHandler requestHandler)
 	{
@@ -54,8 +54,8 @@ public class ExtendedFrame extends WebComponent
 	}
 
 	/**
-	 * @param id
-	 * @param url
+	 * @param id The id
+	 * @param url The url
 	 */
 	public ExtendedFrame(String id, CharSequence url)
 	{

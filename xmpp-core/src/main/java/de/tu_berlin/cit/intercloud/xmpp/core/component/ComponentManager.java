@@ -30,7 +30,7 @@ import de.tu_berlin.cit.intercloud.xmpp.core.packet.Packet;
 public interface ComponentManager {
 
     /**
-     * Adds a component. The {@link Component#initialize(org.xmpp.packet.JID, ComponentManager)}
+     * Adds a component. The 
      * method will be called on the component. The subdomain specifies the address of
      * the component on a server. For example, if the subdomain is "test" and the XMPP
      * server is at "example.com", then the component's address would be "test.example.com".
@@ -42,7 +42,7 @@ public interface ComponentManager {
     public void addComponent(String subdomain, Component component) throws ComponentException;
 
     /**
-     * Removes a component. The {@link Component#shutdown} method will be called on the
+     * Removes a component. The method will be called on the
      * component.
      *
      * @param subdomain the subdomain of the component's address.

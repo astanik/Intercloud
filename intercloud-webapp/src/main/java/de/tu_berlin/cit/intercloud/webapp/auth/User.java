@@ -38,6 +38,8 @@ public interface User extends IClusterable {
 
 	/**
 	 * Set the user name.
+	 * 
+	 * @param name The user name.
 	 */
 	public void setUserName(String name);
 
