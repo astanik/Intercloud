@@ -73,6 +73,7 @@
 		<module>occi-text</module>
 		<module>occi-infrastructure</module>
 		<module>xmpp-core</module>
+		<module>xmpp-rest</module>
 		<module>intercloud-root</module>
 		<module>intercloud-exchange</module>
 		<module>intercloud-gateway</module>

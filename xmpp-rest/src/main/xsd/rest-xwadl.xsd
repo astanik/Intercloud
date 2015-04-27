@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:rest:xwadl" xmlns="urn:xmpp:rest:xwadl"
+	attributeFormDefault="qualified" elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:documentation>
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="resource_type">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="grammars" minOccurs="0" />
+				<xs:element ref="method" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="doc">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="title" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="grammars">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="method">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="request" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="response" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="request" type="call" />
+
+	<xs:element name="response" type="call" />
+
+	<xs:complexType name="call">
+		<xs:sequence>
+			<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="param">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="option" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:NMTOKEN" />
+			<xs:attribute name="default" type="xs:string" />
+			<xs:attribute name="required" type="xs:boolean" default="false" />
+			<xs:attribute name="repeating" type="xs:boolean"
+				default="false" />
+			<xs:attribute name="fixed" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="option">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="type" type="xs:QName" default="xs:string" />
+			<xs:attribute name="mediaType" type="xs:string" />
+			<xs:attribute name="link" type="linkTarget" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="linkTarget">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="local" />
+			<xs:enumeration value="remote" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>
