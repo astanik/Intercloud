@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>REST with XMPP</title>
+  <abstract>This specification defines how the Representational State Transfer (REST)
+  architectural style can be applied to an XMPP overlay network. It specifies 
+  an XMPP protocol extension for accessing resources and transporting resource metadata and XML-REST encoded 
+  requests and responses between two XMPP entities.</abstract>
+  <legal>
+    <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
+    <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
+    <warranty>## NOTE WELL: This Specification is provided on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event shall the XMPP Standards Foundation or the authors of this Specification be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Specification or the implementation, deployment, or other use of the Specification. ##</warranty>
+    <liability>In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall the XMPP Standards Foundation or any author of this Specification be liable for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising out of the use or inability to use the Specification (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if the XMPP Standards Foundation or such author has been advised of the possibility of such damages.</liability>
+    <conformance>This XMPP Extension Protocol has been contributed in full conformance with the XSF's Intellectual Property Rights Policy (a copy of which may be found at &lt;<link url='http://xmpp.org/extensions/ipr-policy.shtml'>http://xmpp.org/extensions/ipr-policy.shtml</link>&gt; or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201 USA).</conformance>
+  </legal>
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>NOT_YET_ASSIGNED</shortname>
+  <author>
+    <firstname>Alexander</firstname>
+    <surname>Stanik</surname>
+    <email>alexander.stanik@tu-berlin.de</email>
+    <uri>http://www.cit.tu-berlin.de/</uri>
+  </author>
+  <revision>
+    <version>0.0.1</version>
+    <date>2015-04-27</date>
+    <initials>psa</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+</section1>
+<section1 topic='Requirements' anchor='reqs'>
+  <p>The author has designed the REST with XMPP protocol with the following requirements in mind:</p>
+  <ul>
+  	<li><p>REST with XMPP should be easy to implement such as it is with REST over HTTP.</p></li>
+  	<li><p>This specification should apply the REST architectural style to XMPP and should eliminate limitations of HTTP.</p></li>
+  	<li><p>Resources should be linkable in terms of static connections as well as link targets used for resource access and modifications.</p></li>
+  	<li><p>The number of request and <strong>response</strong> parameters, representations and links should be unbounded.</p></li>
+  	<li><p>The number of operations should be unlimited as in contrast to HTTP's GET, POST, PUT, DELETE methods.</p></li>
+  </ul>
+</section1>
+<section1 topic='Resource Discovery' anchor='restdis'>
+  <p>TBD.</p>
+</section1>
+<section1 topic='Use Cases' anchor='usecases'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+<section1 topic='Service Discovery' anchor='disco'>
+  <p>If an entity supports the REST with XMPP protocol, it SHOULD advertise that fact in response to &xep0030; information ("diso#info") requests by returning an identity of "automation/rest" and a feature of "jabber:iq:rest":</p>
+  <example caption='A disco#info query'><![CDATA[
+<iq type='get' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com/rest-server' 
+    id='disco1'>
+  <query xmlns='http://jabber.org/protocol/disco#info'/>
+</iq>
+  ]]></example>
+  <example caption='A disco#info response'><![CDATA[
+<iq type='result' 
+    to='requester@company-b.com/rest-client' 
+    from='responder@company-a.com/rest-server' 
+    id='disco1'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    <identity category='automation' type='rest'/>
+    <feature var='jabber:iq:rest'/>
+  </query>
+</iq>
+  ]]></example>
+</section1>
+<section1 topic='Security Considerations' anchor='security'>
+  <p>Determining when and how a resource can be accessed or modified based on permissions or 
+  rights which are considered outside the scope of this document. Although such mechanisms SHOULD be 
+  considered specific to the application and/or implementation of this document, 
+  future specifications may address these concerns.</p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
+    <p>The &REGISTRAR; includes 'urn:xmpp:rest:xwadl' and 'urn:xmpp:rest:xml' in its registry of protocol namespaces.</p>
+  </section2>
+  <section2 topic='Service Discovery Identity' anchor='registrar-disco'>
+    <p>The XMPP Registrar includes a Service Discovery type of "rest" within the "automation" category in its registry of service discovery identities.</p>
+  </section2>
+</section1>
+<section1 topic='XML Schema' anchor='schema'>
+    <section2 topic='XWADL Schema' anchor='schema-xwadl'>
+    <code><![CDATA[
+<?xml version='1.0' encoding='UTF-8'?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:rest:xwadl" xmlns="urn:xmpp:rest:xwadl"
+	attributeFormDefault="qualified" elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:documentation>
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="resource_type">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="grammars" minOccurs="0" />
+				<xs:element ref="method" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="doc">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="title" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="grammars">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="method">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="request" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="response" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="request" type="call" />
+
+	<xs:element name="response" type="call" />
+
+	<xs:complexType name="call">
+		<xs:sequence>
+			<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="param">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="option" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:NMTOKEN" />
+			<xs:attribute name="default" type="xs:string" />
+			<xs:attribute name="required" type="xs:boolean" default="false" />
+			<xs:attribute name="repeating" type="xs:boolean"
+				default="false" />
+			<xs:attribute name="fixed" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="option">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="type" type="xs:QName" default="xs:string" />
+			<xs:attribute name="mediaType" type="xs:string" />
+			<xs:attribute name="link" type="linkTarget" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="linkTarget">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="local" />
+			<xs:enumeration value="remote" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>
+	]]></code>
+	</section2>
+	<section2 topic='XML-REST Schema' anchor='schema-rest'>
+    <code><![CDATA[
+<?xml version='1.0' encoding='UTF-8'?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:rest:xml" xmlns="urn:xmpp:rest:xml"
+	attributeFormDefault="qualified" elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:documentation>
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="resource">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="method" minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="path" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:element name="method">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="request" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="response" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="request" type="call" />
+
+	<xs:element name="response" type="call" />
+
+	<xs:complexType name="call">
+		<xs:sequence>
+			<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:element name="param">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="1">
+				<xs:element ref="value" />
+				<xs:element ref="representation" />
+				<xs:element ref="link" />
+			</xs:choice>
+			<xs:attribute name="name" type="xs:NMTOKEN" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="value">
+		<xs:complexType>
+			<xs:attribute name="type" type="xs:QName" default="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="representation">
+		<xs:complexType>
+			<xs:attribute name="mediaType" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="link">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="to" type="xs:string" minOccurs="0"
+					maxOccurs="1" />
+				<xs:element name="path" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
+	]]></code>
+	</section2>
+</section1>
+</xep>
