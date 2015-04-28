@@ -10,7 +10,7 @@
 
 	<groupId>de.tu_berlin.cit.intercloud</groupId>
 	<artifactId>exchange</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>Intercloud Exchange Module</name>
 
