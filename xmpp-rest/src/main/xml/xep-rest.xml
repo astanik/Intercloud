@@ -46,9 +46,13 @@
   <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
-  <p>The authors have designed the service discovery protocol with the following requirements in mind:</p>
+  <p>The author has designed the REST with XMPP protocol with the following requirements in mind:</p>
   <ul>
-  	<li><p>TBD.</p></li>
+  	<li><p>REST with XMPP should be easy to implement such as it is with REST over HTTP.</p></li>
+  	<li><p>This specification should apply the REST architectural style to XMPP and should eliminate limitations of HTTP.</p></li>
+  	<li><p>Resources should be linkable in terms of static connections as well as link targets used for resource access and modifications.</p></li>
+  	<li><p>The number of request and <strong>response</strong> parameters, representations and links should be unbounded.</p></li>
+  	<li><p>The number of operations should be unlimited as in contrast to HTTP's GET, POST, PUT, DELETE methods.</p></li>
   </ul>
 </section1>
 <section1 topic='Resource Discovery' anchor='restdis'>
