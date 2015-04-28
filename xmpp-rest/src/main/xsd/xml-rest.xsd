@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="urn:xmpp:rest:xml" xmlns="urn:xmpp:rest:xml"
-	attributeFormDefault="qualified" elementFormDefault="qualified">
+	targetNamespace="urn:xmpp:xml-rest" xmlns="urn:xmpp:xml-rest"
+	elementFormDefault="qualified">
 
 	<xs:annotation>
 		<xs:documentation>
@@ -49,19 +49,23 @@
 				<xs:element ref="representation" />
 				<xs:element ref="link" />
 			</xs:choice>
-			<xs:attribute name="name" type="xs:NMTOKEN" use="required" />
+			<xs:attribute name="name" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 
 	<xs:element name="value">
 		<xs:complexType>
-			<xs:attribute name="type" type="xs:QName" default="xs:string" />
+			<xs:attribute name="type" type="xs:QName" use="required" />
 		</xs:complexType>
 	</xs:element>
 
 	<xs:element name="representation">
-		<xs:complexType>
-			<xs:attribute name="mediaType" type="xs:string" />
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="mediaType" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 

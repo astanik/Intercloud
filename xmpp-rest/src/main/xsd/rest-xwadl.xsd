@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="urn:xmpp:rest:xwadl" xmlns="urn:xmpp:rest:xwadl"
-	attributeFormDefault="qualified" elementFormDefault="qualified">
+	targetNamespace="urn:xmpp:rest-xwadl" xmlns="urn:xmpp:rest-xwadl"
+	elementFormDefault="qualified">
 
 	<xs:annotation>
 		<xs:documentation>
@@ -69,7 +69,7 @@
 				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
 				<xs:element ref="option" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:NMTOKEN" />
+			<xs:attribute name="name" type="xs:string" />
 			<xs:attribute name="default" type="xs:string" />
 			<xs:attribute name="required" type="xs:boolean" default="false" />
 			<xs:attribute name="repeating" type="xs:boolean"

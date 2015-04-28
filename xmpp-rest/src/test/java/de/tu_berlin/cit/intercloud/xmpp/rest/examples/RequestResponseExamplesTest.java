@@ -28,7 +28,9 @@ public class RequestResponseExamplesTest {
 
 	private void validate(String xml, String xsd) throws SAXException, IOException, ParserConfigurationException {
 		// parse an XML document into a DOM tree
-	    DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+	    DocumentBuilder parser = dbf.newDocumentBuilder();
 	    Document document = parser.parse(new File(xmlFolder + xml));
 
 	    // create a SchemaFactory capable of understanding WXS schemas
