@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource xmlns="urn:xmpp:rest:xml" path="/rest/compute/vm1">
+	<method name="GET">
+		<request>
+		</request>
+		<response>
+			<param name="result">
+				<representation mediaType="text/plain">
+Category: compute; scheme="http://schemas.ogf.org/occi/infrastructure#"; class="kind";
+Category: my_stuff; scheme="http://example.com/occi/my_stuff#"; class="mixin";
+X-OCCI-Attribute: occi.compute.cores=2
+X-OCCI-Attribute: occi.compute.hostname="foobar"
+Link: [...]
+				</representation>
+			</param>
+		</response>
+	</method>
+</resource>
