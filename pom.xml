@@ -74,11 +74,13 @@
 		<module>occi-infrastructure</module>
 		<module>xmpp-core</module>
 		<module>xmpp-rest</module>
+		<module>xmpp-connector</module>
 		<module>intercloud-root</module>
 		<module>intercloud-exchange</module>
 		<module>intercloud-gateway</module>
 		<module>intercloud-webapp</module>
-		<module>enterprise-application</module>
+		<module>enterprise-application-provider</module>
+		<module>enterprise-application-root</module>
 	</modules>
 
 	<properties>

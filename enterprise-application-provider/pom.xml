@@ -9,17 +9,17 @@
 	</parent>
 
 	<groupId>de.tu_berlin.cit.intercloud</groupId>
-	<artifactId>enterprise-application</artifactId>
+	<artifactId>enterprise-application-provider</artifactId>
 	<packaging>ear</packaging>
 
-	<name>Enterprise Application Deployment Module</name>
+	<name>Provider Enterprise Application Deployment Module</name>
 
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.10</version>
 				<configuration>
-					<version>2.10</version>
 					<!-- modules>
 						<webModule>
 							<groupId>de.tu_berlin.cit.intercloud</groupId>
@@ -33,7 +33,7 @@
 							<bundleFileName>myEjbNameInTheEar.jar</bundleFileName>
 						</ejbModule>
 					</modules -->
-					<displayName>Intercloud Enterprise Application</displayName>
+					<displayName>Intercloud Provider Enterprise Application</displayName>
 					<generateApplicationXml>true</generateApplicationXml>
 				</configuration>
 			</plugin>
@@ -45,21 +45,25 @@
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
 			<artifactId>gateway</artifactId>
 			<version>0.0.1</version>
+			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
 			<artifactId>exchange</artifactId>
 			<version>0.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>root</artifactId>
-			<version>0.0.1</version>
+			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
 			<artifactId>webapp</artifactId>
 			<version>0.0.1</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-connector</artifactId>
+			<version>0.0.1</version>
+			<type>rar</type>
 		</dependency>
 	</dependencies>
 	

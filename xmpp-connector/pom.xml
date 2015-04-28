@@ -9,26 +9,26 @@
 	</parent>
 
 	<groupId>de.tu_berlin.cit.intercloud</groupId>
-	<artifactId>root</artifactId>
-	<packaging>war</packaging>
+	<artifactId>xmpp-connector</artifactId>
+	<packaging>rar</packaging>
 
-	<name>Intercloud Root Module</name>
+	<name>XMPP Connector Module</name>
+	<description>
+	This XMPP Connector Module is required for interconnecting the Inercloud deployment of
+	a single application server to another.
+	</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>7.0</version>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-core</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.0</version>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-rest</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
+
 </project>

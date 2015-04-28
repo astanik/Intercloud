@@ -12,8 +12,8 @@
 	<artifactId>webapp</artifactId>
 	<packaging>war</packaging>
 	
-	<name>Intercloud SLAM Webapp</name>
-	<description>Webapp for Intercloud SLA Management</description>
+	<name>Intercloud Webapp</name>
+	<description>Webapp for Intercloud Component Management</description>
 
 	<properties>
 		<wicket.version>6.11.0</wicket.version>
