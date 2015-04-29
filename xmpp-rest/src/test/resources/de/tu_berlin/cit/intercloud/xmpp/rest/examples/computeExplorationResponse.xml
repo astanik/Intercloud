@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute">
+<resource_type xmlns="urn:xmpp:rest-xwadl" xmlns:xs="http://www.w3.org/2001/XMLSchema" path="/compute">
 	<doc title="Compute resource management">
 		Use one of the following actions to manage your compute instances!
 	</doc>

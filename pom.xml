@@ -26,6 +26,17 @@
 			<organization>Technische Universität Berlin</organization>
 			<organizationUrl>http://www.cit.tu-berlin.de</organizationUrl>
 		</developer>
+		<developer>
+			<id>daniel</id>
+			<name>Daniel Schroeder</name>
+			<email>tbd&lt;at&gt;tu-berlin.de</email>
+			<roles>
+				<role>Java developer</role>
+			</roles>
+			<timezone>+1</timezone>
+			<organization>Technische Universität Berlin</organization>
+			<organizationUrl>http://www.cit.tu-berlin.de</organizationUrl>
+		</developer>
 	</developers>
 
 	<mailingLists>
