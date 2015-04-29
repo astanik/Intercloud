@@ -43,7 +43,7 @@
 									<targetExtension>.html</targetExtension>
 								</fileMapper>
 							</fileMappers>
-							<outputDir>${basedir}/target/xmpp/extensions</outputDir>
+							<outputDir>${basedir}/../target/site/xmpp/extensions</outputDir>
 						</transformationSet>
 					</transformationSets>
 				</configuration>
@@ -64,7 +64,7 @@
 								<goal>copy-resources</goal>
 							</goals>
 							<configuration>
-								<outputDirectory>${basedir}/target/xmpp</outputDirectory>
+								<outputDirectory>${basedir}/../target/site/xmpp</outputDirectory>
 								<resources>
 									<resource>
 										<directory>src/main/xmpp</directory>

@@ -22,6 +22,10 @@
 		<item name="Overview" href="index.html" />
 		<item name="Architecture" href="architecture.html" />
 	</menu>
+	<menu name="Standards">
+		<item name="XMPP" href="xmpp.html" />
+		<item name="REST with XMPP" href="xmpp/extensions/xep-rest.html" />
+	</menu>
 	<menu ref="reports"/>
 	
 	

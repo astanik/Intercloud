@@ -9,7 +9,10 @@
 
 	<name>Intercloud</name>
 	<url>https://github.com/citlab/Intercloud</url>
-	<description>The Intercloud project aims to provide an Extensible Messaging and Presence Protocol (XMPP) and Open Cloud Computing Interface (OCCI) based network overlay for cloud to cloud interoperability.</description>
+	<description>The Intercloud project aims to provide an Extensible
+		Messaging and Presence Protocol (XMPP) and Open Cloud Computing
+		Interface (OCCI) based network overlay for cloud to cloud
+		interoperability.</description>
 
 	<inceptionYear>2014</inceptionYear>
 
@@ -28,8 +31,8 @@
 		</developer>
 		<developer>
 			<id>daniel</id>
-			<name>Daniel Schroeder</name>
-			<email>tbd&lt;at&gt;tu-berlin.de</email>
+			<name>Daniel Schröder</name>
+			<email>daniel.schroeder&lt;at&gt;mailbox.tu-berlin.de</email>
 			<roles>
 				<role>Java developer</role>
 			</roles>
@@ -42,13 +45,17 @@
 	<mailingLists>
 		<mailingList>
 			<name>CIT Intercloud Developer Mailing List</name>
-			<subscribe>https://lists.tu-berlin.de/mailman/listinfo/cit-intercloud</subscribe>
-			<unsubscribe>https://lists.tu-berlin.de/mailman/listinfo/cit-intercloud</unsubscribe>
-			<archive>https://lists.tu-berlin.de/pipermail/cit-intercloud</archive>
+			<subscribe>https://lists.tu-berlin.de/mailman/listinfo/cit-intercloud
+			</subscribe>
+			<unsubscribe>https://lists.tu-berlin.de/mailman/listinfo/cit-intercloud
+			</unsubscribe>
+			<archive>https://lists.tu-berlin.de/pipermail/cit-intercloud
+			</archive>
 			<post>intercloud@cit.tu-berlin.de</post>
 		</mailingList>
 		<mailingList>
-			<name>IEEE Intercloud P2302 Standard Working Group Mailing List</name>
+			<name>IEEE Intercloud P2302 Standard Working Group Mailing List
+			</name>
 			<post>p2302@mentor.ieee.org</post>
 		</mailingList>
 		<mailingList>
@@ -67,8 +74,10 @@
 	</issueManagement>
 	<scm>
 		<url>https://github.com/citlab/Intercloud</url>
-		<connection>scm:git:git://github.com/citlab/Intercloud.git</connection>
-		<developerConnection>scm:git:git@github.com:citlab/Intercloud.git</developerConnection>
+		<connection>scm:git:git://github.com/citlab/Intercloud.git
+		</connection>
+		<developerConnection>scm:git:git@github.com:citlab/Intercloud.git
+		</developerConnection>
 	</scm>
 
 	<licenses>
@@ -109,6 +118,11 @@
 						<source>1.8</source>
 						<target>1.8</target>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.3</version>
 				</plugin>
 				<plugin>
 					<!-- to generate javadoc report -->

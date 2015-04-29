@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  
+  <body>
+<section name=" " style="font-size:10%">
+    <!-- The body of the document contains a frame for a static html file -->
+    <iframe src="xmpp/extensions/xep-rest.html" style="width: 100%; height: 100%"
+scrolling="no" marginwidth="0" marginheight="0" frameborder="0" >
+</iframe>
+</section>
+  </body>
+
+</document>
