@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute">
+	<doc title="Compute resource management">
+		Use one of the following actions to manage your compute instances!
+	</doc>
+	<method name="create">
+		<request>
+			<param name="image" required="true" repeating="false">
+				<option link="remote" />
+			</param>
+			<param name="flavors" repeating="false" default="m1.small">
+				<option type="xs:string">m1.small</option>
+				<option type="xs:string">m2.medium</option>
+				<option type="xs:string">m3.large</option>
+			</param>
+		</request>
+		<response>
+			<param name="newVM">
+				<option link="local" />
+			</param>
+		</response>
+	</method>
+	<method name="sla">
+		<response>
+			<param name="computeSla">
+				<option mediaType="text/plain" />
+				<option mediaType="application/json" />
+			</param>
+		</response>
+	</method>
+</resource_type>

@@ -18,6 +18,7 @@
 				<xs:element ref="grammars" minOccurs="0" />
 				<xs:element ref="method" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
+			<xs:attribute name="path" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 
@@ -67,14 +68,12 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
-				<xs:element ref="option" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="option" minOccurs="1" maxOccurs="unbounded" />
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" />
+			<xs:attribute name="name" type="xs:string" use="required" />
 			<xs:attribute name="default" type="xs:string" />
 			<xs:attribute name="required" type="xs:boolean" default="false" />
-			<xs:attribute name="repeating" type="xs:boolean"
-				default="false" />
-			<xs:attribute name="fixed" type="xs:string" />
+			<xs:attribute name="repeating" type="xs:boolean" default="false" />
 		</xs:complexType>
 	</xs:element>
 

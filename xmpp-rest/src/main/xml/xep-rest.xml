@@ -43,7 +43,10 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+  <p>TBD.</p>
+  <p>The REST with XMPP protocol makes use of the IQ stanza in order to enable access, to create, to delete,
+  or to modify resources within a XMPP network overlay. This specification defines two XML Schema files:
+  one for exploring the capabilities of a resource and one for performing actions on a resource.</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>The author has designed the REST with XMPP protocol with the following requirements in mind:</p>
@@ -55,11 +58,100 @@
   	<li><p>The number of operations should be unlimited as in contrast to HTTP's GET, POST, PUT, DELETE methods.</p></li>
   </ul>
 </section1>
-<section1 topic='Resource Discovery' anchor='restdis'>
-  <p>TBD.</p>
+<section1 topic='Resource Exploration' anchor='restdis'>
+  <p>In order to explore the capabilities of a resource, the IQ stanza type "get" have to be used. The returned 
+  IQ stanza is either of type "error" or "result". If it is of type "result", the returned contend have to be
+  complied with the xwadl schema of this specification. The xwadl schema has been designed for providing a machine 
+  process-able description of a resource. It was inspired by the Web Application Description Language (WADL)
+  standard delivered by the World Wide Web Consortium (W3C).</p>
+  <p>An IQ stanza of type "get" is returning an IQ stanza of type "result" that describes all actions that the
+  requesting party can perform. The following example shows an exploration of a cloud provider's REST based 
+  interface for handling compute services.</p>
+      <!-- computeExplorationRequest.xml -->
+      <example caption='Exploration of an OpenStack interface for handling compute services'><![CDATA[
+<iq type='get' 
+    from='requester@company-b.com/rest-client' 
+    to='company-a.com/openstack' 
+    id='rest1'>
+  <resource xmlns="urn:xmpp:xml-rest" path="/">
+    ...
+  </resource>
+</iq>
+  ]]></example>
+      <!-- computeExplorationResponse.xml -->
+      <example caption='Result of an exploration for handling compute services'><![CDATA[
+<iq type='get' 
+    from='company-a.com/openstack' 
+    to='requester@company-b.com/rest-client'
+    id='rest1'>
+  <resource xmlns="urn:xmpp:xml-rest" path="/">
+    ...
+  </resource>
+</iq>
+  ]]></example>
+  
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
-  <p>STRONGLY RECOMMENDED.</p>
+  <section2 topic='Cloud Provider Overlay Network' anchor='usecases-intercloud'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Multi-Dimensional Resource Placement' anchor='usecases-multi-dim'>
+    <p>The REST with XMPP protocol enables a multi-dimensional resource placement. The following examples show 
+    how different resources can be placed within a single server entity:</p>
+      <example caption='A request to a server'><![CDATA[
+<iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='company-a.com' 
+    id='rest1'>
+  <resource xmlns="urn:xmpp:xml-rest" path="/">
+    ...
+  </resource>
+</iq>
+  ]]></example>
+      <example caption='A request to a server with a JID contained a resource part'><![CDATA[
+<iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='company-a.com/resource' 
+    id='rest1'>
+  <resource xmlns="urn:xmpp:xml-rest" path="/">
+    ...
+  </resource>
+</iq>
+  ]]></example>
+      <example caption='A request to a server with a JID contained a locaol part'><![CDATA[
+<iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com' 
+    id='rest1'>
+  <resource xmlns="urn:xmpp:xml-rest" path="/">
+    ...
+  </resource>
+</iq>
+  ]]></example>
+      <example caption='A request to a server with a JID contained a local and a resource part'><![CDATA[
+<iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com/resource' 
+    id='rest1'>
+  <resource xmlns="urn:xmpp:xml-rest" path="/">
+    ...
+  </resource>
+</iq>
+  ]]></example>
+      <example caption='A request to a server with a JID contained a local and a resource part, but access another resource'><![CDATA[
+<iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com/resource' 
+    id='rest1'>
+  <resource xmlns="urn:xmpp:xml-rest" path="/resource/">
+    ...
+  </resource>
+</iq>
+  ]]></example>
+  <p>All examples above are accessing different resources. A variation of the path attribute of the resource 
+  element would also combine the presented JIDs and referring to different resources. 
+  Further example are possible to show how different resources can be located at a single server entity.</p>
+  </section2>
 </section1>
 <section1 topic='Service Discovery' anchor='disco'>
   <p>If an entity supports the REST with XMPP protocol, it SHOULD advertise that fact in response to &xep0030; information ("diso#info") requests by returning an identity of "automation/rest" and a feature of "jabber:iq:rest":</p>
