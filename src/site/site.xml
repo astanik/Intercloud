@@ -24,7 +24,7 @@
 	</menu>
 	<menu name="Standards">
 		<item name="XMPP" href="xmpp.html" />
-		<item name="REST with XMPP" href="xmpp/extensions/xep-rest.html" />
+		<item name="REST with XMPP" href="xep.html" />
 	</menu>
 	<menu ref="reports"/>
 	
