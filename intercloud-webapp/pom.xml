@@ -94,12 +94,6 @@
 
 	<dependencies>
 		
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>gateway</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-
 		<!--  WICKET DEPENDENCIES -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
