@@ -76,6 +76,10 @@
   <resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute" />
 </iq>
       ]]></example>
+  <p>In order to explore a resource, only the path to a resource is required. The counter party have to
+  answer of such a request with a response that exposes all possible actions which can be performed on the 
+  resource located at the specified path. The following example illustrates a response that exposes all
+  actions for this resource.</p>
       <!-- computeExplorationResponseIQ.xml -->
       <example caption='Result of an exploration for handling compute services'><![CDATA[
 <iq type="result"
@@ -118,6 +122,42 @@
   </resource_type>
 </iq>
       ]]></example>
+  <p>This response exposes two methods that can be performed on the 
+  resource located at "/compute". The first method TBD.</p>
+  <p>The following subsections describe each component of a xwadl document in detail.</p>
+  <section2 topic='Resource Type' anchor='restdis-resourcetype'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Documentation' anchor='restdis-documentation'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Grammars' anchor='restdis-grammars'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Method' anchor='restdis-method'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Request' anchor='restdis-request'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Response' anchor='restdis-response'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Parameter' anchor='restdis-parameter'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Option' anchor='restdis-option'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Type' anchor='restdis-type'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Media Type' anchor='restdis-mediatype'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Link' anchor='restdis-link'>
+    <p>TBD.</p>
+  </section2>
 </section1>
 <section1 topic='Resource Access' anchor='restaccess'>
   <p>TBD.</p>
@@ -190,6 +230,35 @@
   </resource>
 </iq>
       ]]></example>
+  <p>The following subsections describe each component of a xml-rest document in detail.</p>
+  <section2 topic='Resource' anchor='restaccess-resource'>
+    <p>TBD. No further documentation or grammers are possible in order to keep the number of bytes 
+    low as possible.</p>
+  </section2>
+  <section2 topic='Method' anchor='restaccess-method'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Request' anchor='restaccess-request'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Response' anchor='restaccess-response'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Parameter' anchor='restaccess-parameter'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Value' anchor='restaccess-value'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Representation' anchor='restaccess-representation'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Link' anchor='restaccess-link'>
+    <p>TBD.</p>
+  </section2>
+  <section2 topic='Resource List' anchor='restaccess-resourcelist'>
+    <p>TBD.</p>
+  </section2>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
   <section2 topic='Cloud Provider Overlay Network' anchor='usecases-intercloud'>
@@ -421,7 +490,6 @@
 		</xs:complexType>
 	</xs:element>
 
-
 	<xs:element name="method">
 		<xs:complexType>
 			<xs:sequence>
@@ -441,7 +509,6 @@
 			<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-
 
 	<xs:element name="param">
 		<xs:complexType>
