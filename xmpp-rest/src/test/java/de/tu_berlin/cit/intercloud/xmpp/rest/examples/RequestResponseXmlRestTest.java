@@ -14,7 +14,7 @@ public class RequestResponseXmlRestTest {
 
 	@Test
 	public void simpleRequest() {
-		ExampleXmlValidator validator = new ExampleXmlValidator();
+		ExampleXmlHelper validator = new ExampleXmlHelper();
 	    try {
 	    	validator.validate("simpleRequest.xml", xsdFile);
 	    } catch (SAXException e) {
@@ -28,7 +28,7 @@ public class RequestResponseXmlRestTest {
 
 	@Test
 	public void simpleResponse() {
-		ExampleXmlValidator validator = new ExampleXmlValidator();
+		ExampleXmlHelper validator = new ExampleXmlHelper();
 	    try {
 	    	validator.validate("simpleResponse.xml", xsdFile);
 	    } catch (SAXException e) {
