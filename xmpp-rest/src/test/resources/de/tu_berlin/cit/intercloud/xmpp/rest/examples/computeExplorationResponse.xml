@@ -14,10 +14,14 @@
 				<option type="xs:string">m2.medium</option>
 				<option type="xs:string">m3.large</option>
 			</param>
+			<param name="number" repeating="false" default="1">
+				<doc title="number of requested virtual machnies" />
+				<option type="xs:integer" />
+			</param>
 		</request>
 		<response>
 			<param name="newVM">
-				<option link="local" />
+				<option link="list" />
 			</param>
 		</response>
 	</method>

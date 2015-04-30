@@ -67,29 +67,129 @@
   <p>An IQ stanza of type "get" is returning an IQ stanza of type "result" that describes all actions that the
   requesting party can perform. The following example shows an exploration of a cloud provider's REST based 
   interface for handling compute services.</p>
-      <!-- computeExplorationRequest.xml -->
+      <!-- computeExplorationRequestIQ.xml -->
       <example caption='Exploration of an OpenStack interface for handling compute services'><![CDATA[
 <iq type='get' 
     from='requester@company-b.com/rest-client' 
     to='company-a.com/openstack' 
     id='rest1'>
-  <resource xmlns="urn:xmpp:xml-rest" path="/">
-    ...
-  </resource>
+  <resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute" />
 </iq>
-  ]]></example>
-      <!-- computeExplorationResponse.xml -->
+      ]]></example>
+      <!-- computeExplorationResponseIQ.xml -->
       <example caption='Result of an exploration for handling compute services'><![CDATA[
-<iq type='get' 
-    from='company-a.com/openstack' 
-    to='requester@company-b.com/rest-client'
-    id='rest1'>
-  <resource xmlns="urn:xmpp:xml-rest" path="/">
-    ...
+<iq type="result"
+    from="company-a.com/openstack" 
+    to="requester@company-b.com/rest-client"
+    id="rest1">
+  <resource_type xmlns="urn:xmpp:rest-xwadl" xmlns:xs="http://www.w3.org/2001/XMLSchema" path="/compute">  
+    <doc title="Compute resource management">
+        Use one of the following actions to manage your compute instances!
+    </doc>  
+    <method name="create"> 
+      <request> 
+        <param name="image" required="true" repeating="false"> 
+          <option link="remote"/> 
+        </param>  
+        <param name="flavors" repeating="false" default="m1.small"> 
+          <option type="xs:string">m1.small</option>  
+          <option type="xs:string">m2.medium</option>  
+          <option type="xs:string">m3.large</option> 
+        </param>  
+        <param name="number" repeating="false" default="1"> 
+          <doc title="number of requested virtual machnies"/>  
+          <option type="xs:integer"/> 
+        </param> 
+      </request>  
+      <response> 
+        <param name="newVM"> 
+          <option link="list"/> 
+        </param> 
+      </response> 
+    </method>  
+    <method name="sla"> 
+      <response> 
+        <param name="computeSla"> 
+          <option mediaType="text/plain"/>  
+          <option mediaType="application/json"/> 
+        </param> 
+      </response> 
+    </method> 
+  </resource_type>
+</iq>
+      ]]></example>
+</section1>
+<section1 topic='Resource Access' anchor='restaccess'>
+  <p>TBD.</p>
+      <!-- computeCreateRequestIQ.xml -->
+      <example caption='Access of an OpenStack interface to create a virtual machnine'><![CDATA[
+<iq type="set"
+    from="requester@company-b.com/rest-client"
+    to="company-a.com/openstack"
+    id="rest2">
+  <resource xmlns="urn:xmpp:xml-rest" xmlns:xs="http://www.w3.org/2001/XMLSchema" path="/compute">  
+    <method name="create"> 
+      <request> 
+        <param name="image"> 
+          <link> 
+            <to>requester@company-b.com/rest-client</to>  
+            <path>/images/myLinuxImage</path> 
+          </link> 
+        </param>  
+        <param name="number"> 
+          <value type="xs:integer">3</value> 
+        </param> 
+      </request>  
+      <response> 
+        <param name="newVM"> 
+          <resourceList/> 
+        </param> 
+      </response> 
+    </method> 
   </resource>
 </iq>
-  ]]></example>
-  
+      ]]></example>
+      <!-- computeCreateRequestIQ.xml -->
+      <example caption='Result of an access to create a virtual machnine'><![CDATA[
+<iq type="result" 
+    from="company-a.com/openstack"
+    to="requester@company-b.com/rest-client"
+    id="rest2">
+  <resource xmlns="urn:xmpp:xml-rest" xmlns:xs="http://www.w3.org/2001/XMLSchema" path="/compute">  
+    <method name="create"> 
+      <request> 
+        <param name="image"> 
+          <link> 
+            <to>requester@company-b.com/rest-client</to>  
+            <path>/images/myLinuxImage</path> 
+          </link> 
+        </param>  
+        <param name="number"> 
+          <value type="xs:integer">3</value> 
+        </param> 
+      </request>  
+      <response> 
+        <param name="newVM"> 
+          <resourceList> 
+            <link> 
+              <to>dc1.company-a.com/openstack</to>  
+              <path>requester/vms/vm1</path> 
+            </link>  
+            <link> 
+              <to>dc2.company-a.com/openstack</to>  
+              <path>requester/vms/vm02</path> 
+            </link>  
+            <link> 
+              <to>dc3.company-a.com/openstack</to>  
+              <path>requester/vms/vm003</path> 
+            </link> 
+          </resourceList> 
+        </param> 
+      </response> 
+    </method> 
+  </resource>
+</iq>
+      ]]></example>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
   <section2 topic='Cloud Provider Overlay Network' anchor='usecases-intercloud'>
@@ -198,8 +298,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="urn:xmpp:rest:xwadl" xmlns="urn:xmpp:rest:xwadl"
-	attributeFormDefault="qualified" elementFormDefault="qualified">
+	targetNamespace="urn:xmpp:rest-xwadl" xmlns="urn:xmpp:rest-xwadl"
+	elementFormDefault="qualified">
 
 	<xs:annotation>
 		<xs:documentation>
@@ -215,6 +315,7 @@
 				<xs:element ref="grammars" minOccurs="0" />
 				<xs:element ref="method" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
+			<xs:attribute name="path" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 
@@ -264,21 +365,20 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
-				<xs:element ref="option" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="option" minOccurs="1" maxOccurs="unbounded" />
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:NMTOKEN" />
+			<xs:attribute name="name" type="xs:string" use="required" />
 			<xs:attribute name="default" type="xs:string" />
 			<xs:attribute name="required" type="xs:boolean" default="false" />
-			<xs:attribute name="repeating" type="xs:boolean"
-				default="false" />
-			<xs:attribute name="fixed" type="xs:string" />
+			<xs:attribute name="repeating" type="xs:boolean" default="false" />
 		</xs:complexType>
 	</xs:element>
 
 	<xs:element name="option">
-		<xs:complexType>
+		<xs:complexType mixed="true">
 			<xs:sequence>
-				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
 			</xs:sequence>
 			<xs:attribute name="type" type="xs:QName" default="xs:string" />
 			<xs:attribute name="mediaType" type="xs:string" />
@@ -290,6 +390,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="local" />
 			<xs:enumeration value="remote" />
+			<xs:enumeration value="list" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -301,8 +402,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="urn:xmpp:rest:xml" xmlns="urn:xmpp:rest:xml"
-	attributeFormDefault="qualified" elementFormDefault="qualified">
+	targetNamespace="urn:xmpp:xml-rest" xmlns="urn:xmpp:xml-rest"
+	elementFormDefault="qualified">
 
 	<xs:annotation>
 		<xs:documentation>
@@ -347,21 +448,38 @@
 			<xs:choice minOccurs="0" maxOccurs="1">
 				<xs:element ref="value" />
 				<xs:element ref="representation" />
+				<xs:element ref="resourceList" />
 				<xs:element ref="link" />
 			</xs:choice>
-			<xs:attribute name="name" type="xs:NMTOKEN" use="required" />
+			<xs:attribute name="name" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 
 	<xs:element name="value">
-		<xs:complexType>
-			<xs:attribute name="type" type="xs:QName" default="xs:string" />
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="type" type="xs:QName" use="required" />
 		</xs:complexType>
 	</xs:element>
 
 	<xs:element name="representation">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="mediaType" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="resourceList">
 		<xs:complexType>
-			<xs:attribute name="mediaType" type="xs:string" />
+			<xs:sequence>
+				<xs:element ref="link" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
