@@ -191,7 +191,23 @@
     Both elements have no attributes and may contain one or more "param" elements as child elements.</p>
   </section2>
   <section2 topic='Parameter' anchor='restdis-parameter'>
-    <p>TBD.</p>
+    <p>A "param" element describes a parameterized component of its parent element (either a request or a 
+    response). It can be identified by its "name" attribute and MUST have minimum one "option" element 
+    that defines one of a set of possible 
+    values for the parameter. In order to parameterize a component, the "param" element SHOULD specify 
+    a combination of the following attributes:</p>
+    <ul>
+      <li>The <strong>name</strong> attribute specifies the name of the parameter and is a required attribute.</li>
+      <li>The <strong>default</strong> attribute specifies an OPTIONAL default value that is applied if this
+      parameter is not used while accessing a resource. If this attribute is specified, the overall parameter 
+      element is optional when accessing a resource.</li>
+      <li>The <strong>required</strong> attribute is an OPTIONAL element and can be either false or true (default is false).
+      It indicates whether the parameter is required to be present or not.</li>
+      <li>The <strong>repeating</strong> attribute is an OPTIONAL element and can be either false or true (default is false).
+      It indicates whether the parameter is single valued or may have multiple values.</li>
+    </ul>
+    <p>Some combinations of attributes do not make sense, e.g. the specification of "default=?" and "repeating=true", 
+    and SHOULD be considered application specific.</p>
   </section2>
   <section2 topic='Option' anchor='restdis-option'>
     <p>TBD.</p>
