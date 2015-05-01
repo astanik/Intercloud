@@ -129,19 +129,66 @@
     <p>TBD.</p>
   </section2>
   <section2 topic='Documentation' anchor='restdis-documentation'>
-    <p>TBD.</p>
+    <p>Each xwadl-defined element down to the "param" can have one or more child "doc" elements that 
+    can be used to document that element. The doc element has "title" attributes which is a short plain 
+    text description of the element being documented. The "doc" element can have mixed content 
+    and may contain text and zero or more child elements.</p>
   </section2>
   <section2 topic='Grammars' anchor='restdis-grammars'>
-    <p>TBD.</p>
+    <p>The "grammars" element acts as a container for definitions of the format of data exchanged 
+    during execution of the protocol described by the xwadl document and SHOULD be according the  
+    XML Schema definition.</p>
+      <!-- grammarsExampleResponseIQ.xml -->
+      <example caption='Example xwadl document with a grammars element'><![CDATA[
+<iq type="result"  
+    from="responder@company-a.com" 
+    to="requester@company-b.com/rest-client"
+    id="rest1">
+  <resource_type xmlns="urn:xmpp:rest-xwadl" xmlns:xs="http://www.w3.org/2001/XMLSchema" path="/address-book">  
+    <grammars> 
+      <doc title="Person List"/>  
+      <xs:element name="PersonList" type="MyStructType"/>  
+      <xs:complexType name="MyStructType"> 
+        <xs:sequence> 
+          <xs:element name="Person" type="MyPersonType" maxOccurs="unbounded"/> 
+        </xs:sequence> 
+      </xs:complexType>  
+      <xs:complexType name="MyPersonType"> 
+        <xs:sequence> 
+          <xs:element name="name" type="xs:string"/>  
+          <xs:element name="age" type="xs:integer"/> 
+        </xs:sequence> 
+      </xs:complexType> 
+    </grammars>  
+    <method name="POST"> 
+      <request> 
+        <param name="persons" required="true" repeating="false"> 
+          <option type="MyStructType"/> 
+        </param> 
+      </request>  
+      <response/> 
+    </method> 
+  </resource_type>
+</iq>
+      ]]></example>
   </section2>
   <section2 topic='Method' anchor='restdis-method'>
-    <p>TBD.</p>
+    <p>A method element describes the specific actions that can be performed on a resource targeted 
+    by the "path" attribute of the resource_type element.
+    A method element is a child of a "resource_type" element and has a "name" attribute
+    that identifies this method.</p>
+    <p>Additionally, each "method" MUST have one "request" and one "response" element
+    which can be empty or be used to expose the optional parameters that this method can execute.</p>
   </section2>
-  <section2 topic='Request' anchor='restdis-request'>
-    <p>TBD.</p>
-  </section2>
-  <section2 topic='Response' anchor='restdis-response'>
-    <p>TBD.</p>
+  <section2 topic='Request and Response' anchor='restdis-reqeesp'>
+    <p>The "request" and the "response" element are according the xwadl schema of type "call". They are 
+    identically by definition and describing the input and output data for accessing a resource.</p>
+    <ul>
+      <li>A <strong>request</strong> describes the <strong>input</strong> to the method as a collection of parameters.</li>
+      <li>A <strong>response</strong> describes the <strong>output</strong> to the method as a collection of parameters.</li>
+    </ul>
+    <p>Both elements describe the information to be included when applying a method to a resource.
+    Both elements have no attributes and may contain one or more "param" elements as child elements.</p>
   </section2>
   <section2 topic='Parameter' anchor='restdis-parameter'>
     <p>TBD.</p>

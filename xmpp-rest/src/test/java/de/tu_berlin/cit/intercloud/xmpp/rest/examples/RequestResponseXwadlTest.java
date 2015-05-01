@@ -77,4 +77,34 @@ public class RequestResponseXwadlTest {
 		}
 	}
 
+	@Test
+	public void grammarsExampleResponse() {
+		ExampleXmlHelper validator = new ExampleXmlHelper();
+	    try {
+	    	validator.validate("grammarsExampleResponse.xml", xsdFile);
+	    } catch (SAXException e) {
+	        Assert.fail(e.getMessage());
+	    } catch (IOException e) {
+	        Assert.fail(e.getMessage());
+		} catch (ParserConfigurationException e) {
+	        Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void grammarsExampleResponseIQ() {
+		ExampleXmlHelper parser = new ExampleXmlHelper();
+	    try {
+	    	ResourceTypeDocument doc = parser.getXwadlDocument("grammarsExampleResponse.xml");
+	    	RestIQ iq = new RestIQ(Type.result, "rest1", doc);
+	    	iq.setFrom("responder@company-a.com");
+	    	iq.setTo("requester@company-b.com/rest-client");
+	    	parser.storeIQ(iq.toString(), "grammarsExampleResponseIQ.xml");
+	    } catch (IOException e) {
+	        Assert.fail(e.getMessage());
+		} catch (XmlException e) {
+	        Assert.fail(e.getMessage());
+		}
+	}
+
 }
