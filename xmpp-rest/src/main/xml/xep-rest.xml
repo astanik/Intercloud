@@ -43,8 +43,32 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>TBD.</p>
-  <p>The REST with XMPP protocol makes use of the IQ stanza in order to enable access, to create, to delete,
+  <p>Representational State Transfer (<cite>REST</cite>) is an architectural style that is a coordinated
+  set of constrains which also apply to the web. It aims to simplify component implementations, to reducing
+  the complexity of distributed software elements, to improve the performance, and to increase the 
+  scalability. In relation to the definition of a RESTful application programming interface (API)
+  the uniform interface constraint is of high importance. It simplifies and decouples the architecture
+  and makes REST components independent. The constraints for an uniform interface can be reduced to:
+  the identification of resources, the self-descriptive representation of resources, and the 
+  self-descriptive manipulation of resources.</p>
+  <p>REST systems typically communicate over the Hypertext Transfer Protocol (HTTP) and gaining due to its
+  growing support and its simplicity for implementation a large acceptance. RESTful web services
+  are in this context a simpler alternative to &w3soap; and WSDL-based Web services which are specified 
+  for the use with XMPP
+  in &xep0072; and also a more powerful alternative to &xmlrpc; which are specified as XMPP extension 
+  in &xep0009;.</p>
+  <p>The &xep0332; allows for designing REST services in the context of XMPP, but requires an implementation
+  of both protocols: XMPP and HTTP. Furthermore, HTTP was selected in the past because of its 
+  degree of popularity, but have some drawbacks like the lack of discoverability of services.
+  The REST with XMPP extension is a powerful protocol for cloud services that have 
+  several advantages in contrast to the traditional HTTP-based REST approach:</p>
+  <ol>
+    <li>services are discoverable and explorable,</li>
+    <li>asynchronous invocation can be performed in parallel,</li>
+    <li>generation of clients on the fly based on the capabilities of resources, and</li>
+    <li>multiple input and output types definitions are possible.</li>
+  </ol>
+  <p>The REST with XMPP protocol makes use of the &IQ; stanza in order to enable access, to create, to delete,
   or to modify resources within a XMPP network overlay. This specification defines two XML Schema files:
   one for exploring the capabilities of a resource and one for performing actions on a resource.</p>
 </section1>
@@ -59,12 +83,12 @@
   </ul>
 </section1>
 <section1 topic='Resource Exploration' anchor='restdis'>
-  <p>In order to explore the capabilities of a resource, the IQ stanza type "get" have to be used. The returned 
-  IQ stanza is either of type "error" or "result". If it is of type "result", the returned contend have to be
+  <p>In order to explore the capabilities of a resource, the &IQ; stanza type "get" have to be used. The returned 
+  &IQ; stanza is either of type "error" or "result". If it is of type "result", the returned contend have to be
   complied with the xwadl schema of this specification. The xwadl schema has been designed for providing a machine 
   process-able description of a resource. It was inspired by the Web Application Description Language (WADL)
   standard delivered by the World Wide Web Consortium (W3C).</p>
-  <p>An IQ stanza of type "get" is returning an IQ stanza of type "result" that describes all actions that the
+  <p>An &IQ; stanza of type "get" is returning an &IQ; stanza of type "result" that describes all actions that the
   requesting party can perform. The following example shows an exploration of a cloud provider's REST based 
   interface for handling compute services.</p>
       <!-- computeExplorationRequestIQ.xml -->
@@ -123,10 +147,16 @@
 </iq>
       ]]></example>
   <p>This response exposes two methods that can be performed on the 
-  resource located at "/compute". The first method TBD.</p>
+  resource located at "/compute". The first method "create" can be used to create one or
+  more virtual machines (VM). This method have three input parameters in its request and one output
+  parameter in its response. If a client would like to perform this method, at least only a link to
+  the location of an image is required. The other two parameters are optional. The server will respond to this 
+  method with a list of links to the instantiated VMs. A detailed example of how to access this method is 
+  illustrated in the <link url='#restaccess'>Resource Access</link> section.</p>
   <p>The following subsections describe each component of a xwadl document in detail.</p>
   <section2 topic='Resource Type' anchor='restdis-resourcetype'>
-    <p>TBD.</p>
+    <p>The "resource_type" element forms the root of a xwadl document and MAY comprises the following 
+    sub-elements: "doc", "grammars", and "method"</p>
   </section2>
   <section2 topic='Documentation' anchor='restdis-documentation'>
     <p>Each xwadl-defined element down to the "param" can have one or more child "doc" elements that 
@@ -174,7 +204,7 @@
   </section2>
   <section2 topic='Method' anchor='restdis-method'>
     <p>A method element describes the specific actions that can be performed on a resource targeted 
-    by the "path" attribute of the resource_type element.
+    by the "path" attribute of the "resource_type" element.
     A method element is a child of a "resource_type" element and has a "name" attribute
     that identifies this method.</p>
     <p>Additionally, each "method" MUST have one "request" and one "response" element
@@ -210,20 +240,49 @@
     and SHOULD be considered application specific.</p>
   </section2>
   <section2 topic='Option' anchor='restdis-option'>
-    <p>TBD.</p>
-  </section2>
-  <section2 topic='Type' anchor='restdis-type'>
-    <p>TBD.</p>
-  </section2>
-  <section2 topic='Media Type' anchor='restdis-mediatype'>
-    <p>TBD.</p>
-  </section2>
-  <section2 topic='Link' anchor='restdis-link'>
-    <p>TBD.</p>
+    <p>An "option" element defines one of a set of possible types, representations, link type, or also values 
+    for the parameter. An "option" element has MUST have one of the following attributes:</p>
+    <dl>
+      <di>
+        <dt>type</dt>
+        <dd>
+          <p>The "type" attribute indicates one possible type of the parameter as an XML qualified name, 
+          defaults to xs:string. It SHOULD specify the type of a single optional value. Multiple options
+          with the same type but different values SHOULD specify a set of possible values which are 
+          acceptable as input for the parent parameter.</p>
+        </dd>
+      </di>
+      <di>
+        <dt>mediaType</dt>
+        <dd>
+          <p>The "mediaType" attribute indicates that the parent parameter acts as a media type selector 
+          for requests or responses. The value of the attribute is the media type that is expected. If
+          a representation of an OPTIONAL media type is exposed, this representation can act as a
+          template for manipulating a resource.</p>
+        </dd>
+      </di>
+      <di>
+        <dt>link</dt>
+        <dd>
+          <p>The "link" attribute is used to identify links to resources. It can have as value local, remote,
+          or list. A local link links to another resource located at the same server entity. A remote link links to 
+          a resource located at another server entity anywhere in the XMPP network overlay. A link with a
+          list value indicates a list of remote links that can be used for discovery or linking to a set
+          of resources.</p>
+        </dd>
+      </di>
+    </dl>
   </section2>
 </section1>
 <section1 topic='Resource Access' anchor='restaccess'>
-  <p>TBD.</p>
+  <p>In order to access a resource, the &IQ; stanza type "set" have to be used. The returned 
+  &IQ; stanza is either of type "error" or "result". If it is of type "result", the returned contend have to be
+  complied with the xml-rest schema of this specification. The xml-rest schema has been designed 
+  for providing a xml-rest encoded payload for accessing a resource. 
+  An &IQ; stanza MUST NOT contain more than one method element with one request and one response.
+  The following example illustrates how the create method of the previous example is requested. 
+  Here, the client requests three VMs which are based on an image that is available as resource 
+  on the clients side.</p>
       <!-- computeCreateRequestIQ.xml -->
       <example caption='Access of an OpenStack interface to create a virtual machnine'><![CDATA[
 <iq type="set"
@@ -252,6 +311,11 @@
   </resource>
 </iq>
       ]]></example>
+  <p>In order to make sure that both parties have a common understanding, the requester specifies also
+  the expected responds type which has been exposed during the exploration step. The counter party have to
+  answer of such a request with the same request element and an extended complitation of the response
+  element as illustrated in the example below.
+  </p>
       <!-- computeCreateRequestIQ.xml -->
       <example caption='Result of an access to create a virtual machnine'><![CDATA[
 <iq type="result" 
@@ -295,37 +359,42 @@
       ]]></example>
   <p>The following subsections describe each component of a xml-rest document in detail.</p>
   <section2 topic='Resource' anchor='restaccess-resource'>
-    <p>TBD. No further documentation or grammers are possible in order to keep the number of bytes 
-    low as possible.</p>
+    <p>The "resource" element forms the root of a xml-rest document and MUST comprise only a
+    single "method" sub-element. In contrast to the xwadl description, no further documentation or grammers 
+    are possible in order to keep the number of bytes low as possible. 
+    In order to specify the resource to access, the "path" attribute is required.</p>
   </section2>
   <section2 topic='Method' anchor='restaccess-method'>
-    <p>TBD.</p>
+    <p>The "method" element MUST have one request element and one response element. Additionally, the
+    "name" attribute is required in order to identify the action that have to be performed on the resource.</p>
   </section2>
-  <section2 topic='Request' anchor='restaccess-request'>
-    <p>TBD.</p>
-  </section2>
-  <section2 topic='Response' anchor='restaccess-response'>
-    <p>TBD.</p>
+  <section2 topic='Request and Response' anchor='restaccess-reqeesp'>
+    <p>The "request" and the "response" element are according the xml-rest schema of type "call". They are 
+    identically by definition and including the information for applying the method of a resource.
+    Both elements have no attributes and may contain one or more "param" elements as child elements.</p>
+    <ul>
+      <li>A <strong>request</strong> includes the <strong>input data</strong> to the method as a collection of parameters.</li>
+      <li>A <strong>response</strong> includes the <strong>output data</strong> to the method as a collection of parameters.</li>
+    </ul>
   </section2>
   <section2 topic='Parameter' anchor='restaccess-parameter'>
-    <p>TBD.</p>
+    <p>Each "param" element has a "name" attribute to identify the parameter and a single sub-element
+    that includes the data. Possible sub-elements are value, representation, link, or resourceList.</p>
   </section2>
   <section2 topic='Value' anchor='restaccess-value'>
-    <p>TBD.</p>
+    <p>The "value" element has a "type" attribute that specifies the type of the value.</p>
   </section2>
   <section2 topic='Representation' anchor='restaccess-representation'>
-    <p>TBD.</p>
+    <p>The "representation" element has a "mediaType" attribute that specifies the media type of the representation.</p>
   </section2>
-  <section2 topic='Link' anchor='restaccess-link'>
-    <p>TBD.</p>
-  </section2>
-  <section2 topic='Resource List' anchor='restaccess-resourcelist'>
-    <p>TBD.</p>
+  <section2 topic='Link and Resource List' anchor='restaccess-link'>
+    <p>A "link" element or a "resourceList" element have no attributes. While a link targets to a single local
+    or remote location, a resource list is a set of links which are targeting to any resource in an XMPP overlay network.</p>
   </section2>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
-  <section2 topic='Cloud Provider Overlay Network' anchor='usecases-intercloud'>
-    <p>TBD.</p>
+  <section2 topic='Retrieving a specific representation' anchor='usecases-intercloud'>
+    <p>Example to access the sla method.</p>
   </section2>
   <section2 topic='Multi-Dimensional Resource Placement' anchor='usecases-multi-dim'>
     <p>The REST with XMPP protocol enables a multi-dimensional resource placement. The following examples show 
