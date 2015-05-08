@@ -82,12 +82,15 @@
 
 	<xs:element name="link">
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="to" type="xs:string" minOccurs="0"
-					maxOccurs="1" />
-				<xs:element name="path" type="xs:string" minOccurs="1"
-					maxOccurs="1" />
-			</xs:sequence>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:sequence>
+					<xs:element name="to" type="xs:string" minOccurs="0"
+						maxOccurs="1" />
+					<xs:element name="path" type="xs:string" minOccurs="1"
+						maxOccurs="1" />
+				</xs:sequence>
+				<xs:element name="uri" type="xs:string" />
+			</xs:choice>
 		</xs:complexType>
 	</xs:element>
 
