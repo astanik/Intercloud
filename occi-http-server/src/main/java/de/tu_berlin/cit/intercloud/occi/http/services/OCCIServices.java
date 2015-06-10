@@ -44,7 +44,7 @@ public class OCCIServices {
     @Context
     private UriInfo uriInfo;
 
-	private ConcurrentHashMap<Integer,String> computeMap = new ConcurrentHashMap<Integer,String>();
+	static private ConcurrentHashMap<Integer,String> computeMap = new ConcurrentHashMap<Integer,String>();
 	
     @GET
     @Path( "/flavor" )
@@ -77,10 +77,10 @@ public class OCCIServices {
     	do {
     		Random ran = new Random();
     		id = ran.nextInt(100000);
-    	}while(id == 0 || this.computeMap.containsKey(id));
+    	}while(id == 0 || computeMap.containsKey(id));
     	
     	// add representation to map
-    	this.computeMap.put(id, input);
+    	computeMap.put(id, input);
     	
     	// build uri
     	URI resourcetUri = getUriBuilder().clone().path(Integer.toString(id)).build();
@@ -92,7 +92,7 @@ public class OCCIServices {
     @Produces( "text/uri-list" )
     public List<URI> listVMs() {
         List<URI> uris = new Vector<URI>();
-        for(Enumeration<Integer> e = this.computeMap.keys(); e.hasMoreElements(); )
+        for(Enumeration<Integer> e = computeMap.keys(); e.hasMoreElements(); )
         {
             String resourceId = Integer.toString(e.nextElement());
 
@@ -109,7 +109,7 @@ public class OCCIServices {
     {
        	int id = Integer.parseInt(pathId);
         // lookup the map with the given id 
-        String computeRepresentation = this.computeMap.get(id);
+        String computeRepresentation = computeMap.get(id);
 
         // if the map returns null, the resource is not available
         if ( computeRepresentation == null )
@@ -124,12 +124,12 @@ public class OCCIServices {
     
     @DELETE
     public void deleteVMs() {
-    	this.computeMap.clear();
+    	computeMap.clear();
     }
 
 
 	public void removeCompute(int id) {
-		this.computeMap.remove(id);
+		computeMap.remove(id);
 	}
 	
     private UriBuilder getUriBuilder()
