@@ -36,12 +36,12 @@ public class ComputeService {
 	
     @GET
     @Produces( MediaType.TEXT_PLAIN )
-    String getRepresentation() {
+    public String getRepresentation() {
     	return this.representation;
     }
 
     @DELETE
-    void createVM() {
+    public void createVM() {
     	this.parent.removeCompute(this.id);
     }
 

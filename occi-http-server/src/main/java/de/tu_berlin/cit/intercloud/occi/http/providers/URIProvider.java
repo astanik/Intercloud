@@ -27,15 +27,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Vector;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
+import javax.ws.rs.ext.Provider;
 
 /**
  * 
  */
+@Provider
+@Produces("text/uri")
+@Consumes("text/uri")
 public class URIProvider
     implements MessageBodyWriter<URI>, MessageBodyReader<URI>
 {

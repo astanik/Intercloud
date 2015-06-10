@@ -123,7 +123,7 @@ public class OCCIServices {
     }
     
     @DELETE
-    void deleteVMs() {
+    public void deleteVMs() {
     	this.computeMap.clear();
     }
 
