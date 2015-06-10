@@ -41,7 +41,7 @@ public class ComputeService {
     }
 
     @DELETE
-    void createVM( String input ) {
+    void createVM() {
     	this.parent.removeCompute(this.id);
     }
 

@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	id="WebApp_ID" version="2.5">
+<web-app version="3.0"
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
 	<display-name>OCCI</display-name>
 	<servlet>
-		<display-name>JAX-RS REST Servlet</display-name>
-		<servlet-name>REST-Servlet</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<servlet-name>de.tu_berlin.cit.intercloud.occi.http.Server</servlet-name>
+		<!-- servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class -->
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>REST-Servlet</servlet-name>
+		<servlet-name>de.tu_berlin.cit.intercloud.occi.http.Server</servlet-name>
 		<url-pattern>/services/*</url-pattern>
 	</servlet-mapping>
 

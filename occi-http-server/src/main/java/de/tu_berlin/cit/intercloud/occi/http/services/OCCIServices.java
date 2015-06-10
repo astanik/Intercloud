@@ -25,6 +25,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -120,6 +121,12 @@ public class OCCIServices {
         }
         return new ComputeService( this, id, computeRepresentation );
     }
+    
+    @DELETE
+    void deleteVMs() {
+    	this.computeMap.clear();
+    }
+
 
 	public void removeCompute(int id) {
 		this.computeMap.remove(id);

@@ -16,9 +16,27 @@
 
 package de.tu_berlin.cit.intercloud.occi.http;
 
+import java.util.HashSet;
+import java.util.Set;
 
-public class Server {
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
+import de.tu_berlin.cit.intercloud.occi.http.services.OCCIServices;
+
+@ApplicationPath("services")
+public class Server extends Application {
+
+	
+	@Override
+	public Set<Class<?>> getClasses() {
+		Set<Class<?>> s = new HashSet<Class<?>>();
+		s.add(OCCIServices.class);
+		return s;
+	}
+	
+	
+	
 	public static void main( String[] args ) throws Exception
 	   {
 	      String url = ( args.length > 0 ) ? args[0] : "http://localhost:4434";
