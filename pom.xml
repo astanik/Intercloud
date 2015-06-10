@@ -94,6 +94,8 @@
 		<module>occi-infrastructure</module>
 		<module>xmpp-core</module>
 		<module>xmpp-rest</module>
+		<module>xmpp-component</module>
+		<module>xmpp-client</module>
 		<module>xmpp-connector</module>
 		<module>intercloud-root</module>
 		<module>intercloud-exchange</module>
@@ -258,7 +260,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.10</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

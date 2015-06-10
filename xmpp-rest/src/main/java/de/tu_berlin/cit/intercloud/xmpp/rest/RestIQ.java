@@ -2,7 +2,6 @@ package de.tu_berlin.cit.intercloud.xmpp.rest;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentFactory;
 import org.dom4j.DocumentHelper;
 
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;

@@ -136,4 +136,6 @@ public interface ComponentManager {
      * @return true if the managed components are external components.
      */
     public boolean isExternalMode();
+
+	public Object getLog();
 }

@@ -15,5 +15,10 @@
 	<name>Intercloud Gateway Module</name>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smack-core</artifactId>
+			<version>4.1.1</version>
+		</dependency>
 	</dependencies>
 </project>
