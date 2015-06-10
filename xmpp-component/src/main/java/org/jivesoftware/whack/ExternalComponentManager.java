@@ -39,6 +39,7 @@ import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.JID;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.Packet;
 
+
 /**
  * Implementation of the ComponentManager interface for external components.
  * This implementation follows JEP-0014.
@@ -276,7 +277,7 @@ public class ExternalComponentManager implements ComponentManager {
         sendPacket(component, packet);
     }
 
-	/*
+	
     public String getProperty(String name) {
         return preferences.get(getPreferencesPrefix() + name, null);
     }
@@ -291,7 +292,7 @@ public class ExternalComponentManager implements ComponentManager {
         }
         return preferencesPrefix;
     }
-*/
+
     /**
      * Sets the domain of the XMPP server. The domain may or may not match the host. The domain
      * will be used mainly for the XMPP packets while the host is used mainly for creating
