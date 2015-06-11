@@ -93,6 +93,7 @@
 		<module>occi-text</module>
 		<module>occi-infrastructure</module>
 		<module>occi-http-server</module>
+		<module>occi-http-client</module>
 		<module>xmpp-core</module>
 		<module>xmpp-rest</module>
 		<module>xmpp-component</module>

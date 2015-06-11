@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>de.tu_berlin.cit</groupId>
+		<artifactId>intercloud</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<groupId>de.tu_berlin.cit.intercloud</groupId>
+	<artifactId>occi-http-client</artifactId>
+	<packaging>jar</packaging>
+
+	<name>OCCI HTTP Client Module</name>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>de.tu_berlin.cit.intercloud.occi.http.Client</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin> 
+                    <artifactId>maven-dependency-plugin</artifactId> 
+                        <executions> 
+                            <execution> 
+                                <phase>install</phase> 
+                                <goals> 
+                                    <goal>copy-dependencies</goal> 
+                                </goals> 
+                                <configuration> 
+                                    <outputDirectory>${project.build.directory}/lib</outputDirectory> 
+                                </configuration> 
+                            </execution> 
+                        </executions> 
+                </plugin> 
+		</plugins>
+	</build>
+
+
+	<dependencies>
+		<!-- Project dependencies -->
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>occi-core</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>occi-text</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<!-- REST dependencies -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
+		</dependency>
+	</dependencies>
+</project>
