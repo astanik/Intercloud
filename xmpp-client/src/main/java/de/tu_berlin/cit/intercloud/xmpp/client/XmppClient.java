@@ -5,14 +5,13 @@ import java.io.IOException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.ExtensionElement;
-import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smack.packet.IQ.Type;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 
 public class XmppClient {
+
+	private static String baseURL = "cit-mac1.cit.tu-berlin.de";
 
 	/**
      * Main
@@ -23,9 +22,11 @@ public class XmppClient {
 		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
 				  .setUsernameAndPassword("alex", "alex")
 				  .setServiceName("jabber.org")
-				  .setHost("stanik.cit.tu-berlin.de")
+				  .setHost(baseURL)
 				  .setPort(5222)
 				  .build();
+
+		System.out.println("URL: " + baseURL);
 
 		// Create a connection to the jabber.org server.
 		AbstractXMPPConnection connection = new XMPPTCPConnection(config);
@@ -35,22 +36,9 @@ public class XmppClient {
 			// login
 			connection.login();
 			
-			//connection.addPacketListener(new MyPacketListener(),new PacketTypeFilter(IQ.class));
-
-			 
-
-			 
-
-	//		class MyPacketListener implements PacketListener{
-	//		    public void processPacket(Packet packet){
-	//		     System.out.println("Recv : " + packet.toXML());
-	//		    }
-			    
-			ExtensionElement extension = new MethodExtension("GET");
-			
-			IQ iq = RestIQ.createRestPacket("alex@stanik.", "exchange.cit.tu-berlin.de", Type.set, extension);  
-				
-			connection.sendStanza(iq);
+			// perform the test
+			TestClient client = new TestClient(connection);
+			client.performTest();
 			
 		} catch (SmackException e) {
 			// TODO Auto-generated catch block
@@ -64,8 +52,6 @@ public class XmppClient {
 		} finally {
 			connection.disconnect();
 		}
-
-		
 	}
 
 }

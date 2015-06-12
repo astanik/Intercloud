@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.http;
+package de.tu_berlin.cit.intercloud.xmpp.client;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -25,26 +25,26 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.packet.ExtensionElement;
+import org.jivesoftware.smack.packet.IQ;
+import org.jivesoftware.smack.packet.IQ.Type;
 
 import de.tu_berlin.cit.intercloud.util.monitoring.PerformanceMeter;
 
-public class Client {
+public class TestClient {
 
-	private static String baseURL = "http://cit-mac1.cit.tu-berlin.de:8080/intercloud/services";
+	private static String flavorURL = "/occi/flavor";
 
-	private static String flavorURL = baseURL + "/occi/flavor";
+	private static String computeURL = "/occi/compute";
 
-	private static String computeURL = baseURL + "/occi/compute";
-
-	public static void main(String[] args) throws URISyntaxException, FileNotFoundException, UnsupportedEncodingException {
-		System.out.println("URL: " + baseURL);
+	private final AbstractXMPPConnection connection;
+	
+	public TestClient(AbstractXMPPConnection connection) {
+		this.connection = connection;
+	}
+	
+	public void performTest() throws FileNotFoundException, UnsupportedEncodingException {
 		
 		// create files
 		PrintWriter flavorWriter = new PrintWriter("getFlavor.txt", "UTF-8");
@@ -56,36 +56,33 @@ public class Client {
 
 		// iterate over resources on server
 		for (int r = 0; r < 100; r++) {
+			String representation = "dummy";
 
 			// create performance meter
 			PerformanceMeter flavorMeter = new PerformanceMeter();
 			PerformanceMeter createMeter = new PerformanceMeter();
 			PerformanceMeter deleteMeter = new PerformanceMeter();
 	
-			// create client
-			Client client = new Client();
-			String representation = "dummy";
-	
 			// measure 50 times
 			for (int i = 0; i < 50; i++) {
 				// get flavor
 				flavorMeter.startTimer(i);
-				representation = client.getFlavor();
+				representation = this.getFlavor();
 				flavorMeter.stopTimer(i);
-//				System.out.println("========Representation:========");
-//				System.out.println(representation);
+				System.out.println("========Representation:========");
+				System.out.println(representation);
 				// create vm
 				createMeter.startTimer(i);
-				URI vmURI = client.createVM(representation);
+				String vmURI = this.createVM(representation);
 				createMeter.stopTimer(i);
-//				System.out.println("============VM URI:============");
-//				System.out.println(vmURI.getPath());
+				System.out.println("============VM URI:============");
+				System.out.println(vmURI);
 				// delete vm
 				deleteMeter.startTimer(i);
-				String message = client.deleteVM(vmURI);
+				String message = this.deleteVM(vmURI);
 				deleteMeter.stopTimer(i);
-//				System.out.println("===========Message:============");
-//				System.out.println(message);
+				System.out.println("===========Message:============");
+				System.out.println(message);
 			}
 
 			System.out.println(r + " resources available");
@@ -102,7 +99,7 @@ public class Client {
 			deleteWriter.println(r + " " + deleteMeter.toString());
 
 			// create a new resources and continue
-			client.createVM(representation);
+			this.createVM(representation);
 		}
 				
 		// close file writer
@@ -110,8 +107,28 @@ public class Client {
 		createWriter.close();
 		deleteWriter.close();
 	}
+	
+	private void bla() {
+		//connection.addPacketListener(new MyPacketListener(),new PacketTypeFilter(IQ.class));
 
-	private String deleteVM(URI vmURI) {
+		 
+
+		 
+
+//		class MyPacketListener implements PacketListener{
+//		    public void processPacket(Packet packet){
+//		     System.out.println("Recv : " + packet.toXML());
+//		    }
+		    
+		ExtensionElement extension = new MethodExtension("GET");
+		
+		IQ iq = RestIQ.createRestPacket("alex@stanik.", "exchange.cit.tu-berlin.de", Type.set, extension);  
+			
+		connection.sendStanza(iq);
+
+	}
+
+	private String deleteVM(String vmURI) {
 		String output = "";
 		try {
 			// create HTTP Client
@@ -142,7 +159,7 @@ public class Client {
 		return output;
 	}
 
-	private URI createVM(String representation) throws URISyntaxException {
+	private String createVM(String representation) {
 		URI vmURI = new URI("");
 		try {
 			// create HTTP Client

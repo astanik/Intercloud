@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.occi.http;
+package de.tu_berlin.cit.intercloud.util.monitoring;
 
 import java.util.Enumeration;
 import java.util.List;

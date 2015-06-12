@@ -24,7 +24,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>de.tu_berlin.cit.intercloud.xmpp.component.XmppComponent</mainClass>
+							<mainClass>de.tu_berlin.cit.intercloud.xmpp.client.XmppClient</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -38,19 +38,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>de.tu_berlin.cit.intercloud.xmpp.component.XmppComponent</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin -->
 			<plugin> 
                     <artifactId>maven-dependency-plugin</artifactId> 
                         <executions> 
@@ -73,6 +60,11 @@
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
 			<artifactId>xmpp-rest</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>util</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<!-- smack -->
