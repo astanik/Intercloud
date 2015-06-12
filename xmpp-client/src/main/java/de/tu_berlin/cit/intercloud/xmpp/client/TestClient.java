@@ -26,6 +26,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.IQ.Type;
@@ -108,11 +111,28 @@ public class TestClient {
 		deleteWriter.close();
 	}
 	
-	private void bla() {
+	public void bla() throws NotConnectedException {
 		//connection.addPacketListener(new MyPacketListener(),new PacketTypeFilter(IQ.class));
 
 		 
+		// Create a packet filter to listen for new messages from a particular
+		// user. We use an AndFilter to combine two other filters._
+		StanzaFilter filter = new AndFilter(new StanzaTypeFilter(IQ.class),
+				new FromContainsFilter("mary@jivesoftware.com"));
+		// Assume we've created an XMPPConnection name "connection".
 
+		// First, register a packet collector using the filter we created.
+		PacketCollector myCollector = connection.createPacketCollector(filter);
+		// Normally, you'd do something with the collector, like wait for new packets.
+
+		// Next, create a packet listener. We use an anonymous inner class for brevity.
+		PacketListener myListener = new PacketListener() {
+				**public** **void** processPacket(Packet packet) {
+					// Do something with the incoming packet here._
+				}
+			};
+		// Register the listener._
+		connection.addPacketListener(myListener, filter);
 		 
 
 //		class MyPacketListener implements PacketListener{
@@ -124,7 +144,7 @@ public class TestClient {
 		
 		IQ iq = RestIQ.createRestPacket("alex@stanik.", "exchange.cit.tu-berlin.de", Type.set, extension);  
 			
-//		connection.sendStanza(iq);
+		connection.sendStanza(iq);
 
 	}
 /*
@@ -198,13 +218,16 @@ public class TestClient {
 		}
 		return vmURI;
 	}
+*/
 
 	private String getFlavor() {
 		String output = "";
 		try {
+			
+			URI uri = new URI("exchange.cit.tu-berlin.de/rest#" + flavorURL);
 
-			// create HTTP Client
-			HttpClient httpClient = HttpClientBuilder.create().build();
+			// create XMPP Client
+			XmppRestClient restClient = XmppRestClientBuilder.build(connection, uri);
 
 			// Create new getRequest with below mentioned URL
 			HttpGet getRequest = new HttpGet(flavorURL);
@@ -242,5 +265,4 @@ public class TestClient {
 		}
 		return output;
 	}
-*/
 }

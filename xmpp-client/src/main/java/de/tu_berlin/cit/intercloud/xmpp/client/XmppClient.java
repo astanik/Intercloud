@@ -38,7 +38,8 @@ public class XmppClient {
 			
 			// perform the test
 			TestClient client = new TestClient(connection);
-			client.performTest();
+//			client.performTest();
+			client.bla();
 			
 		} catch (SmackException e) {
 			// TODO Auto-generated catch block

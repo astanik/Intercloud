@@ -1,12 +1,16 @@
 package de.tu_berlin.cit.intercloud.xmpp.component;
 
 
+import org.jivesoftware.whack.ExternalComponentManager;
+
 import de.tu_berlin.cit.intercloud.xmpp.core.component.AbstractComponent;
+import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
+import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentManager;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
+import de.tu_berlin.cit.intercloud.xmpp.core.packet.JID;
 
 public class ExchangeComponent extends AbstractComponent {
 
-	//private ExternalComponentManager mgr = null;
 	
 	@Override
 	public String getName() {
@@ -17,13 +21,7 @@ public class ExchangeComponent extends AbstractComponent {
 	public String getDescription() {
 		return "This is the Intercloud Exchange service.";
 	}
-/*
-	@Override
-	public void processPacket(Packet packet) {
-		// TODO Auto-generated method stub
 
-	}
-	*/
 	/**
 	 * Override this method to handle the IQ stanzas of type <tt>result</tt>
 	 * that are received by the component. If you do not override this method,
@@ -113,26 +111,10 @@ public class ExchangeComponent extends AbstractComponent {
 	protected IQ handleIQSet(IQ iq) throws Exception {
 		// Doesn't do anything. Override this method to process IQ set
 		// stanzas.
+		IQ response = IQ.createResultIQ(iq);
+		response.setChildElement(iq.getChildElement());
+		this.compMan.sendPacket(this, response);
 		return null;
 	}
-	/*
-
-	@Override
-	public void initialize(JID jid, ComponentManager componentManager)
-			throws ComponentException {
-		mgr = (ExternalComponentManager) componentManager;
-
-	}
-
-	@Override
-	public void start() {
-		// do nothing
-	}
-
-	@Override
-	public void shutdown() {
-		// do nothing
-	}
-	*/
 
 }

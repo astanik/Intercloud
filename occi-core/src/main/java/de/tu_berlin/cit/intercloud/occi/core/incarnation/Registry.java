@@ -14,44 +14,25 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.core;
+package de.tu_berlin.cit.intercloud.occi.core.incarnation;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tu_berlin.cit.intercloud.occi.core.classification.Action;
 import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
 
-public class Resource extends Entity {
+public class Registry {
 
-	private List<Link> links;
+	private final List<Kind> kinds = new ArrayList<Kind>();
 	
-	private String summary;
+	private final List<Action> actions = new ArrayList<Action>();
 	
-	public Resource(String id, String title, Kind kind, List<Mixin> mixins) {
-		this(id, title, kind, mixins, new ArrayList<Link>(), "");
-	}
+	private final List<Mixin> mixins = new ArrayList<Mixin>();
 	
-	public Resource(String id, String title, Kind kind, List<Mixin> mixins, List<Link> links, String summary) {
-		super(id, title, kind, mixins);
-		this.links = links;
-		this.summary = summary;
-	}
 	
-	public List<Link> getLinks() {
-		return this.links;
-	}
 	
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
 	
-	public String getSummary() {
-		return this.summary;
-	}
-	
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
 	
 }

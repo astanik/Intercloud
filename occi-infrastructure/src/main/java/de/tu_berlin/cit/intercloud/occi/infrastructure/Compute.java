@@ -7,6 +7,7 @@ import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
 
+//@Path("/compute")
 public class Compute extends Resource {
 
 	final static public String InfrastructureSchema = Infrastructure.InfrastructureSchema + "compute";
@@ -15,5 +16,17 @@ public class Compute extends Resource {
 			List<Link> links, String summary) {
 		super(id, title, kind, mixins, links, summary);
 	}
+	
+	
+//	@Action()
+	public void start() {
+		
+	}
+	
+//	@Action()
+	public void stop() {
+		
+	}
+	
 	
 }
