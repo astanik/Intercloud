@@ -89,6 +89,7 @@
 	</licenses>
 
 	<modules>
+		<module>intercloud-util</module>
 		<module>occi-core</module>
 		<module>occi-text</module>
 		<module>occi-infrastructure</module>

@@ -1,6 +1,8 @@
-package de.tu_berlin.cit.intercloud.occi.core;
+package de.tu_berlin.cit.intercloud.occi.core.classification;
 
 import java.util.List;
+
+import de.tu_berlin.cit.intercloud.occi.core.Entity;
 
 public abstract class Kind extends Category {
 

@@ -3,6 +3,9 @@ package de.tu_berlin.cit.intercloud.occi.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
+
 public abstract class Entity {
 	
 	final private String id;

@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.occi.core;
+package de.tu_berlin.cit.intercloud.occi.core.classification;
 
 public abstract class Attribute {
 

@@ -2,6 +2,9 @@ package de.tu_berlin.cit.intercloud.occi.core;
 
 import java.util.List;
 
+import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
+
 public class Link extends Entity {
 
 	private Resource source;

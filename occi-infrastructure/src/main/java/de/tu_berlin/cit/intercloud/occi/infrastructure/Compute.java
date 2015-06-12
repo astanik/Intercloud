@@ -2,10 +2,10 @@ package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
 import java.util.List;
 
-import de.tu_berlin.cit.intercloud.occi.core.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.Link;
-import de.tu_berlin.cit.intercloud.occi.core.Mixin;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
 
 public class Compute extends Resource {
 

@@ -67,22 +67,22 @@ public class TestClient {
 			for (int i = 0; i < 50; i++) {
 				// get flavor
 				flavorMeter.startTimer(i);
-				representation = this.getFlavor();
+//				representation = this.getFlavor();
 				flavorMeter.stopTimer(i);
 				System.out.println("========Representation:========");
 				System.out.println(representation);
 				// create vm
 				createMeter.startTimer(i);
-				String vmURI = this.createVM(representation);
+//				String vmURI = this.createVM(representation);
 				createMeter.stopTimer(i);
 				System.out.println("============VM URI:============");
-				System.out.println(vmURI);
+//				System.out.println(vmURI);
 				// delete vm
 				deleteMeter.startTimer(i);
-				String message = this.deleteVM(vmURI);
+//				String message = this.deleteVM(vmURI);
 				deleteMeter.stopTimer(i);
 				System.out.println("===========Message:============");
-				System.out.println(message);
+//				System.out.println(message);
 			}
 
 			System.out.println(r + " resources available");
@@ -99,7 +99,7 @@ public class TestClient {
 			deleteWriter.println(r + " " + deleteMeter.toString());
 
 			// create a new resources and continue
-			this.createVM(representation);
+//			this.createVM(representation);
 		}
 				
 		// close file writer
@@ -124,10 +124,10 @@ public class TestClient {
 		
 		IQ iq = RestIQ.createRestPacket("alex@stanik.", "exchange.cit.tu-berlin.de", Type.set, extension);  
 			
-		connection.sendStanza(iq);
+//		connection.sendStanza(iq);
 
 	}
-
+/*
 	private String deleteVM(String vmURI) {
 		String output = "";
 		try {
@@ -242,5 +242,5 @@ public class TestClient {
 		}
 		return output;
 	}
-
+*/
 }

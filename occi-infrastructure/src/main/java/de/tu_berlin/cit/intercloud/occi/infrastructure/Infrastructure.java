@@ -2,10 +2,10 @@ package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
 import java.util.List;
 
-import de.tu_berlin.cit.intercloud.occi.core.Action;
-import de.tu_berlin.cit.intercloud.occi.core.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.Entity;
-import de.tu_berlin.cit.intercloud.occi.core.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Action;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Attribute;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
 
 public abstract class Infrastructure extends Kind {
 

@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.occi.text;
 
-import de.tu_berlin.cit.intercloud.occi.core.Attribute;
+import de.tu_berlin.cit.intercloud.occi.core.classification.Attribute;
 
 public abstract class TextAttribute extends Attribute {
 
