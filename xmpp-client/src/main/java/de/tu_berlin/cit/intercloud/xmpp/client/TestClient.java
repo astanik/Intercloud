@@ -27,19 +27,22 @@ import java.net.URISyntaxException;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.IQ.Type;
 
 import de.tu_berlin.cit.intercloud.util.monitoring.PerformanceMeter;
+import de.tu_berlin.cit.intercloud.util.xmpp.XmppURI;
 
 public class TestClient {
 
-	private static String flavorURL = "/occi/flavor";
+	private static String testComponent = "exchange.intercloud.cit.tu-berlin.de";
 
-	private static String computeURL = "/occi/compute";
+	private static String computePath = "/occi/compute";
 
 	private final AbstractXMPPConnection connection;
 	
@@ -47,7 +50,8 @@ public class TestClient {
 		this.connection = connection;
 	}
 	
-	public void performTest() throws FileNotFoundException, UnsupportedEncodingException {
+	public void performTest() throws FileNotFoundException, UnsupportedEncodingException, 
+			URISyntaxException, NotConnectedException, NoResponseException, XMPPErrorException {
 		
 		// create files
 		PrintWriter flavorWriter = new PrintWriter("getFlavor.txt", "UTF-8");
@@ -68,7 +72,9 @@ public class TestClient {
 	
 			// measure 50 times
 			for (int i = 0; i < 50; i++) {
+				XmppURI uri = new XmppURI(testComponent, computePath);
 				// get flavor
+				XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
 				flavorMeter.startTimer(i);
 //				representation = this.getFlavor();
 				flavorMeter.stopTimer(i);

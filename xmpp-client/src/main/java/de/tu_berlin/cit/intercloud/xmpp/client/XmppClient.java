@@ -21,7 +21,7 @@ public class XmppClient {
 		// Create a connection configuration
 		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
 				  .setUsernameAndPassword("alex", "alex")
-				  .setServiceName("jabber.org")
+				  .setServiceName("intercloud.cit.tu-berlin.de")
 				  .setHost(baseURL)
 				  .setPort(5222)
 				  .build();
