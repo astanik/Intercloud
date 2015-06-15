@@ -5,51 +5,24 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.xmlbeans.XmlException;
+import org.jivesoftware.smack.packet.IQ.Type;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ.Type;
-import de.tu_berlin.cit.intercloud.xmpp.rest.RestIQ;
+import de.tu_berlin.cit.intercloud.xmpp.rest.examples.ExampleXmlHelper;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 public class RequestResponseXwadlTest {
 	
 	private static final String xsdFile = "rest-xwadl.xsd";
-/*	
-	@Test
-	public void computeExplorationRequest() {
-		ExampleXmlHelper validator = new ExampleXmlHelper();
-	    try {
-	    	validator.validate("computeExplorationRequest.xml", xsdFile);
-	    } catch (SAXException e) {
-	        Assert.fail(e.getMessage());
-	    } catch (IOException e) {
-	        Assert.fail(e.getMessage());
-		} catch (ParserConfigurationException e) {
-	        Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void computeExplorationResponse() {
-		ExampleXmlHelper validator = new ExampleXmlHelper();
-	    try {
-	    	validator.validate("computeExplorationResponse.xml", xsdFile);
-	    } catch (SAXException e) {
-	        Assert.fail(e.getMessage());
-	    } catch (IOException e) {
-	        Assert.fail(e.getMessage());
-		} catch (ParserConfigurationException e) {
-	        Assert.fail(e.getMessage());
-		}
-	}
+	
 	@Test
 	public void computeExplorationRequestIQ() {
 		ExampleXmlHelper parser = new ExampleXmlHelper();
 	    try {
 	    	ResourceTypeDocument doc = parser.getXwadlDocument("computeExplorationRequest.xml");
-	    	RestIQ iq = new RestIQ(Type.get, "rest1", doc);
+	    	RestIQ iq = new RestIQ(Type.get, doc);
 	    	iq.setFrom("requester@company-b.com/rest-client");
 	    	iq.setTo("company-a.com/openstack");
 	    	parser.storeIQ(iq.toString(), "computeExplorationRequestIQ.xml");
@@ -77,20 +50,6 @@ public class RequestResponseXwadlTest {
 	}
 
 	@Test
-	public void grammarsExampleResponse() {
-		ExampleXmlHelper validator = new ExampleXmlHelper();
-	    try {
-	    	validator.validate("grammarsExampleResponse.xml", xsdFile);
-	    } catch (SAXException e) {
-	        Assert.fail(e.getMessage());
-	    } catch (IOException e) {
-	        Assert.fail(e.getMessage());
-		} catch (ParserConfigurationException e) {
-	        Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
 	public void grammarsExampleResponseIQ() {
 		ExampleXmlHelper parser = new ExampleXmlHelper();
 	    try {
@@ -105,6 +64,5 @@ public class RequestResponseXwadlTest {
 	        Assert.fail(e.getMessage());
 		}
 	}
-*/
 
 }

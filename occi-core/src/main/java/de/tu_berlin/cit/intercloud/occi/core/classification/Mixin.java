@@ -17,6 +17,7 @@
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tu_berlin.cit.intercloud.occi.core.Entity;
@@ -31,12 +32,12 @@ public abstract class Mixin extends Category {
 	
 	private List<Entity> entities;
 
-	protected Mixin(URI schema, String term, String title, List<Attribute> attributes, List<Mixin> dependencies, List<Action> actions, List<Kind> kinds, List<Entity> entities) {
-		super(schema, term, title, attributes);
-		this.dependencies = dependencies;
-		this.actions = actions;
-		this.kinds = kinds;
-		this.entities = entities;
+	protected Mixin(URI schema, String term, String title) {
+		super(schema, term, title);
+		this.dependencies = new ArrayList<Mixin>();
+		this.actions = new ArrayList<Action>();
+		this.kinds = new ArrayList<Kind>();
+		this.entities = new ArrayList<Entity>();
 	}
 
 	public List<Mixin> getDependencies() {

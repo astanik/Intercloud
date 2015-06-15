@@ -189,17 +189,22 @@
 
 	<dependencies>
 		<!-- intercloud dependencies -->
-		<dependency>
+		<!-- dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
 			<artifactId>xmpp-core</artifactId>
 			<version>0.0.1</version>
-		</dependency>
+		</dependency -->
 		<!-- xmlbeans -->
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>
 			<artifactId>xmlbeans</artifactId>
 			<version>2.4.0</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 		<!-- spec dependencies -->
 		<dependency>

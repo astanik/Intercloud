@@ -8,17 +8,17 @@ import de.tu_berlin.cit.intercloud.occi.core.classification.Action;
 import de.tu_berlin.cit.intercloud.occi.core.classification.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
 
-public abstract class Infrastructure extends Kind {
+public abstract class AbstractKind extends Kind {
 
 	final static public String InfrastructureSchema = "http://schema.ogf.org/occi/infrastructure#";
 
-	protected Infrastructure(URI schema, String term, String title,
+	protected AbstractKind(URI schema, String term, String title,
 			List<Attribute> attributes, Kind parent, List<Action> actions,
 			List<Entity> entities) {
 		super(schema, term, title, attributes, parent, actions, entities);
 	}
 
-	protected Infrastructure(URI schema, String term, String title,
+	protected AbstractKind(URI schema, String term, String title,
 			List<Attribute> attributes, List<Action> actions,
 			List<Entity> entities) {
 		super(schema, term, title, attributes, actions, entities);

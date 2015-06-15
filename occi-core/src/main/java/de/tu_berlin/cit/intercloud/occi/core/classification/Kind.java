@@ -17,32 +17,31 @@
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tu_berlin.cit.intercloud.occi.core.Entity;
 
 public abstract class Kind extends Category {
 
-	final private Kind parent;
+	final private Class<? extends Kind> parent;
 	
 	final private List<Action> actions;
 	
 	final private List<Entity> entities;
 	
-	protected Kind(URI schema, String term, String title, List<Attribute> attributes, 
-			Kind parent, List<Action> actions, List<Entity> entities) {
-		super(schema, term, title, attributes);
+	protected Kind(URI schema, String term, String title, Class<? extends Kind> parent) {
+		super(schema, term, title);
 		this.parent = parent;
-		this.actions = actions;
-		this.entities = entities;
+		this.actions = new ArrayList<Action>();
+		this.entities = new ArrayList<Entity>();
 	}
 
-	protected Kind(URI schema, String term, String title, List<Attribute> attributes, 
-			List<Action> actions, List<Entity> entities) {
-		this(schema, term, title, attributes, null, actions, entities);
+	protected Kind(URI schema, String term, String title) {
+		this(schema, term, title, null);
 	}
 	
-	public Kind getParent() {
+	public Class<? extends Kind> getParent() {
 		return this.parent;
 	}
 	
@@ -59,8 +58,19 @@ public abstract class Kind extends Category {
     	StringBuilder text = new StringBuilder();
     	text.append(this.getCategoryText("kind"));
 
-    	if(this.parent != null)
-    		text.append("parent=" + this.parent.getSchema() + "#" + this.parent.getTerm() + "; \n");
+    	if(this.parent != null) {
+			try {
+	    		Kind instance;
+				instance = this.parent.newInstance();
+	    		text.append("parent=" + instance.getSchema() + "#" + instance.getTerm() + "; \n");
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
     	
     	if(!this.actions.isEmpty()) {
         	text.append("actions=");

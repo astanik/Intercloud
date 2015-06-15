@@ -1,17 +1,23 @@
 package de.tu_berlin.cit.intercloud.xmpp.component;
 
-
-import org.jivesoftware.whack.ExternalComponentManager;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
 import de.tu_berlin.cit.intercloud.xmpp.core.component.AbstractComponent;
-import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
-import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentManager;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
-import de.tu_berlin.cit.intercloud.xmpp.core.packet.JID;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 public class ExchangeComponent extends AbstractComponent {
 
+	private final ResourceContainer container;
 	
+	public ExchangeComponent(ResourceContainer container) {
+		this.container = container;
+	}
+
 	@Override
 	public String getName() {
 		return "Intercloud Exchange";
@@ -20,38 +26,6 @@ public class ExchangeComponent extends AbstractComponent {
 	@Override
 	public String getDescription() {
 		return "This is the Intercloud Exchange service.";
-	}
-
-	/**
-	 * Override this method to handle the IQ stanzas of type <tt>result</tt>
-	 * that are received by the component. If you do not override this method,
-	 * the stanzas are ignored.
-	 * 
-	 * @param iq
-	 *            The IQ stanza of type <tt>result</tt> that was received by
-	 *            this component.
-	 */
-	@Override
-	protected void handleIQResult(IQ iq) {
-		// Doesn't do anything. Override this method to process IQ result
-		// stanzas.
-	}
-
-	/**
-	 * Override this method to handle the IQ stanzas of type <tt>error</tt> that
-	 * are received by the component. If you do not override this method, the
-	 * stanzas are ignored.
-	 * 
-	 * @param iq
-	 *            The IQ stanza of type <tt>error</tt> that was received by this
-	 *            component.
-	 */
-	@Override
-	protected void handleIQError(IQ iq) {
-		// Doesn't do anything. Override this method to process IQ error
-		// stanzas.
-		log.info("(serving component '{}') IQ stanza "
-				+ "of type <tt>error</tt> received: ", getName(), iq.toXML());
 	}
 
 	/**
@@ -79,9 +53,13 @@ public class ExchangeComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQGet(IQ iq) throws Exception {
-		// Doesn't do anything. Override this method to process IQ get
-		// stanzas.
-		return null;
+		Element child = iq.getChildElement();
+		String path = child.attribute("path").getValue();
+		ResourceTypeDocument xwadl = this.container.getXWADL(path);
+		Document doc = DocumentHelper.parseText(xwadl.toString());
+		IQ response = IQ.createResultIQ(iq);
+		response.setChildElement(doc.getRootElement());
+		return response;
 	}
 
 	/**
@@ -109,12 +87,45 @@ public class ExchangeComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQSet(IQ iq) throws Exception {
-		// Doesn't do anything. Override this method to process IQ set
-		// stanzas.
+		Element child = iq.getChildElement();
+		ResourceDocument xmlRequest = ResourceDocument.Factory.parse(child.asXML());
+		ResourceDocument xmlResponse = this.container.execute(xmlRequest);
+		Document doc = DocumentHelper.parseText(xmlResponse.toString());
 		IQ response = IQ.createResultIQ(iq);
-		response.setChildElement(iq.getChildElement());
-		this.compMan.sendPacket(this, response);
-		return null;
+		response.setChildElement(doc.getRootElement());
+		return response;
 	}
+
+	/**
+	 * Override this method to handle the IQ stanzas of type <tt>result</tt>
+	 * that are received by the component. If you do not override this method,
+	 * the stanzas are ignored.
+	 * 
+	 * @param iq
+	 *            The IQ stanza of type <tt>result</tt> that was received by
+	 *            this component.
+	 */
+//	@Override
+//	protected void handleIQResult(IQ iq) {
+		// Doesn't do anything. Override this method to process IQ result
+		// stanzas.
+//	}
+
+	/**
+	 * Override this method to handle the IQ stanzas of type <tt>error</tt> that
+	 * are received by the component. If you do not override this method, the
+	 * stanzas are ignored.
+	 * 
+	 * @param iq
+	 *            The IQ stanza of type <tt>error</tt> that was received by this
+	 *            component.
+	 */
+//	@Override
+//	protected void handleIQError(IQ iq) {
+		// Doesn't do anything. Override this method to process IQ error
+		// stanzas.
+//		log.info("(serving component '{}') IQ stanza "
+//				+ "of type <tt>error</tt> received: ", getName(), iq.toXML());
+//	}
 
 }

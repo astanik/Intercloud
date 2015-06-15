@@ -17,15 +17,12 @@
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
 import java.net.URI;
-import java.util.List;
 
 public abstract class Action extends Category {
 
-	protected Action(URI schema, String term, String title, List<Attribute> attributes) {
-		super(schema, term, title, attributes);
+	protected Action(URI schema, String term, String title) {
+		super(schema, term, title);
 	}
-
-//	public abstract void invoke();
 
 	@Override
 	public String toText() {

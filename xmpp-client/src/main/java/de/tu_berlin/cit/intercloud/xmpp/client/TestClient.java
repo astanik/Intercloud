@@ -75,14 +75,18 @@ public class TestClient {
 				XmppURI uri = new XmppURI(testComponent, computePath);
 				// get flavor
 				XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
+				XmppRestMethod method = client.getMethod(XmppRestMethodType.POST);
+				XmppRestRequest request = method.getRequest();
+				XmppRestResponse response = method.getResponse();
+				response.
 				flavorMeter.startTimer(i);
-//				representation = this.getFlavor();
+				representation = this.getFlavor();
 				flavorMeter.stopTimer(i);
 				System.out.println("========Representation:========");
 				System.out.println(representation);
 				// create vm
 				createMeter.startTimer(i);
-//				String vmURI = this.createVM(representation);
+				XmppURI vmURI = this.createVM(representation);
 				createMeter.stopTimer(i);
 				System.out.println("============VM URI:============");
 //				System.out.println(vmURI);

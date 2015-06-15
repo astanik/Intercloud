@@ -25,5 +25,10 @@
 			<artifactId>occi-text</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-rest</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>
 </project>

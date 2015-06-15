@@ -17,6 +17,7 @@
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Category {
@@ -29,13 +30,13 @@ public abstract class Category {
 	
 	final private String title;
 	
-	final private List<Attribute> attributes;
+	private List<Attribute> attributes;
 	
-	protected Category(URI schema, String term, String title, List<Attribute> attributes) {
+	protected Category(URI schema, String term, String title) {
 		this.schema = schema;
 		this.term = term;
 		this.title = title;
-		this.attributes = attributes;
+		this.attributes = new ArrayList<Attribute>();
 	}
 	
 	public URI getSchema() {
@@ -53,7 +54,11 @@ public abstract class Category {
 	public List<Attribute> getAttributes() {
 		return this.attributes;
 	}
-	
+
+	public void setAttributes(List<Attribute> attributes) {
+		if(attributes != null)
+			this.attributes = attributes;
+	}
 	abstract public String toText();
 
 	protected String getCategoryText(String className) {
