@@ -20,13 +20,7 @@
 		</xs:complexType>
 	</grammars>
 
-	<method name="POST">
-		<request>
-			<param name="persons" required="true" repeating="false">
-				<option type="MyStructType" />
-			</param>
-		</request>
-		<response>
-		</response>
+	<method type="POST">
+		<request mediaType="text/plain" />
 	</method>
 </resource_type>

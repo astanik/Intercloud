@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <resource xmlns="urn:xmpp:xml-rest" xmlns:xs="http://www.w3.org/2001/XMLSchema" path="/compute">
-	<method name="create">
+	<method type="POST">
 		<request>
 			<param name="image">
 				<link>

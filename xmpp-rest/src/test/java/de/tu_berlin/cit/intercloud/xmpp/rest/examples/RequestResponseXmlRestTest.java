@@ -40,6 +40,7 @@ public class RequestResponseXmlRestTest {
 		}
 	}
 
+	/*
 	@Test
 	public void computeCreateRequest() {
 		ExampleXmlHelper validator = new ExampleXmlHelper();
@@ -67,5 +68,6 @@ public class RequestResponseXmlRestTest {
 	        Assert.fail(e.getMessage());
 		}
 	}
+	*/
 
 }

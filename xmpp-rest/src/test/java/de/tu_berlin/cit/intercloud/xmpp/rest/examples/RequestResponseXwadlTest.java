@@ -25,7 +25,7 @@ public class RequestResponseXwadlTest {
 	        Assert.fail(e.getMessage());
 		}
 	}
-
+/*
 	@Test
 	public void computeExplorationResponse() {
 		ExampleXmlHelper validator = new ExampleXmlHelper();
@@ -39,7 +39,7 @@ public class RequestResponseXwadlTest {
 	        Assert.fail(e.getMessage());
 		}
 	}
-
+*/
 	@Test
 	public void grammarsExampleResponse() {
 		ExampleXmlHelper validator = new ExampleXmlHelper();

@@ -4,7 +4,7 @@
 	<doc title="Compute resource management">
 		Use one of the following actions to manage your compute instances!
 	</doc>
-	<method name="create">
+	<method type="create">
 		<request>
 			<param name="image" required="true" repeating="false">
 				<option link="remote" />

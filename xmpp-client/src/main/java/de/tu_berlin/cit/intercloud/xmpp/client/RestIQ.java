@@ -1,61 +1,51 @@
 package de.tu_berlin.cit.intercloud.xmpp.client;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.id.StanzaIdUtil;
 
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
-public abstract class RestIQ extends IQ {
+public class RestIQ extends IQ {
 
 	public static final String ELEMENT = "resource";
 	public static final String NAMESPACE = "urn:xmpp:xml-rest";
 
-	protected Element restElement = null;
-	
-	protected RestIQ() {
-		super(ELEMENT, NAMESPACE);
-		this.setStanzaId(StanzaIdUtil.newStanzaId());
+	private final ResourceDocument doc;
+
+	final private XmppURI uri;
+
+	public RestIQ(XmppURI uri) {
+		this(uri, ResourceDocument.Factory.newInstance());
 	}
 
-	/**
-     * Constructs a new IQ using the specified type and ID.
-     *
-     * @param ID the packet ID of the IQ.
-     * @param type the IQ type.
-     */
-    public RestIQ(Type type) {
-    	this();
-		this.setType(type);
+    public RestIQ(XmppURI uri, ResourceDocument doc) {
+		super(ELEMENT, NAMESPACE);
+		this.setStanzaId(StanzaIdUtil.newStanzaId());
+		this.uri = uri;
+		this.setType(Type.set);
+		this.setTo(uri.getJID());
+		this.doc = doc;
+		
+		if(this.doc.getResource() == null)
+			this.doc.addNewResource().setPath(this.uri.getPath());
+
     }
 
-    public RestIQ(Type type, ResourceTypeDocument doc) {
-    	this(type);
-    	Document child;
-		try {
-			child = DocumentHelper.parseText(doc.toString());
-	    	this.restElement = child.getRootElement();
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
-    public RestIQ(Type type, ResourceDocument doc) {
-    	this(type);
-    	Document child;
-		try {
-			child = DocumentHelper.parseText(doc.toString());
-	    	this.restElement = child.getRootElement();
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+	@Override
+	protected IQChildElementXmlStringBuilder getIQChildElementBuilder(
+			IQChildElementXmlStringBuilder xml) {
+		// set resource path
+		xml.attribute("path", this.uri.getPath());
+		xml.rightAngleBracket();
+
+		if(this.doc.getResource().isSetMethod())
+			xml.append(this.doc.getResource().getMethod().toString());
+		else if(this.doc.getResource().isSetAction())
+			xml.append(this.doc.getResource().getAction().toString());
+
+		return xml;
+	}
 
 
 }

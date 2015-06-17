@@ -9,7 +9,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
 public class UriListText extends Representation {
 
-	public static final String MEDIA_TYPE = "'text/uri-list";
+	public static final String MEDIA_TYPE = "text/uri-list";
 
 	private ArrayList<URI> uris = new ArrayList<URI>();
 	
