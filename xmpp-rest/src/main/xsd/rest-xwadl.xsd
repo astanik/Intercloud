@@ -14,9 +14,10 @@
 	<xs:element name="resource_type">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
-				<xs:element ref="grammars" minOccurs="0" />
+				<xs:element ref="doc" minOccurs="0" />
+				<xs:element ref="grammars" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="method" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="action" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 			<xs:attribute name="path" type="xs:string" use="required" />
 		</xs:complexType>
@@ -45,55 +46,80 @@
 	<xs:element name="method">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="doc" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="request" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="response" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" />
+			<xs:attribute name="type" type="methodType" use="required" />
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="request" type="call" />
+	<xs:simpleType name="methodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GET" />
+			<xs:enumeration value="POST" />
+			<xs:enumeration value="PUT" />
+			<xs:enumeration value="DELETE" />
+		</xs:restriction>
+	</xs:simpleType>
 
-	<xs:element name="response" type="call" />
-
-	<xs:complexType name="call">
-		<xs:sequence>
-			<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="param">
+	<xs:element name="request" >
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="doc" minOccurs="0" maxOccurs="unbounded" />
-				<xs:element ref="option" minOccurs="1" maxOccurs="unbounded" />
+				<xs:element ref="doc" minOccurs="0" maxOccurs="1" />
+				<xs:element name="template" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="mediaType" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="response">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="mediaType" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="action">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="result" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required" />
-			<xs:attribute name="default" type="xs:string" />
-			<xs:attribute name="required" type="xs:boolean" default="false" />
-			<xs:attribute name="repeating" type="xs:boolean" default="false" />
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="option">
-		<xs:complexType mixed="true">
+	<xs:element name="parameter">
+		<xs:complexType>
 			<xs:sequence>
-				<xs:any namespace="##other" processContents="lax" minOccurs="0"
-					maxOccurs="unbounded" />
+				<xs:element ref="doc" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
-			<xs:attribute name="type" type="xs:QName" default="xs:string" />
-			<xs:attribute name="mediaType" type="xs:string" />
-			<xs:attribute name="link" type="linkTarget" />
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="default" type="xs:string" use="required" />
+			<xs:attribute name="type" type="parameterType" use="required" />
 		</xs:complexType>
 	</xs:element>
 
-	<xs:simpleType name="linkTarget">
+	<xs:element name="result">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="doc" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="type" type="parameterType" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="parameterType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="local" />
-			<xs:enumeration value="remote" />
-			<xs:enumeration value="list" />
+			<xs:enumeration value="STRING" />
+			<xs:enumeration value="INTEGER" />
+			<xs:enumeration value="DOUBLE" />
+			<xs:enumeration value="BOOLEAN" />
+			<xs:enumeration value="LINK" />
 		</xs:restriction>
 	</xs:simpleType>
 

@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.util.xmpp;
+package de.tu_berlin.cit.intercloud.xmpp.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;

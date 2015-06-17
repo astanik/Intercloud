@@ -41,7 +41,7 @@ public class ComputeService {
     }
 
     @DELETE
-    public void createVM() {
+    public void deleteVM() {
     	this.parent.removeCompute(this.id);
     }
 

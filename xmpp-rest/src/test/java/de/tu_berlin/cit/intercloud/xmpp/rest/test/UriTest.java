@@ -1,11 +1,11 @@
-package de.tu_berlin.cit.intercloud.util.xmpp.test;
+package de.tu_berlin.cit.intercloud.xmpp.rest.test;
 
 import java.net.URISyntaxException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.tu_berlin.cit.intercloud.util.xmpp.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 
 public class UriTest {

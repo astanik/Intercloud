@@ -10,7 +10,7 @@ import org.jivesoftware.smack.filter.IQReplyFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.IQ;
 
-import de.tu_berlin.cit.intercloud.util.xmpp.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 public class XmppRestClient {
 

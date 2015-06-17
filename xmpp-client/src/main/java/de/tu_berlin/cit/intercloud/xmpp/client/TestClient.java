@@ -36,7 +36,7 @@ import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.IQ.Type;
 
 import de.tu_berlin.cit.intercloud.util.monitoring.PerformanceMeter;
-import de.tu_berlin.cit.intercloud.util.xmpp.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 public class TestClient {
 

@@ -1,25 +1,29 @@
 package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.Representation;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
-public class FlavorMixin extends Representation<String> {
+public class FlavorMixin extends OcciText {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Map<String, String> getOptions() {
-		String mediaType = "text/occi";
-		
-		StringBuilder option = new StringBuilder();
-    	option.append("X-OCCI-Attribute: occi.compute.architecture='x86' \n");
-    	option.append("X-OCCI-Attribute: occi.compute.memory=2.0 \n");
-    	flavor.append("X-OCCI-Attribute: occi.compute.cores=2 \n");
-    	return flavor.toString();
-		// TODO Auto-generated method stub
-		return null;
+	public List<Representation> getTemplates() {
+		List<Representation> list = new ArrayList<Representation>();
+		HashMap<String,String> template = new HashMap<String,String>();
+		template.put("occi.compute.architecture", "x86");
+		template.put("occi.compute.memory", "2.0");
+		template.put("occi.compute.cores", "2");
+		list.add(new OcciText(template));
+		return list;
 	}
 
-	
-	
 	
 }

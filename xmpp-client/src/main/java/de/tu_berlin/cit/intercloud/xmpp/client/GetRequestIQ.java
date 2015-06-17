@@ -1,7 +1,7 @@
 package de.tu_berlin.cit.intercloud.xmpp.client;
 
 
-import de.tu_berlin.cit.intercloud.util.xmpp.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 public class GetRequestIQ extends RestIQ {
 

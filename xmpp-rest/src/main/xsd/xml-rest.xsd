@@ -13,9 +13,10 @@
 
 	<xs:element name="resource">
 		<xs:complexType>
-			<xs:sequence>
+			<xs:choice>
 				<xs:element ref="method" minOccurs="1" maxOccurs="1" />
-			</xs:sequence>
+				<xs:element ref="action" minOccurs="1" maxOccurs="1" />
+			</xs:choice>
 			<xs:attribute name="path" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
@@ -26,45 +27,23 @@
 				<xs:element ref="request" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="response" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" />
+			<xs:attribute name="type" type="methodType" use="required" />
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="request" type="call" />
+	<xs:simpleType name="methodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GET" />
+			<xs:enumeration value="POST" />
+			<xs:enumeration value="PUT" />
+			<xs:enumeration value="DELETE" />
+		</xs:restriction>
+	</xs:simpleType>
 
-	<xs:element name="response" type="call" />
-
-	<xs:complexType name="call">
-		<xs:sequence>
-			<xs:element ref="param" minOccurs="0" maxOccurs="unbounded" />
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="param">
+	<xs:element name="request" >
 		<xs:complexType>
-			<xs:choice minOccurs="0" maxOccurs="1">
-				<xs:element ref="value" />
-				<xs:element ref="representation" />
-				<xs:element ref="resourceList" />
-				<xs:element ref="link" />
-			</xs:choice>
-			<xs:attribute name="name" type="xs:string" use="required" />
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="value">
-		<xs:complexType mixed="true">
 			<xs:sequence>
-				<xs:any namespace="##other" processContents="lax" minOccurs="0"
-					maxOccurs="unbounded" />
-			</xs:sequence>
-			<xs:attribute name="type" type="xs:QName" use="required" />
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="representation">
-		<xs:complexType mixed="true">
-			<xs:sequence>
+				<xs:element name="representation" type="xs:string"/>
 				<xs:any namespace="##other" processContents="lax" minOccurs="0"
 					maxOccurs="unbounded" />
 			</xs:sequence>
@@ -72,24 +51,48 @@
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="resourceList">
+	<xs:element name="response">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="link" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="representation" type="xs:string"/>
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
 			</xs:sequence>
+			<xs:attribute name="mediaType" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="link">
+	<xs:element name="action">
 		<xs:complexType>
-			<xs:choice minOccurs="1" maxOccurs="1">
-				<xs:sequence>
-					<xs:element name="to" type="xs:string" minOccurs="0"
-						maxOccurs="1" />
-					<xs:element name="path" type="xs:string" minOccurs="1"
-						maxOccurs="1" />
-				</xs:sequence>
-				<xs:element name="uri" type="xs:string" />
+			<xs:sequence>
+				<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="result" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="parameter">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
+				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
+				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
+			</xs:choice>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="result">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
+				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
+				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
