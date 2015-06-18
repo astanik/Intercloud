@@ -1,7 +1,9 @@
 package de.tu_berlin.cit.intercloud.xmpp.client;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
+import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -38,8 +40,7 @@ public class XmppClient {
 			
 			// perform the test
 			TestClient client = new TestClient(connection);
-//			client.performTest();
-			client.bla();
+			client.performTest();
 			
 		} catch (SmackException e) {
 			// TODO Auto-generated catch block
@@ -48,6 +49,12 @@ public class XmppClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XmlException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {

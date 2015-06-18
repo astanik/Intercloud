@@ -25,6 +25,13 @@ public final class XmppURI {
 				   restPath);
 	}
 	
+	public XmppURI(URI uri) throws URISyntaxException {
+		if(uri != null)
+			this.uri = new URI(uri.toASCIIString());
+		else
+			throw new URISyntaxException("null","The uri object is null");
+	}
+
 	public String getPath() {
 		return this.uri.getFragment();
 	}

@@ -10,11 +10,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.examples.ExampleXmlHelper;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 public class RequestResponseXwadlTest {
-	
+/*
 	private static final String xsdFile = "rest-xwadl.xsd";
 	
 	@Test
@@ -64,5 +63,5 @@ public class RequestResponseXwadlTest {
 	        Assert.fail(e.getMessage());
 		}
 	}
-
+*/
 }

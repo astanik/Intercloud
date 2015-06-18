@@ -1,6 +1,11 @@
 package de.tu_berlin.cit.intercloud.xmpp.rest;
 
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument.Method;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.RequestDocument.Request;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
@@ -35,4 +40,34 @@ public class MethodInvocation {
 			request.setRepresentation(builder.toString());
 		}
 	}
+	
+	public Class<? extends Representation> getResponseRepresentationClass(Method method) {
+		if(method.isSetResponse()) {
+			String mediaType = method.getResponse().getMediaType();
+			if(mediaType.equals(PlainText.MEDIA_TYPE)) {
+				return PlainText.class;
+			} else if(mediaType.equals(UriText.MEDIA_TYPE)) {
+				return UriText.class;
+			} else if(mediaType.equals(UriListText.MEDIA_TYPE)) {
+				return UriListText.class;
+			} else if(mediaType.equals(OcciText.MEDIA_TYPE)) {
+				return OcciText.class;
+			}
+		}
+		return null;
+	}
+	
+	public Representation getResponseRepresentation(Method method) {
+		Class<? extends Representation> repClass = getResponseRepresentationClass(method);
+		Representation rep = null;
+		try {
+			if(repClass != null)
+				rep = repClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rep;
+	}
+
 }

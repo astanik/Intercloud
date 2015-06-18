@@ -39,5 +39,9 @@ public class UriText extends Representation {
 		representationBuilder.append(this.uri.toASCIIString());
 		return representationBuilder;
 	}
+
+	public URI getUri() {
+		return this.uri;
+	}
 	
 }

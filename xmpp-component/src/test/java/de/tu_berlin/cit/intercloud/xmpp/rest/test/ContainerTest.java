@@ -49,7 +49,7 @@ public class ContainerTest {
 				List<Representation> rep = client.getRequestTemplates(method);
 				for(Representation representation : rep) {
 					invocable.setRequestRepresentation(representation);
-					container.execute(invocable.getXmlDocument()).toString();
+					container.execute(invocable.getXmlDocument());
 				}
 			}
 		} catch (URISyntaxException e) {

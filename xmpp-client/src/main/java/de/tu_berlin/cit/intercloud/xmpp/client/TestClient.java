@@ -24,7 +24,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
+import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException.NoResponseException;
@@ -36,7 +38,14 @@ import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.IQ.Type;
 
 import de.tu_berlin.cit.intercloud.util.monitoring.PerformanceMeter;
+import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
+import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
 
 public class TestClient {
 
@@ -51,7 +60,7 @@ public class TestClient {
 	}
 	
 	public void performTest() throws FileNotFoundException, UnsupportedEncodingException, 
-			URISyntaxException, NotConnectedException, NoResponseException, XMPPErrorException {
+			URISyntaxException, NotConnectedException, NoResponseException, XMPPErrorException, XmlException {
 		
 		// create files
 		PrintWriter flavorWriter = new PrintWriter("getFlavor.txt", "UTF-8");
@@ -63,7 +72,7 @@ public class TestClient {
 
 		// iterate over resources on server
 		for (int r = 0; r < 100; r++) {
-			String representation = "dummy";
+			OcciText representation = null;
 
 			// create performance meter
 			PerformanceMeter flavorMeter = new PerformanceMeter();
@@ -73,29 +82,44 @@ public class TestClient {
 			// measure 50 times
 			for (int i = 0; i < 50; i++) {
 				XmppURI uri = new XmppURI(testComponent, computePath);
+				XmppURI delUri = null;
 				// get flavor
 				XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
-				XmppRestMethod method = client.getMethod(XmppRestMethodType.POST);
-				XmppRestRequest request = method.getRequest();
-				XmppRestResponse response = method.getResponse();
-				response.
-				flavorMeter.startTimer(i);
-				representation = this.getFlavor();
-				flavorMeter.stopTimer(i);
-				System.out.println("========Representation:========");
-				System.out.println(representation);
-				// create vm
-				createMeter.startTimer(i);
-				XmppURI vmURI = this.createVM(representation);
-				createMeter.stopTimer(i);
-				System.out.println("============VM URI:============");
-//				System.out.println(vmURI);
+				Method method = client.getMethod(MethodType.POST, new OcciText(), new UriText());
+				if(method != null) {
+					flavorMeter.startTimer(i);
+					List<Representation> rep = client.getRequestTemplates(method);
+					flavorMeter.stopTimer(i);
+					if(rep.size() > 0) {
+						if(rep.get(0) instanceof OcciText) {
+							representation = (OcciText) rep.get(0);
+							System.out.println("========Representation:========");
+							System.out.println(representation);
+							// create vm
+							XmppRestMethod invocable = client.buildMethodInvocation(method);
+							createMeter.startTimer(i);
+							Representation vmURI = invocable.invoke(representation);
+							createMeter.stopTimer(i);
+							System.out.println("============VM URI:============");
+							System.out.println(vmURI);
+							if(vmURI instanceof UriText) {
+								delUri = new XmppURI(((UriText)vmURI).getUri());
+							}
+						}
+					}
+				}
 				// delete vm
-				deleteMeter.startTimer(i);
-//				String message = this.deleteVM(vmURI);
-				deleteMeter.stopTimer(i);
-				System.out.println("===========Message:============");
-//				System.out.println(message);
+				client = XmppRestClient.XmppRestClientBuilder.build(connection, delUri);
+				method = client.getMethod(MethodType.DELETE, null, null);
+				if(method != null) {
+					XmppRestMethod invocable = client.buildMethodInvocation(method);
+					deleteMeter.startTimer(i);
+					Representation message = invocable.invoke();
+					deleteMeter.stopTimer(i);
+					System.out.println("===========Message:============");
+					if(message != null)
+						System.out.println(message);
+				}
 			}
 
 			System.out.println(r + " resources available");
@@ -112,7 +136,26 @@ public class TestClient {
 			deleteWriter.println(r + " " + deleteMeter.toString());
 
 			// create a new resources and continue
-//			this.createVM(representation);
+			{
+				XmppURI uri = new XmppURI(testComponent, computePath);
+				XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
+				Method method = client.getMethod(MethodType.POST, new OcciText(), new UriText());
+				if(method != null) {
+					List<Representation> rep = client.getRequestTemplates(method);
+					if(rep.size() > 0) {
+						if(rep.get(0) instanceof OcciText) {
+							representation = (OcciText) rep.get(0);
+							System.out.println("========Representation:========");
+							System.out.println(representation);
+							// create vm
+							XmppRestMethod invocable = client.buildMethodInvocation(method);
+							Representation vmURI = invocable.invoke(representation);
+							System.out.println("============VM URI:============");
+							System.out.println(vmURI);
+						}
+					}
+				}
+			}
 		}
 				
 		// close file writer
@@ -120,159 +163,5 @@ public class TestClient {
 		createWriter.close();
 		deleteWriter.close();
 	}
-	
-	public void bla() throws NotConnectedException {
-		//connection.addPacketListener(new MyPacketListener(),new PacketTypeFilter(IQ.class));
-
-		 
-		// Create a packet filter to listen for new messages from a particular
-		// user. We use an AndFilter to combine two other filters._
-		StanzaFilter filter = new AndFilter(new StanzaTypeFilter(IQ.class),
-				new FromContainsFilter("mary@jivesoftware.com"));
-		// Assume we've created an XMPPConnection name "connection".
-
-		// First, register a packet collector using the filter we created.
-		PacketCollector myCollector = connection.createPacketCollector(filter);
-		// Normally, you'd do something with the collector, like wait for new packets.
-
-		// Next, create a packet listener. We use an anonymous inner class for brevity.
-		PacketListener myListener = new PacketListener() {
-				**public** **void** processPacket(Packet packet) {
-					// Do something with the incoming packet here._
-				}
-			};
-		// Register the listener._
-		connection.addPacketListener(myListener, filter);
-		 
-
-//		class MyPacketListener implements PacketListener{
-//		    public void processPacket(Packet packet){
-//		     System.out.println("Recv : " + packet.toXML());
-//		    }
-		    
-		ExtensionElement extension = new MethodExtension("GET");
 		
-		IQ iq = RestIQ.createRestPacket("alex@stanik.", "exchange.cit.tu-berlin.de", Type.set, extension);  
-			
-		connection.sendStanza(iq);
-
-	}
-/*
-	private String deleteVM(String vmURI) {
-		String output = "";
-		try {
-			// create HTTP Client
-			HttpClient httpClient = HttpClientBuilder.create().build();
-
-			// Create new deleteRequest with URI
-			HttpDelete delRequest = new HttpDelete(vmURI);
-
-			// Add additional header to getRequest which accepts text/plain data
-//			delRequest.addHeader("Accept", "text/plain");
-
-			// Execute your request and catch response
-			HttpResponse response = httpClient.execute(delRequest);
-
-			// Check for HTTP response code: 210 > success
-			if (response.getStatusLine().getStatusCode() > 210) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ response.getStatusLine().getStatusCode());
-			} else {
-				output = response.getStatusLine().getReasonPhrase();
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return output;
-	}
-
-	private String createVM(String representation) {
-		URI vmURI = new URI("");
-		try {
-			// create HTTP Client
-			HttpClient httpClient = HttpClientBuilder.create().build();
-
-			// Create new postRequest with below mentioned URL
-			HttpPost postRequest = new HttpPost(computeURL);
-
-			// Add additional header to postRequest which accepts text/plain data
-			postRequest.addHeader("Content-Type", "text/plain");
-//			postRequest.addHeader("Accept", "text/plain");
-
-			// Execute your request and catch response
-			HttpResponse response = httpClient.execute(postRequest);
-
-			// Check for HTTP response code: 200 = success
-			if (response.getStatusLine().getStatusCode() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ response.getStatusLine().getStatusCode());
-			}
-
-			// Get-Capture Complete text/plain body response
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(response.getEntity().getContent())));
-
-			// Simply iterate through text response and build a string
-			String line = "";
-			while ((line = br.readLine()) != null) {
-				vmURI = new URI(line);
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return vmURI;
-	}
-*/
-
-	private String getFlavor() {
-		String output = "";
-		try {
-			
-			URI uri = new URI("exchange.cit.tu-berlin.de/rest#" + flavorURL);
-
-			// create XMPP Client
-			XmppRestClient restClient = XmppRestClientBuilder.build(connection, uri);
-
-			// Create new getRequest with below mentioned URL
-			HttpGet getRequest = new HttpGet(flavorURL);
-
-			// Add additional header to getRequest which accepts text/plain data
-			getRequest.addHeader("Accept", "text/plain");
-
-			// Execute your request and catch response
-			HttpResponse response = httpClient.execute(getRequest);
-
-			// Check for HTTP response code: 200 = success
-			if (response.getStatusLine().getStatusCode() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ response.getStatusLine().getStatusCode());
-			}
-
-			// Get-Capture Complete text/plain body response
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(response.getEntity().getContent())));
-
-			// Simply iterate through text response and build a string
-			StringBuilder builder = new StringBuilder();
-			String line = "";
-			while ((line = br.readLine()) != null) {
-				builder.append(line + "\n");
-			}
-
-			// return the content
-			output = builder.toString();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return output;
-	}
 }

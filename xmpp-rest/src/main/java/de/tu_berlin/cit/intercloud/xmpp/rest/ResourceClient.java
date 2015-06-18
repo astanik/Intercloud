@@ -36,7 +36,7 @@ public class ResourceClient {
 		return new MethodInvocation(resourceDoc, method);
 	}
 
-	private ResourceDocument createBasicResourceDocument() {
+	protected ResourceDocument createBasicResourceDocument() {
 		ResourceDocument resourceDoc = ResourceDocument.Factory.newInstance();
 		resourceDoc.addNewResource().setPath(this.doc.getResourceType().getPath());
 		return resourceDoc;
