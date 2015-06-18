@@ -12,8 +12,11 @@ import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.IQReplyFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.IQ;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
@@ -26,6 +29,8 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 
 public class XmppRestClient extends ResourceClient {
 
+
+	protected final static Logger logger = LoggerFactory.getLogger(XmppRestClient.class);
 
 	private final XmppURI uri;
 	
@@ -48,22 +53,25 @@ public class XmppRestClient extends ResourceClient {
 		public static XmppRestClient build(XMPPConnection connection,
 				XmppURI uri) throws NotConnectedException, NoResponseException,
 				XMPPErrorException, XmlException {
+			logger.info("building rest client");
 			// create an get IQ stanza to uri
 			IQ getIQ = new GetXwadlIQ(uri);
 
 			// send stanza
 			connection.sendStanza(getIQ);
-
+			logger.info("the following stanza had been send: " + getIQ.toString());
 			// wait for response
 			StanzaFilter filter = new AndFilter(new IQReplyFilter(getIQ,
 					connection));
 			PacketCollector collector = connection
 					.createPacketCollector(filter);
 			IQ resultIQ = collector.nextResultOrThrow();
-			System.out.println("Received iq: " + resultIQ.toString());
+			// TODO http://www.igniterealtime.org/builds/smack/docs/latest/documentation/providers.html
+			String resultXML = resultIQ.getChildElementXML().toString();
+			logger.info("the following stanza had been received: " + resultXML);
 
 			// create xwadl
-			ResourceTypeDocument xwadl = ResourceTypeDocument.Factory.parse(resultIQ.getChildElementXML().toString());
+			ResourceTypeDocument xwadl = ResourceTypeDocument.Factory.parse(resultXML);
 			// create client
 			return new XmppRestClient(connection, uri, xwadl);
 		}

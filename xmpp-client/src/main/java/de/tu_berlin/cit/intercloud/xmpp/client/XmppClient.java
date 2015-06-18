@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -26,20 +27,25 @@ public class XmppClient {
 				  .setServiceName("intercloud.cit.tu-berlin.de")
 				  .setHost(baseURL)
 				  .setPort(5222)
+				  .setSecurityMode(SecurityMode.disabled)
 				  .build();
 
 		System.out.println("URL: " + baseURL);
 
 		// Create a connection to the jabber.org server.
 		AbstractXMPPConnection connection = new XMPPTCPConnection(config);
+		System.out.println("Connection established ");
 		try {
 			// connect
 			connection.connect();
+			System.out.println("Connection connected ");
 			// login
 			connection.login();
+			System.out.println("Loged in ");
 			
 			// perform the test
 			TestClient client = new TestClient(connection);
+			System.out.println("Test Client created ");
 			client.performTest();
 			
 		} catch (SmackException e) {

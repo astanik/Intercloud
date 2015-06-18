@@ -22,7 +22,7 @@ public class XmppComponent {
 				"cit-mac1.cit.tu-berlin.de", 5275);
 		mgr.setSecretKey("exchange", "intercloud");
 		try {
-			XmppURI uri = new XmppURI("exchange.cit-mac1.cit.tu-berlin.de", "/occi");
+			XmppURI uri = new XmppURI("exchange.intercloud.cit.tu-berlin.de", "");
 			ResourceContainer container = new ResourceContainer(uri);
 			container.addResource(new Compute());
 			ExchangeComponent component = new ExchangeComponent(container);

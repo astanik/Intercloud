@@ -3,6 +3,8 @@ package de.tu_berlin.cit.intercloud.xmpp.component;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.xmpp.core.component.AbstractComponent;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
@@ -11,6 +13,8 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 public class ExchangeComponent extends AbstractComponent {
+
+	protected final static Logger logger = LoggerFactory.getLogger(ExchangeComponent.class);
 
 	private final ResourceContainer container;
 	
@@ -53,12 +57,14 @@ public class ExchangeComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQGet(IQ iq) throws Exception {
+		logger.info("the following iq get stanza has been received:" + iq.toString());
 		Element child = iq.getChildElement();
 		String path = child.attribute("path").getValue();
 		ResourceTypeDocument xwadl = this.container.getXWADL(path);
 		Document doc = DocumentHelper.parseText(xwadl.toString());
 		IQ response = IQ.createResultIQ(iq);
 		response.setChildElement(doc.getRootElement());
+		logger.info("the following iq result stanza will be send:" + response.toString());
 		return response;
 	}
 
@@ -87,12 +93,14 @@ public class ExchangeComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQSet(IQ iq) throws Exception {
+		logger.info("the following iq set stanza has been received:" + iq.toString());
 		Element child = iq.getChildElement();
 		ResourceDocument xmlRequest = ResourceDocument.Factory.parse(child.asXML());
 		ResourceDocument xmlResponse = this.container.execute(xmlRequest);
 		Document doc = DocumentHelper.parseText(xmlResponse.toString());
 		IQ response = IQ.createResultIQ(iq);
 		response.setChildElement(doc.getRootElement());
+		logger.info("the following iq result stanza will be send:" + response.toString());
 		return response;
 	}
 

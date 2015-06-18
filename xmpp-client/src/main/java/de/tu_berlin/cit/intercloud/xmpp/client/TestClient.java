@@ -51,7 +51,7 @@ public class TestClient {
 
 	private static String testComponent = "exchange.intercloud.cit.tu-berlin.de";
 
-	private static String computePath = "/occi/compute";
+	private static String computePath = "/compute";
 
 	private final AbstractXMPPConnection connection;
 	

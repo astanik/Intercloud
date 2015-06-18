@@ -26,7 +26,7 @@ public class GetXwadlIQ extends IQ {
 			IQChildElementXmlStringBuilder xml) {
 		// set resource path
 		xml.attribute("path", this.uri.getPath());
-		xml.rightAngleBracket();
+//		xml.rightAngleBracket();
 		// mark that no further elements are present
 		xml.setEmptyElement();
 		return xml;
