@@ -61,8 +61,12 @@ public class MethodInvocation {
 		Class<? extends Representation> repClass = getResponseRepresentationClass(method);
 		Representation rep = null;
 		try {
-			if(repClass != null)
+			if(repClass != null) {
 				rep = repClass.newInstance();
+				if(method.getResponse().isSetRepresentation()) {
+					rep.readRepresentation(method.getResponse().getRepresentation());
+				}
+			}
 		} catch (InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

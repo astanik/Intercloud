@@ -7,6 +7,8 @@ import org.jivesoftware.smack.provider.IQProvider;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
+
 public class RepresentationProvider extends IQProvider<RestIQ> {
 
 	@Override

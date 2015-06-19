@@ -8,8 +8,14 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQProvider;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQProvider;
 
 
 public class XmppClient {
@@ -42,6 +48,9 @@ public class XmppClient {
 			// login
 			connection.login();
 			System.out.println("Loged in ");
+			// add provider
+			ProviderManager.addIQProvider(XwadlIQ.ELEMENT, XwadlIQ.NAMESPACE, new XwadlIQProvider());
+			ProviderManager.addIQProvider(RestIQ.ELEMENT, RestIQ.NAMESPACE, new RestIQProvider());
 			
 			// perform the test
 			TestClient client = new TestClient(connection);

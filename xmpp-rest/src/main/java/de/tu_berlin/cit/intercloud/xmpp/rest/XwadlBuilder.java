@@ -21,13 +21,13 @@ public class XwadlBuilder {
 
 	public static ResourceTypeDocument build(String path,
 			ResourceInstance instance) {
-		logger.info("Start building xwadl document");
+//		logger.info("Start building xwadl document");
 		// create new document 
 		ResourceTypeDocument xwadl = ResourceTypeDocument.Factory.newInstance();
 		// set resource path
 		ResourceType resType = xwadl.addNewResourceType();
 		resType.setPath(path);
-		logger.info("resource path=" + path);
+//		logger.info("resource path=" + path);
 		// search methods
 		for(java.lang.reflect.Method method : instance.getClass().getMethods()) {
 			// create method entry
@@ -36,8 +36,8 @@ public class XwadlBuilder {
 		}
 		// TODO Actions
 		
-		logger.info("Finished building xwadl document");
-		logger.info("New xwadl document: " + xwadl.toString());
+//		logger.info("Finished building xwadl document");
+//		logger.info("New xwadl document: " + xwadl.toString());
 		return xwadl;
 	}
 
@@ -46,7 +46,7 @@ public class XwadlBuilder {
 			de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method xmlMethod) {
 		// set method type
 		xmlMethod.setType(MethodType.Enum.forString(method.getAnnotation(XmppMethod.class).value()));
-		logger.info("method=" + method.getName() + " has annotation XmppMethod with value=" + xmlMethod.getType().toString());
+//		logger.info("method=" + method.getName() + " has annotation XmppMethod with value=" + xmlMethod.getType().toString());
 		
 		// add request information
 		if(method.isAnnotationPresent(Consumes.class)) {

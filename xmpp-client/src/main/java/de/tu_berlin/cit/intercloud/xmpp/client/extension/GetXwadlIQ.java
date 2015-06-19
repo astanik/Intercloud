@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.xmpp.client;
+package de.tu_berlin.cit.intercloud.xmpp.client.extension;
 
 
 import org.jivesoftware.smack.packet.IQ;

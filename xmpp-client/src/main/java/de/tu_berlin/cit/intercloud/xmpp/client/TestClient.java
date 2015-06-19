@@ -29,6 +29,7 @@ import java.util.List;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
@@ -60,7 +61,7 @@ public class TestClient {
 	}
 	
 	public void performTest() throws FileNotFoundException, UnsupportedEncodingException, 
-			URISyntaxException, NotConnectedException, NoResponseException, XMPPErrorException, XmlException {
+			URISyntaxException, XMPPErrorException, XmlException, SmackException {
 		
 		// create files
 		PrintWriter flavorWriter = new PrintWriter("getFlavor.txt", "UTF-8");
@@ -93,15 +94,15 @@ public class TestClient {
 					if(rep.size() > 0) {
 						if(rep.get(0) instanceof OcciText) {
 							representation = (OcciText) rep.get(0);
-							System.out.println("========Representation:========");
-							System.out.println(representation);
+//							System.out.println("========Representation:========");
+//							System.out.println(representation);
 							// create vm
 							XmppRestMethod invocable = client.buildMethodInvocation(method);
 							createMeter.startTimer(i);
 							Representation vmURI = invocable.invoke(representation);
 							createMeter.stopTimer(i);
-							System.out.println("============VM URI:============");
-							System.out.println(vmURI);
+//							System.out.println("============VM URI:============");
+//							System.out.println(vmURI);
 							if(vmURI instanceof UriText) {
 								delUri = new XmppURI(((UriText)vmURI).getUri());
 							}
@@ -116,7 +117,7 @@ public class TestClient {
 					deleteMeter.startTimer(i);
 					Representation message = invocable.invoke();
 					deleteMeter.stopTimer(i);
-					System.out.println("===========Message:============");
+//					System.out.println("===========Message:============");
 					if(message != null)
 						System.out.println(message);
 				}
@@ -145,13 +146,9 @@ public class TestClient {
 					if(rep.size() > 0) {
 						if(rep.get(0) instanceof OcciText) {
 							representation = (OcciText) rep.get(0);
-							System.out.println("========Representation:========");
-							System.out.println(representation);
 							// create vm
 							XmppRestMethod invocable = client.buildMethodInvocation(method);
-							Representation vmURI = invocable.invoke(representation);
-							System.out.println("============VM URI:============");
-							System.out.println(vmURI);
+							invocable.invoke(representation);
 						}
 					}
 				}

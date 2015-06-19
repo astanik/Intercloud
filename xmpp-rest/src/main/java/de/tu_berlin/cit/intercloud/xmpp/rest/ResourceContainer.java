@@ -22,7 +22,7 @@ public class ResourceContainer extends ResourceInstance {
 	}
 	
 	public ResourceTypeDocument getXWADL(String path) {
-		logger.info("An XWADL is requested for path=" + path);
+//		logger.info("An XWADL is requested for path=" + path);
 		// search instance
 		ResourceInstance instance = this.getResource(path);
 		if(instance == null)
@@ -33,7 +33,7 @@ public class ResourceContainer extends ResourceInstance {
 	}
 
 	public ResourceDocument execute(ResourceDocument xmlRequest) {
-		logger.info("An invocation is requested with xml=" + xmlRequest.toString());
+//		logger.info("An invocation is requested with xml=" + xmlRequest.toString());
 		// create response document
 		ResourceDocument xmlResponse = (ResourceDocument) xmlRequest.copy();
 		String path = xmlRequest.getResource().getPath();
@@ -55,7 +55,9 @@ public class ResourceContainer extends ResourceInstance {
 						+ e.getMessage());
 			}
 			// remove request part
-			xmlResponse.getResource().getMethod().unsetRequest();
+			if(xmlResponse.getResource().getMethod().isSetRequest()) {
+				xmlResponse.getResource().getMethod().unsetRequest();
+			}
 		}
 		
 		// invoke action
@@ -68,7 +70,7 @@ public class ResourceContainer extends ResourceInstance {
 			}
 		}
 		
-		logger.info("An invocation was performed and returned is xml=" + xmlResponse.toString());
+//		logger.info("An invocation was performed and returned is xml=" + xmlResponse.toString());
 		return xmlResponse;
 	}
 

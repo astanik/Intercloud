@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.PacketCollector;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -15,6 +16,8 @@ import org.jivesoftware.smack.packet.IQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.GetXwadlIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -40,6 +43,8 @@ public class XmppRestClient extends ResourceClient {
 		super(xwadl);
 		this.connection = connection;
 		this.uri = uri;
+//		logger.info("A new rest client has been build with uri=" + uri.toString()
+//				+ " and xwadl=" + xwadl.toString());
 	}
 
 	@Override
@@ -51,27 +56,29 @@ public class XmppRestClient extends ResourceClient {
 	
 	public static class XmppRestClientBuilder {
 		public static XmppRestClient build(XMPPConnection connection,
-				XmppURI uri) throws NotConnectedException, NoResponseException,
-				XMPPErrorException, XmlException {
-			logger.info("building rest client");
+				XmppURI uri) throws XMPPErrorException, XmlException, SmackException {
+//			logger.info("building rest client for uri=" + uri.toString());
 			// create an get IQ stanza to uri
 			IQ getIQ = new GetXwadlIQ(uri);
 
 			// send stanza
 			connection.sendStanza(getIQ);
-			logger.info("the following stanza had been send: " + getIQ.toString());
+//			logger.info("the following stanza had been send: " + getIQ.toString());
 			// wait for response
 			StanzaFilter filter = new AndFilter(new IQReplyFilter(getIQ,
 					connection));
 			PacketCollector collector = connection
 					.createPacketCollector(filter);
 			IQ resultIQ = collector.nextResultOrThrow();
-			// TODO http://www.igniterealtime.org/builds/smack/docs/latest/documentation/providers.html
-			String resultXML = resultIQ.getChildElementXML().toString();
-			logger.info("the following stanza had been received: " + resultXML);
+			ResourceTypeDocument xwadl = null;
+			if(resultIQ instanceof XwadlIQ) {
+				// create xwadl
+				xwadl = ((XwadlIQ) resultIQ).getXwadl();
+			} else
+				throw new SmackException("Wrong IQ has been passed");
+			
+//			logger.info("the following stanza had been received: " + xwadl.toString());
 
-			// create xwadl
-			ResourceTypeDocument xwadl = ResourceTypeDocument.Factory.parse(resultXML);
 			// create client
 			return new XmppRestClient(connection, uri, xwadl);
 		}

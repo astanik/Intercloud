@@ -57,14 +57,14 @@ public class ExchangeComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQGet(IQ iq) throws Exception {
-		logger.info("the following iq get stanza has been received:" + iq.toString());
+//		logger.info("the following iq get stanza has been received:" + iq.toString());
 		Element child = iq.getChildElement();
 		String path = child.attribute("path").getValue();
 		ResourceTypeDocument xwadl = this.container.getXWADL(path);
 		Document doc = DocumentHelper.parseText(xwadl.toString());
 		IQ response = IQ.createResultIQ(iq);
 		response.setChildElement(doc.getRootElement());
-		logger.info("the following iq result stanza will be send:" + response.toString());
+//		logger.info("the following iq result stanza will be send:" + response.toString());
 		return response;
 	}
 
@@ -93,14 +93,14 @@ public class ExchangeComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQSet(IQ iq) throws Exception {
-		logger.info("the following iq set stanza has been received:" + iq.toString());
+//		logger.info("the following iq set stanza has been received:" + iq.toString());
 		Element child = iq.getChildElement();
 		ResourceDocument xmlRequest = ResourceDocument.Factory.parse(child.asXML());
 		ResourceDocument xmlResponse = this.container.execute(xmlRequest);
 		Document doc = DocumentHelper.parseText(xmlResponse.toString());
 		IQ response = IQ.createResultIQ(iq);
 		response.setChildElement(doc.getRootElement());
-		logger.info("the following iq result stanza will be send:" + response.toString());
+//		logger.info("the following iq result stanza will be send:" + response.toString());
 		return response;
 	}
 

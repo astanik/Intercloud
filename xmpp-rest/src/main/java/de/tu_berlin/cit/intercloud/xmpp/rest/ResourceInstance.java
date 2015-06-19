@@ -48,13 +48,13 @@ public abstract class ResourceInstance {
 		// generate new relative path
 		if (instance.getClass().isAnnotationPresent(Path.class)) {
 			newPath = instance.getClass().getAnnotation(Path.class).value();
-			logger.info("ResourceInstance has Path annotation=" + newPath);
+//			logger.info("ResourceInstance has Path annotation=" + newPath);
 		} else if (instance.getClass().isAnnotationPresent(PathID.class)) {
 			// find unused id
 			do {
 				newPath = "/" + UUID.randomUUID().toString();
 			} while (resourceMap.containsKey(newPath));
-			logger.info("ResourceInstance has PathID annotation=" + newPath);
+//			logger.info("ResourceInstance has PathID annotation=" + newPath);
 		} else {
 			throw new RuntimeException("Failed: XMPP Resource error: "
 					+ "The recified resource object has no Path annotation.");
@@ -69,8 +69,8 @@ public abstract class ResourceInstance {
 
 		// add resource to map
 		this.resourceMap.put(newPath, instance);
-		logger.info("New ResourceInstance had been added to resource map with path=" + newPath
-				+ " and absolute path=" + absolutePath);
+//		logger.info("New ResourceInstance had been added to resource map with path=" + newPath
+//				+ " and absolute path=" + absolutePath);
 
 		// return the absolute path of this resource
 		return absolutePath;
@@ -93,7 +93,7 @@ public abstract class ResourceInstance {
 	}
 	
 	public ResourceInstance getResource(String resPath) {
-		logger.info("Lookup ResourceInstance for path=" + resPath);
+//		logger.info("Lookup ResourceInstance for path=" + resPath);
 		String myPath = "";
 		// find my resource path
 		String[] elements = resPath.split("/");
@@ -102,10 +102,10 @@ public abstract class ResourceInstance {
 		else
 			myPath = "/" + elements[1];
 
-		logger.info("myPath=" + myPath + "  and elements.length=" + elements.length);
+//		logger.info("myPath=" + myPath + "  and elements.length=" + elements.length);
 		// check if this resource map contains the requested resource
 		if(elements.length == 2) {
-			logger.info("Lookup ResourceInstance in my resource map with path=" + myPath);
+//			logger.info("Lookup ResourceInstance in my resource map with path=" + myPath);
 			return this.resourceMap.get(myPath);
 		}
 		

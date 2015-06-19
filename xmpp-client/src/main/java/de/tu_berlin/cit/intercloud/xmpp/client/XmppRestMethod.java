@@ -2,6 +2,7 @@ package de.tu_berlin.cit.intercloud.xmpp.client;
 
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.PacketCollector;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -10,14 +11,21 @@ import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.IQReplyFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.IQ;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument.Method;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 public class XmppRestMethod extends MethodInvocation {
+
+	protected final static Logger logger = LoggerFactory.getLogger(XmppRestMethod.class);
 
 	private final XmppURI uri;
 	
@@ -30,14 +38,16 @@ public class XmppRestMethod extends MethodInvocation {
 		this.uri = uri;
 	}
 
-	public Representation invoke(Representation rep) throws NotConnectedException, NoResponseException, XMPPErrorException, XmlException {
+	public Representation invoke(Representation rep) throws XMPPErrorException, XmlException, SmackException {
 		this.setRequestRepresentation(rep);
 		return this.invoke();
 	}
 
-	public Representation invoke() throws NotConnectedException, NoResponseException, XMPPErrorException, XmlException {
+	public Representation invoke() throws XMPPErrorException, XmlException, SmackException {
 		// create an set IQ stanza to uri
 		RestIQ setIQ = new RestIQ(this.uri, this.getXmlDocument());
+		
+//		logger.info("invoke: the following stanza will be send: " + this.getXmlDocument().toString());
 
 		// send stanza
 		this.connection.sendStanza(setIQ);
@@ -48,14 +58,20 @@ public class XmppRestMethod extends MethodInvocation {
 		PacketCollector collector = connection
 				.createPacketCollector(filter);
 		IQ resultIQ = collector.nextResultOrThrow();
-		System.out.println("Received iq: " + resultIQ.toString());
+		ResourceDocument doc = null;
+		if(resultIQ instanceof RestIQ) {
+			// create rest doc
+			doc = ((RestIQ) resultIQ).getResourceDocument();
+		} else
+			throw new SmackException("Wrong RestIQ has been passed");
+		
+//		logger.info("the following resource stanza had been received: " + doc.toString());
 
 		// create representation
-		return getPresentation(resultIQ);
+		return getPresentation(doc);
 	}
 
-	private Representation getPresentation(IQ resultIQ) throws XmlException {
-		ResourceDocument xmlRepresentationDoc = ResourceDocument.Factory.parse(resultIQ.getChildElementXML().toString());
+	private Representation getPresentation(ResourceDocument xmlRepresentationDoc) throws XmlException {
 		if(xmlRepresentationDoc.getResource().isSetMethod()) {
 			Method method = xmlRepresentationDoc.getResource().getMethod();
 			if(method.isSetResponse()) {
