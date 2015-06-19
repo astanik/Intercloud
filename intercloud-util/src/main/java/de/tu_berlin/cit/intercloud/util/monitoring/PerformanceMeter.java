@@ -37,8 +37,10 @@ public class PerformanceMeter {
 	public void startTimer(int id) {
 		// increment timer count
 		this.startedTimers++;
+		// get current time in nanoseconds
+		long startTime = System.nanoTime();
 		// get current time in milliseconds
-		long startTime = System.currentTimeMillis();
+//		long startTime = System.currentTimeMillis();
 		// store the time
 		this.startTimes.put(id, startTime);
 	}
@@ -46,8 +48,10 @@ public class PerformanceMeter {
 	public void stopTimer(int id) {
 		// decrement timer count
 		this.startedTimers--;
+		// get current time in nanoseconds
+		long endTime = System.nanoTime();
 		// get current time in milliseconds
-		long endTime = System.currentTimeMillis();
+//		long endTime = System.currentTimeMillis();
 		// store the time
 		this.stopTimes.put(id, endTime);
 	}
@@ -59,9 +63,9 @@ public class PerformanceMeter {
 							+ this.startedTimers);
 
 		System.out.println("Average execution time: " + this.getAverage()
-				+ " ms");
-		System.out.println("Minimum execution time: " + this.getMin() + " ms");
-		System.out.println("Maximum execution time: " + this.getMax() + " ms");
+				+ " ns");
+		System.out.println("Minimum execution time: " + this.getMin() + " ns");
+		System.out.println("Maximum execution time: " + this.getMax() + " ns");
 	}
 
 	public static String getHead() {
@@ -70,7 +74,7 @@ public class PerformanceMeter {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s %s ms", this.getAverage(), this.getMin(),
+		return String.format("%s %s %s ns", this.getAverage(), this.getMin(),
 				this.getMax());
 	}
 
