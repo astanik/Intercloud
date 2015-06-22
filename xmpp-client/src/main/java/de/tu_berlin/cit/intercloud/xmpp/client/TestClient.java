@@ -85,12 +85,14 @@ public class TestClient {
 				XmppURI uri = new XmppURI(testComponent, computePath);
 				XmppURI delUri = null;
 				// get flavor
+				flavorMeter.startTimer(i);
 				XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
+				flavorMeter.stopTimer(i);
 				Method method = client.getMethod(MethodType.POST, new OcciText(), new UriText());
 				if(method != null) {
-					flavorMeter.startTimer(i);
+				//	flavorMeter.startTimer(i);
 					List<Representation> rep = client.getRequestTemplates(method);
-					flavorMeter.stopTimer(i);
+				//	flavorMeter.stopTimer(i);
 					if(rep.size() > 0) {
 						if(rep.get(0) instanceof OcciText) {
 							representation = (OcciText) rep.get(0);
