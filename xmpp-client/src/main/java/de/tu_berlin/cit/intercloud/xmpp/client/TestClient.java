@@ -112,11 +112,12 @@ public class TestClient {
 					}
 				}
 				// delete vm
+				deleteMeter.startTimer(i);
 				client = XmppRestClient.XmppRestClientBuilder.build(connection, delUri);
 				method = client.getMethod(MethodType.DELETE, null, null);
 				if(method != null) {
 					XmppRestMethod invocable = client.buildMethodInvocation(method);
-					deleteMeter.startTimer(i);
+				//	deleteMeter.startTimer(i);
 					Representation message = invocable.invoke();
 					deleteMeter.stopTimer(i);
 //					System.out.println("===========Message:============");
