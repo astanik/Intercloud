@@ -24,7 +24,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>de.tu_berlin.cit.intercloud.root.GatewayApplication</mainClass>
+							<mainClass>de.tu_berlin.cit.intercloud.gateway.GatewayApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

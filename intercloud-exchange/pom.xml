@@ -24,7 +24,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>de.tu_berlin.cit.intercloud.root.ExchangeApplication</mainClass>
+							<mainClass>de.tu_berlin.cit.intercloud.exchange.ExchangeApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
