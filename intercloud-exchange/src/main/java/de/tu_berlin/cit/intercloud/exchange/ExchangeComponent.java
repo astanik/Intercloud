@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.rest.representations;
+package de.tu_berlin.cit.intercloud.exchange;
 
-import java.util.List;
+import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 
-public abstract class Representation {
-
-	public abstract List<Representation> getTemplates();
+public class ExchangeComponent extends ResourceContainerComponent {
 	
-	public abstract void readRepresentation(String stringRepresentation);
-	
-	public abstract StringBuilder writeRepresentation(StringBuilder representationBuilder);
+	public ExchangeComponent(ResourceContainer container) {
+		super(container);
+	}
 
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder = this.writeRepresentation(builder);
-		return builder.toString();
+	public String getName() {
+		return "Intercloud Exchange";
 	}
+
+	@Override
+	public String getDescription() {
+		return "This is the Intercloud Exchange service.";
+	}
+
 }
