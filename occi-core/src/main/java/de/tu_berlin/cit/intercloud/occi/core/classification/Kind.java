@@ -16,71 +16,16 @@
 
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.tu_berlin.cit.intercloud.occi.core.Entity;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
 
 public abstract class Kind extends Category {
-
-	final private Class<? extends Kind> parent;
 	
-	final private List<Action> actions;
-	
-	final private List<Entity> entities;
-	
-	protected Kind(URI schema, String term, String title, Class<? extends Kind> parent) {
-		super(schema, term, title);
-		this.parent = parent;
-		this.actions = new ArrayList<Action>();
-		this.entities = new ArrayList<Entity>();
-	}
-
-	protected Kind(URI schema, String term, String title) {
-		this(schema, term, title, null);
+	protected Kind(String schema, String term) {
+		this(schema, term, null);
 	}
 	
-	public Class<? extends Kind> getParent() {
-		return this.parent;
+	protected Kind(String schema, String term, String title) {
+		super(ClassType.KIND, schema, term, title);
 	}
 	
-	public List<Action> getAction() {
-		return this.actions;
-	}
-	
-	public List<Entity> getEntities() {
-		return this.entities;
-	}
-	
-	@Override
-	public String toText() {
-    	StringBuilder text = new StringBuilder();
-    	text.append(this.getCategoryText("kind"));
-
-    	if(this.parent != null) {
-			try {
-	    		Kind instance;
-				instance = this.parent.newInstance();
-	    		text.append("parent=" + instance.getSchema() + "#" + instance.getTerm() + "; \n");
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
-    	
-    	if(!this.actions.isEmpty()) {
-        	text.append("actions=");
-        	for(int i = 0; i < this.actions.size(); i++) {
-        		text.append(" " + this.actions.get(i).getSchema() + "#" + this.actions.get(i).getTerm());
-        	}
-        	text.append("; \n");
-    	}
-
-    	return text.toString();
-	}
-
 }

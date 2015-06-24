@@ -16,73 +16,16 @@
 
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.tu_berlin.cit.intercloud.occi.core.Entity;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
 
 public abstract class Mixin extends Category {
 
-	final private List<Mixin> dependencies;
-	
-	final private List<Action> actions;
-
-	final private List<Kind> kinds;
-	
-	private List<Entity> entities;
-
-	protected Mixin(URI schema, String term, String title) {
-		super(schema, term, title);
-		this.dependencies = new ArrayList<Mixin>();
-		this.actions = new ArrayList<Action>();
-		this.kinds = new ArrayList<Kind>();
-		this.entities = new ArrayList<Entity>();
-	}
-
-	public List<Mixin> getDependencies() {
-		return this.dependencies;
+	protected Mixin(String schema, String term) {
+		this(schema, term, null);
 	}
 	
-	public List<Action> getActions() {
-		return this.actions;
-	}
-	
-	public List<Kind> getKinds() {
-		return this.kinds;
-	}
-	
-	public List<Entity> getEntities() {
-		return this.entities;
-	}
-	
-	public void setEntities(List<Entity> entities) {
-		this.entities = entities;
-	}
-	
-	@Override
-	public String toText() {
-    	StringBuilder text = new StringBuilder();
-    	text.append(this.getCategoryText("mixin"));
-
-    	if(!this.dependencies.isEmpty()) {
-        	text.append("dependencies=");
-        	for(int i = 0; i < this.dependencies.size(); i++) {
-        		text.append(" " + this.dependencies.get(i).getSchema() + "#" + this.dependencies.get(i).getTerm());
-        	}
-        	text.append("; \n");
-    		
-    	}
-    	
-    	if(!this.actions.isEmpty()) {
-        	text.append("actions=");
-        	for(int i = 0; i < this.actions.size(); i++) {
-        		text.append(" " + this.actions.get(i).getSchema() + "#" + this.actions.get(i).getTerm());
-        	}
-        	text.append("; \n");
-    	}
-    	
-    	return text.toString();
+	protected Mixin(String schema, String term, String title) {
+		super(ClassType.MIXIN, schema, term, title);
 	}
 
 }

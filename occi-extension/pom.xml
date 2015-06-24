@@ -9,25 +9,15 @@
 	</parent>
 
 	<groupId>de.tu_berlin.cit.intercloud</groupId>
-	<artifactId>occi-infrastructure</artifactId>
+	<artifactId>occi-extension</artifactId>
 	<packaging>jar</packaging>
 
-	<name>OCCI Infrastructure Module</name>
+	<name>OCCI Extension Module</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
 			<artifactId>occi-core</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>occi-text</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>xmpp-rest</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 	</dependencies>

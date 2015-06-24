@@ -16,41 +16,44 @@
 
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
 
 public abstract class Category {
 	
-	final static public String CategorySchema = "http://schema.ogf.org/occi/core#";
+	public final static String CategorySchema = "http://schema.ogf.org/occi/core#";
 	
-	final private URI schema;
-	
-	final private String term;
-	
-	final private String title;
-	
-	private List<Attribute> attributes;
-	
-	protected Category(URI schema, String term, String title) {
-		this.schema = schema;
-		this.term = term;
-		this.title = title;
-		this.attributes = new ArrayList<Attribute>();
+	private final CategoryDocument doc;
+		
+	protected Category(ClassType.Enum type, String schema, String term) {
+		this(type, schema, term, null);
 	}
 	
-	public URI getSchema() {
-		return this.schema;
+	protected Category(ClassType.Enum type, String schema, String term, String title) {
+		this.doc = CategoryDocument.Factory.newInstance();
+		this.doc.addNewCategory().setClass1(type);
+		this.doc.getCategory().setSchema(schema);
+		this.doc.getCategory().setTerm(term);
+		if(title != null)
+			this.doc.getCategory().setTitle(title);
+	}
+	
+	public String getSchema() {
+		return this.doc.getCategory().getSchema();
 	}
 	
 	public String getTerm() {
-		return this.term;
+		return this.doc.getCategory().getTerm();
 	}
 	
 	public String getTitle() {
-		return this.title;
+		if(this.doc.getCategory().isSetTitle())
+			return this.doc.getCategory().getTitle();
+		else
+			return "";
 	}
 	
+	/*
 	public List<Attribute> getAttributes() {
 		return this.attributes;
 	}
@@ -59,25 +62,25 @@ public abstract class Category {
 		if(attributes != null)
 			this.attributes = attributes;
 	}
-	abstract public String toText();
-
-	protected String getCategoryText(String className) {
+	*/
+	
+	public String toTextPlain() {
     	StringBuilder text = new StringBuilder();
     	text.append("Category: " + this.getTerm() + "; \n");
-    	text.append("scheme=" + this.getSchema().getPath() + "#; \n");
-    	text.append("class=" + className + "; \n");
+    	text.append("scheme=" + this.getSchema() + "; \n");
+    	text.append("class=" + this.doc.getCategory().getClass1().toString() + "; \n");
     	text.append("title=" + this.getTitle() + "; \n");
-    	text.append("attributes=");
-    	for(int i = 0; i < this.attributes.size(); i++) {
-    		text.append(" " + this.attributes.get(i).getName());
-    	}
-    	text.append("; \n");
+//    	text.append("attributes=");
+//    	for(int i = 0; i < this.attributes.size(); i++) {
+//   		text.append(" " + this.attributes.get(i).getName());
+//    	}
+//    	text.append("; \n");
     	return text.toString();
 	}
 
 	@Override
 	public String toString() {
-		return this.toText();
+		return this.doc.toString();
 	}
 	
 }

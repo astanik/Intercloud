@@ -16,17 +16,16 @@
 
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
-import java.net.URI;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
 
 public abstract class Action extends Category {
 
-	protected Action(URI schema, String term, String title) {
-		super(schema, term, title);
+	protected Action(String schema, String term) {
+		this(schema, term, null);
 	}
-
-	@Override
-	public String toText() {
-    	return this.getCategoryText("action");
+	
+	protected Action(String schema, String term, String title) {
+		super(ClassType.ACTION, schema, term, title);
 	}
 
 }
