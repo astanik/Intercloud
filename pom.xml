@@ -80,7 +80,6 @@
 	<modules>
 		<module>intercloud-util</module>
 		<module>occi-core</module>
-		<module>occi-text</module>
 		<module>occi-infrastructure</module>
 		<module>xmpp-core</module>
 		<module>xmpp-rest</module>
