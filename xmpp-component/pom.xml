@@ -28,7 +28,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>occi-infrastructure</artifactId>
+			<artifactId>occi-extension</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<!-- whack v1.0.0 dependencies -->

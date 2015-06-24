@@ -189,11 +189,16 @@
 
 	<dependencies>
 		<!-- intercloud dependencies -->
-		<!-- dependency>
+		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>xmpp-core</artifactId>
+			<artifactId>occi-core</artifactId>
 			<version>0.0.1</version>
-		</dependency -->
+		</dependency>
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>occi-extension</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<!-- xmlbeans -->
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>

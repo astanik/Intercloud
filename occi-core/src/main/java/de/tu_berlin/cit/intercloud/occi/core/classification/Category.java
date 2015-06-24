@@ -16,8 +16,10 @@
 
 package de.tu_berlin.cit.intercloud.occi.core.classification;
 
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeDocument.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkDocument.Link;
 
 public abstract class Category {
 	
@@ -36,6 +38,27 @@ public abstract class Category {
 		this.doc.getCategory().setTerm(term);
 		if(title != null)
 			this.doc.getCategory().setTitle(title);
+		
+		this.setAttributes();
+		this.setLinks();
+	}
+	
+	private void setAttributes() {
+		this.defineAttributes(this.doc.getCategory());
+	}
+
+	protected abstract void defineAttributes(
+			de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument.Category category);
+
+	private void setLinks() {
+		this.defineLinks(this.doc.getCategory());
+	}
+
+	protected abstract void defineLinks(
+			de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument.Category category);
+
+	public CategoryDocument getCategoryDocument() {
+		return this.doc;
 	}
 	
 	public String getSchema() {
@@ -53,28 +76,24 @@ public abstract class Category {
 			return "";
 	}
 	
-	/*
-	public List<Attribute> getAttributes() {
-		return this.attributes;
-	}
-
-	public void setAttributes(List<Attribute> attributes) {
-		if(attributes != null)
-			this.attributes = attributes;
-	}
-	*/
-	
 	public String toTextPlain() {
     	StringBuilder text = new StringBuilder();
     	text.append("Category: " + this.getTerm() + "; \n");
     	text.append("scheme=" + this.getSchema() + "; \n");
     	text.append("class=" + this.doc.getCategory().getClass1().toString() + "; \n");
     	text.append("title=" + this.getTitle() + "; \n");
-//    	text.append("attributes=");
-//    	for(int i = 0; i < this.attributes.size(); i++) {
-//   		text.append(" " + this.attributes.get(i).getName());
-//    	}
-//    	text.append("; \n");
+    	Attribute[] attr = this.doc.getCategory().getAttributes().getAttributeArray();
+    	text.append("attributes=");
+    	for(int i = 0; i < attr.length; i++) {
+    		text.append(" " + attr[i].getName());
+    	}
+    	text.append("; \n");
+    	Link[] link = this.doc.getCategory().getLinks().getLinkArray();
+    	text.append("links=");
+    	for(int i = 0; i < link.length; i++) {
+    		text.append(" " + link[i].getCategory());
+    	}
+    	text.append("; \n");
     	return text.toString();
 	}
 

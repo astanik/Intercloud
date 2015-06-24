@@ -5,9 +5,7 @@ import java.util.Collection;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.infrastructure.FlavorMixin;
-import de.tu_berlin.cit.intercloud.occi.infrastructure.VirtualMachine;
-import de.tu_berlin.cit.intercloud.occi.infrastructure.compute.ComputeKind;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;

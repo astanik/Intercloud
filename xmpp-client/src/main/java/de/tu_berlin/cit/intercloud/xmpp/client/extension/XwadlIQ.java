@@ -32,8 +32,8 @@ public class XwadlIQ extends IQ {
 		xml.rightAngleBracket();
 		
 		// add doc element
-		if(resource.isSetDoc()) // not allowed
-			xml.append(resource.getDoc().toString());
+		if(resource.isSetDocumentation()) // not allowed
+			xml.append(resource.getDocumentation().toString());
 		
 		// add grammars element
 		if(resource.isSetGrammars()) // not allowed

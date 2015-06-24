@@ -85,7 +85,6 @@
 		<module>xmpp-rest</module>
 		<module>xmpp-component</module>
 		<module>xmpp-client</module>
-		<module>xmpp-connector</module>
 		<module>intercloud-root</module>
 		<module>intercloud-exchange</module>
 		<module>intercloud-gateway</module>

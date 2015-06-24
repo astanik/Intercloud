@@ -3,8 +3,6 @@ package de.tu_berlin.cit.intercloud.root.services;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
-import de.tu_berlin.cit.intercloud.occi.infrastructure.FlavorMixin;
-import de.tu_berlin.cit.intercloud.occi.infrastructure.VirtualMachine;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
@@ -37,7 +35,7 @@ public class IaaS extends ResourceInstance {
 		}
 		return uriList;
 	}
-
+/*
 	@XmppMethod(XmppMethod.POST)
     @Consumes(value = FlavorMixin.MEDIA_TYPE, serializer = FlavorMixin.class)
     @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
@@ -54,5 +52,5 @@ public class IaaS extends ResourceInstance {
 			return new UriText(); 
 		}
 	}
-	
+*/
 }

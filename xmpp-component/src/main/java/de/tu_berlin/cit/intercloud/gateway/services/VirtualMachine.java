@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.occi.infrastructure;
+package de.tu_berlin.cit.intercloud.gateway.services;
 
 import java.util.UUID;
 
