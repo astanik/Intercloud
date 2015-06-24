@@ -47,7 +47,6 @@
 				<xs:element name="category" type="xs:string" minOccurs="1" maxOccurs="1" />
 				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
-			<xs:attribute name="mediaType" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 
@@ -59,65 +58,27 @@
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="attribute">xx weiter
+	<xs:element name="attribute">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="representation" type="xs:string" minOccurs="0"
-					maxOccurs="1" />
-				<xs:any namespace="##other" processContents="lax" minOccurs="0"
-					maxOccurs="unbounded" />
+				<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="mutable" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+				<xs:element name="required" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+				<xs:element name="pattern" type="patternType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="default" type="xs:string" minOccurs="0" maxOccurs="1" />
+				<xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
-			<xs:attribute name="mediaType" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 
-
-
-
-	<xs:simpleType name="methodType">
+	<xs:simpleType name="patternType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="GET" />
-			<xs:enumeration value="POST" />
-			<xs:enumeration value="PUT" />
-			<xs:enumeration value="DELETE" />
+			<xs:enumeration value="OnlyOne" />
+			<xs:enumeration value="ZeroOrOne" />
+			<xs:enumeration value="ZeroOrMany" />
+			<xs:enumeration value="OneOrMany" />
 		</xs:restriction>
 	</xs:simpleType>
-
-
-
-	<xs:element name="action">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" />
-				<xs:element ref="result" minOccurs="0" maxOccurs="1" />
-			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="required" />
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="parameter">
-		<xs:complexType>
-			<xs:choice>
-				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
-				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
-				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
-				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
-			</xs:choice>
-			<xs:attribute name="name" type="xs:string" use="required" />
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="result">
-		<xs:complexType>
-			<xs:choice>
-				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
-				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
-				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
-				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
-			</xs:choice>
-		</xs:complexType>
-	</xs:element>
 
 </xs:schema>

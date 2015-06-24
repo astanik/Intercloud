@@ -21,10 +21,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Summary;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
@@ -49,8 +49,12 @@ public class XwadlBuilder {
 		// check summary annotation
 		if (instance.getClass().isAnnotationPresent(Summary.class)) {
 			String summary = instance.getClass().getAnnotation(Summary.class).value();
-			resType.addNewDoc().setTitle("Summary");
-			resType.getDoc().
+			resType.addNewDocumentation().setTitle("Summary");
+			resType.getDocumentation().setStringValue(summary);
+		}
+		// add occi classification grammar
+		if(instance.getClass().isAnnotationPresent(Kind.class)) {
+			
 		}
 
 		// search methods

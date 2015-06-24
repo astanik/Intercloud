@@ -3,13 +3,15 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.FlavorMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.VirtualMachine;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.compute.ComputeKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Summary;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
@@ -17,6 +19,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Path("/compute")
 @Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")
+@Kind(ComputeKind.class)
 public class Compute extends ResourceInstance {
 
 //	final static public String InfrastructureSchema = AbstractKind.InfrastructureSchema + "compute";

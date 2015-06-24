@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.rest.annotations;
+package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 @Target(java.lang.annotation.ElementType.TYPE)
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-public @interface Summary {
+public @interface Mixin {
 
-	String value();
-	
+	/**
+	 * The class that specifies a kind.
+	 * @return kind class
+	 */
+	Class<? extends de.tu_berlin.cit.intercloud.occi.core.classification.Mixin>[] value();
+
 }

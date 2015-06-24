@@ -8,12 +8,8 @@
 		<xb:package>de.tu_berlin.cit.intercloud.xmpp.rest.xmlbeans</xb:package>
 	</xb:namespace>
 	
-	<xb:namespace uri="urn:xmpp:rest-xwadl">
-		<xb:package>de.tu_berlin.cit.intercloud.xmpp.rest.xwadl</xb:package>
-	</xb:namespace>
-	
-	<xb:namespace uri="urn:xmpp:xml-rest">
-		<xb:package>de.tu_berlin.cit.intercloud.xmpp.rest.xml</xb:package>
+	<xb:namespace uri="urn:xmpp:occi-classification">
+		<xb:package>de.tu_berlin.cit.intercloud.occi.core.xml.classification</xb:package>
 	</xb:namespace>
 	
 </xb:config>
