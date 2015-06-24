@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.tu_berlin.cit.intercloud.occi.infrastructure.Compute;
+import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;

@@ -1,5 +1,7 @@
 package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
+import java.util.UUID;
+
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
@@ -15,6 +17,8 @@ public class VirtualMachine extends ResourceInstance {
 //			List<Link> links, String summary) {
 //		super(id, title, kind, mixins, links, summary);
 //	}
+	
+	private static UUID TemplateID = UUID.fromString("f509099b-0da9-4f96-8fe6-7b20f6614381");
 
 	private final OcciText representation;
 	

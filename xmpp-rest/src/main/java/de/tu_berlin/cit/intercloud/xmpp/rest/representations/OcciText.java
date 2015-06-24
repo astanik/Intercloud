@@ -24,8 +24,12 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
 public class OcciText extends Representation {
 
-	
 	public static final String MEDIA_TYPE = "text/occi";
+	
+	public class OcciLink {
+		public String target;
+		
+	}
 
 	private HashMap<String,String> attributes = new HashMap<String,String>();
 	

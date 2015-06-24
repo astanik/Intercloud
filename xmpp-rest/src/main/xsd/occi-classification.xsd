@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:occi-classification" xmlns="urn:xmpp:occi-classification"
+	elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:documentation>
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="Category">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="term" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="schema" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="attributes" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="links" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="class" type="classType" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="classType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="kind" />
+			<xs:enumeration value="action" />
+			<xs:enumeration value="mixin" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="links">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="link" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="link" >
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="target" type="xs:string" minOccurs="0" maxOccurs="1" />
+				<xs:element name="category" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="mediaType" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="attributes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="attribute">xx weiter
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="representation" type="xs:string" minOccurs="0"
+					maxOccurs="1" />
+				<xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="mediaType" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+
+
+
+	<xs:simpleType name="methodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GET" />
+			<xs:enumeration value="POST" />
+			<xs:enumeration value="PUT" />
+			<xs:enumeration value="DELETE" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+	<xs:element name="action">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="result" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="parameter">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
+				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
+				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
+			</xs:choice>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="result">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
+				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
+				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

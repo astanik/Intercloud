@@ -22,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Summary;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
@@ -37,13 +39,20 @@ public class XwadlBuilder {
 
 	public static ResourceTypeDocument build(String path,
 			ResourceInstance instance) {
-//		logger.info("Start building xwadl document");
+		logger.info("Start building xwadl document");
 		// create new document 
 		ResourceTypeDocument xwadl = ResourceTypeDocument.Factory.newInstance();
 		// set resource path
 		ResourceType resType = xwadl.addNewResourceType();
 		resType.setPath(path);
-//		logger.info("resource path=" + path);
+		logger.info("resource path=" + path);
+		// check summary annotation
+		if (instance.getClass().isAnnotationPresent(Summary.class)) {
+			String summary = instance.getClass().getAnnotation(Summary.class).value();
+			resType.addNewDoc().setTitle("Summary");
+			resType.getDoc().
+		}
+
 		// search methods
 		for(java.lang.reflect.Method method : instance.getClass().getMethods()) {
 			// create method entry
