@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.root.services;
+package de.tu_berlin.cit.intercloud.gateway.services;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
-@Path("/de-be")
-public class ComputeBerlinCatalog extends AbstractComputeCatalog {
-
-	public ComputeBerlinCatalog() {
-	}
+@Path("/manager")
+@Summary("This resource allows for manage overall tasks, "
+		+ "espesially agreement management, monitoring, "
+		+ "and virtual machine instantiation.")
+public class Manager extends CollectionResourceInstance {
 
 }

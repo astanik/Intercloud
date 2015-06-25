@@ -9,7 +9,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
 
 @PathID
-public class VirtualMachine extends ResourceInstance {
+public class ComputeInstance extends ResourceInstance {
 
 //	final static public String InfrastructureSchema = AbstractKind.InfrastructureSchema + "compute";
 //
@@ -22,11 +22,11 @@ public class VirtualMachine extends ResourceInstance {
 
 	private final OcciText representation;
 	
-	public VirtualMachine() {
+	public ComputeInstance() {
 		this(new OcciText());
 	}
 
-	public VirtualMachine(OcciText rep) {
+	public ComputeInstance(OcciText rep) {
 		this.representation = rep;
 	}
 

@@ -1,45 +1,26 @@
 package de.tu_berlin.cit.intercloud.gateway.services;
 
 import java.net.URISyntaxException;
-import java.util.Collection;
 
+import de.tu_berlin.cit.intercloud.gateway.templates.FlavorMixin;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Path("/compute")
 @Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")
 @Kind(ComputeKind.class)
-public class Compute extends ResourceInstance {
+public class Compute extends CollectionResourceInstance {
 
-//	final static public String InfrastructureSchema = AbstractKind.InfrastructureSchema + "compute";
-//
-//	public Compute(String id, String title, Kind kind, List<Mixin> mixins,
-//			List<Link> links, String summary) {
-//		super(id, title, kind, mixins, links, summary);
-//	}
-	
-	
 	public Compute() {
-	}
-
-	@XmppMethod(XmppMethod.GET)
-	@Produces(value = UriListText.MEDIA_TYPE, serializer = UriListText.class)
-	public UriListText getVMs() {
-		UriListText uriList = new UriListText();
-		Collection<ResourceInstance> resources = this.getResources();
-		for(ResourceInstance res : resources) {
-			uriList.addURI(res.getPath());
-		}
-		return uriList;
+		super();
 	}
 
 	@XmppMethod(XmppMethod.POST)
@@ -47,7 +28,7 @@ public class Compute extends ResourceInstance {
     @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
 	public UriText createVM(FlavorMixin flavor) {
 		// create a virtual machine and return its uri
-		VirtualMachine vm = new VirtualMachine(flavor);
+		ComputeInstance vm = new ComputeInstance(flavor);
 		String path = this.addResource(vm);
 		try {
 			UriText uri = new UriText(path);

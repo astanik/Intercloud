@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.root.services;
+package de.tu_berlin.cit.intercloud.xmpp.rest;
 
 import java.util.Collection;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 
-@Path("/iaas")
-public class IaaSCatalog extends ResourceInstance {
+public class CollectionResourceInstance extends ResourceInstance {
 
-	public IaaSCatalog() {
-		this.addResource(new ComputeCatalog());
+	public CollectionResourceInstance() {
+		super();
 	}
 
 	@XmppMethod(XmppMethod.GET)
 	@Produces(value = UriListText.MEDIA_TYPE, serializer = UriListText.class)
-	public UriListText getSubResources() {
+	public UriListText getVMs() {
 		UriListText uriList = new UriListText();
 		Collection<ResourceInstance> resources = this.getResources();
 		for(ResourceInstance res : resources) {
@@ -41,5 +39,5 @@ public class IaaSCatalog extends ResourceInstance {
 		}
 		return uriList;
 	}
-
+	
 }

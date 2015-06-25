@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.root.services;
+package de.tu_berlin.cit.intercloud.exchange.services;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 
-@Path("/de-be")
-public class ComputeBerlinCatalog extends AbstractComputeCatalog {
-
-	public ComputeBerlinCatalog() {
-	}
+public class OfferInstance extends ResourceInstance {
 
 }

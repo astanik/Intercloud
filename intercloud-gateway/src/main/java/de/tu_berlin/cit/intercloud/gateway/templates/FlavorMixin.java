@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.gateway.services;
+package de.tu_berlin.cit.intercloud.gateway.templates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
