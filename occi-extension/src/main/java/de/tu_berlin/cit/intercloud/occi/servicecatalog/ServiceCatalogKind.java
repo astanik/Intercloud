@@ -3,6 +3,7 @@ package de.tu_berlin.cit.intercloud.occi.servicecatalog;
 import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeDocument.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument.Category;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkDocument.Link;
 
 public class ServiceCatalogKind extends Kind {
 
@@ -19,70 +20,41 @@ public class ServiceCatalogKind extends Kind {
 	@Override
 	protected void defineAttributes(Category category) {
 		// create attribute list
-		todo
 		Attribute attribute = category.addNewAttributes().addNewAttribute();
 		// define base name
-		String baseName = "occi.compute.";
+		String baseName = "occi.catalog.";
 		
-		// define architecture
-		attribute.setName(baseName + "architecture");
-		attribute.setType("Enum{x86,x64}");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("CPU Architecture of the instance");
-
-		// define cores
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "cores");
-		attribute.setType("Integer");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Number of virtual CPU cores assigned to the instance");
-		
-		// define host name
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "hostname");
-		attribute.setType("String");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Fully qualified DNS host name for the instance");
-		
-		// define share
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "share");
-		attribute.setType("Integer");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Relative number of CPU shares for the instance");
-		
-		// define memory
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "memory");
+		// define price
+		attribute.setName(baseName + "price");
 		attribute.setType("Double");
 		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Minimum RAM in gigabytes allocated to the instance");
-		
-		// define state
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "state");
-		attribute.setType("Enum{active, inactive, suspended, error}");
-		attribute.setMutable(false);
 		attribute.setRequired(true);
-		attribute.setDescription("Current state of the instance");
-		
-		// define message
+		attribute.setDescription("The price for the described service");
+
+		// define currency
 		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "message");
+		attribute.setName(baseName + "currency");
 		attribute.setType("String");
-		attribute.setMutable(false);
-		attribute.setRequired(false);
-		attribute.setDescription("Human-readable explanation of the current instance state");
+		attribute.setMutable(true);
+		attribute.setRequired(true);
+		attribute.setDescription("The currency of the price");
+		
+		// define billing increments
+		attribute = category.getAttributes().addNewAttribute();
+		attribute.setName(baseName + "billingincrements");
+		attribute.setType("String");
+		attribute.setMutable(true);
+		attribute.setRequired(true);
+		attribute.setDescription("The billing increments of the price, e.g. per GB, per hour, per second, etc.");
 	}
 
 	@Override
 	protected void defineLinks(Category category) {
-		// TODO Auto-generated method stub
+		// create link list
+		Link link = category.addNewLinks().addNewLink();
+
+		// set category
+		link.setCategory(CatalogSchema + "link");
 	}
 
 }

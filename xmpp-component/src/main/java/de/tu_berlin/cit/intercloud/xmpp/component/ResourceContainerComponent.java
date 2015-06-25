@@ -30,12 +30,28 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 public abstract class ResourceContainerComponent extends AbstractComponent {
 
-	protected final static Logger logger = LoggerFactory.getLogger(ResourceContainerComponent.class);
+	protected final static Logger logger = LoggerFactory
+			.getLogger(ResourceContainerComponent.class);
 
 	private final ResourceContainer container;
-	
+
 	protected ResourceContainerComponent(ResourceContainer container) {
 		this.container = container;
+	}
+
+	@Override
+	protected String[] discoInfoFeatureNamespaces() {
+		return (new String[] { "urn:xmpp:rest:xwadl", "urn:xmpp:rest:xml" });
+	}
+
+	@Override
+	protected String discoInfoIdentityCategory() {
+		return ("automation");
+	}
+
+	@Override
+	protected String discoInfoIdentityCategoryType() {
+		return ("rest");
 	}
 
 	/**
@@ -63,14 +79,16 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQGet(IQ iq) throws Exception {
-//		logger.info("the following iq get stanza has been received:" + iq.toString());
+		// logger.info("the following iq get stanza has been received:" +
+		// iq.toString());
 		Element child = iq.getChildElement();
 		String path = child.attribute("path").getValue();
 		ResourceTypeDocument xwadl = this.container.getXWADL(path);
 		Document doc = DocumentHelper.parseText(xwadl.toString());
 		IQ response = IQ.createResultIQ(iq);
 		response.setChildElement(doc.getRootElement());
-//		logger.info("the following iq result stanza will be send:" + response.toString());
+		// logger.info("the following iq result stanza will be send:" +
+		// response.toString());
 		return response;
 	}
 
@@ -99,14 +117,17 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	 */
 	@Override
 	protected IQ handleIQSet(IQ iq) throws Exception {
-//		logger.info("the following iq set stanza has been received:" + iq.toString());
+		// logger.info("the following iq set stanza has been received:" +
+		// iq.toString());
 		Element child = iq.getChildElement();
-		ResourceDocument xmlRequest = ResourceDocument.Factory.parse(child.asXML());
+		ResourceDocument xmlRequest = ResourceDocument.Factory.parse(child
+				.asXML());
 		ResourceDocument xmlResponse = this.container.execute(xmlRequest);
 		Document doc = DocumentHelper.parseText(xmlResponse.toString());
 		IQ response = IQ.createResultIQ(iq);
 		response.setChildElement(doc.getRootElement());
-//		logger.info("the following iq result stanza will be send:" + response.toString());
+		// logger.info("the following iq result stanza will be send:" +
+		// response.toString());
 		return response;
 	}
 
@@ -119,11 +140,11 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	 *            The IQ stanza of type <tt>result</tt> that was received by
 	 *            this component.
 	 */
-//	@Override
-//	protected void handleIQResult(IQ iq) {
-		// Doesn't do anything. Override this method to process IQ result
-		// stanzas.
-//	}
+	// @Override
+	// protected void handleIQResult(IQ iq) {
+	// Doesn't do anything. Override this method to process IQ result
+	// stanzas.
+	// }
 
 	/**
 	 * Override this method to handle the IQ stanzas of type <tt>error</tt> that
@@ -134,12 +155,12 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	 *            The IQ stanza of type <tt>error</tt> that was received by this
 	 *            component.
 	 */
-//	@Override
-//	protected void handleIQError(IQ iq) {
-		// Doesn't do anything. Override this method to process IQ error
-		// stanzas.
-//		log.info("(serving component '{}') IQ stanza "
-//				+ "of type <tt>error</tt> received: ", getName(), iq.toXML());
-//	}
+	// @Override
+	// protected void handleIQError(IQ iq) {
+	// Doesn't do anything. Override this method to process IQ error
+	// stanzas.
+	// log.info("(serving component '{}') IQ stanza "
+	// + "of type <tt>error</tt> received: ", getName(), iq.toXML());
+	// }
 
 }

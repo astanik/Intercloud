@@ -74,8 +74,7 @@ public class XwadlBuilder {
 		}
 		// TODO Actions
 		
-//		logger.info("Finished building xwadl document");
-//		logger.info("New xwadl document: " + xwadl.toString());
+		logger.info("Finished building xwadl document: " + xwadl.toString());
 		return xwadl;
 	}
 

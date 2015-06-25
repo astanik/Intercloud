@@ -16,6 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.gateway;
 
+import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 
@@ -27,7 +28,7 @@ public class GatewayComponent extends ResourceContainerComponent {
 
 	@Override
 	public String getName() {
-		return "Intercloud Gateway";
+		return ServiceNames.GatewayComponentName;
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class GatewayApplication {
 
 	private final static String secretKey = "intercloud";
 
-	private final static String subDomain = "gateway";
+//	private final static String subDomain = "gateway";
 
 	private volatile boolean keepOn = true;
 	
@@ -99,6 +99,12 @@ public class GatewayApplication {
 		logger.info("Starting up...");
 		ExternalComponentManager mgr = new ExternalComponentManager(xmppServer,
 				5275);
+		
+		// allow domain naming by arguments
+		String subDomain = "gateway";
+		if(args.length > 0)
+			subDomain = args[0];
+		
 		mgr.setSecretKey(subDomain, secretKey);
 		try {
 			XmppURI uri = new XmppURI(subDomain + "." + xmppDomain, "");

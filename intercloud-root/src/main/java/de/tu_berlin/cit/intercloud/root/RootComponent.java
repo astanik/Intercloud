@@ -16,6 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.root;
 
+import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 
@@ -27,7 +28,7 @@ public class RootComponent extends ResourceContainerComponent {
 
 	@Override
 	public String getName() {
-		return "Intercloud Root";
+		return ServiceNames.RootComponentName;
 	}
 
 	@Override

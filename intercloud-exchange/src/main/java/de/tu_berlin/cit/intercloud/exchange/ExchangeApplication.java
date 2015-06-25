@@ -108,6 +108,7 @@ public class ExchangeApplication {
 			ExchangeComponent component = new ExchangeComponent(container);
 			mgr.addComponent(subDomain, component);
 			logger.info("Container is up and running...");
+			component.discoverRoot(xmppDomain);
 			new ExchangeApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {
 			logger.error(e.getMessage());
