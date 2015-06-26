@@ -17,7 +17,9 @@
 package de.tu_berlin.cit.intercloud.exchange.services;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
+@PathID
 public class AgreementInstance extends ResourceInstance {
 
 }

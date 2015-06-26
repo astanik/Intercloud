@@ -16,10 +16,24 @@
 
 package de.tu_berlin.cit.intercloud.root.services;
 
+import java.net.URISyntaxException;
+import java.util.Collection;
+
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeDocument.Attribute;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributesDocument.Attributes;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciListXml;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Kind(ServiceCatalogKind.class)
 @Summary("This resource allows for manage "
@@ -28,6 +42,89 @@ public abstract class AbstractComputeCatalog extends CollectionResourceInstance 
 
 	protected AbstractComputeCatalog() {
 		super();
+	}
+
+	@XmppMethod(XmppMethod.GET)
+    @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
+	@Produces(value = OcciListXml.MEDIA_TYPE, serializer = OcciListXml.class)
+	public OcciListXml searchSlaTemplates(OcciXml requirements) {
+		CategoryListDocument catalogList = CategoryListDocument.Factory.newInstance();
+		catalogList.addNewCategoryList();
+		Collection<ResourceInstance> resources = this.getResources();
+		for(ResourceInstance res : resources) {
+			if(res instanceof TemplateInstance) {
+				TemplateInstance templateInst = (TemplateInstance) res;
+				if(matchRequirements(templateInst.getOcciXml(), requirements)) {
+					// add template to list
+					Category cat = catalogList.getCategoryList().addNewCategory();
+					Category templCat = templateInst.getOcciXml().getDocument().getCategory();
+					if(templCat.isSetKind())
+						cat.setKind(templCat.getKind());
+					if(templCat.getMixinArray().length > 0)
+						cat.setMixinArray(templCat.getMixinArray());
+				}
+			} else if(res instanceof AbstractComputeCatalog) {
+				AbstractComputeCatalog catalogInst = (AbstractComputeCatalog) res;
+				OcciListXml subList = catalogInst.searchSlaTemplates(requirements);
+				// copy all elements
+				Category[] categories = subList.getDocument().getCategoryList().getCategoryArray();
+				for(int i=0; i < categories.length; i++) {
+					// add template to list
+					Category cat = catalogList.getCategoryList().addNewCategory();
+					if(categories[i].isSetKind())
+						cat.setKind(categories[i].getKind());
+					if(categories[i].getMixinArray().length > 0)
+						cat.setMixinArray(categories[i].getMixinArray());
+				}
+			}
+		}
+		return new OcciListXml(catalogList);
+	}
+
+	private boolean matchRequirements(OcciXml occiXml, OcciXml requirements) {
+		Category requCat = requirements.getDocument().getCategory();
+		Category category = occiXml.getDocument().getCategory();
+		
+		// compare kind attributes
+		if(requCat.isSetKind() && category.isSetKind()) {
+			Attribute[] attr = requCat.getKind().getAttributes().getAttributeArray();
+			for(int i=0; i<attr.length; i++) {
+				if(!containsEqualAttribute(category.getKind().getAttributes(), attr[i]))
+					return false;
+			}
+		}
+		
+		return true;
+	}
+
+	private boolean containsEqualAttribute(Attributes attributes,
+			Attribute attribute) {
+		Attribute[] attrList = attributes.getAttributeArray();
+		
+		for(int k=0; k < attrList.length; k++) {
+			if(attribute.getName().equals(attrList[k].getName()) && 
+					attribute.getStringValue().equals(attrList[k].getStringValue()))
+				return true;
+					
+		}
+		return false;
+	}
+
+	@XmppMethod(XmppMethod.POST)
+    @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
+    @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
+	public UriText addSlaTemplate(OcciXml template) {
+		// create a virtual machine and return its uri
+		TemplateInstance templateInst = new TemplateInstance(template);
+		String path = this.addResource(templateInst);
+		try {
+			UriText uri = new UriText(path);
+			return uri;
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new UriText(); 
+		}
 	}
 
 }

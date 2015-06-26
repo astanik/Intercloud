@@ -31,7 +31,7 @@ public class CollectionResourceInstance extends ResourceInstance {
 
 	@XmppMethod(XmppMethod.GET)
 	@Produces(value = UriListText.MEDIA_TYPE, serializer = UriListText.class)
-	public UriListText getVMs() {
+	public UriListText getSubResources() {
 		UriListText uriList = new UriListText();
 		Collection<ResourceInstance> resources = this.getResources();
 		for(ResourceInstance res : resources) {

@@ -12,4 +12,8 @@
 		<xb:package>de.tu_berlin.cit.intercloud.occi.core.xml.classification</xb:package>
 	</xb:namespace>
 	
+	<xb:namespace uri="urn:xmpp:occi-representation">
+		<xb:package>de.tu_berlin.cit.intercloud.occi.core.xml.representation</xb:package>
+	</xb:namespace>
+	
 </xb:config>

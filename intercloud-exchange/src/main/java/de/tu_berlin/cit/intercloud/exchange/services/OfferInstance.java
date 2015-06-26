@@ -17,7 +17,15 @@
 package de.tu_berlin.cit.intercloud.exchange.services;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
+@PathID
 public class OfferInstance extends ResourceInstance {
+
+	@XmppMethod(XmppMethod.DELETE)
+	public void deleteOffer() {
+		this.getParent().removeResource(this);
+	}
 
 }

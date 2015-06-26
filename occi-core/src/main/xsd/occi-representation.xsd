@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:occi-representation" xmlns="urn:xmpp:occi-representation"
+	elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:documentation>
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="Category_List">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Category" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="Category">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Kind" type="CategoryType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="Mixin" type="CategoryType" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="CategoryType">
+		<xs:sequence>
+			<xs:element name="term" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="schema" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="attributes" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="links" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="links">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="link" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="link" >
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
+				<xs:element name="target" type="xs:string" minOccurs="0" maxOccurs="1" />
+				<xs:element name="category" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="attributes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="attribute">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="name" type="xs:string" use="required" />
+					<xs:attribute name="type" type="xs:string" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
