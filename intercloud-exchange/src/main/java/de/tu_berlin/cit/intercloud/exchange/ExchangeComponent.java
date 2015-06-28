@@ -18,15 +18,14 @@ package de.tu_berlin.cit.intercloud.exchange;
 
 import java.util.Iterator;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
+import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
+import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
-import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ.Type;
-import de.tu_berlin.cit.intercloud.xmpp.core.packet.PacketError.Condition;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 
 public class ExchangeComponent extends ResourceContainerComponent {
@@ -43,6 +42,14 @@ public class ExchangeComponent extends ResourceContainerComponent {
 	@Override
 	public String getDescription() {
 		return "This is the Intercloud Exchange service.";
+	}
+
+	@Override
+	protected String[] discoInfoFeatureNamespaces() {
+		return (new String[] { "urn:xmpp:rest:xwadl", "urn:xmpp:rest:xml",
+				AgreementKind.AgreementSchema + AgreementKind.AgreementTerm,
+				OfferKind.OfferSchema + OfferKind.OfferTerm,
+				MeterKind.MeterSchema + MeterKind.MeterTerm});
 	}
 
 //	public void postComponentStart() {
