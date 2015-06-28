@@ -21,7 +21,9 @@ import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciListXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
@@ -101,6 +103,27 @@ public class XmppRestClient extends ResourceClient {
 					return method;
 
 			if(requestMatch && !method.isSetResponse() && uriText == null)
+				return method;
+		}
+		return null;
+	}
+
+	public Method getMethod(Enum type, OcciXml occiXml, OcciListXml occiListXml) {
+		List<Method> list = this.getMethods(type);
+		for(Method method : list) {
+			Boolean requestMatch = false;
+			if(method.isSetRequest() && occiXml != null)
+				if(method.getRequest().getMediaType().equals(occiXml.MEDIA_TYPE))
+					requestMatch = true;
+			
+			if(!method.isSetRequest() && occiXml == null)
+				requestMatch = true;
+			
+			if(requestMatch && method.isSetResponse() && occiListXml != null)
+				if(method.getResponse().getMediaType().equals(occiListXml.MEDIA_TYPE))
+					return method;
+
+			if(requestMatch && !method.isSetResponse() && occiListXml == null)
 				return method;
 		}
 		return null;

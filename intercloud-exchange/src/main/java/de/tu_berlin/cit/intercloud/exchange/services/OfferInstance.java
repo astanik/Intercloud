@@ -16,13 +16,37 @@
 
 package de.tu_berlin.cit.intercloud.exchange.services;
 
+import java.util.List;
+
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkDocument.Link;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 
 @PathID
 public class OfferInstance extends ResourceInstance {
 
+	private final OcciXml representation;
+	
+	public OfferInstance(OcciXml offerXml) {
+		this.representation = offerXml;
+		// create Management instance at gateway
+		List<Link> links = offerXml.getLinks();
+		for(int i = 0; i < links.size(); i++) {
+			if(links.get(i).getCategory().equals(ManagerSchema)) {
+				// send post
+			}
+		}
+	}
+
+	@XmppMethod(XmppMethod.GET)
+	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
+	public OcciXml getOcciXml() {
+		return this.representation;
+	}
+	
 	@XmppMethod(XmppMethod.DELETE)
 	public void deleteOffer() {
 		this.getParent().removeResource(this);

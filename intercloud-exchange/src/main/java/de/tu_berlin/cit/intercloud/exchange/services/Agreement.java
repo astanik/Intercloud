@@ -16,12 +16,40 @@
 
 package de.tu_berlin.cit.intercloud.exchange.services;
 
+import java.net.URISyntaxException;
+
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Path("/agreement")
 @Summary("This resource allows for manage service level agreements.")
 public class Agreement extends CollectionResourceInstance {
+
+	public Agreement() {
+		super();
+	}
+	
+	@XmppMethod(XmppMethod.POST)
+    @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
+    @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
+	public UriText createAgreement(OcciXml agreementXml) {
+		// create an agreement and return its uri
+		AgreementInstance agreement = new AgreementInstance(agreementXml);
+		String path = this.addResource(agreement);
+		try {
+			UriText uri = new UriText(path);
+			return uri;
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new UriText(); 
+		}
+	}
 
 }

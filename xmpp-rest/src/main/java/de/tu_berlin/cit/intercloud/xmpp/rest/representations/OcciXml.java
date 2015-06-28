@@ -16,11 +16,15 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.rest.representations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
 
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkDocument.Link;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
 public class OcciXml extends Representation {
@@ -42,6 +46,32 @@ public class OcciXml extends Representation {
 
 	public CategoryDocument getDocument() {
 		return this.catDoc;
+	}
+	
+	public List<Link> getLinks() {
+		ArrayList<Link> linkList = new ArrayList<Link>();
+		Category category = this.catDoc.getCategory();
+		// add kind links to array
+		if(category.isSetKind()) {
+			if(category.getKind().isSetLinks()) {
+				Link[] linkArr = category.getKind().getLinks().getLinkArray();
+				for(int i = 0; i < linkArr.length; i++) {
+					linkList.add(linkArr[i]);
+				}
+			}
+		}
+		// add mixin links to array
+		CategoryType[] mixins = category.getMixinArray();
+		for(int k = 0; k < mixins.length; k++) {
+			if(mixins[k].isSetLinks()) {
+				Link[] linkArr = mixins[k].getLinks().getLinkArray();
+				for(int i = 0; i < linkArr.length; i++) {
+					linkList.add(linkArr[i]);
+				}
+			}
+		}
+		
+		return linkList;
 	}
 
 	@Override

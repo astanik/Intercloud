@@ -19,9 +19,14 @@ package de.tu_berlin.cit.intercloud.gateway;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 public class GatewayComponent extends ResourceContainerComponent {
 	
+	private XmppURI exchangeURI = null;
+	
+	private XmppURI rootURI = null;
+
 	public GatewayComponent(ResourceContainer container) {
 		super(container);
 	}
@@ -34,6 +39,10 @@ public class GatewayComponent extends ResourceContainerComponent {
 	@Override
 	public String getDescription() {
 		return "This is one Intercloud Gateway service.";
+	}
+
+	public void postComponentStart() {
+		String domain = this.getDomain().replace("exchange.", "");
 	}
 
 }

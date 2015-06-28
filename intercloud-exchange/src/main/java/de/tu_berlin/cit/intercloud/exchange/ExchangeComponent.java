@@ -99,16 +99,5 @@ public class ExchangeComponent extends ResourceContainerComponent {
 */
 	}
 
-	public void discoverRoot(String domain) {
-		// discover root service
-		IQ discoIQ = new IQ(Type.get);
-		logger.info("Start discovering domain: " + domain);
-		discoIQ.setTo(domain);
-		discoIQ.setFrom(getJID());
-		discoIQ.setChildElement("query", NAMESPACE_DISCO_ITEMS);
-		logger.info(discoIQ.toXML());
-		// the response have to be caught in handleIQResult
-		send(discoIQ);
-	}
 
 }

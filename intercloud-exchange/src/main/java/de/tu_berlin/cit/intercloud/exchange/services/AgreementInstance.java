@@ -18,8 +18,28 @@ package de.tu_berlin.cit.intercloud.exchange.services;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 
 @PathID
 public class AgreementInstance extends ResourceInstance {
+
+	private final OcciXml representation;
+	
+	public AgreementInstance(OcciXml agreementXml) {
+		this.representation = agreementXml;
+	}
+
+	@XmppMethod(XmppMethod.GET)
+	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
+	public OcciXml getOcciXml() {
+		return this.representation;
+	}
+	
+	@XmppMethod(XmppMethod.DELETE)
+	public void deleteAgreement() {
+		this.getParent().removeResource(this);
+	}
 
 }

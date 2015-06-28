@@ -24,6 +24,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
@@ -37,11 +39,21 @@ import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.IQ.Type;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo.Identity;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
 
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
+import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.util.monitoring.PerformanceMeter;
 import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciListXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
@@ -50,67 +62,113 @@ import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
 
 public class TestClient {
 
-	private static String testComponent = "exchange.intercloud.cit.tu-berlin.de";
+	private static String testDomain = "intercloud.cit.tu-berlin.de";
 
-	private static String computePath = "/compute";
+	private static String servicePath = "/iaas/compute/de";
+	
+	private XmppURI rootURI = null;
+	
+	private XmppURI exchangeURI = null;
 
 	private final AbstractXMPPConnection connection;
 	
-	public TestClient(AbstractXMPPConnection connection) {
+	public TestClient(AbstractXMPPConnection connection) throws XMPPErrorException, URISyntaxException, SmackException {
 		this.connection = connection;
+		
+		discover();
 	}
 	
+	private void discover() throws XMPPErrorException, URISyntaxException, SmackException {
+		// discover root services
+		// Obtain the ServiceDiscoveryManager associated with my XMPPConnection
+		ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
+		// Get the items of a given XMPP entity
+		// This gets the items associated with online catalog service
+		DiscoverItems discoItems = discoManager.discoverItems(testDomain);
+		// Get the discovered items of the queried XMPP entity
+		List<Item> items = discoItems.getItems();
+		// set exchange and root server
+		for(int i=0; i < items.size(); i++) {
+			Item item = items.get(i);
+			System.out.println(item.getEntityID());
+			if(ServiceNames.RootComponentName.equals(item.getName()))
+				rootURI = new XmppURI(item.getEntityID());
+			else if(ServiceNames.ExchangeComponentName.equals(item.getName()))
+				exchangeURI = new XmppURI(item.getEntityID());
+		}
+
+		// discover root features
+		if(rootURI != null) {
+			// Get the information of a given XMPP entity
+			System.out.println("Discover root: " + rootURI.getJID());
+			// This gets the information of a root component
+			DiscoverInfo discoInfo = discoManager.discoverInfo(rootURI.getJID());
+			// Get the discovered identities of the remote XMPP entity
+			List<Identity> identities = discoInfo.getIdentities();
+			// Display the identities of the remote XMPP entity
+			for(int k=0; k < identities.size(); k++) {
+				Identity identity = identities.get(k);
+				System.out.println(identity.getName());
+				System.out.println(identity.getType());
+				System.out.println(identity.getCategory());
+			}
+			// Check if root supports rest
+			if(discoInfo.containsFeature("urn:xmpp:rest:xwadl"))
+				System.out.println("XWADL is supported");
+			else
+				throw new SmackException("XWADL is not supported");
+
+			if(discoInfo.containsFeature("urn:xmpp:rest:xml"))
+				System.out.println("REST is supported");
+			else
+				throw new SmackException("REST is not supported");
+		} else {
+			throw new SmackException("Root not found");
+		}
+
+		// discover exchange features
+		if(exchangeURI != null) {
+			// Get the information of a given XMPP entity
+			System.out.println("Discover exchange: " + exchangeURI.getJID());
+			// This gets the information of a root component
+			DiscoverInfo discoInfo = discoManager.discoverInfo(exchangeURI.getJID());
+			// Get the discovered identities of the remote XMPP entity
+			List<Identity> identities = discoInfo.getIdentities();
+			// Display the identities of the remote XMPP entity
+			for(int k=0; k < identities.size(); k++) {
+				Identity identity = identities.get(k);
+				System.out.println(identity.getName());
+				System.out.println(identity.getType());
+				System.out.println(identity.getCategory());
+			}
+			// Check if root supports rest
+			if(discoInfo.containsFeature("urn:xmpp:rest:xwadl"))
+				System.out.println("XWADL is supported");
+			else
+				throw new SmackException("XWADL is not supported");
+
+			if(discoInfo.containsFeature("urn:xmpp:rest:xml"))
+				System.out.println("REST is supported");
+			else
+				throw new SmackException("REST is not supported");
+		} else {
+			throw new SmackException("Exchange not found");
+		}
+	}
+
 	public void performTest() throws FileNotFoundException, UnsupportedEncodingException, 
 			URISyntaxException, XMPPErrorException, XmlException, SmackException {
 		
-		// create files
-		PrintWriter flavorWriter = new PrintWriter("getFlavor.txt", "UTF-8");
-		flavorWriter.println("Count " + PerformanceMeter.getHead());
-		PrintWriter createWriter = new PrintWriter("postCompute.txt", "UTF-8");
-		createWriter.println("Count " + PerformanceMeter.getHead());
-		PrintWriter deleteWriter = new PrintWriter("deleteCompute.txt", "UTF-8");
-		deleteWriter.println("Count " + PerformanceMeter.getHead());
+		System.out.println("Start test ...");
 
-		// iterate over resources on server
-		for (int r = 0; r < 100; r++) {
-			OcciText representation = null;
-
-			// create performance meter
-			PerformanceMeter flavorMeter = new PerformanceMeter();
-			PerformanceMeter createMeter = new PerformanceMeter();
-			PerformanceMeter deleteMeter = new PerformanceMeter();
-	
-			// measure 50 times
-			for (int i = 0; i < 50; i++) {
-				XmppURI uri = new XmppURI(testComponent, computePath);
-				XmppURI delUri = null;
-				// get flavor
-				flavorMeter.startTimer(i);
-				XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
-				flavorMeter.stopTimer(i);
-				Method method = client.getMethod(MethodType.POST, new OcciText(), new UriText());
-				if(method != null) {
-				//	flavorMeter.startTimer(i);
-					List<Representation> rep = client.getRequestTemplates(method);
-				//	flavorMeter.stopTimer(i);
-					if(rep.size() > 0) {
-						if(rep.get(0) instanceof OcciText) {
-							representation = (OcciText) rep.get(0);
-//							System.out.println("========Representation:========");
-//							System.out.println(representation);
-							// create vm
-							XmppRestMethod invocable = client.buildMethodInvocation(method);
-							createMeter.startTimer(i);
-							Representation vmURI = invocable.invoke(representation);
-							createMeter.stopTimer(i);
-//							System.out.println("============VM URI:============");
-//							System.out.println(vmURI);
-							if(vmURI instanceof UriText) {
-								delUri = new XmppURI(((UriText)vmURI).getUri());
-							}
-						}
-					}
-				}
+		OcciXml slaTemplate = searchService();
+		
+		XmppURI offerEndpoint = createOffer(slaTemplate);
+		
+		XmppURI slaEndpoint = negotiateOffer(offerEndpoint);
+		
+		observeSLA(slaEndpoint);
+		
 				// delete vm
 				deleteMeter.startTimer(i);
 				client = XmppRestClient.XmppRestClientBuilder.build(connection, delUri);
@@ -126,18 +184,6 @@ public class TestClient {
 				}
 			}
 
-			System.out.println(r + " resources available");
-
-			// write sample to file
-			System.out.println("===========GET flavor:============");
-			flavorMeter.print();
-			flavorWriter.println(r + " " + flavorMeter.toString());
-			System.out.println("===========POST VM:============");
-			createMeter.print();
-			createWriter.println(r + " " + createMeter.toString());
-			System.out.println("===========DELETE VM:============");
-			deleteMeter.print();
-			deleteWriter.println(r + " " + deleteMeter.toString());
 
 			// create a new resources and continue
 			{
@@ -158,10 +204,91 @@ public class TestClient {
 			}
 		}
 				
+		System.out.println("Test was successful");
+	}
+
+	private OcciXml searchService() throws FileNotFoundException, UnsupportedEncodingException {
+		// create file
+		PrintWriter fileWriter = new PrintWriter("searchService.txt", "UTF-8");
+		fileWriter.println("Start search at " + new Date());
+		System.out.println("Start searchService");
+
+		// search iterate over resources on server
+
+			XmppURI uri = new XmppURI(rootURI.getJID(), servicePath);
+			System.out.println("Create client for uri: " + uri);
+			XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
+			Method method = client.getMethod(MethodType.GET, new OcciXml(), new OcciListXml());
+			if(method != null) {
+				// create search representation
+				CategoryDocument catDoc = CategoryDocument.Factory.newInstance();
+				CategoryType mixin = catDoc.addNewCategory().addNewMixin();
+				OcciXml representation = new;
+				
+			//	flavorMeter.startTimer(i);
+				List<Representation> rep = client.getRequestTemplates(method);
+			//	flavorMeter.stopTimer(i);
+				if(rep.size() > 0) {
+					if(rep.get(0) instanceof OcciText) {
+						representation = (OcciText) rep.get(0);
+//						System.out.println("========Representation:========");
+//						System.out.println(representation);
+						// create vm
+						XmppRestMethod invocable = client.buildMethodInvocation(method);
+						createMeter.startTimer(i);
+						Representation vmURI = invocable.invoke(representation);
+						createMeter.stopTimer(i);
+//						System.out.println("============VM URI:============");
+//						System.out.println(vmURI);
+						if(vmURI instanceof UriText) {
+							delUri = new XmppURI(((UriText)vmURI).getUri());
+						}
+					}
+				}
+			}
+
 		// close file writer
-		flavorWriter.close();
-		createWriter.close();
-		deleteWriter.close();
+		fileWriter.close();
+		System.out.println("Finished searchService");
+		return null;
+	}
+
+	private XmppURI createOffer(OcciXml slaTemplate) throws FileNotFoundException, UnsupportedEncodingException {
+		// create file
+		PrintWriter fileWriter = new PrintWriter("createOffer.txt", "UTF-8");
+		fileWriter.println("Start offer creation at " + new Date());
+		System.out.println("Start createOffer");
+
+
+		// close file writer
+		fileWriter.close();
+		System.out.println("Finished createOffer");
+		return null;
+	}
+
+	private XmppURI negotiateOffer(XmppURI offerEndpoint) throws FileNotFoundException, UnsupportedEncodingException {
+		// create file
+		PrintWriter fileWriter = new PrintWriter("negotiateOffer.txt", "UTF-8");
+		fileWriter.println("Start offer negotiation at " + new Date());
+		System.out.println("Start negotiateOffer");
+
+
+		// close file writer
+		fileWriter.close();
+		System.out.println("Finished negotiateOffer");
+		return null;
+	}
+
+	private void observeSLA(XmppURI slaEndpoint) throws FileNotFoundException, UnsupportedEncodingException {
+		// create file
+		PrintWriter fileWriter = new PrintWriter("observeSLA.txt", "UTF-8");
+		fileWriter.println("Start SLA observation at " + new Date());
+		System.out.println("Start observeSLA");
+
+
+		// close file writer
+		fileWriter.close();
+		System.out.println("Finished observeSLA");
 	}
 		
 }
