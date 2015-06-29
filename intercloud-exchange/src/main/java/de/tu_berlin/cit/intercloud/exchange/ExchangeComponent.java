@@ -16,6 +16,9 @@
 
 package de.tu_berlin.cit.intercloud.exchange;
 
+import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
+import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
+import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
@@ -49,6 +52,14 @@ public class ExchangeComponent extends ResourceContainerComponent {
 	protected void handleRestXML(ResourceDocument parse) {
 		// TODO Auto-generated method stub
 		logger.info("handleRestXML");
+	}
+
+	@Override
+	protected String[] discoInfoFeatureNamespaces() {
+		return (new String[] { "urn:xmpp:rest:xwadl", "urn:xmpp:rest:xml",
+				AgreementKind.AgreementSchema + AgreementKind.AgreementTerm,
+				OfferKind.OfferSchema + OfferKind.OfferTerm,
+				MeterKind.MeterSchema + MeterKind.MeterTerm});
 	}
 
 //	public void postComponentStart() {
