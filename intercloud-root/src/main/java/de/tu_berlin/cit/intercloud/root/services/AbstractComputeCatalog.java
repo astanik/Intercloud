@@ -22,7 +22,6 @@ import java.util.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeDocument.Attribute;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributesDocument.Attributes;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogKind;
@@ -35,9 +34,9 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciListXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
-@Kind(ServiceCatalogKind.class)
 @Summary("This resource allows for manage "
 		+ "the overall intercloud service catalog.")
+@Kind(ServiceCatalogKind.class)
 public abstract class AbstractComputeCatalog extends CollectionResourceInstance {
 
 	protected AbstractComputeCatalog() {
@@ -87,9 +86,9 @@ public abstract class AbstractComputeCatalog extends CollectionResourceInstance 
 		
 		// compare kind attributes
 		if(requCat.isSetKind() && category.isSetKind()) {
-			Attribute[] attr = requCat.getKind().getAttributes().getAttributeArray();
+			Attribute[] attr = requCat.getKind().getAttributeArray();
 			for(int i=0; i<attr.length; i++) {
-				if(!containsEqualAttribute(category.getKind().getAttributes(), attr[i]))
+				if(!containsEqualAttribute(category.getKind().getAttributeArray(), attr[i]))
 					return false;
 			}
 		}
@@ -97,10 +96,9 @@ public abstract class AbstractComputeCatalog extends CollectionResourceInstance 
 		return true;
 	}
 
-	private boolean containsEqualAttribute(Attributes attributes,
+	private boolean containsEqualAttribute(Attribute[] attrList,
 			Attribute attribute) {
-		Attribute[] attrList = attributes.getAttributeArray();
-		
+
 		for(int k=0; k < attrList.length; k++) {
 			if(attribute.getName().equals(attrList[k].getName()) && 
 					attribute.getStringValue().equals(attrList[k].getStringValue()))

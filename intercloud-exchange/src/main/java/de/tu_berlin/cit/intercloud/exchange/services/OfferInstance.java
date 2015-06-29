@@ -18,7 +18,10 @@ package de.tu_berlin.cit.intercloud.exchange.services;
 
 import java.util.List;
 
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkDocument.Link;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
@@ -26,6 +29,9 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 
 @PathID
+@Summary("This resource allows for manage "
+		+ "SLA offer creation and agreement negotiation.")
+@Kind(OfferKind.class)
 public class OfferInstance extends ResourceInstance {
 
 	private final OcciXml representation;
@@ -33,9 +39,9 @@ public class OfferInstance extends ResourceInstance {
 	public OfferInstance(OcciXml offerXml) {
 		this.representation = offerXml;
 		// create Management instance at gateway
-		List<Link> links = offerXml.getLinks();
-		for(int i = 0; i < links.size(); i++) {
-			if(links.get(i).getCategory().equals(ManagerSchema)) {
+		LinkType[] links = offerXml.getLinks();
+		for(int i = 0; i < links.length; i++) {
+			if(links[i].getCategory().equals(ManagerSchema)) {
 				// send post
 			}
 		}

@@ -24,6 +24,7 @@
 			<xs:sequence>
 				<xs:element name="Kind" type="CategoryType" minOccurs="0" maxOccurs="1" />
 				<xs:element name="Mixin" type="CategoryType" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="Link" type="LinkType" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -33,37 +34,17 @@
 			<xs:element name="term" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="schema" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
-			<xs:element ref="attributes" minOccurs="0" maxOccurs="1" />
-			<xs:element ref="links" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="links">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="link" minOccurs="0" maxOccurs="unbounded" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="link" >
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
-				<xs:element name="target" type="xs:string" minOccurs="0" maxOccurs="1" />
-				<xs:element name="category" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="attributes">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+	<xs:complexType name="LinkType">
+		<xs:sequence>
+			<xs:element name="target" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="category" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:element name="attribute">
 		<xs:complexType>

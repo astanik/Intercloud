@@ -16,15 +16,22 @@
 
 package de.tu_berlin.cit.intercloud.gateway.services;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 @PathID
+@Summary("This resource allows for manage overall tasks, "
+		+ "espesially agreement management, monitoring, "
+		+ "and virtual machine instantiation.")
+@Kind(ManagerKind.class)
 public class ManagerInstance extends ResourceInstance {
 
 	
 	
-	public static Category SlaTemplate {
+//	public static Category SlaTemplate {
 		
-	}
+//	}
 }

@@ -16,13 +16,16 @@
 
 package de.tu_berlin.cit.intercloud.exchange.services;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 @Path("/meter")
 @Summary("This resource allows for manage meter resources "
 		+ "used for agreement evaluation.")
+@Kind(MeterKind.class)
 public class Meter extends CollectionResourceInstance {
 
 }

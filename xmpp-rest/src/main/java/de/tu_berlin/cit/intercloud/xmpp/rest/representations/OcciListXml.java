@@ -16,16 +16,18 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.rest.representations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
 
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
 public class OcciListXml extends Representation {
 
-	public static final String MEDIA_TYPE = "xml/occi";
+	public static final String MEDIA_TYPE = "xml/occi-list";
 	
 	private CategoryListDocument catDoc = CategoryListDocument.Factory.newInstance();
 	
@@ -42,6 +44,16 @@ public class OcciListXml extends Representation {
 	
 	public CategoryListDocument getDocument() {
 		return this.catDoc;
+	}
+	
+	public List<OcciXml> getRepresentations() {
+		ArrayList<OcciXml> list = new ArrayList<OcciXml>();
+		Category[] categories = this.catDoc.getCategoryList().getCategoryArray();
+		for(int i = 0; i< categories.length; i++) {
+			OcciXml rep = new OcciXml(categories[i].toString());
+			list.add(rep);
+		}
+		return list;
 	}
 
 	@Override

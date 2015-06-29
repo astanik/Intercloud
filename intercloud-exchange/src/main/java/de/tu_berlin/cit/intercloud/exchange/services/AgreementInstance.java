@@ -16,6 +16,9 @@
 
 package de.tu_berlin.cit.intercloud.exchange.services;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
@@ -23,6 +26,8 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 
 @PathID
+@Summary("This resource allows for manage service level agreements.")
+@Kind(AgreementKind.class)
 public class AgreementInstance extends ResourceInstance {
 
 	private final OcciXml representation;

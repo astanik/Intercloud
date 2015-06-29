@@ -16,12 +16,15 @@
 
 package de.tu_berlin.cit.intercloud.gateway.services;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 @Path("/sensor")
 @Summary("This resource allows for manage sensor resources.")
+@Kind(SensorKind.class)
 public class Sensor extends CollectionResourceInstance {
 
 }
