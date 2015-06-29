@@ -16,12 +16,16 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.component;
 
+import java.util.Iterator;
+
+import org.apache.xmlbeans.XmlException;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.AbstractComponent;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ.Type;
@@ -34,7 +38,24 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	protected final static Logger logger = LoggerFactory
 			.getLogger(ResourceContainerComponent.class);
 
+	/**
+	 * The 'XWADL' namespace
+	 * 
+	 */
+	public static final String NAMESPACE_REST_XWADL = "urn:xmpp:rest-xwadl";
+
+	/**
+	 * The 'REST XML' namespace
+	 * 
+	 */
+	public static final String NAMESPACE_REST_XML = "urn:xmpp:xml-rest";
+
 	private final ResourceContainer container;
+	
+	private String rootJID = null;
+
+	private String exchangeJID = null;
+
 
 	protected ResourceContainerComponent(ResourceContainer container) {
 		this.container = container;
@@ -42,7 +63,7 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 
 	@Override
 	protected String[] discoInfoFeatureNamespaces() {
-		return (new String[] { "urn:xmpp:rest:xwadl", "urn:xmpp:rest:xml" });
+		return (new String[] { NAMESPACE_REST_XWADL, NAMESPACE_REST_XML });
 	}
 
 	@Override
@@ -143,9 +164,93 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	 */
 	@Override
 	protected void handleIQResult(IQ iq) {
-		// handle disco results
+		logger.info("the following iq result stanza has been received:" +
+				iq.toString());
 		
+		// IQ get (and set) stanza's MUST be replied to.
+		final Element childElement = iq.getChildElement();
+		String namespace = null;
+		if (childElement != null) {
+			namespace = childElement.getNamespaceURI();
+		}
+		if (namespace == null) {
+			logger.info("(serving component '{}') Invalid XMPP "
+					+ "- no child element or namespace in IQ "
+					+ "request (packetId {})", getName(), iq.getID());
+			// this isn't valid XMPP.
+			return;
+		}
+		if (NAMESPACE_DISCO_ITEMS.equals(namespace)) {
+			logger.info("discovery item result.");
+			@SuppressWarnings("rawtypes")
+			Iterator iter = childElement.elementIterator();
+			while (iter.hasNext()) {
+				Element item = (Element) iter.next();
+				// filter
+				if(item.attributeValue("name").equals(ServiceNames.RootComponentName)) {
+					this.rootJID = item.attributeValue("jid");
+					System.out.println("Discovered root jid: " + this.rootJID);
+					discoverIntercloudFeatures(this.rootJID);
+				} else if(item.attributeValue("name").equals(ServiceNames.ExchangeComponentName)) {
+					this.exchangeJID = item.attributeValue("jid");
+					System.out.println("Discovered exchange jid: " + this.exchangeJID);
+					discoverIntercloudFeatures(this.exchangeJID);
+				}
+			}
+		} else if (NAMESPACE_DISCO_INFO.equals(namespace)) {
+			logger.info("discovery info result.");
+			@SuppressWarnings("rawtypes")
+			Iterator iter = childElement.elementIterator();
+			while (iter.hasNext()) {
+				Element feature = (Element) iter.next();
+				if(feature.getName().equals("feature")) {
+					String fet = feature.attributeValue("var");
+					System.out.println("Discovered feature: " + fet);
+				}
+			}
+			if(this.rootJID != null) {
+				if(iq.getFrom().equals(this.rootJID))
+					rootDiscovered();
+			}
+			if(this.exchangeJID != null) {
+				if(iq.getFrom().equals(this.exchangeJID))
+					exchangeDiscovered();
+			}
+		} else if (NAMESPACE_REST_XWADL.equals(namespace)) {
+			logger.info("received xwadl iq.");
+			try {
+				handleRestXWADL(ResourceTypeDocument.Factory.parse(childElement
+						.asXML()));
+			} catch (XmlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} else if (NAMESPACE_REST_XML.equals(namespace)) {
+			logger.info("received rest xml iq.");
+			try {
+				handleRestXML(ResourceDocument.Factory.parse(childElement
+						.asXML()));
+			} catch (XmlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
+
+	protected void rootDiscovered() {
+		// Doesn't do anything. Override this method to process IQ stanzas.
+		logger.info("root discovery successfully completed!");
+	}
+
+	protected void exchangeDiscovered() {
+		// Doesn't do anything. Override this method to process IQ stanzas.
+		logger.info("exchange discovery successfully completed!");
+	}
+
+	protected abstract void handleRestXWADL(ResourceTypeDocument parse);
+
+	protected abstract void handleRestXML(ResourceDocument parse);
 
 	/**
 	 * Override this method to handle the IQ stanzas of type <tt>error</tt> that
@@ -186,6 +291,14 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 		logger.info(discoIQ.toXML());
 		// the response have to be caught in handleIQResult
 		send(discoIQ);
+	}
+
+	public String getRootJID() {
+		return this.rootJID;
+	}
+	
+	public String getExchangeJID() {
+		return this.exchangeJID;
 	}
 
 }

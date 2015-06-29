@@ -22,4 +22,9 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 @PathID
 public class ManagerInstance extends ResourceInstance {
 
+	
+	
+	public static Category SlaTemplate {
+		
+	}
 }
