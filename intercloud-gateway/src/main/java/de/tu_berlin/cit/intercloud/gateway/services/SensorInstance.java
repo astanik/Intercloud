@@ -16,6 +16,8 @@
 
 package de.tu_berlin.cit.intercloud.gateway.services;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
@@ -25,6 +27,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 @PathID
 @Summary("This resource allows for manage sensor resources.")
 @Kind(SensorKind.class)
-public class SensorInstance extends ResourceInstance {
+public class SensorInstance extends Resource {
+
+	public SensorInstance(OcciXml occiRepresentation) {
+		super(occiRepresentation);
+		// TODO Auto-generated constructor stub
+	}
 
 }

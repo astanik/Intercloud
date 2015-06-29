@@ -16,38 +16,43 @@
 
 package de.tu_berlin.cit.intercloud.occi.core;
 
-import java.net.URI;
-import java.util.List;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
-import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
-import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
+public class Link extends ResourceInstance {
 
-public class Link extends Entity {
+	private final LinkType linkRepresentation;
+	
+	public Link(LinkType linkRepresentation) {
+		super();
+		this.linkRepresentation = linkRepresentation;
+	}
+	
+	@XmppMethod(XmppMethod.GET)
+	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
+	public OcciXml getRepresentation() {
+		CategoryDocument doc = CategoryDocument.Factory.newInstance();
+		doc.addNewCategory().addNewLink().set(linkRepresentation);
+		return new OcciXml(doc);
+	}
+	
+	@XmppMethod(XmppMethod.DELETE)
+	public void deleteResource() {
+		this.getParent().removeResource(this);
+	}
 
-	private Resource source;
-	
-	private URI target;
-	
-	public Link(String id, String title, Kind kind, List<Mixin> mixins, Resource source, URI target) {
-		super(id, title, kind, mixins);
-		this.source = source;
-		this.target = target;
+	public ResourceInstance getSource() {
+		return this.getParent();
 	}
 	
-	public Resource getSource() {
-		return this.source;
-	}
-	
-	public void setSource(Resource source) {
-		this.source = source;
-	}
-	
-	public URI getTarget() {
-		return this.target;
-	}
-	
-	public void setTarget(URI target) {
-		this.target = target;
+	public String getTarget() {
+		if(this.linkRepresentation.isSetTarget())
+			return this.linkRepresentation.getTarget();
+		else
+			return null;
 	}
 	
 }

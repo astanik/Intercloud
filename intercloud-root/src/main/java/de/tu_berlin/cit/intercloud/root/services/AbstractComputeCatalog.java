@@ -17,8 +17,8 @@
 package de.tu_berlin.cit.intercloud.root.services;
 
 import java.net.URISyntaxException;
-import java.util.Collection;
 
+import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
@@ -27,7 +27,6 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeDocumen
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
@@ -37,7 +36,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 @Summary("This resource allows for manage "
 		+ "the overall intercloud service catalog.")
 @Kind(ServiceCatalogKind.class)
-public abstract class AbstractComputeCatalog extends CollectionResourceInstance {
+public abstract class AbstractComputeCatalog extends Collection {
 
 	protected AbstractComputeCatalog() {
 		super();
@@ -49,14 +48,14 @@ public abstract class AbstractComputeCatalog extends CollectionResourceInstance 
 	public OcciListXml searchSlaTemplates(OcciXml requirements) {
 		CategoryListDocument catalogList = CategoryListDocument.Factory.newInstance();
 		catalogList.addNewCategoryList();
-		Collection<ResourceInstance> resources = this.getResources();
+		java.util.Collection<ResourceInstance> resources = this.getResources();
 		for(ResourceInstance res : resources) {
 			if(res instanceof TemplateInstance) {
 				TemplateInstance templateInst = (TemplateInstance) res;
-				if(matchRequirements(templateInst.getOcciXml(), requirements)) {
+				if(matchRequirements(templateInst.getRepresentation(), requirements)) {
 					// add template to list
 					Category cat = catalogList.getCategoryList().addNewCategory();
-					Category templCat = templateInst.getOcciXml().getDocument().getCategory();
+					Category templCat = templateInst.getRepresentation().getDocument().getCategory();
 					if(templCat.isSetKind())
 						cat.setKind(templCat.getKind());
 					if(templCat.getMixinArray().length > 0)

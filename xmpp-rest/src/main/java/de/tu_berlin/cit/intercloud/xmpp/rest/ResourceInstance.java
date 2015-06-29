@@ -73,33 +73,17 @@ public abstract class ResourceInstance {
 	}
 
 	public String addResource(ResourceInstance instance, String subPath) {
-		String newPath = "";
-		// generate new relative path
-		if (instance.getClass().isAnnotationPresent(Path.class)) {
-			newPath = instance.getClass().getAnnotation(Path.class).value();
-//			logger.info("ResourceInstance has Path annotation=" + newPath);
-		} else if (instance.getClass().isAnnotationPresent(PathID.class)) {
-			// find unused id
-			do {
-				newPath = "/" + UUID.randomUUID().toString();
-			} while (resourceMap.containsKey(newPath));
-//			logger.info("ResourceInstance has PathID annotation=" + newPath);
-		} else {
-			throw new RuntimeException("Failed: XMPP Resource error: "
-					+ "The recified resource object has no Path annotation.");
-		}
-
 		// set absolute path in resource
-		String absolutePath = this.getPath() + newPath;
+		String absolutePath = this.getPath() + subPath;
 		instance.setPath(absolutePath);
 
 		// set parent resource
 		instance.setParent(this);
 
 		// add resource to map
-		this.resourceMap.put(newPath, instance);
-//		logger.info("New ResourceInstance had been added to resource map with path=" + newPath
-//				+ " and absolute path=" + absolutePath);
+		this.resourceMap.put(subPath, instance);
+		logger.info("New ResourceInstance had been added to resource map with path=" + subPath
+				+ " and absolute path=" + absolutePath);
 
 		// return the absolute path of this resource
 		return absolutePath;
@@ -110,32 +94,20 @@ public abstract class ResourceInstance {
 		// generate new relative path
 		if (instance.getClass().isAnnotationPresent(Path.class)) {
 			newPath = instance.getClass().getAnnotation(Path.class).value();
-//			logger.info("ResourceInstance has Path annotation=" + newPath);
+			logger.info("ResourceInstance has Path annotation=" + newPath);
 		} else if (instance.getClass().isAnnotationPresent(PathID.class)) {
 			// find unused id
 			do {
 				newPath = "/" + UUID.randomUUID().toString();
 			} while (resourceMap.containsKey(newPath));
-//			logger.info("ResourceInstance has PathID annotation=" + newPath);
+			logger.info("ResourceInstance has PathID annotation=" + newPath);
 		} else {
 			throw new RuntimeException("Failed: XMPP Resource error: "
-					+ "The recified resource object has no Path annotation.");
+					+ "The received resource object has no Path annotation.");
 		}
 
-		// set absolute path in resource
-		String absolutePath = this.getPath() + newPath;
-		instance.setPath(absolutePath);
-
-		// set parent resource
-		instance.setParent(this);
-
-		// add resource to map
-		this.resourceMap.put(newPath, instance);
-//		logger.info("New ResourceInstance had been added to resource map with path=" + newPath
-//				+ " and absolute path=" + absolutePath);
-
-		// return the absolute path of this resource
-		return absolutePath;
+		// add resource and return the absolute path of this resource
+		return this.addResource(instance, newPath);
 	}
 
 	public boolean removeResource(ResourceInstance instance) {

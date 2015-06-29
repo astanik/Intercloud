@@ -18,6 +18,7 @@ package de.tu_berlin.cit.intercloud.exchange.services;
 
 import java.net.URISyntaxException;
 
+import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
@@ -33,7 +34,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 @Summary("This resource allows for manage "
 		+ "SLA offer creation and agreement negotiation.")
 @Kind(OfferKind.class)
-public class Offer extends CollectionResourceInstance {
+public class Offer extends Collection {
 
 	public Offer() {
 		super();

@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.root.services;
+package de.tu_berlin.cit.intercloud.occi.core;
 
-import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
-@Path("/iaas")
-public class IaaSCatalog extends Collection {
+public class Collection extends CollectionResourceInstance {
 
-	public IaaSCatalog() {
-		this.addResource(new ComputeCatalog());
+	public Collection() {
+		super();
 	}
-
+	
 }

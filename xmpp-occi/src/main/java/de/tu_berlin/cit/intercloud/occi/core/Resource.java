@@ -16,42 +16,28 @@
 
 package de.tu_berlin.cit.intercloud.occi.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
-import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
-import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
+public class Resource extends CollectionResourceInstance {
 
-public class Resource extends Entity {
+	private final OcciXml representation;
 
-	private List<Link> links;
-	
-	private String summary;
-	
-	public Resource(String id, String title, Kind kind, List<Mixin> mixins) {
-		this(id, title, kind, mixins, new ArrayList<Link>(), "");
+	public Resource(OcciXml occiRepresentation) {
+		super();
+		this.representation = occiRepresentation;
 	}
 	
-	public Resource(String id, String title, Kind kind, List<Mixin> mixins, List<Link> links, String summary) {
-		super(id, title, kind, mixins);
-		this.links = links;
-		this.summary = summary;
+	@XmppMethod(XmppMethod.GET)
+	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
+	public OcciXml getRepresentation() {
+		return this.representation;
 	}
 	
-	public List<Link> getLinks() {
-		return this.links;
+	@XmppMethod(XmppMethod.DELETE)
+	public void deleteResource() {
+		this.getParent().removeResource(this);
 	}
-	
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
-	
-	public String getSummary() {
-		return this.summary;
-	}
-	
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-	
+
 }

@@ -19,6 +19,7 @@ package de.tu_berlin.cit.intercloud.exchange.services;
 import java.util.List;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
@@ -32,12 +33,10 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 @Summary("This resource allows for manage "
 		+ "SLA offer creation and agreement negotiation.")
 @Kind(OfferKind.class)
-public class OfferInstance extends ResourceInstance {
+public class OfferInstance extends Resource {
 
-	private final OcciXml representation;
-	
 	public OfferInstance(OcciXml offerXml) {
-		this.representation = offerXml;
+		super(offerXml);
 		// create Management instance at gateway
 		LinkType[] links = offerXml.getLinks();
 		for(int i = 0; i < links.length; i++) {
@@ -45,17 +44,6 @@ public class OfferInstance extends ResourceInstance {
 				// send post
 //			}
 		}
-	}
-
-	@XmppMethod(XmppMethod.GET)
-	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
-	public OcciXml getOcciXml() {
-		return this.representation;
-	}
-	
-	@XmppMethod(XmppMethod.DELETE)
-	public void deleteOffer() {
-		this.getParent().removeResource(this);
 	}
 
 }
