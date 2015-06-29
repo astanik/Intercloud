@@ -23,10 +23,10 @@ import org.jivesoftware.whack.ExternalComponentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.root.services.IaaSCatalog;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 public class RootApplication {
@@ -104,7 +104,7 @@ public class RootApplication {
 		try {
 			XmppURI uri = new XmppURI(subDomain + "." + xmppDomain, "");
 			logger.info("Starting resource container: " + uri.toString());
-			ResourceContainer container = new ResourceContainer(uri);
+			OcciContainer container = new OcciContainer(uri);
 			container.addResource(new IaaSCatalog());
 			RootComponent component = new RootComponent(container);
 			mgr.addComponent(subDomain, component);

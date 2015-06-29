@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.rest.representations;
+package de.tu_berlin.cit.intercloud.occi.core;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.Map;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
+@Deprecated
 public class OcciText extends Representation {
 
 	public static final String MEDIA_TYPE = "text/occi";

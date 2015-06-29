@@ -3,6 +3,7 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 import java.net.URISyntaxException;
 
 import de.tu_berlin.cit.intercloud.gateway.templates.FlavorMixin;
+import de.tu_berlin.cit.intercloud.occi.core.OcciText;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
@@ -11,7 +12,6 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Path("/compute")

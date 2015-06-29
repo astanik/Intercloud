@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
+import de.tu_berlin.cit.intercloud.occi.core.OcciText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
 public class FlavorMixin extends OcciText {

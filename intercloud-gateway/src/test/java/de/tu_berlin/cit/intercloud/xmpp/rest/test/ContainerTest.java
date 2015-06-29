@@ -11,9 +11,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.tu_berlin.cit.intercloud.gateway.services.Compute;
+import de.tu_berlin.cit.intercloud.occi.core.OcciClient;
+import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
@@ -29,7 +29,7 @@ public class ContainerTest {
 	public void computeTest() {
 	    try {
 			XmppURI uri = new XmppURI("exchange.cit-mac1.cit.tu-berlin.de", "/occi");
-			ResourceContainer container = new ResourceContainer(uri);
+			OcciContainer container = new OcciContainer(uri);
 			System.out.println("Container base path: " + container.getPath());
 			container.addResource(new Compute());
 			ResourceInstance cmp = container.getResource("/compute");
@@ -42,7 +42,7 @@ public class ContainerTest {
 			doc.save(out);
 			out.close();
 			// client test
-			ResourceClient client = new ResourceClient(doc);
+			OcciClient client = new OcciClient(doc);
 			List<Method> list = client.getMethods(MethodType.POST);
 			for(Method method : list) {
 				MethodInvocation invocable = client.buildMethodInvocation(method);

@@ -90,7 +90,7 @@ public class ResourceContainer extends ResourceInstance {
 		return xmlResponse;
 	}
 
-	private void invokeMethod(Method xmlMethod, ResourceInstance instance) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	protected void invokeMethod(Method xmlMethod, ResourceInstance instance) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 		java.lang.reflect.Method method = this.searchMethod(xmlMethod, instance);
 		if(method == null) {
@@ -125,7 +125,7 @@ public class ResourceContainer extends ResourceInstance {
 		
 	}
 
-	private java.lang.reflect.Method searchMethod(Method xmlMethod,
+	protected java.lang.reflect.Method searchMethod(Method xmlMethod,
 			ResourceInstance instance) {
 		String methodType = xmlMethod.getType().toString();
 		// search methods
@@ -139,7 +139,7 @@ public class ResourceContainer extends ResourceInstance {
 		return null;
 	}
 
-	private boolean isMethodCorrectAnnotated(Method xmlMethod,
+	protected boolean isMethodCorrectAnnotated(Method xmlMethod,
 			java.lang.reflect.Method method) {
 		
 		// if there is no input
@@ -171,7 +171,7 @@ public class ResourceContainer extends ResourceInstance {
 		return false;
 	}
 
-	private void invokeAction(Action xmlAction, ResourceInstance instance) {
+	protected void invokeAction(Action xmlAction, ResourceInstance instance) {
 		// TODO Auto-generated method stub
 		
 	}

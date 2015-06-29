@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import de.tu_berlin.cit.intercloud.exchange.services.Agreement;
 import de.tu_berlin.cit.intercloud.exchange.services.Meter;
 import de.tu_berlin.cit.intercloud.exchange.services.Offer;
+import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 public class ExchangeApplication {
@@ -105,7 +105,7 @@ public class ExchangeApplication {
 		try {
 			XmppURI uri = new XmppURI(subDomain + "." + xmppDomain, "");
 			logger.info("Starting resource container: " + uri.toString());
-			ResourceContainer container = new ResourceContainer(uri);
+			OcciContainer container = new OcciContainer(uri);
 			container.addResource(new Offer());
 			container.addResource(new Agreement());
 			container.addResource(new Meter());

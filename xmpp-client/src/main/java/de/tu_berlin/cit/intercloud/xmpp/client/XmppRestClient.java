@@ -6,8 +6,6 @@ import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.PacketCollector;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.SmackException.NoResponseException;
-import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.IQReplyFilter;
@@ -16,15 +14,13 @@ import org.jivesoftware.smack.packet.IQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciClient;
+import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
+import de.tu_berlin.cit.intercloud.occi.core.OcciText;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.GetXwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciListXml;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType.Enum;
@@ -32,7 +28,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 
-public class XmppRestClient extends ResourceClient {
+public class XmppRestClient extends OcciClient {
 
 
 	protected final static Logger logger = LoggerFactory.getLogger(XmppRestClient.class);

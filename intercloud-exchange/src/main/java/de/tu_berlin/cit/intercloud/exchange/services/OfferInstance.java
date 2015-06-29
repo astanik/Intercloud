@@ -18,6 +18,7 @@ package de.tu_berlin.cit.intercloud.exchange.services;
 
 import java.util.List;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
@@ -26,7 +27,6 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 
 @PathID
 @Summary("This resource allows for manage "
@@ -41,9 +41,9 @@ public class OfferInstance extends ResourceInstance {
 		// create Management instance at gateway
 		LinkType[] links = offerXml.getLinks();
 		for(int i = 0; i < links.length; i++) {
-			if(links[i].getCategory().equals(ManagerSchema)) {
+//			if(links[i].getCategory().equals(ManagerSchema)) {
 				// send post
-			}
+//			}
 		}
 	}
 

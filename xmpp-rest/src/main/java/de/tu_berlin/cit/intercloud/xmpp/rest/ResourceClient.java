@@ -19,7 +19,6 @@ package de.tu_berlin.cit.intercloud.xmpp.rest;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
@@ -67,8 +66,6 @@ public class ResourceClient {
 				return UriText.class;
 			} else if(mediaType.equals(UriListText.MEDIA_TYPE)) {
 				return UriListText.class;
-			} else if(mediaType.equals(OcciText.MEDIA_TYPE)) {
-				return OcciText.class;
 			}
 		}
 		return null;

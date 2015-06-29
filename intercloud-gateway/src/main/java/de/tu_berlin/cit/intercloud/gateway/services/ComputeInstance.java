@@ -2,6 +2,7 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 
 import java.util.UUID;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciText;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
@@ -9,7 +10,6 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
 
 @PathID
 @Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")

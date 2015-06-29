@@ -21,11 +21,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
@@ -48,23 +44,6 @@ public class XwadlBuilder {
 		ResourceType resType = xwadl.addNewResourceType();
 		resType.setPath(path);
 		logger.info("resource path=" + path);
-		// check summary annotation
-		if (instance.getClass().isAnnotationPresent(Summary.class)) {
-			String summary = instance.getClass().getAnnotation(Summary.class).value();
-			resType.addNewDocumentation().setTitle("Summary");
-			resType.getDocumentation().setStringValue(summary);
-		}
-		// add occi classification grammar
-		if(instance.getClass().isAnnotationPresent(Kind.class)) {
-			Class<? extends de.tu_berlin.cit.intercloud.occi.core.classification.Kind> kind = instance.getClass().getAnnotation(Kind.class).value();
-			try {
-				CategoryDocument catDoc = kind.newInstance().getCategoryDocument();
-				resType.addNewGrammars().set(catDoc);
-			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
 		// search methods
 		for(java.lang.reflect.Method method : instance.getClass().getMethods()) {
@@ -78,7 +57,7 @@ public class XwadlBuilder {
 		return xwadl;
 	}
 
-	private static void createMethodXWADL(
+	protected static void createMethodXWADL(
 			java.lang.reflect.Method method,
 			de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method xmlMethod) {
 		// set method type

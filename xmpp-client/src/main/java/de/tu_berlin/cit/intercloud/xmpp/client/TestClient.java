@@ -45,15 +45,15 @@ import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo.Identity;
 import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
+import de.tu_berlin.cit.intercloud.occi.core.OcciText;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.util.monitoring.PerformanceMeter;
 import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciListXml;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
@@ -168,7 +168,7 @@ public class TestClient {
 		XmppURI slaEndpoint = negotiateOffer(offerEndpoint);
 		
 		observeSLA(slaEndpoint);
-		
+/*		
 				// delete vm
 				deleteMeter.startTimer(i);
 				client = XmppRestClient.XmppRestClientBuilder.build(connection, delUri);
@@ -203,7 +203,7 @@ public class TestClient {
 				}
 			}
 		}
-				
+*/
 		System.out.println("Test was successful");
 	}
 
@@ -214,7 +214,7 @@ public class TestClient {
 		System.out.println("Start searchService");
 
 		// search iterate over resources on server
-
+/*
 			XmppURI uri = new XmppURI(rootURI.getJID(), servicePath);
 			System.out.println("Create client for uri: " + uri);
 			XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
@@ -246,7 +246,7 @@ public class TestClient {
 					}
 				}
 			}
-
+*/
 		// close file writer
 		fileWriter.close();
 		System.out.println("Finished searchService");

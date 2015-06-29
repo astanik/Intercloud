@@ -18,6 +18,7 @@ package de.tu_berlin.cit.intercloud.exchange.services;
 
 import java.net.URISyntaxException;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
@@ -26,7 +27,6 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Path("/manager")

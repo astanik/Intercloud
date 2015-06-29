@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.rest.representations;
+package de.tu_berlin.cit.intercloud.occi.core;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ import org.apache.xmlbeans.XmlException;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
 public class OcciXml extends Representation {
 

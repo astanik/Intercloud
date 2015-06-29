@@ -19,6 +19,8 @@ package de.tu_berlin.cit.intercloud.root.services;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeDocument.Attribute;
@@ -30,8 +32,6 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciListXml;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Summary("This resource allows for manage "

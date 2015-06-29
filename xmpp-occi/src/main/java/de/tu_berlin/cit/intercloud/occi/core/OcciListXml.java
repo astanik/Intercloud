@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.rest.representations;
+package de.tu_berlin.cit.intercloud.occi.core;
 
 import java.util.ArrayList;
 import java.util.List;
