@@ -194,16 +194,6 @@
 			<artifactId>util</artifactId>
 			<version>0.0.1</version>
 		</dependency>
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>occi-core</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>occi-extension</artifactId>
-			<version>0.0.1</version>
-		</dependency>
 		<!-- xmlbeans -->
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>

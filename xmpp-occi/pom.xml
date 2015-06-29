@@ -9,10 +9,10 @@
 	</parent>
 
 	<groupId>de.tu_berlin.cit.intercloud</groupId>
-	<artifactId>occi-core</artifactId>
+	<artifactId>xmpp-occi</artifactId>
 	<packaging>jar</packaging>
 
-	<name>OCCI Core Module</name>
+	<name>XMPP OCCI Module</name>
 
 	<build>
 		<plugins>
@@ -114,6 +114,12 @@
 	</build>
 
 	<dependencies>
+		<!-- intercloud dependencies -->
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-rest</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<!-- xmlbeans -->
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>

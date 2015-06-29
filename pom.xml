@@ -79,10 +79,9 @@
 
 	<modules>
 		<module>intercloud-util</module>
-		<module>occi-core</module>
-		<module>occi-extension</module>
 		<module>xmpp-core</module>
 		<module>xmpp-rest</module>
+		<module>xmpp-occi</module>
 		<module>xmpp-component</module>
 		<module>xmpp-client</module>
 		<module>intercloud-root</module>

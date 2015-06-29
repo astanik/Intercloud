@@ -59,7 +59,7 @@
 		<!-- intercloud dependencies -->
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>xmpp-rest</artifactId>
+			<artifactId>xmpp-occi</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
