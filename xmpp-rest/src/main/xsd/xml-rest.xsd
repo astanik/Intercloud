@@ -40,11 +40,11 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:element name="request" >
+	<xs:element name="request">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="representation" type="xs:string" minOccurs="0"
-					maxOccurs="1" />
+				<xs:element name="representation" type="xs:string"
+					minOccurs="0" maxOccurs="1" />
 				<xs:any namespace="##other" processContents="lax" minOccurs="0"
 					maxOccurs="unbounded" />
 			</xs:sequence>
@@ -55,8 +55,8 @@
 	<xs:element name="response">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="representation" type="xs:string" minOccurs="0"
-					maxOccurs="1" />
+				<xs:element name="representation" type="xs:string"
+					minOccurs="0" maxOccurs="1" />
 				<xs:any namespace="##other" processContents="lax" minOccurs="0"
 					maxOccurs="unbounded" />
 			</xs:sequence>
@@ -77,11 +77,16 @@
 	<xs:element name="parameter">
 		<xs:complexType>
 			<xs:choice>
-				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
-				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
-				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
-				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="STRING" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="INTEGER" type="xs:integer" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="DOUBLE" type="xs:double" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="LINK" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
 			</xs:choice>
 			<xs:attribute name="name" type="xs:string" use="required" />
 		</xs:complexType>
@@ -90,11 +95,16 @@
 	<xs:element name="result">
 		<xs:complexType>
 			<xs:choice>
-				<xs:element name="STRING" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="INTEGER" type="xs:integer" minOccurs="1" maxOccurs="1" />
-				<xs:element name="DOUBLE" type="xs:double" minOccurs="1" maxOccurs="1" />
-				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1" maxOccurs="1" />
-				<xs:element name="LINK" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="STRING" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="INTEGER" type="xs:integer" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="DOUBLE" type="xs:double" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="LINK" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>

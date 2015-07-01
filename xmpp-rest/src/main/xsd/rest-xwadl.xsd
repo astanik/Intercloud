@@ -46,7 +46,8 @@
 	<xs:element name="method">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="documentation" type="documentationType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" />
 				<xs:element ref="request" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="response" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
@@ -66,7 +67,8 @@
 	<xs:element name="request">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="documentation" type="documentationType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" />
 				<xs:element name="template" type="xs:string" minOccurs="0"
 					maxOccurs="unbounded" />
 			</xs:sequence>
@@ -77,7 +79,8 @@
 	<xs:element name="response">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="documentation" type="documentationType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 			<xs:attribute name="mediaType" type="xs:string" use="required" />
 		</xs:complexType>
@@ -86,7 +89,8 @@
 	<xs:element name="action">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="documentation" type="documentationType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" />
 				<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" />
 				<xs:element ref="result" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
@@ -97,7 +101,8 @@
 	<xs:element name="parameter">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="documentation" type="documentationType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required" />
 			<xs:attribute name="default" type="xs:string" use="required" />
@@ -108,7 +113,8 @@
 	<xs:element name="result">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="documentation" type="documentationType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 			<xs:attribute name="type" type="parameterType" use="required" />
 		</xs:complexType>
