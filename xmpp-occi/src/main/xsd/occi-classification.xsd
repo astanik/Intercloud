@@ -14,9 +14,12 @@
 	<xs:element name="Category">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="term" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="schema" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
+				<xs:element name="term" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="schema" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="title" type="xs:string" minOccurs="0"
+					maxOccurs="1" />
 				<xs:element ref="attributes" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="links" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
@@ -40,10 +43,11 @@
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="link" >
+	<xs:element name="link">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="category" type="xs:string" minOccurs="1" maxOccurs="1" />
+				<xs:element name="category" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
 				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
@@ -60,13 +64,20 @@
 	<xs:element name="attribute">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
-				<xs:element name="mutable" type="xs:boolean" minOccurs="1" maxOccurs="1" />
-				<xs:element name="required" type="xs:boolean" minOccurs="1" maxOccurs="1" />
-				<xs:element name="pattern" type="patternType" minOccurs="0" maxOccurs="1" />
-				<xs:element name="default" type="xs:string" minOccurs="0" maxOccurs="1" />
-				<xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1" />
+				<xs:element name="name" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="type" type="xs:string" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="mutable" type="xs:boolean" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="required" type="xs:boolean" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="pattern" type="patternType" minOccurs="0"
+					maxOccurs="1" />
+				<xs:element name="default" type="xs:string" minOccurs="0"
+					maxOccurs="1" />
+				<xs:element name="description" type="xs:string"
+					minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
