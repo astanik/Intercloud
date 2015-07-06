@@ -85,7 +85,7 @@ public class OcciContainer extends ResourceContainer {
 			}
 		}
 		
-//		logger.info("An invocation was performed and returned is xml=" + xmlResponse.toString());
+		logger.info("An invocation was performed and returned is xml=" + xmlResponse.toString());
 		return xmlResponse;
 	}
 

@@ -105,7 +105,7 @@
 					minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required" />
-			<xs:attribute name="default" type="xs:string" use="required" />
+			<xs:attribute name="default" type="xs:string" />
 			<xs:attribute name="type" type="parameterType" use="required" />
 		</xs:complexType>
 	</xs:element>
