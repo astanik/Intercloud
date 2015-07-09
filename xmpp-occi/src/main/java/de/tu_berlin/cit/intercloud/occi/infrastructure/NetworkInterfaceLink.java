@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.webapp.auth;
+package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
-import org.apache.wicket.markup.html.WebPage;
+public class NetworkInterfaceLink {
 
-/**
- * Page that all web pages of the authentication package should inherit from.
- * 
- * @author Alexander Stanik
- * 
- */
-@SuppressWarnings("serial")
-public class AbstractAuthPage extends WebPage {
-
-	/**
-	 * Default constructor
-	 */
-	public AbstractAuthPage() {
-           
-		// do nothing
-	}
 }

@@ -25,7 +25,7 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
-public class FlavorMixin extends OcciXml {
+public class SlaTemplateMixin extends OcciXml {
 
 	@Override
 	public List<Representation> getTemplates() {
@@ -51,6 +51,7 @@ public class FlavorMixin extends OcciXml {
 		att.setType("Integer");
 		att.setStringValue("2");
 
+//		doc.getCategory().
 		// add template
 		list.add(new OcciXml(doc));
 		
