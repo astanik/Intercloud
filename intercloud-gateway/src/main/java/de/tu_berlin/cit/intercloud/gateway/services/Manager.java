@@ -17,17 +17,16 @@
 package de.tu_berlin.cit.intercloud.gateway.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 @Path("/manager")
 @Summary("This resource allows for manage overall tasks, "
 		+ "espesially agreement management, monitoring, "
 		+ "and virtual machine instantiation.")
-@Kind(ManagerKind.class)
+@Classification(kind = ManagerKind.class)
 public class Manager extends Collection {
 
 }

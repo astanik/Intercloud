@@ -19,9 +19,9 @@ package de.tu_berlin.cit.intercloud.occi.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.incarnation.ClassificationRegistry;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XwadlBuilder;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
@@ -34,7 +34,7 @@ public class OcciXwadlBuilder extends XwadlBuilder {
 
 	public static ResourceTypeDocument build(String path,
 			ResourceInstance instance) {
-		logger.info("Start building xwadl document");
+		logger.info("Start building xwadl document ...");
 		// create new document 
 		ResourceTypeDocument xwadl = ResourceTypeDocument.Factory.newInstance();
 		// set resource path
@@ -48,17 +48,12 @@ public class OcciXwadlBuilder extends XwadlBuilder {
 			resType.getDocumentation().setStringValue(summary);
 		}
 		// add occi classification grammar
-		if(instance.getClass().isAnnotationPresent(Kind.class)) {
-			Class<? extends de.tu_berlin.cit.intercloud.occi.core.classification.Kind> kind = instance.getClass().getAnnotation(Kind.class).value();
-			try {
-				CategoryDocument catDoc = kind.newInstance().getCategoryDocument();
-				resType.addNewGrammars().set(catDoc);
-			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if(instance instanceof Collection || instance instanceof Resource ||
+				instance instanceof Link) {
+			ClassificationDocument classDoc = ClassificationRegistry.buildClassification(instance);
+			resType.addNewGrammars().set(classDoc);
 		}
-
+		
 		// search methods
 		for(java.lang.reflect.Method method : instance.getClass().getMethods()) {
 			// create method entry

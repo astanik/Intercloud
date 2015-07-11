@@ -16,12 +16,14 @@
 
 package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
-import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeDocument.Attribute;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument.Category;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkDocument.Link;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
-public class ComputeKind extends Kind {
+
+@Kind(schema = ComputeKind.ComputeSchema, term = ComputeKind.ComputeTerm)
+public class ComputeKind extends Category {
 
 	public final static String ComputeTitle = "Compute Resource";
 	
@@ -32,104 +34,65 @@ public class ComputeKind extends Kind {
 	public final static String NetworkInterfaceTerm = "networkinterface";
 	
 	public ComputeKind() {
-		super(ComputeSchema, ComputeTerm, ComputeTitle);
+		super(ComputeTitle);
 	}
 
-	@Override
-	protected void defineAttributes(Category category) {
-		// create attribute list
-		Attribute attribute = category.addNewAttributes().addNewAttribute();
-		// define base name
-		String baseName = "occi.compute.";
-		
-		// define architecture
-		attribute.setName(baseName + "architecture");
-		attribute.setType("Enum{x86,x64}");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("CPU Architecture of the instance");
-
-		// define cores
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "cores");
-		attribute.setType("Integer");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Number of virtual CPU cores assigned to the instance");
-		
-		// define host name
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "hostname");
-		attribute.setType("String");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Fully qualified DNS host name for the instance");
-		
-		// define share
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "share");
-		attribute.setType("Integer");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Relative number of CPU shares for the instance");
-		
-		// define memory
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "memory");
-		attribute.setType("Double");
-		attribute.setMutable(true);
-		attribute.setRequired(false);
-		attribute.setDescription("Minimum RAM in gigabytes allocated to the instance");
-		
-		// define state
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "state");
-		attribute.setType("Enum{active, inactive, suspended, error}");
-		attribute.setMutable(false);
-		attribute.setRequired(true);
-		attribute.setDescription("Current state of the instance");
-		
-		// define message
-		attribute = category.getAttributes().addNewAttribute();
-		attribute.setName(baseName + "message");
-		attribute.setType("String");
-		attribute.setMutable(false);
-		attribute.setRequired(false);
-		attribute.setDescription("Human-readable explanation of the current instance state");
+	public ComputeKind(String title) {
+		super(title);
 	}
 
-	@Override
-	protected void defineLinks(Category category) {
-		// create link list
-		Link link = category.addNewLinks().addNewLink();
-		// set category
-		link.setCategory(ComputeSchema + NetworkInterfaceTerm);
-		// define base name
-		String baseName = "occi.networkinterface.";
-		
-		// define mac
-		Attribute attribute = link.addNewAttribute();
-		attribute.setName(baseName + "mac");
-		attribute.setType("String");
-		attribute.setMutable(true);
-		attribute.setRequired(true);
-		attribute.setDescription("MAC address associated with the link's device interface");
-		
-		// define state
-		attribute = link.addNewAttribute();
-		attribute.setName(baseName + "state");
-		attribute.setType("Enum{active, inactive, error}");
-		attribute.setMutable(false);
-		attribute.setRequired(true);
-		attribute.setDescription("Current state of the instance");
-		
-		// define message
-		attribute = link.addNewAttribute();
-		attribute.setName(baseName + "message");
-		attribute.setType("String");
-		attribute.setMutable(false);
-		attribute.setRequired(false);
-		attribute.setDescription("Human-readable explanation of the current instance state");
+	public enum Architecture {
+		x86,
+		x64
 	}
 	
+	@Attribute(name = "occi.compute.architecture",
+			type = AttributeType.ENUM,
+			mutable = true,
+			description = "CPU Architecture of the instance: Enum{x86,x64}")
+	public Architecture architecture;
+
+	@Attribute(name = "occi.compute.cores",
+			type = AttributeType.INTEGER,
+			mutable = true,
+			value = "1",
+			description = "Number of virtual CPU cores assigned to the instance")
+	public Integer cores;
+
+	@Attribute(name = "occi.compute.hostname",
+			type = AttributeType.STRING,
+			mutable = true,
+			description = "Fully qualified DNS host name for the instance")
+	public String hostname;
+
+	@Attribute(name = "occi.compute.share",
+			type = AttributeType.INTEGER,
+			mutable = true,
+			description = "Relative number of CPU shares for the instance")
+	public Integer share;
+
+	@Attribute(name = "occi.compute.memory",
+			type = AttributeType.DOUBLE,
+			mutable = true,
+			description = "Minimum RAM in gigabytes allocated to the instance")
+	public Double memory;
+
+	public enum State {
+		active, 
+		inactive, 
+		suspended, 
+		error
+	}
+	
+	@Attribute(name = "occi.compute.state",
+			type = AttributeType.ENUM,
+			required = true,
+			description = "Current state of the instance: Enum{active, inactive, suspended, error}")
+	public State state;
+
+	@Attribute(name = "occi.compute.message",
+			type = AttributeType.STRING,
+			description = "Human-readable explanation of the current instance state")
+	public String message;
+
 }

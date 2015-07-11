@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
@@ -31,7 +31,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Path("/agreement")
 @Summary("This resource allows for manage service level agreements.")
-@Kind(AgreementKind.class)
+@Classification(kind = AgreementKind.class)
 public class Agreement extends Collection {
 
 	public Agreement() {

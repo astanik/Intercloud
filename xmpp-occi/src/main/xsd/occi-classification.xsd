@@ -11,68 +11,64 @@
 		</xs:documentation>
 	</xs:annotation>
 
-	<xs:element name="Category">
+	<xs:element name="Classification">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="term" type="xs:string" minOccurs="1"
-					maxOccurs="1" />
-				<xs:element name="schema" type="xs:string" minOccurs="1"
-					maxOccurs="1" />
-				<xs:element name="title" type="xs:string" minOccurs="0"
-					maxOccurs="1" />
-				<xs:element ref="attributes" minOccurs="0" maxOccurs="1" />
-				<xs:element ref="links" minOccurs="0" maxOccurs="1" />
-			</xs:sequence>
-			<xs:attribute name="class" type="classType" use="required" />
-		</xs:complexType>
-	</xs:element>
-
-	<xs:simpleType name="classType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="kind" />
-			<xs:enumeration value="action" />
-			<xs:enumeration value="mixin" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:element name="links">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="link" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="KindType" type="CategoryClassification"
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="MixinType" type="MixinClassification"
+					minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="LinkType" type="LinkClassification"
+					minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="link">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="category" type="xs:string" minOccurs="1"
-					maxOccurs="1" />
-				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+	<xs:complexType name="MixinClassification">
+		<xs:complexContent>
+			<xs:extension base="CategoryClassification">
+				<xs:sequence>
+					<xs:element name="applies" type="xs:string" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<xs:element name="attributes">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+	<xs:complexType name="LinkClassification">
+		<xs:complexContent>
+			<xs:extension base="CategoryClassification">
+				<xs:sequence>
+					<xs:element name="relation" type="xs:string" minOccurs="0"
+						maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<xs:element name="attribute">
+	<xs:complexType name="CategoryClassification">
+		<xs:sequence>
+			<xs:element name="term" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="schema" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="title" type="xs:string" minOccurs="0"
+				maxOccurs="1" />
+			<xs:element ref="attributeClassification" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="attributeClassification">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="name" type="xs:string" minOccurs="1"
 					maxOccurs="1" />
-				<xs:element name="type" type="xs:string" minOccurs="1"
+				<xs:element name="type" type="attributeType" minOccurs="1"
 					maxOccurs="1" />
 				<xs:element name="mutable" type="xs:boolean" minOccurs="1"
 					maxOccurs="1" />
 				<xs:element name="required" type="xs:boolean" minOccurs="1"
-					maxOccurs="1" />
-				<xs:element name="pattern" type="patternType" minOccurs="0"
 					maxOccurs="1" />
 				<xs:element name="default" type="xs:string" minOccurs="0"
 					maxOccurs="1" />
@@ -82,12 +78,19 @@
 		</xs:complexType>
 	</xs:element>
 
-	<xs:simpleType name="patternType">
+	<xs:simpleType name="attributeType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="OnlyOne" />
-			<xs:enumeration value="ZeroOrOne" />
-			<xs:enumeration value="ZeroOrMany" />
-			<xs:enumeration value="OneOrMany" />
+			<xs:enumeration value="STRING" />
+			<xs:enumeration value="ENUM" />
+			<xs:enumeration value="INTEGER" />
+			<xs:enumeration value="FLOAT" />
+			<xs:enumeration value="DOUBLE" />
+			<xs:enumeration value="BOOLEAN" />
+			<xs:enumeration value="URI" />
+			<xs:enumeration value="SIGNATURE" />
+			<xs:enumeration value="KEY" />
+			<xs:enumeration value="DATETIME" />
+			<xs:enumeration value="DURATION" />
 		</xs:restriction>
 	</xs:simpleType>
 

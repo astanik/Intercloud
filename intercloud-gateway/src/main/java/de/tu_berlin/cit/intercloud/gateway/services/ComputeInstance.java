@@ -18,20 +18,16 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 
 import java.util.UUID;
 
-import de.tu_berlin.cit.intercloud.occi.core.OcciText;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
 @PathID
-@Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")
-@Kind(ComputeKind.class)
+@Summary("This resource allows for manage a particular virtual machine.")
+@Classification(kind = ComputeKind.class)
 public class ComputeInstance extends Resource {
 
 	private static UUID TemplateID = UUID.fromString("f509099b-0da9-4f96-8fe6-7b20f6614381");

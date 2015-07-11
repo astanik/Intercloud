@@ -22,7 +22,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
 public class Resource extends CollectionResourceInstance {
 
-	private final OcciXml representation;
+	protected final OcciXml representation;
 
 	public Resource(OcciXml occiRepresentation) {
 		super();

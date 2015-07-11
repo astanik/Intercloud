@@ -24,9 +24,15 @@ import java.lang.annotation.Target;
 public @interface Kind {
 
 	/**
-	 * The class that specifies a kind.
-	 * @return kind class
+	 * The schema of this kind.
+	 * @return schema
 	 */
-	Class<? extends de.tu_berlin.cit.intercloud.occi.core.classification.Kind> value();
+	String schema();
+
+	/**
+	 * The term of this kind.
+	 * @return term
+	 */
+	String term();
 
 }

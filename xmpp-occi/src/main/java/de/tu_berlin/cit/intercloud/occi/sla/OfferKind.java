@@ -16,11 +16,11 @@
 
 package de.tu_berlin.cit.intercloud.occi.sla;
 
-import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeDocument.Attribute;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryDocument.Category;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 
-public class OfferKind extends Kind {
+@Kind(schema = OfferKind.OfferSchema, term = OfferKind.OfferTerm)
+public class OfferKind extends Category {
 
 	public final static String OfferTitle = "Offer Resource";
 	
@@ -29,28 +29,12 @@ public class OfferKind extends Kind {
 	public final static String OfferTerm = "offer";
 	
 	public OfferKind() {
-		super(OfferSchema, OfferTerm, OfferTitle);
+		super(OfferTitle);
 	}
 
-	@Override
-	protected void defineAttributes(Category category) {
-		// create attribute list
-		Attribute attribute = category.addNewAttributes().addNewAttribute();
-		// define base name
-		String baseName = "occi.offer.";
-		
-		// define state
-//		attribute = category.getAttributes().addNewAttribute();
-//		attribute.setName(baseName + "state");
-//		attribute.setType("Enum{active, inactive, suspended, error}");
-//		attribute.setMutable(false);
-//		attribute.setRequired(true);
-//		attribute.setDescription("Current state of the instance");
+	public OfferKind(String title) {
+		super(title);
 	}
 
-	@Override
-	protected void defineLinks(Category category) {
-		// TODO Auto-generated method stub
-	}
 
 }

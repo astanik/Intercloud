@@ -21,24 +21,24 @@ import java.lang.annotation.Target;
 
 @Target(java.lang.annotation.ElementType.TYPE)
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-public @interface Mixin {
-
-	static final String coreMixin = Category.CategorySchema + "category";
-	/**
-	 * The schema of this mixin.
-	 * @return schema
-	 */
-	String schema();
+public @interface Classification {
 
 	/**
-	 * The term of this mixin.
-	 * @return term
+	 * The class that specifies a kind.
+	 * @return kind class
 	 */
-	String term();
+	Class<? extends Category> kind() default Category.class;
 
 	/**
-	 * The type to which this mixin applies to.
-	 * @return applied type
+	 * The classes which specifies the mixins.
+	 * @return mixin classes
 	 */
-	String[] applies() default coreMixin;
+	Class<? extends Category>[] mixins() default {};
+
+	/**
+	 * The classes which specifies the links.
+	 * @return link classes
+	 */
+	Class<? extends LinkCategory>[] links() default {};
+
 }

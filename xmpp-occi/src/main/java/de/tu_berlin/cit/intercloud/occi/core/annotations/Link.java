@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.core.classification;
+package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public abstract class Mixin extends Category {
+@Target(java.lang.annotation.ElementType.TYPE)
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+public @interface Link {
 
-	protected Mixin(String schema, String term) {
-		this(schema, term, null);
-	}
-	
-	protected Mixin(String schema, String term, String title) {
-		super(ClassType.MIXIN, schema, term, title);
-	}
+	/**
+	 * The schema of this link.
+	 * @return schema
+	 */
+	String schema();
 
+	/**
+	 * The term of this link.
+	 * @return term
+	 */
+	String term();
+
+	/**
+	 * The type of this link target
+	 * @return relation
+	 */
+	String relation();
 }

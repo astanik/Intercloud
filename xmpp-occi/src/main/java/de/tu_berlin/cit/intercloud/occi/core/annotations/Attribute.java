@@ -19,26 +19,59 @@ package de.tu_berlin.cit.intercloud.occi.core.annotations;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target(java.lang.annotation.ElementType.TYPE)
+
+@Target(java.lang.annotation.ElementType.FIELD)
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-public @interface Mixin {
+public @interface Attribute {
 
-	static final String coreMixin = Category.CategorySchema + "category";
+	enum AttributeType {
+		STRING,
+		ENUM,
+		INTEGER,
+		FLOAT,
+		DOUBLE,
+		BOOLEAN,
+		URI,
+		SIGNATURE,
+		KEY,
+		DATETIME,
+		DURATION
+	}
+	
 	/**
-	 * The schema of this mixin.
-	 * @return schema
+	 * 
+	 * @return The attribute name
 	 */
-	String schema();
+	String name();
 
 	/**
-	 * The term of this mixin.
-	 * @return term
+	 * 
+	 * @return The type of the attribute
 	 */
-	String term();
+	AttributeType type();
 
 	/**
-	 * The type to which this mixin applies to.
-	 * @return applied type
+	 * 
+	 * @return Returns true if this attribute is mutabile
 	 */
-	String[] applies() default coreMixin;
+	boolean mutable() default false;
+
+	/**
+	 * 
+	 * @return Returns true if this attribute is required
+	 */
+	boolean required() default false;
+
+	/**
+	 * 
+	 * @return The default value of this attribute
+	 */
+	String value() default "";
+
+	/**
+	 * 
+	 * @return The description of this attribute
+	 */
+	String description() default "";
+
 }

@@ -19,7 +19,7 @@ package de.tu_berlin.cit.intercloud.occi.extension.test;
 import org.junit.Test;
 
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
-import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogKind;
+import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
 
 public class KindTest {
 
@@ -31,7 +31,7 @@ public class KindTest {
 	
 	@Test
 	public void catalogKindTest() {
-		ServiceCatalogKind kind = new ServiceCatalogKind();
+		ServiceCatalogMixin kind = new ServiceCatalogMixin();
 		System.out.println(kind.toString());
 	}
 	

@@ -21,12 +21,12 @@ import java.net.URISyntaxException;
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeDocument.Attribute;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
-import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogKind;
+import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
@@ -35,7 +35,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Summary("This resource allows for manage "
 		+ "the overall intercloud service catalog.")
-@Kind(ServiceCatalogKind.class)
+@Classification(mixins = {ServiceCatalogMixin.class})
 public abstract class AbstractComputeCatalog extends Collection {
 
 	protected AbstractComputeCatalog() {
@@ -85,7 +85,7 @@ public abstract class AbstractComputeCatalog extends Collection {
 		
 		// compare kind attributes
 		if(requCat.isSetKind() && category.isSetKind()) {
-			Attribute[] attr = requCat.getKind().getAttributeArray();
+			AttributeType[] attr = requCat.getKind().getAttributeArray();
 			for(int i=0; i<attr.length; i++) {
 				if(!containsEqualAttribute(category.getKind().getAttributeArray(), attr[i]))
 					return false;
@@ -95,13 +95,47 @@ public abstract class AbstractComputeCatalog extends Collection {
 		return true;
 	}
 
-	private boolean containsEqualAttribute(Attribute[] attrList,
-			Attribute attribute) {
+	private boolean containsEqualAttribute(AttributeType[] attrList,
+			AttributeType attribute) {
 
 		for(int k=0; k < attrList.length; k++) {
-			if(attribute.getName().equals(attrList[k].getName()) && 
-					attribute.getStringValue().equals(attrList[k].getStringValue()))
-				return true;
+			if(attribute.getName().equals(attrList[k].getName()))
+				if(attribute.isSetBOOLEAN()&& attrList[k].isSetBOOLEAN() &&
+					attribute.getBOOLEAN() == attrList[k].getBOOLEAN())
+					return true;
+				else if(attribute.isSetBOOLEAN()&& attrList[k].isSetBOOLEAN() &&
+					attribute.getBOOLEAN() == attrList[k].getBOOLEAN())
+					return true;
+				else if(attribute.isSetSTRING()&& attrList[k].isSetSTRING() &&
+						attribute.getSTRING().equals(attrList[k].getSTRING()))
+						return true;
+				else if(attribute.isSetENUM()&& attrList[k].isSetENUM() &&
+						attribute.getENUM().equals(attrList[k].getENUM()))
+						return true;
+				else if(attribute.isSetINTEGER()&& attrList[k].isSetINTEGER() &&
+						attribute.getINTEGER() == attrList[k].getINTEGER())
+						return true;
+				else if(attribute.isSetFLOAT()&& attrList[k].isSetFLOAT() &&
+						attribute.getFLOAT() == attrList[k].getFLOAT())
+						return true;
+				else if(attribute.isSetDOUBLE()&& attrList[k].isSetDOUBLE() &&
+						attribute.getDOUBLE() == attrList[k].getDOUBLE())
+						return true;
+				else if(attribute.isSetURI()&& attrList[k].isSetURI() &&
+						attribute.getURI().equals(attrList[k].getURI()))
+						return true;
+				else if(attribute.isSetSIGNATURE()&& attrList[k].isSetSIGNATURE() &&
+						attribute.getSIGNATURE() == attrList[k].getSIGNATURE())
+						return true;
+				else if(attribute.isSetKEY()&& attrList[k].isSetKEY() &&
+						attribute.getKEY() == attrList[k].getKEY())
+						return true;
+				else if(attribute.isSetDATETIME()&& attrList[k].isSetDATETIME() &&
+						attribute.getDATETIME().equals(attrList[k].getDATETIME()))
+						return true;
+				else if(attribute.isSetDURATION()&& attrList[k].isSetDURATION() &&
+						attribute.getDURATION().equals(attrList[k].getDURATION()))
+						return true;
 					
 		}
 		return false;

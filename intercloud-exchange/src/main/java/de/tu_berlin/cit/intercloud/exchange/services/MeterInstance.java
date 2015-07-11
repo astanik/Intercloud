@@ -18,16 +18,15 @@ package de.tu_berlin.cit.intercloud.exchange.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 @PathID
 @Summary("This resource allows for manage meter resources "
 		+ "used for agreement evaluation.")
-@Kind(MeterKind.class)
+@Classification(kind = MeterKind.class)
 public class MeterInstance extends Resource {
 
 	public MeterInstance(OcciXml occiRepresentation) {

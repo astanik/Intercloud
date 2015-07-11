@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.core.incarnation;
+package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
-import java.util.ArrayList;
-import java.util.List;
+public class LinkCategory extends Category {
 
-import de.tu_berlin.cit.intercloud.occi.core.classification.Action;
-import de.tu_berlin.cit.intercloud.occi.core.classification.Kind;
-import de.tu_berlin.cit.intercloud.occi.core.classification.Mixin;
+	private String target = "";
+	
+	public LinkCategory() {
+		super("OCCI Core Model");
+	}
 
-public class Registry {
+	public LinkCategory(String title) {
+		super(title);
+	}
 
-	private final List<Kind> kinds = new ArrayList<Kind>();
-	
-	private final List<Action> actions = new ArrayList<Action>();
-	
-	private final List<Mixin> mixins = new ArrayList<Mixin>();
-	
-	
-	
-	
-	
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
 }

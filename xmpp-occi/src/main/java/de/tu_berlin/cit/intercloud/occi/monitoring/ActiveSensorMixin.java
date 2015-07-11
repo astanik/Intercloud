@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.core.classification;
+package de.tu_berlin.cit.intercloud.occi.monitoring;
 
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 
-public abstract class Action extends Category {
+@Mixin(schema = SensorKind.SensorMixinSchema, term = ActiveSensorMixin.ActiveSensorTerm,
+		applies = SensorKind.SensorSchema + SensorKind.SensorTerm)
+public class ActiveSensorMixin extends Category {
 
-	protected Action(String schema, String term) {
-		this(schema, term, null);
-	}
+	public final static String ActiveSensorTitle = "Active Sensor Mixin";
 	
-	protected Action(String schema, String term, String title) {
-		super(ClassType.ACTION, schema, term, title);
+	public final static String ActiveSensorTerm = "activesensor";
+	
+	public ActiveSensorMixin() {
+		super(ActiveSensorTitle);
 	}
+
+	public ActiveSensorMixin(String title) {
+		super(title);
+	}
+
 
 }

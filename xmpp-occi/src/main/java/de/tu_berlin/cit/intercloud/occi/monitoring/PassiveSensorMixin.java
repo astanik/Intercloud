@@ -17,22 +17,21 @@
 package de.tu_berlin.cit.intercloud.occi.monitoring;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 
-@Kind(schema = MeterKind.MeterSchema, term = MeterKind.MeterTerm)
-public class MeterKind extends Category {
+@Mixin(schema = SensorKind.SensorMixinSchema, term = PassiveSensorMixin.PassiveSensorTerm,
+		applies = SensorKind.SensorSchema + SensorKind.SensorTerm)
+public class PassiveSensorMixin extends Category {
 
-	public final static String MeterTitle = "Meter Resource";
+	public final static String PassiveSensorTitle = "Active Sensor Mixin";
 	
-	public final static String MeterSchema = "http://schema.cit.tu-berlin.de/occi/monitoring#";
+	public final static String PassiveSensorTerm = "passivesensor";
 	
-	public final static String MeterTerm = "meter";
-	
-	public MeterKind() {
-		super(MeterTitle);
+	public PassiveSensorMixin() {
+		super(PassiveSensorTitle);
 	}
 
-	public MeterKind(String title) {
+	public PassiveSensorMixin(String title) {
 		super(title);
 	}
 

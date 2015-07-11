@@ -14,49 +14,42 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.infrastructure;
+package de.tu_berlin.cit.intercloud.occi.monitoring;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
 
-@Link(schema = ComputeKind.ComputeSchema, term = NetworkInterfaceLink.NetworkInterfaceTerm,
-		relation = NetworkKind.NetworkSchema + NetworkKind.NetworkTerm)
-public class NetworkInterfaceLink extends LinkCategory {
+@Link(schema = SensorKind.SensorSchema, term = CollectorLink.CollectorTerm,
+		relation = MeterKind.MeterSchema + MeterKind.MeterTerm)
+public class CollectorLink extends LinkCategory {
 
-	public final static String NetworkInterfaceTitle = "Network Interface Link";
+	public final static String CollectorTitle = "Collector Link";
 	
-	public final static String NetworkInterfaceTerm = "networkinterface";
+	public final static String CollectorTerm = "collector";
 
-	public NetworkInterfaceLink() {
-		super(NetworkInterfaceTitle);
+	public CollectorLink() {
+		super(CollectorTitle);
 	}
 
-	public NetworkInterfaceLink(String title) {
+	public CollectorLink(String title) {
 		super(title);
 	}
 
-	@Attribute(name = "occi.networkinterface.mac",
-			type = AttributeType.STRING,
-			mutable = true,
-			required = true,
-			description = "MAC address associated with the link's device interface")
-	public String mac;
 
 	public enum State {
-		active, 
-		inactive, 
-		error
+		upToDate, 
+		obsolete
 	}
 	
-	@Attribute(name = "occi.networkinterface.state",
+	@Attribute(name = "occi.collector.state",
 			type = AttributeType.ENUM,
 			required = true,
-			description = "Current state of the instance: Enum{active, inactive, error}")
+			description = "Current state of the instance: Enum{upToDate, obsolete}")
 	public State state;
 
-	@Attribute(name = "occi.networkinterface.message",
+	@Attribute(name = "occi.collector.message",
 			type = AttributeType.STRING,
 			description = "Human-readable explanation of the current instance state")
 	public String message;

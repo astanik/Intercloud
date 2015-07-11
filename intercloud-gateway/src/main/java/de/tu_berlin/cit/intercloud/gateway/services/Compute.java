@@ -21,9 +21,10 @@ import java.net.URISyntaxException;
 import de.tu_berlin.cit.intercloud.gateway.templates.FlavorMixin;
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
@@ -32,7 +33,8 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 @Path("/compute")
 @Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")
-@Kind(ComputeKind.class)
+@Classification(kind = ComputeKind.class,
+				links = {NetworkInterfaceLink.class})
 public class Compute extends Collection {
 
 	public Compute() {

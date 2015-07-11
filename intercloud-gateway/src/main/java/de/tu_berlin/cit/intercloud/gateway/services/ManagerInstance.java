@@ -18,10 +18,9 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
@@ -33,7 +32,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 @Summary("This resource allows for manage overall tasks, "
 		+ "espesially agreement management, monitoring, "
 		+ "and virtual machine instantiation.")
-@Kind(ManagerKind.class)
+@Classification(kind = ManagerKind.class)
 public class ManagerInstance extends Resource {
 
 	public ManagerInstance(OcciXml occiRepresentation) {

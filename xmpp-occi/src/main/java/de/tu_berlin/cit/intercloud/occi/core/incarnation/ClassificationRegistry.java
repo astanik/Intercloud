@@ -1,0 +1,186 @@
+/**
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package de.tu_berlin.cit.intercloud.occi.core.incarnation;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeClassificationDocument.AttributeClassification;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
+
+public final class ClassificationRegistry {
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(ClassificationRegistry.class);
+
+	private static ClassificationRegistry singleton = new ClassificationRegistry();
+
+	private final Map<String, Class<? extends Category>> classMapping;
+
+	/**
+	 * A private Constructor prevents any other class from instantiating.
+	 */
+	private ClassificationRegistry() {
+		logger.info("Retrieving namespace constants ...");
+		this.classMapping = NamespaceConstants.mapping;
+	}
+
+	/**
+	 * Static 'instance' method
+	 */
+	public static ClassificationRegistry getInstance() {
+		return singleton;
+	}
+
+	// public static <T extends Category> T newInstance(OcciXml xml, ) {
+
+	// }
+
+	public static ClassificationDocument buildClassification(ResourceInstance instance) {
+		logger.info("Start building " + instance.getClass().getSimpleName()
+				+ " classification ...");
+		ClassificationDocument doc = ClassificationDocument.Factory
+				.newInstance();
+
+		doc.addNewClassification();
+		if (instance.getClass().isAnnotationPresent(Classification.class)) {
+			Classification classification = instance.getClass().getAnnotation(
+					Classification.class);
+			appendKindClassification(doc, classification);
+			appendMixinClassification(doc, classification);
+			appendLinkClassification(doc, classification);
+		}
+
+		logger.info("Classification document has been build: ");
+		logger.info(doc.toString());
+		return doc;
+	}
+
+	private static void appendLinkClassification(ClassificationDocument doc,
+			Classification classification) {
+		Class<? extends Category>[] links = classification.links();
+
+		// append links
+		for (int i = 0; i < links.length; i++) {
+
+			if (!links[i].isAnnotationPresent(Link.class)) {
+				throw new RuntimeException("the class is not a link");
+			}
+
+			// create link element
+			LinkClassification docLink = doc.getClassification()
+					.addNewLinkType();
+
+			docLink.setSchema(links[i].getAnnotation(Link.class).schema());
+			docLink.setTerm(links[i].getAnnotation(Link.class).term());
+			docLink.setRelation(links[i].getAnnotation(Link.class).relation());
+			// TODO: add optional title
+
+			appendAttributeClassification(docLink, links[i]);
+		}
+	}
+
+	private static void appendMixinClassification(ClassificationDocument doc,
+			Classification classification) {
+		Class<? extends Category>[] mixins = classification.mixins();
+
+		for (int i = 0; i < mixins.length; i++) {
+
+			if (!mixins[i].isAnnotationPresent(Mixin.class)) {
+				throw new RuntimeException("the class is not a mixin");
+			}
+
+			// create mixin element
+			MixinClassification docMixin = doc.getClassification()
+					.addNewMixinType();
+
+			docMixin.setSchema(mixins[i].getAnnotation(Mixin.class).schema());
+			docMixin.setTerm(mixins[i].getAnnotation(Mixin.class).term());
+			docMixin.setAppliesArray(mixins[i].getAnnotation(Mixin.class)
+					.applies());
+			// TODO: add optional title
+
+			appendAttributeClassification(docMixin, mixins[i]);
+		}
+	}
+
+	private static void appendKindClassification(ClassificationDocument doc,
+			Classification classification) {
+		Class<? extends Category> kind = classification.kind();
+		if (kind.equals(Category.class)) {
+			// no kind is set
+			// this is not an exception!
+			return;
+		}
+
+		if (!kind.isAnnotationPresent(Kind.class)) {
+			// the class is no kind
+			throw new RuntimeException("the class is not a kind");
+		}
+
+		// create kind element
+		CategoryClassification docKind = doc.getClassification()
+				.addNewKindType();
+
+		docKind.setSchema(kind.getAnnotation(Kind.class).schema());
+		docKind.setTerm(kind.getAnnotation(Kind.class).term());
+		// TODO: add optional title
+
+		appendAttributeClassification(docKind, kind);
+	}
+
+	private static void appendAttributeClassification(CategoryClassification docKind,
+			Class<? extends Category> kind) {
+
+		for (Field field : kind.getFields()) {
+			if (field.isAnnotationPresent(Attribute.class)) {
+				Attribute attribute = field.getAnnotation(Attribute.class);
+				AttributeClassification attXml = docKind
+						.addNewAttributeClassification();
+				attXml.setName(attribute.name());
+				attXml.setType(AttributeType.Enum.forString(attribute.type()
+						.toString()));
+				attXml.setMutable(attribute.mutable());
+				attXml.setRequired(attribute.required());
+				attXml.setDefault(attribute.value());
+				attXml.setDescription(attribute.description());
+			}
+		}
+	}
+
+	public Map<String, Class<? extends Category>> getClassMapping() {
+		return this.classMapping;
+	}
+
+	public void addClassMapping(String key, Class<? extends Category> value) {
+		this.classMapping.put(key, value);
+	}
+}
