@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,22 @@ import java.lang.annotation.Target;
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 public @interface Mixin {
 
+	static final String coreMixin = Category.CategorySchema + "category";
 	/**
-	 * The class that specifies a kind.
-	 * @return kind class
+	 * The schema of this mixin.
+	 * @return schema
 	 */
-	Class<? extends de.tu_berlin.cit.intercloud.occi.core.classification.Mixin>[] value();
+	String schema();
 
+	/**
+	 * The term of this mixin.
+	 * @return term
+	 */
+	String term();
+
+	/**
+	 * The type to which this mixin applies to.
+	 * @return applied type
+	 */
+	String[] applies() default coreMixin;
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class OcciContainer extends ResourceContainer {
 			}
 		}
 		
-//		logger.info("An invocation was performed and returned is xml=" + xmlResponse.toString());
+		logger.info("An invocation was performed and returned is xml=" + xmlResponse.toString());
 		return xmlResponse;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.core.classification;
+package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
+public class LinkCategory extends Category {
 
-public abstract class Action extends Category {
-
-	protected Action(String schema, String term) {
-		this(schema, term, null);
-	}
+	private String target = "";
 	
-	protected Action(String schema, String term, String title) {
-		super(ClassType.ACTION, schema, term, title);
+	public LinkCategory() {
+		super("OCCI Core Model");
+	}
+
+	public LinkCategory(String title) {
+		super(title);
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
 	}
 
 }

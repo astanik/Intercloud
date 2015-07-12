@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.root;
 
-import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogKind;
+import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
@@ -42,7 +42,7 @@ public class RootComponent extends ResourceContainerComponent {
 	@Override
 	protected String[] discoInfoFeatureNamespaces() {
 		return (new String[] { "urn:xmpp:rest:xwadl", "urn:xmpp:rest:xml",
-				ServiceCatalogKind.CatalogSchema + ServiceCatalogKind.CatalogTerm});
+				ServiceCatalogMixin.CatalogSchema + ServiceCatalogMixin.CatalogTerm});
 	}
 
 	@Override

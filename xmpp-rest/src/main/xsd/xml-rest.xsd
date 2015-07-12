@@ -85,7 +85,7 @@
 					maxOccurs="1" />
 				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
 					maxOccurs="1" />
-				<xs:element name="LINK" type="xs:string" minOccurs="1"
+				<xs:element name="LINK" type="xs:anyURI" minOccurs="1"
 					maxOccurs="1" />
 			</xs:choice>
 			<xs:attribute name="name" type="xs:string" use="required" />
@@ -103,7 +103,7 @@
 					maxOccurs="1" />
 				<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
 					maxOccurs="1" />
-				<xs:element name="LINK" type="xs:string" minOccurs="1"
+				<xs:element name="LINK" type="xs:anyURI" minOccurs="1"
 					maxOccurs="1" />
 			</xs:choice>
 		</xs:complexType>

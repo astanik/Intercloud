@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,20 @@
 package de.tu_berlin.cit.intercloud.gateway.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.monitoring.ActiveSensorMixin;
+import de.tu_berlin.cit.intercloud.occi.monitoring.CollectorLink;
+import de.tu_berlin.cit.intercloud.occi.monitoring.MetricMixin;
+import de.tu_berlin.cit.intercloud.occi.monitoring.PassiveSensorMixin;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 @Path("/sensor")
 @Summary("This resource allows for manage sensor resources.")
-@Kind(SensorKind.class)
+@Classification(kind = SensorKind.class,
+				mixins = {ActiveSensorMixin.class, PassiveSensorMixin.class, MetricMixin.class},
+				links = {CollectorLink.class})
 public class Sensor extends Collection {
 
 }

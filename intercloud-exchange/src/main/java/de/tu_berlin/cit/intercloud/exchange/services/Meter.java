@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,15 @@
 package de.tu_berlin.cit.intercloud.exchange.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 @Path("/meter")
 @Summary("This resource allows for manage meter resources "
 		+ "used for agreement evaluation.")
-@Kind(MeterKind.class)
+@Classification(kind = MeterKind.class)
 public class Meter extends Collection {
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
 public class Resource extends CollectionResourceInstance {
 
-	private final OcciXml representation;
+	protected final OcciXml representation;
 
 	public Resource(OcciXml occiRepresentation) {
 		super();

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.core.classification;
+package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public abstract class Kind extends Category {
-	
-	protected Kind(String schema, String term) {
-		this(schema, term, null);
-	}
-	
-	protected Kind(String schema, String term, String title) {
-		super(ClassType.KIND, schema, term, title);
-	}
-	
+@Target(java.lang.annotation.ElementType.TYPE)
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+public @interface Link {
+
+	/**
+	 * The schema of this link.
+	 * @return schema
+	 */
+	String schema();
+
+	/**
+	 * The term of this link.
+	 * @return term
+	 */
+	String term();
+
+	/**
+	 * The type of this link target
+	 * @return relation
+	 */
+	String relation();
 }

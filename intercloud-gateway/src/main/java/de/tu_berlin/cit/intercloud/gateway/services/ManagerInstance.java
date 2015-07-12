@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 TU Berlin. All rights reserved.
+ * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,21 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @PathID
 @Summary("This resource allows for manage overall tasks, "
 		+ "espesially agreement management, monitoring, "
 		+ "and virtual machine instantiation.")
-@Kind(ManagerKind.class)
+@Classification(kind = ManagerKind.class)
 public class ManagerInstance extends Resource {
 
 	public ManagerInstance(OcciXml occiRepresentation) {
