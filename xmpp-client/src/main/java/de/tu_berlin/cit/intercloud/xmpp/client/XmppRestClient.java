@@ -55,13 +55,13 @@ public class XmppRestClient extends OcciClient {
 	public static class XmppRestClientBuilder {
 		public static XmppRestClient build(XMPPConnection connection,
 				XmppURI uri) throws XMPPErrorException, XmlException, SmackException {
-//			logger.info("building rest client for uri=" + uri.toString());
+			logger.info("building rest client for uri=" + uri.toString());
 			// create an get IQ stanza to uri
 			IQ getIQ = new GetXwadlIQ(uri);
 
 			// send stanza
 			connection.sendStanza(getIQ);
-//			logger.info("the following stanza had been send: " + getIQ.toString());
+			logger.info("the following stanza had been send: " + getIQ.toString());
 			// wait for response
 			StanzaFilter filter = new AndFilter(new IQReplyFilter(getIQ,
 					connection));
@@ -75,7 +75,7 @@ public class XmppRestClient extends OcciClient {
 			} else
 				throw new SmackException("Wrong IQ has been passed");
 			
-//			logger.info("the following stanza had been received: " + xwadl.toString());
+			logger.info("the following stanza had been received: " + xwadl.toString());
 
 			// create client
 			return new XmppRestClient(connection, uri, xwadl);

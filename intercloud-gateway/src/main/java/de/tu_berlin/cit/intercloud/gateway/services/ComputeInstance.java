@@ -25,17 +25,19 @@ public class ComputeInstance extends Resource {
 	}
 
 
-//	@Action()
+//	@Action("start")
+//	@Result()
 	public Boolean start(String message) {
 		// starting vm
 		System.out.println("Stating vm with message: " + message);
 		return true;
 	}
 	
-//	@Action()
-	public void stop(Integer delay) {
+//	@Action(value = "stop", documentation = "Stop this virtual machine")
+//	@Result(documentation = "Returns true if the vm has been stopped successfully")
+//	public Boolean stop( @Parameter(value = method, documentation = "The method used for stopping this vm") String method) {
 		// stop the vm after "delay" seconds
-		System.out.println("Stopping vm in " + delay + " seconds");
-	}
+//		System.out.println("Stopping vm in " + delay + " seconds");
+//	}
 	
 }
