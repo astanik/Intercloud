@@ -43,7 +43,7 @@ public class ServiceCatalogMixin extends Category {
 			mutable = true,
 			required = true,
 			description = "The price for the described service")
-	public Double price;
+	public double price;
 
 	@Attribute(name = "occi.catalog.currency",
 			type = AttributeType.STRING,

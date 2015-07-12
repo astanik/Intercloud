@@ -33,36 +33,48 @@ public class RepresentationBuilder {
 		
 		// set attributes
 		for (Field field : categoryInstance.getClass().getFields()) {
-			if (field.isAnnotationPresent(Attribute.class)) {
+			if (field.isAnnotationPresent(Attribute.class) && field.get(categoryInstance) != null) {
 				Attribute attribute = field.getAnnotation(Attribute.class);
 				AttributeType attXml = categoryXml.addNewAttribute();
 				attXml.setName(attribute.name());
 				switch(attribute.type()) {
 				case STRING:
-					attXml.setSTRING((String)field.get(categoryInstance));
+					String str = (String)field.get(categoryInstance);
+					attXml.setSTRING(str);
 					break;
 				case ENUM:
-					attXml.setENUM(field.get(categoryInstance).toString());
+					Object en = field.get(categoryInstance);
+					attXml.setENUM(en.toString());
 					break;
 				case INTEGER:
-					attXml.setINTEGER(field.getInt(categoryInstance));
+					Integer i = (Integer) field.get(categoryInstance);
+					attXml.setINTEGER(i);
 					break;
 				case FLOAT:
-					attXml.setFLOAT(field.getFloat(categoryInstance));
+					Float f = (Float) field.get(categoryInstance);
+					attXml.setFLOAT(f);
 					break;
 				case DOUBLE:
-					attXml.setDOUBLE(field.getDouble(categoryInstance));
+					Double d = (Double) field.get(categoryInstance);
+					attXml.setDOUBLE(d);
 					break;
 				case BOOLEAN:
-					attXml.setBOOLEAN(field.getBoolean(categoryInstance));
+					Boolean b = (Boolean) field.get(categoryInstance);
+					attXml.setBOOLEAN(b);
 					break;
 				case URI:
 					attXml.setURI(field.get(categoryInstance).toString());
 					break;
 				case SIGNATURE:
+					if(!field.getType().isArray())
+						throw new RuntimeException("Wrong attribute's signature type");
+					
 					attXml.setSIGNATURE((byte[])field.get(categoryInstance));
 					break;
 				case KEY:
+					if(!field.getType().isArray())
+						throw new RuntimeException("Wrong attribute's signature type");
+
 					attXml.setKEY((byte[])field.get(categoryInstance));
 					break;
 				case DATETIME:

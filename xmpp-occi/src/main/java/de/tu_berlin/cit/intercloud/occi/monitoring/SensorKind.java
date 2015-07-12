@@ -43,7 +43,7 @@ public class SensorKind extends Category {
 	@Attribute(name = "occi.sensor.lastmeasurand",
 			type = AttributeType.FLOAT,
 			description = "Current measurand of the last sample.")
-	public double lastMeasurand;
+	public Float lastMeasurand;
 	
 
 }

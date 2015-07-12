@@ -50,32 +50,32 @@ public class ComputeKind extends Category {
 			type = AttributeType.ENUM,
 			mutable = true,
 			description = "CPU Architecture of the instance: Enum{x86,x64}")
-	public Architecture architecture;
+	public Architecture architecture = null;
 
 	@Attribute(name = "occi.compute.cores",
 			type = AttributeType.INTEGER,
 			mutable = true,
 			value = "1",
 			description = "Number of virtual CPU cores assigned to the instance")
-	public Integer cores;
+	public Integer cores = 1;
 
 	@Attribute(name = "occi.compute.hostname",
 			type = AttributeType.STRING,
 			mutable = true,
 			description = "Fully qualified DNS host name for the instance")
-	public String hostname;
+	public String hostname = null;
 
 	@Attribute(name = "occi.compute.share",
 			type = AttributeType.INTEGER,
 			mutable = true,
 			description = "Relative number of CPU shares for the instance")
-	public Integer share;
+	public Integer share = null;
 
 	@Attribute(name = "occi.compute.memory",
 			type = AttributeType.DOUBLE,
 			mutable = true,
 			description = "Minimum RAM in gigabytes allocated to the instance")
-	public Double memory;
+	public Double memory = null;
 
 	public enum State {
 		active, 
@@ -88,11 +88,11 @@ public class ComputeKind extends Category {
 			type = AttributeType.ENUM,
 			required = true,
 			description = "Current state of the instance: Enum{active, inactive, suspended, error}")
-	public State state;
+	public State state = null;
 
 	@Attribute(name = "occi.compute.message",
 			type = AttributeType.STRING,
 			description = "Human-readable explanation of the current instance state")
-	public String message;
+	public String message = null;
 
 }
