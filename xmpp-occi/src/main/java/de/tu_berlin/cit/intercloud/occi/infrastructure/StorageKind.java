@@ -16,15 +16,15 @@
 
 package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
-@Kind(schema = StorageKind.StorageSchema, term = StorageKind.StorageTerm)
+@Kind(schema = InfrastructureSchemas.StorageSchema, term = StorageKind.StorageTerm)
 public class StorageKind extends Category {
 
 	public final static String StorageTitle = "Storage Resource";
-	
-	public final static String StorageSchema = "http://schema.ogf.org/occi/infrastructure#";
 	
 	public final static String StorageTerm = "storage";
 	
@@ -36,5 +36,40 @@ public class StorageKind extends Category {
 		super(title);
 	}
 
+	/**
+	 * Storage size in gigabytes of the instance.
+	 */
+	@Attribute(name = "occi.storage.size",
+			type = AttributeType.FLOAT,
+			mutable = true,
+			required = true,
+			description = "Storage size in gigabytes of the instance.")
+	public Float size = null;
+	
+	public enum State {
+		online,
+		offline,
+		error
+	}
+	
+	/**
+	 * Current status of the instance.
+	 */
+	@Attribute(name = "occi.storage.state",
+			type = AttributeType.ENUM,
+			mutable = false,
+			required = true,
+			description = "Current status of the instance.")
+	public State state = null;
+	
+	/**
+	 * Human-readable explanation of the current instance state.
+	 */
+	@Attribute(name = "occi.storage.state.message",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "Human-readable explanation of the current instance state.")
+	public String message = null;
 
 }
