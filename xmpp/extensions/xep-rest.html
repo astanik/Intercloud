@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><title>XEP-xxxx: REST with XMPP</title><link rel="stylesheet" type="text/css" href="../xmpp.css"/><link href="../prettify.css" type="text/css" rel="stylesheet"/><link rel="shortcut icon" type="image/x-icon" href="../favicon.ico"/><meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=2.0"/><meta name="DC.Title" content="REST with XMPP"/><meta name="DC.Creator" content="Alexander Stanik"/><meta name="DC.Description" content="This specification defines how the Representational State Transfer (REST)&#10;  architectural style can be applied to an XMPP overlay network. It specifies &#10;  an XMPP protocol extension for accessing resources and transporting resource metadata and XML-REST encoded &#10;  requests and responses between two XMPP entities."/><meta name="DC.Publisher" content="XMPP Standards Foundation"/><meta name="DC.Contributor" content="XMPP Extensions Editor"/><meta name="DC.Date" content="2015-04-27"/><meta name="DC.Type" content="XMPP Extension Protocol"/><meta name="DC.Format" content="XHTML"/><meta name="DC.Identifier" content="XEP-xxxx"/><meta name="DC.Language" content="en"/><meta name="DC.Rights" content="This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF)."/></head><body onload="prettyPrint()"><h1>XEP-xxxx: REST with XMPP</h1><table><tr valign="top"><td><strong>Abstract:</strong></td><td>This specification defines how the Representational State Transfer (REST)
+  architectural style can be applied to an XMPP overlay network. It specifies 
+  an XMPP protocol extension for accessing resources and transporting resource metadata and XML-REST encoded 
+  requests and responses between two XMPP entities.</td></tr><tr valign="top"><td><strong>Author:</strong></td><td>Alexander Stanik</td></tr><tr valign="top"><td><strong>Copyright:</strong></td><td>© 1999 - 2014 XMPP Standards Foundation. <a href="#appendix-legal">SEE LEGAL NOTICES</a>.</td></tr><tr valign="top"><td><strong>Status:</strong></td><td>ProtoXEP</td></tr><tr valign="top"><td><strong>Type:</strong></td><td>Standards Track</td></tr><tr valign="top"><td><strong>Version:</strong></td><td>0.0.1</td></tr><tr valign="top"><td><strong>Last Updated:</strong></td><td>2015-04-27</td></tr></table><hr/><p style="color:red">WARNING: This document has not yet been accepted for consideration or approved in any official manner by the XMPP Standards Foundation, and this document is not yet an XMPP Extension Protocol (XEP). If this document is accepted as a XEP by the XMPP Council, it will be published at &lt;<a href="http://xmpp.org/extensions/">http://xmpp.org/extensions/</a>&gt; and announced on the &lt;standards@xmpp.org&gt; mailing list.</p><hr/><h2>Table of Contents</h2><div class="indent"><p><br/>1.  <a href="#intro">Introduction</a><br/>2.  <a href="#reqs">Requirements</a><br/>3.  <a href="#restdis">Resource Exploration</a><br/>   
+      3.1.  <a href="#restdis-resourcetype">Resource Type</a><br/>   
+      3.2.  <a href="#restdis-documentation">Documentation</a><br/>   
+      3.3.  <a href="#restdis-grammars">Grammars</a><br/>   
+      3.4.  <a href="#restdis-method">Method</a><br/>   
+      3.5.  <a href="#restdis-reqeesp">Request and Response</a><br/>   
+      3.6.  <a href="#restdis-action">Action</a><br/>4.  <a href="#restaccess">Resource Access</a><br/>5.  <a href="#usecases">Use Cases</a><br/>   
+      5.1.  <a href="#usecases-multi-dim">Multi-Dimensional Resource Placement</a><br/>6.  <a href="#disco">Service Discovery</a><br/>7.  <a href="#security">Security Considerations</a><br/>8.  <a href="#iana">IANA Considerations</a><br/>9.  <a href="#registrar">XMPP Registrar Considerations</a><br/>   
+      9.1.  <a href="#registrar-ns">Protocol Namespaces</a><br/>   
+      9.2.  <a href="#registrar-disco">Service Discovery Identity</a><br/>10.  <a href="#schema">XML Schema</a><br/>   
+      10.1.  <a href="#schema-xwadl">XWADL Schema</a><br/>   
+      10.2.  <a href="#schema-rest">XML-REST Schema</a></p><p><a href="#appendices">Appendices</a><br/>    <a href="#appendix-docinfo">A: Document Information</a><br/>    <a href="#appendix-authorinfo">B: Author Information</a><br/>    <a href="#appendix-legal">C: Legal Notices</a><br/>    <a href="#appendix-xmpp">D: Relation to XMPP</a><br/>    <a href="#appendix-discuss">E: Discussion Venue</a><br/>    <a href="#appendix-conformance">F: Requirements Conformance</a><br/>    <a href="#appendix-notes">G: Notes</a><br/>    <a href="#appendix-revs">H: Revision History</a></p></div><hr/><h2>1.
+       <a name="intro">Introduction</a></h2>
+  <p class="" style="">Representational State Transfer (<span class="ref">REST</span>) is an architectural style that is a coordinated
+  set of constraints which also apply to the web. It aims at simplifying component implementations, reducing
+  the complexity of distributed software elements, improving the performance, and increasing the 
+  scalability. In relation to the definition of a RESTful application programming interface (API)
+  the uniform interface constraint is of high importance. It simplifies and decouples the architecture
+  and makes REST components independent. The constraints for a uniform interface can be reduced to:
+  the identification of resources, the self-descriptive representation of resources, and the 
+  self-descriptive manipulation of resources.</p>
+  <p class="" style="">REST systems typically communicate over the Hypertext Transfer Protocol (HTTP) and are gaining 
+  large acceptance due to its
+  growing support and its simplicity for implementation. RESTful web services
+  are in this context a simpler alternative to <span class="ref" style=""><a href="http://www.w3.org/TR/SOAP/">SOAP</a></span>  [<a href="#nt-N65657">1</a>] and WSDL-based Web services which are specified 
+  for the use with XMPP
+  in <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0072.html">SOAP over XMPP (XEP-0072)</a></span>  [<a href="#nt-N65671">2</a>] and also a more powerful alternative to <span class="ref" style=""><a href="http://www.xmlrpc.com/spec">XML-RPC</a></span>  [<a href="#nt-N65685">3</a>] which are specified as XMPP extension 
+  in <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0009.html">Jabber-RPC (XEP-0009)</a></span>  [<a href="#nt-N65699">4</a>].</p>
+  <p class="" style="">The <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0332.html">HTTP Over XMPP Transport (XEP-0332)</a></span>  [<a href="#nt-N65718">5</a>] allows for designing REST services in the context of XMPP, but requires an implementation
+  of both protocols: XMPP and HTTP. Furthermore, HTTP was selected in the past because of its 
+  degree of popularity, but has some drawbacks like the lack of discoverability of services.
+  The REST with XMPP extension is a powerful protocol for cloud services that has 
+  several advantages in contrast to the traditional HTTP-based REST approach:</p>
+  <ol start="" class="" style="">
+    <li class="" style="">services are discoverable and explorable,</li>
+    <li class="" style="">asynchronous invocation can be performed in parallel,</li>
+    <li class="" style="">generation of clients on the fly based on the capabilities of resources, and</li>
+    <li class="" style="">multiple input and output types definitions are possible.</li>
+  </ol>
+  <p class="" style="">The REST with XMPP protocol makes use of the &lt;iq/&gt; stanza in order to enable access, to create, to delete,
+  or to modify resources within a XMPP network overlay. This specification defines two XML Schema files:
+  one for exploring the capabilities of a resource and one for transfering
+  representations to a method or performing actions on a resource.</p>
+<h2>2.
+       <a name="reqs">Requirements</a></h2>
+  <p class="" style="">The author has designed the REST with XMPP protocol with the following requirements in mind:</p>
+  <ul class="" style="">
+  	<li class="" style=""><p class="" style="">REST with XMPP should be easy to implement such as it is with REST over HTTP.</p></li>
+  	<li class="" style=""><p class="" style="">This specification should apply the REST architectural style to XMPP and should eliminate limitations of HTTP.</p></li>
+  	<li class="" style=""><p class="" style="">Resources should be linkable in terms of static connections as well as link targets used for resource access and modifications.</p></li>
+  	<li class="" style=""><p class="" style="">The number of request and <span class="strong">response</span> parameters, representations and links should be unbounded.</p></li>
+  	<li class="" style=""><p class="" style="">The number of operations should be unlimited as in contrast to HTTP's GET, POST, PUT, DELETE methods.</p></li>
+  </ul>
+<h2>3.
+       <a name="restdis">Resource Exploration</a></h2>
+  <p class="" style="">In order to explore the capabilities of a resource, the &lt;iq/&gt; stanza type "get" have to be used. The returned 
+  &lt;iq/&gt; stanza is either of type "error" or "result". If it is of type "result", the returned content has to be
+  complied with the xwadl schema of this specification. The xwadl schema has been designed for providing a machine 
+  process-able description of a resource. It was inspired by the Web Application Description Language (WADL)
+  standard delivered by the World Wide Web Consortium (W3C).</p>
+  <p class="" style="">An &lt;iq/&gt; stanza of type "get" is returning an &lt;iq/&gt; stanza of type "result" that describes all actions that the
+  requesting party can perform. The following example shows an exploration of a cloud provider's REST based 
+  interface for handling compute services.</p>
+      
+      <p class="caption"><a name="example-1"/>Example 1. Exploration of an OpenStack interface for handling compute services</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='get' 
+    from='requester@company-b.com/rest-client' 
+    to='company-a.com/openstack' 
+    id='rest1'&gt;
+  &lt;resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute" /&gt;
+&lt;/iq&gt;
+      </pre></div>
+  <p class="" style="">In order to explore a resource, only the path to a resource is required. The counter party has to
+  answer of such a request with a response that exposes all possible actions which can be performed on the 
+  resource located at the specified path. The following example illustrates a response that exposes all
+  actions for this resource.</p>
+      
+      <p class="caption"><a name="example-2"/>Example 2. Result of an exploration for handling compute services</p><div class="indent"><pre class="prettyprint">
+&lt;iq type="result"
+    from="company-a.com/openstack" 
+    to="requester@company-b.com/rest-client"
+    id="rest1"&gt;
+  &lt;resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute"&gt;  
+    &lt;documentation title="Summary"&gt;
+       This resource allows for manage compute instances, e.g. creating virtual machines.
+    &lt;/documentation&gt; 
+    &lt;method type="POST"&gt;
+       &lt;request mediaType="text/occi"&gt;
+       ...
+       &lt;/request&gt;
+       &lt;response mediaType="text/uri" /&gt;
+    &lt;/method&gt;
+    &lt;method type="GET"&gt;
+       &lt;response mediaType="text/uri-list" /&gt;
+    &lt;/method&gt;
+  &lt;/resource_type&gt;
+&lt;/iq&gt;
+      </pre></div>
+  <p class="" style="">This response exposes two methods that can be performed on the 
+  resource located at "/compute". The first method "POST" can be used to create one or
+  more virtual machines (VM). This method expects a representation of media-type "text/occi"
+  and returns a representation of media-type "text/url". 
+  A detailed example of how to access this method is 
+  illustrated later in the <a href="#restaccess">Resource Access</a> subsection.
+  Based on this overview,
+  the following subsections describe each element of the designed XWADL
+  schema and its assigning documents in detail.</p>
+  <div class="indent"><h3>3.1 <a name="restdis-resourcetype">Resource Type</a></h3>
+    <p class="" style="">The "resource_type" element forms the root of a xwadl document and MAY comprises the following 
+    sub-elements: "documentation", "grammars", "action", and "method".
+    This REST with XMPP specification distinguishes between two kinds of
+    operations: actions and methods. Methods are used to transfer
+    state representations according predefined media types among two entities.
+    Actions in turn are used to perform operations on a resource in order to 
+    retrieve a single primitive values or to change the state of a
+    resource.
+    In fact, while methods are used to transfer representations, actions are used to
+    call operation with primitive data type as parameters or return value similar to
+    XML-RPC.</p>
+  </div>
+  <div class="indent"><h3>3.2 <a name="restdis-documentation">Documentation</a></h3>
+    <p class="" style="">Each xwadl-defined element down to the "param" can have one or more child "documentation" elements that 
+    can be used to document that element. The documentation element has a "title" attribute which is a short plain 
+    text description of the element being documented. The "documentation" element can have mixed content 
+    and may contain text and zero or more child elements.</p>
+  </div>
+  <div class="indent"><h3>3.3 <a name="restdis-grammars">Grammars</a></h3>
+    <p class="" style="">The "grammars" element acts as a container for definitions of the format of data exchanged 
+    during execution of the protocol described by the xwadl document and SHOULD be according to the  
+    XML Schema definition.</p>
+      
+      <p class="caption"><a name="example-3"/>Example 3. Example xwadl document with a grammars element</p><div class="indent"><pre class="prettyprint">
+&lt;iq type="result"  
+    from="responder@company-a.com" 
+    to="requester@company-b.com/rest-client"
+    id="rest1"&gt;
+  &lt;resource_type xmlns="urn:xmpp:rest-xwadl" xmlns:xs="http://www.w3.org/2001/XMLSchema" path="/address-book"&gt;  
+    &lt;grammars&gt; 
+      &lt;doc title="Person List"/&gt;  
+      &lt;xs:element name="PersonList" type="MyStructType"/&gt;  
+      &lt;xs:complexType name="MyStructType"&gt; 
+        &lt;xs:sequence&gt; 
+          &lt;xs:element name="Person" type="MyPersonType" maxOccurs="unbounded"/&gt; 
+        &lt;/xs:sequence&gt; 
+      &lt;/xs:complexType&gt;  
+      &lt;xs:complexType name="MyPersonType"&gt; 
+        &lt;xs:sequence&gt; 
+          &lt;xs:element name="name" type="xs:string"/&gt;  
+          &lt;xs:element name="age" type="xs:integer"/&gt; 
+        &lt;/xs:sequence&gt; 
+      &lt;/xs:complexType&gt; 
+    &lt;/grammars&gt;  
+    &lt;method name="POST"&gt; 
+      &lt;request&gt; 
+        &lt;param name="persons" required="true" repeating="false"&gt; 
+          &lt;option type="MyStructType"/&gt; 
+        &lt;/param&gt; 
+      &lt;/request&gt;  
+      &lt;response/&gt; 
+    &lt;/method&gt; 
+  &lt;/resource_type&gt;
+&lt;/iq&gt;
+      </pre></div>
+  </div>
+  <div class="indent"><h3>3.4 <a name="restdis-method">Method</a></h3>
+    <p class="" style="">A method element describes a specific operation that can be performed on a
+resource targeted by the "path" attribute of the "resource_type"
+element.
+A method element is a child of a "resource_type" element and has a
+"type" attribute that identifies the kind of such a method.
+In order to achieve simplicity for implementation and having uniform interface
+constraints, methods are of a specific type. The types defined for a method are
+GET, POST, PUT, and DELETE like the CRUD
+methods of HTTP. This has the purpose to gain a feeling of familiarity for the
+developer and increases his intention to use.
+Additionally, each method can have one "request" and one "response"
+element which can be empty or be used to expose optional templates 
+for representations expected by this method.</p>
+  </div>
+  <div class="indent"><h3>3.5 <a name="restdis-reqeesp">Request and Response</a></h3>
+    <p class="" style="">The request and the response elements of a method 
+describe the input and output representation data to be transferred among an
+entity and a resource of another entity.
+While a request describes the input to the method,
+a response describes the output from the method.
+Both elements have a required mediaType attribute that specifies the
+media type of the representation expected by the method.
+A request element in contrast to a response element
+can also define a set of representation templates as illustrated below.</p>
+      <p class="caption"><a name="example-4"/>Example 4. Templates for creating a virtual machine</p><div class="indent"><pre class="prettyprint">
+...
+&lt;request mediaType="xml/occi"&gt;
+   &lt;template&gt;
+      &lt;Category xmlns="urn:xmpp:occi-representation"&gt;
+         &lt;Kind&gt;
+            &lt;term&gt;compute&lt;/term&gt;
+            &lt;schema&gt;http://schema.ogf.org/occi/infrastructure#&lt;/schema&gt;
+            &lt;title&gt;Compute Resource&lt;/title&gt;
+            &lt;attribute name="occi.compute.architecture" type="Enum"&gt;x64&lt;/attribute&gt; 
+            &lt;attribute name="occi.compute.memory" type="Double"&gt;1.0&lt;/attribute&gt;
+            &lt;attribute name="occi.compute.cores" type="Integer"&gt;2&lt;/attribute&gt;
+         &lt;/Kind&gt;
+      &lt;/Category&gt;
+   &lt;/template&gt;
+   &lt;template&gt;
+      &lt;Category xmlns="urn:xmpp:occi-representation"&gt;
+         &lt;Kind&gt;
+            &lt;term&gt;compute&lt;/term&gt;
+            &lt;schema&gt;http://schema.ogf.org/occi/infrastructure#&lt;/schema&gt;
+            &lt;title&gt;Compute Resource&lt;/title&gt;
+            &lt;attribute name="occi.compute.architecture" type="Enum"&gt;x64&lt;/attribute&gt; 
+            &lt;attribute name="occi.compute.memory" type="Double"&gt;8.0&lt;/attribute&gt;
+            &lt;attribute name="occi.compute.cores" type="Integer"&gt;4&lt;/attribute&gt;
+         &lt;/Kind&gt;
+      &lt;/Category&gt;
+   &lt;/template&gt;
+&lt;/request&gt;
+...
+      </pre></div>
+  </div>
+  <div class="indent"><h3>3.6 <a name="restdis-action">Action</a></h3>
+    <p class="" style="">An action element describes a specific action operation that can be performed on
+a resource targeted by the path attribute of the "resource_type"
+element.
+An action element is a child of a "resource_type" element and has a
+name attribute that identifies a specific invokable operation of a
+resource.
+The number of actions and the amount of parameters of an action is unlimited.
+This eliminate
+limitations of HTTP and allows for defining APIs similar to SOAP and
+XML-RPC. In combination with detailed descriptions of each individual
+element, this achieves self-descriptive, efficient, and fractional resource
+capabilities for self-descriptive manipulation of resources as illustrated in
+listing below.</p>
+      <p class="caption"><a name="example-5"/>Example 5. Result of an exploration for contoling a virtual machine</p><div class="indent"><pre class="prettyprint">
+...
+&lt;resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute/vm1"&gt;  
+   ...
+   &lt;action name="stop"&gt;
+      &lt;documentation title="Stop this virtual machine"/&gt; 
+      &lt;parameter name="method" type="STRING"&gt;
+         &lt;documentation title="The method used for stopping this vm"&gt;
+            Accepted values are: graceful, acpioff, or poweroff
+         &lt;/documentation&gt;
+      &lt;/parameter&gt;
+      &lt;result type="BOOLEAN"&gt;
+         &lt;documentation title="Returns true if the vm has been stopped successfully"/&gt; 
+      &lt;/result&gt;
+   &lt;/action&gt;
+&lt;/resource_type&gt;
+...
+      </pre></div>
+    <p class="" style="">Each action can have one result and zero or more parameter
+elements which specify the types of expected parameters and the return value.
+A parameter element describes a parameterized value and can be
+identified by its name attribute. Additionally,
+it must have a required type attribute that declares the type of
+this parameter.
+The schema defines a static set of possible primitive data types:
+STRING, INTEGER, DOUBLE, BOOLEAN, and
+LINK.
+These primitive data types are also required to specify the return value in
+the result element as illustrated in listing
+below.
+A parameter element can also have an optional 
+default attribute that exposes a default value which is applied
+if this parameter is not stated. Therefore, if this attribute is
+specified, the overall parameter element is optional when accessing a
+resource.</p>
+      <p class="caption"><a name="example-6"/>Example 6. Result of an exploration for contoling a virtual machine</p><div class="indent"><pre class="prettyprint">
+...
+&lt;resource_type xmlns="urn:xmpp:rest-xwadl" path="/compute/vm1"&gt;  
+   ...
+   &lt;action name="start"&gt;
+      &lt;documentation title="Start this virtual machine"/&gt; 
+      &lt;result type="BOOLEAN"&gt;
+         &lt;documentation title="Returns true if the vm has been started successfully"/&gt; 
+      &lt;/result&gt;
+   &lt;/action&gt;
+&lt;/resource_type&gt;
+...
+      </pre></div>
+<p class="" style="">When retrieving an XWADL document for a specific resource, this XWADL document
+comprises all methods and actions that are available for this particular
+resource at a specific moment in time. It is like a snapshot of capabilities
+and the state of this resource. In fact, the actions illustrated in the listings 
+above are never
+available at the same time and thus can never be found in the same XWADL
+document. This methodology enables state machine implementations for resources
+and eliminate thus further limitations of HTTP.</p>
+  </div>
+<h2>4.
+       <a name="restaccess">Resource Access</a></h2>
+  <p class="" style="">In order to access a resource, the &lt;iq/&gt; stanza type "set" has to be used. The returned 
+  &lt;iq/&gt; stanza is either of type "error" or "result". If it is of type "result", the returned content has to be
+  complied with the xml-rest schema of this specification. The xml-rest schema has been designed 
+  for providing a xml-rest encoded payload for accessing a resource. 
+  An &lt;iq/&gt; stanza must not contain more than one method element or one action
+element with an individual request and response media-type or a
+corresponding sequence of parameters.
+The following example in the listing below illustrates how the
+POST method of the previous example is requested.
+Here, the client creates a VM which is configured according
+a previously advertised flavor.</p>
+      
+      <p class="caption"><a name="example-7"/>Example 7. Access of an OpenStack interface to create a virtual machnine</p><div class="indent"><pre class="prettyprint">
+&lt;iq type="set"
+    from="requester@company-b.com/rest-client"
+    to="company-a.com/openstack"
+    id="rest2"&gt;
+  &lt;resource xmlns="urn:xmpp:xml-rest" path="/compute"&gt;  
+    &lt;method type="POST"&gt; 
+      &lt;request mediaType="xml/occi"&gt;
+        &lt;Category xmlns="urn:xmpp:occi-representation"&gt;
+           &lt;Kind&gt;
+             &lt;term&gt;compute&lt;/term&gt;
+             &lt;schema&gt;http://schema.ogf.org/occi/infrastructure#&lt;/schema&gt;
+             &lt;title&gt;Compute Resource&lt;/title&gt;
+             &lt;attribute name="occi.compute.architecture"
+                 type="Enum"&gt;x64&lt;/attribute&gt; 
+             &lt;attribute name="occi.compute.memory"
+                 type="Double"&gt;1.0&lt;/attribute&gt; 
+             &lt;attribute name="occi.compute.cores" 
+                 type="Integer"&gt;2&lt;/attribute&gt; 
+            &lt;/Kind&gt;
+        &lt;/Category&gt;
+      &lt;/request&gt;  
+      &lt;response mediaType="text/uri" /&gt;
+    &lt;/method&gt; 
+  &lt;/resource&gt;
+&lt;/iq&gt;
+      </pre></div>
+  <p class="" style="">In order to make sure that both parties have a common understanding, the requester specifies also
+the expected responds type which has been exposed during the exploration step. The counter party has to
+answer to such a request with no request element and an extended
+complement of the response element as illustrated in the example in the
+listing below. The identification of a response to an
+associated request is accomplished by the id of the &lt;iq/&gt; stanza.
+  </p>
+      
+      <p class="caption"><a name="example-8"/>Example 8. Result of an access to create a virtual machnine</p><div class="indent"><pre class="prettyprint">
+&lt;iq type="result" 
+    from="company-a.com/openstack"
+    to="requester@company-b.com/rest-client"
+    id="rest2"&gt;
+  &lt;resource xmlns="urn:xmpp:xml-rest" path="/compute"&gt;  
+    &lt;method type="POST"&gt; 
+      &lt;response mediaType="text/uri"&gt;
+         &lt;representation&gt;
+            xmpp://company-a.com/openstack#/compute/vm1
+         &lt;/representation&gt;
+      &lt;/response&gt;
+    &lt;/method&gt; 
+  &lt;/resource&gt;
+&lt;/iq&gt;
+      </pre></div>
+  <p class="" style="">The resource element forms the root of an XML-REST document and must
+comprise only a single method or action as sub-element. In
+contrast to the XWADL description, no further documentation or grammars are
+allowed in order to keep the number of bytes as low as possible.
+In order to specify the resource to access, the path attribute is
+required identical to XWADL.</p>
+<p class="" style="">The method element can have one request element and/or one response
+element.
+Additionally, the type attribute is required in order to identify the
+operation that has to be performed on the resource.
+The request and the response elements of a method are
+in the XML-REST schema similar to the definition in XWADL. Both have an
+mediaType attribute in order to define the input and
+output data of the method.
+The request attribute in XML-REST has no templates in contrast to
+XWADL. Here only XML with namespace definitions are allowed or the
+predefined representation element for plain text can be used as
+child elements.</p>
+<p class="" style="">
+Actions are encoded appropriated. An action element can have one
+result element and one or more parameter elements.
+In contrast to XWADL, both have no type attributes. The type in encoded as child
+element with an assigned XML type definition. Thus types are able to verify by
+validating an XML-REST document with its appropriated XML-REST schema.
+</p>
+<p class="" style="">
+A link targets to a single location locally
+or remotely within an XMPP network overlay. A link is expressed according
+RFC 2396 that specifies the syntactic constraints of an URI
+string, e.g. xmpp://company-a.com/openstack#/compute/vm1.
+Here, the authority and path elements constitute the JID and the fragment
+element is the Path of the resource at that entity identified by
+its JID.</p>
+ 
+<h2>5.
+       <a name="usecases">Use Cases</a></h2>
+  
+  <div class="indent"><h3>5.1 <a name="usecases-multi-dim">Multi-Dimensional Resource Placement</a></h3>
+    <p class="" style="">The REST with XMPP protocol enables a multi-dimensional resource placement. The following examples show 
+    how different resources can be placed within a single server entity:</p>
+      <p class="caption"><a name="example-9"/>Example 9. A request to a server</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='company-a.com' 
+    id='rest1'&gt;
+  &lt;resource xmlns="urn:xmpp:xml-rest" path="/"&gt;
+    ...
+  &lt;/resource&gt;
+&lt;/iq&gt;
+  </pre></div>
+      <p class="caption"><a name="example-10"/>Example 10. A request to a server with a JID contained a resource part</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='company-a.com/resource' 
+    id='rest1'&gt;
+  &lt;resource xmlns="urn:xmpp:xml-rest" path="/"&gt;
+    ...
+  &lt;/resource&gt;
+&lt;/iq&gt;
+  </pre></div>
+      <p class="caption"><a name="example-11"/>Example 11. A request to a server with a JID contained a local part</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com' 
+    id='rest1'&gt;
+  &lt;resource xmlns="urn:xmpp:xml-rest" path="/"&gt;
+    ...
+  &lt;/resource&gt;
+&lt;/iq&gt;
+  </pre></div>
+      <p class="caption"><a name="example-12"/>Example 12. A request to a server with a JID contained a local and a resource part</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com/resource' 
+    id='rest1'&gt;
+  &lt;resource xmlns="urn:xmpp:xml-rest" path="/"&gt;
+    ...
+  &lt;/resource&gt;
+&lt;/iq&gt;
+  </pre></div>
+      <p class="caption"><a name="example-13"/>Example 13. A request to a server with a JID contained a local and a resource part, but accesses another resource</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='set' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com/resource' 
+    id='rest1'&gt;
+  &lt;resource xmlns="urn:xmpp:xml-rest" path="/resource/"&gt;
+    ...
+  &lt;/resource&gt;
+&lt;/iq&gt;
+  </pre></div>
+  <p class="" style="">All examples above are accessing different resources. A variation of the path attribute of the resource 
+  element would also combine the presented JIDs and referring to different resources. 
+  Further examples are possible to show how different resources can be located at a single server entity.</p>
+  </div>
+<h2>6.
+       <a name="disco">Service Discovery</a></h2>
+  <p class="" style="">If an entity supports the REST with XMPP protocol, it SHOULD advertise that fact in response to <span class="ref" style=""><a href="http://xmpp.org/extensions/xep-0030.html">Service Discovery (XEP-0030)</a></span>  [<a href="#nt-N66049">6</a>] information ("diso#info") requests by returning an identity of "automation/rest" and a feature of "jabber:iq:rest":</p>
+  <p class="caption"><a name="example-14"/>Example 14. A disco#info query</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='get' 
+    from='requester@company-b.com/rest-client' 
+    to='responder@company-a.com/rest-server' 
+    id='disco1'&gt;
+  &lt;query xmlns='http://jabber.org/protocol/disco#info'/&gt;
+&lt;/iq&gt;
+  </pre></div>
+  <p class="caption"><a name="example-15"/>Example 15. A disco#info response</p><div class="indent"><pre class="prettyprint">
+&lt;iq type='result' 
+    to='requester@company-b.com/rest-client' 
+    from='responder@company-a.com/rest-server' 
+    id='disco1'&gt;
+  &lt;query xmlns='http://jabber.org/protocol/disco#info'&gt;
+    &lt;identity category='automation' type='rest'/&gt;
+    &lt;feature var='urn:xmpp:rest:xwadl'/&gt;
+    &lt;feature var='urn:xmpp:rest:xml'/&gt;
+  &lt;/query&gt;
+&lt;/iq&gt;
+  </pre></div>
+<h2>7.
+       <a name="security">Security Considerations</a></h2>
+  <p class="" style="">Determining when and how a resource can be accessed or modified based on permissions or 
+  rights are considered outside the scope of this document. Although such mechanisms SHOULD be 
+  considered specifically to the application and/or implementation of this document, 
+  future specifications may address these concerns.</p>
+<h2>8.
+       <a name="iana">IANA Considerations</a></h2>
+  <p class="" style="">REQUIRED.</p>
+<h2>9.
+       <a name="registrar">XMPP Registrar Considerations</a></h2>
+  <div class="indent"><h3>9.1 <a name="registrar-ns">Protocol Namespaces</a></h3>
+    <p class="" style="">The <span class="ref" style=""><a href="http://xmpp.org/registrar/">XMPP Registrar</a></span>  [<a href="#nt-N66105">7</a>] includes 'urn:xmpp:rest:xwadl' and 'urn:xmpp:rest:xml' in its registry of protocol namespaces.</p>
+  </div>
+  <div class="indent"><h3>9.2 <a name="registrar-disco">Service Discovery Identity</a></h3>
+    <p class="" style="">The XMPP Registrar includes a Service Discovery type of "rest" within the "automation" category in its registry of service discovery identities.</p>
+  </div>
+<h2>10.
+       <a name="schema">XML Schema</a></h2>
+    <div class="indent"><h3>10.1 <a name="schema-xwadl">XWADL Schema</a></h3>
+    <p class="caption"/><div class="indent"><pre class="prettyprint">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:rest-xwadl" xmlns="urn:xmpp:rest-xwadl"
+	elementFormDefault="qualified"&gt;
+
+	&lt;xs:annotation&gt;
+		&lt;xs:documentation&gt;
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		&lt;/xs:documentation&gt;
+	&lt;/xs:annotation&gt;
+
+	&lt;xs:element name="resource_type"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:element ref="grammars" minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:element ref="method" minOccurs="0" maxOccurs="unbounded" /&gt;
+				&lt;xs:element ref="action" minOccurs="0" maxOccurs="unbounded" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="path" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:complexType name="documentationType"&gt;
+		&lt;xs:simpleContent&gt;
+			&lt;xs:extension base="xs:string"&gt;
+				&lt;xs:attribute name="title" type="xs:string" /&gt;
+			&lt;/xs:extension&gt;
+		&lt;/xs:simpleContent&gt;
+	&lt;/xs:complexType&gt;
+
+	&lt;xs:element name="grammars"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="unbounded" /&gt;
+				&lt;xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" /&gt;
+			&lt;/xs:sequence&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="method"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:element ref="request" minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:element ref="response" minOccurs="0" maxOccurs="1" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="type" type="methodType" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:simpleType name="methodType"&gt;
+		&lt;xs:restriction base="xs:string"&gt;
+			&lt;xs:enumeration value="GET" /&gt;
+			&lt;xs:enumeration value="POST" /&gt;
+			&lt;xs:enumeration value="PUT" /&gt;
+			&lt;xs:enumeration value="DELETE" /&gt;
+		&lt;/xs:restriction&gt;
+	&lt;/xs:simpleType&gt;
+
+	&lt;xs:element name="request"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:element name="template" type="xs:string" minOccurs="0"
+					maxOccurs="unbounded" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="mediaType" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="response"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="mediaType" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="action"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" /&gt;
+				&lt;xs:element ref="result" minOccurs="0" maxOccurs="1" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="name" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="parameter"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="name" type="xs:string" use="required" /&gt;
+			&lt;xs:attribute name="default" type="xs:string" /&gt;
+			&lt;xs:attribute name="type" type="parameterType" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="result"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="documentation" type="documentationType"
+					minOccurs="0" maxOccurs="1" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="type" type="parameterType" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:simpleType name="parameterType"&gt;
+		&lt;xs:restriction base="xs:string"&gt;
+			&lt;xs:enumeration value="STRING" /&gt;
+			&lt;xs:enumeration value="INTEGER" /&gt;
+			&lt;xs:enumeration value="DOUBLE" /&gt;
+			&lt;xs:enumeration value="BOOLEAN" /&gt;
+			&lt;xs:enumeration value="LINK" /&gt;
+		&lt;/xs:restriction&gt;
+	&lt;/xs:simpleType&gt;
+
+&lt;/xs:schema&gt;
+	</pre></div>
+	</div>
+	<div class="indent"><h3>10.2 <a name="schema-rest">XML-REST Schema</a></h3>
+    <p class="caption"/><div class="indent"><pre class="prettyprint">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:xml-rest" xmlns="urn:xmpp:xml-rest"
+	elementFormDefault="qualified"&gt;
+
+	&lt;xs:annotation&gt;
+		&lt;xs:documentation&gt;
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		&lt;/xs:documentation&gt;
+	&lt;/xs:annotation&gt;
+
+	&lt;xs:element name="resource"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:choice&gt;
+				&lt;xs:element ref="method" minOccurs="1" maxOccurs="1" /&gt;
+				&lt;xs:element ref="action" minOccurs="1" maxOccurs="1" /&gt;
+			&lt;/xs:choice&gt;
+			&lt;xs:attribute name="path" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="method"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element ref="request" minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:element ref="response" minOccurs="0" maxOccurs="1" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="type" type="methodType" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:simpleType name="methodType"&gt;
+		&lt;xs:restriction base="xs:string"&gt;
+			&lt;xs:enumeration value="GET" /&gt;
+			&lt;xs:enumeration value="POST" /&gt;
+			&lt;xs:enumeration value="PUT" /&gt;
+			&lt;xs:enumeration value="DELETE" /&gt;
+		&lt;/xs:restriction&gt;
+	&lt;/xs:simpleType&gt;
+
+	&lt;xs:element name="request"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="representation" type="xs:string"
+					minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="mediaType" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="response"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element name="representation" type="xs:string"
+					minOccurs="0" maxOccurs="1" /&gt;
+				&lt;xs:any namespace="##other" processContents="lax" minOccurs="0"
+					maxOccurs="unbounded" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="mediaType" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="action"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:sequence&gt;
+				&lt;xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" /&gt;
+				&lt;xs:element ref="result" minOccurs="0" maxOccurs="1" /&gt;
+			&lt;/xs:sequence&gt;
+			&lt;xs:attribute name="name" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="parameter"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:choice&gt;
+				&lt;xs:element name="STRING" type="xs:string" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="INTEGER" type="xs:integer" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="DOUBLE" type="xs:double" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="LINK" type="xs:anyURI" minOccurs="1"
+					maxOccurs="1" /&gt;
+			&lt;/xs:choice&gt;
+			&lt;xs:attribute name="name" type="xs:string" use="required" /&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+	&lt;xs:element name="result"&gt;
+		&lt;xs:complexType&gt;
+			&lt;xs:choice&gt;
+				&lt;xs:element name="STRING" type="xs:string" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="INTEGER" type="xs:integer" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="DOUBLE" type="xs:double" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
+					maxOccurs="1" /&gt;
+				&lt;xs:element name="LINK" type="xs:anyURI" minOccurs="1"
+					maxOccurs="1" /&gt;
+			&lt;/xs:choice&gt;
+		&lt;/xs:complexType&gt;
+	&lt;/xs:element&gt;
+
+&lt;/xs:schema&gt;
+	</pre></div>
+	</div>
+<hr/><a name="appendices"/><h2>Appendices</h2><hr/><a name="appendix-docinfo"/><h3>Appendix A: Document Information</h3><p class="indent">
+            Series: <a href="http://xmpp.org/extensions/">XEP</a><br/>
+            Number: xxxx<br/>
+            Publisher: <a href="/xsf/">XMPP Standards Foundation</a><br/>
+            Status: 
+            <a href="http://xmpp.org/extensions/xep-0001.html#states-ProtoXEP">ProtoXEP</a><br/>
+            Type:
+            <a href="http://xmpp.org/extensions/xep-0001.html#types-Standards Track">Standards Track</a><br/>
+            Version: 0.0.1<br/>
+            Last Updated: 2015-04-27<br/>
+                Approving Body: <a href="http://xmpp.org/council/">XMPP Council</a><br/>Dependencies: XMPP Core<br/>
+                Supersedes: None<br/>
+                Superseded By: None<br/>
+            Short Name: NOT_YET_ASSIGNED<br/>
+            This document in other formats: 
+                <a class="standardsButton" href="http://xmpp.org/extensions/xep-xxxx.xml">XML</a> 
+                <a class="standardsButton" href="http://xmpp.org/extensions/xep-xxxx.pdf">PDF</a></p><hr/><a name="appendix-authorinfo"/><h3>Appendix B: Author Information</h3><div class="indent"><h3>Alexander Stanik</h3><p class="indent">
+        Email:
+        <a href="mailto:alexander.stanik@tu-berlin.de">alexander.stanik@tu-berlin.de</a><br/>
+        URI: 
+        <a href="http://www.cit.tu-berlin.de/">http://www.cit.tu-berlin.de/</a><br/></p></div><hr/><a name="appendix-legal"/><h3>Appendix C: Legal Notices</h3><div class="indent"><h4>Copyright</h4>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).<h4>Permissions</h4>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the "Specification"), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.<h4>Disclaimer of Warranty</h4><span style="font-weight: bold">## NOTE WELL: This Specification is provided on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event shall the XMPP Standards Foundation or the authors of this Specification be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Specification or the implementation, deployment, or other use of the Specification. ##</span><h4>Limitation of Liability</h4>In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall the XMPP Standards Foundation or any author of this Specification be liable for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising out of the use or inability to use the Specification (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if the XMPP Standards Foundation or such author has been advised of the possibility of such damages.<h4>IPR Conformance</h4>This XMPP Extension Protocol has been contributed in full conformance with the XSF's Intellectual Property Rights Policy (a copy of which may be found at &lt;<a href="http://xmpp.org/extensions/ipr-policy.shtml">http://xmpp.org/extensions/ipr-policy.shtml</a>&gt; or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201 USA).</div><hr/><a name="appendix-xmpp"/><h3>Appendix D: Relation to XMPP</h3><p class="indent">The Extensible Messaging and Presence Protocol (XMPP) is defined in the XMPP Core (RFC 6120) and XMPP IM (RFC 6121) specifications contributed by the XMPP Standards Foundation to the Internet Standards Process, which is managed by the Internet Engineering Task Force in accordance with RFC 2026. Any protocol defined in this document has been developed outside the Internet Standards Process and is to be understood as an extension to XMPP rather than as an evolution, development, or modification of XMPP itself.</p><hr/><a name="appendix-discuss"/><h3>Appendix E: Discussion Venue</h3><p class="indent">The primary venue for discussion of XMPP Extension Protocols is the &lt;<a href="http://mail.jabber.org/mailman/listinfo/standards">standards@xmpp.org</a>&gt; discussion list.</p><p class="indent">Discussion on other xmpp.org discussion lists might also be appropriate; see &lt;<a href="http://xmpp.org/about/discuss.shtml">http://xmpp.org/about/discuss.shtml</a>&gt; for a complete list.</p><p class="indent">Errata can be sent to &lt;<a href="mailto:editor@xmpp.org">editor@xmpp.org</a>&gt;.</p><hr/><a name="appendix-conformance"/><h3>Appendix F: Requirements Conformance</h3><p class="indent">The following requirements keywords as used in this document are to be interpreted as described in <a href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>: "MUST", "SHALL", "REQUIRED"; "MUST NOT", "SHALL NOT"; "SHOULD", "RECOMMENDED"; "SHOULD NOT", "NOT RECOMMENDED"; "MAY", "OPTIONAL".</p><hr/><a name="appendix-notes"/><h3>Appendix G: Notes</h3><div class="indent"><p><a name="nt-N65657">1</a>. SOAP &lt;<a href="http://www.w3.org/TR/SOAP/">http://www.w3.org/TR/SOAP/</a>&gt;.</p><p><a name="nt-N65671">2</a>. XEP-0072: SOAP over XMPP &lt;<a href="http://xmpp.org/extensions/xep-0072.html">http://xmpp.org/extensions/xep-0072.html</a>&gt;.</p><p><a name="nt-N65685">3</a>. XML-RPC &lt;<a href="http://www.xmlrpc.com/spec">http://www.xmlrpc.com/spec</a>&gt;.</p><p><a name="nt-N65699">4</a>. XEP-0009: Jabber-RPC &lt;<a href="http://xmpp.org/extensions/xep-0009.html">http://xmpp.org/extensions/xep-0009.html</a>&gt;.</p><p><a name="nt-N65718">5</a>. XEP-0332: HTTP Over XMPP Transport &lt;<a href="http://xmpp.org/extensions/xep-0332.html">http://xmpp.org/extensions/xep-0332.html</a>&gt;.</p><p><a name="nt-N66049">6</a>. XEP-0030: Service Discovery &lt;<a href="http://xmpp.org/extensions/xep-0030.html">http://xmpp.org/extensions/xep-0030.html</a>&gt;.</p><p><a name="nt-N66105">7</a>. The XMPP Registrar maintains a list of reserved protocol namespaces as well as registries of parameters used in the context of XMPP extension protocols approved by the XMPP Standards Foundation. For further information, see &lt;<a href="http://xmpp.org/registrar/">http://xmpp.org/registrar/</a>&gt;.</p></div><hr/><a name="appendix-revs"/><h3>Appendix H: Revision History</h3><p>Note: Older versions of this specification might be available at <a href="http://xmpp.org/extensions/attic/">http://xmpp.org/extensions/attic/</a></p><div class="indent"><h4>Version 0.0.1 (2015-04-27)</h4><div class="indent"><p class="" style="">First draft.</p> (psa)
+    </div></div><hr/><p>END</p></body></html>
