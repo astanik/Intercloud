@@ -23,7 +23,10 @@ import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Parameter;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Result;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
 
 @PathID
 @Summary("This resource allows for manage a particular virtual machine.")
@@ -45,11 +48,12 @@ public class ComputeInstance extends Resource {
 		return true;
 	}
 	
-//	@Action(value = "stop", documentation = "Stop this virtual machine")
-//	@Result(documentation = "Returns true if the vm has been stopped successfully")
-//	public Boolean stop( @Parameter(value = method, documentation = "The method used for stopping this vm") String method) {
+	@XmppAction(value = "stop", documentation = "Stop this virtual machine")
+	@Result(documentation = "Returns true if the vm has been stopped successfully")
+	public Boolean stop( @Parameter(value = "method", documentation = "The method used for stopping this vm") String method) {
 		// stop the vm after "delay" seconds
-//		System.out.println("Stopping vm in " + delay + " seconds");
-//	}
+		System.out.println("Stopping vm with method: " + method);
+		return true;
+	}
 	
 }
