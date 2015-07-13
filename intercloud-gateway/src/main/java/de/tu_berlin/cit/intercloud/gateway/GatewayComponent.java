@@ -17,6 +17,7 @@
 package de.tu_berlin.cit.intercloud.gateway;
 
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.InfrastructureSchemas;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
@@ -44,7 +45,7 @@ public class GatewayComponent extends ResourceContainerComponent {
 	@Override
 	protected String[] discoInfoFeatureNamespaces() {
 		return (new String[] { "urn:xmpp:rest:xwadl", "urn:xmpp:rest:xml",
-				ComputeKind.ComputeSchema + ComputeKind.ComputeTerm,
+				InfrastructureSchemas.ComputeSchema + ComputeKind.ComputeTerm,
 				ManagerKind.ManagerSchema + ManagerKind.ManagerTerm,
 				SensorKind.SensorSchema + SensorKind.SensorTerm});
 	}

@@ -21,14 +21,14 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
 
-@Link(schema = ComputeKind.ComputeSchema, term = NetworkInterfaceLink.NetworkInterfaceTerm,
-		relation = NetworkKind.NetworkSchema + NetworkKind.NetworkTerm)
+@Link(schema = InfrastructureSchemas.NetworkInterfaceSchema, term = NetworkInterfaceLink.NetworkInterfaceTerm,
+		relation = InfrastructureSchemas.NetworkSchema + NetworkKind.NetworkTerm)
 public class NetworkInterfaceLink extends LinkCategory {
 
-	public final static String NetworkInterfaceTitle = "Network Interface Link";
+	public final static String NetworkInterfaceTitle = "NetworkInterface Link";
 	
 	public final static String NetworkInterfaceTerm = "networkinterface";
-
+	
 	public NetworkInterfaceLink() {
 		super(NetworkInterfaceTitle);
 	}
@@ -37,12 +37,25 @@ public class NetworkInterfaceLink extends LinkCategory {
 		super(title);
 	}
 
+	/**
+	 * Identifier that relates the link to the link’s device interface
+	 */
+	@Attribute(name = "occi.networkinterface.interface",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = true,
+			description = "Identifier that relates the link to the link’s device interface")
+	public String deviceinterface = null;  // interface is a java keyword
+	
+	/**
+	 * MAC address associated with the link's device interface
+	 */
 	@Attribute(name = "occi.networkinterface.mac",
 			type = AttributeType.STRING,
 			mutable = true,
 			required = true,
 			description = "MAC address associated with the link's device interface")
-	public String mac;
+	public String mac = null;
 
 	public enum State {
 		active, 
@@ -50,15 +63,24 @@ public class NetworkInterfaceLink extends LinkCategory {
 		error
 	}
 	
+	/**
+	 * Current state of the instance
+	 */
 	@Attribute(name = "occi.networkinterface.state",
 			type = AttributeType.ENUM,
+			mutable = false,
 			required = true,
 			description = "Current state of the instance: Enum{active, inactive, error}")
-	public State state;
+	public State state = null;
 
+	/**
+	 * Human-readable explanation of the current instance state
+	 */
 	@Attribute(name = "occi.networkinterface.message",
 			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
 			description = "Human-readable explanation of the current instance state")
-	public String message;
+	public String message = null;
 
 }
