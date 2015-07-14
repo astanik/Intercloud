@@ -17,6 +17,8 @@
 package de.tu_berlin.cit.intercloud.occi.core.incarnation;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -45,6 +47,7 @@ public final class ClassificationRegistry {
 
 	private final Map<String, Class<? extends Category>> classMapping;
 
+	
 	/**
 	 * A private Constructor prevents any other class from instantiating.
 	 */
@@ -64,6 +67,35 @@ public final class ClassificationRegistry {
 
 	// }
 
+	public static List<String> buildTypeList(ResourceInstance instance) {
+		logger.info("Start building " + instance.getClass().getSimpleName()
+				+ " type list ...");
+		ArrayList<String> list = new ArrayList<String>();
+		if (instance.getClass().isAnnotationPresent(Classification.class)) {
+			Classification classification = instance.getClass().getAnnotation(
+					Classification.class);
+			// add kind
+			ClassificationType kind = getKindClassificationType(classification);
+			if (kind != null) {
+				list.add(kind.getCategory());
+			}
+			// add mixins
+			List<ClassificationType> mixins = getMixinClassificationTypes(classification);
+			for(int i=0; i<mixins.size(); i++) {
+				list.add(mixins.get(i).getCategory());
+			}
+			// add links
+			List<ClassificationType> links = getLinkClassificationTypes(classification);
+			for(int i=0; i<links.size(); i++) {
+				list.add(links.get(i).getCategory());
+			}
+		}
+
+		logger.info("Type list has been build: ");
+		logger.info(list.toString());
+		return list;
+	}
+
 	public static ClassificationDocument buildClassification(ResourceInstance instance) {
 		logger.info("Start building " + instance.getClass().getSimpleName()
 				+ " classification ...");
@@ -82,6 +114,20 @@ public final class ClassificationRegistry {
 		logger.info("Classification document has been build: ");
 		logger.info(doc.toString());
 		return doc;
+	}
+
+	private static List<ClassificationType> getLinkClassificationTypes(Classification classification) {
+		Class<? extends Category>[] links = classification.links();
+		ArrayList<ClassificationType> list = new ArrayList<ClassificationType>();
+		for (int i = 0; i < links.length; i++) {
+
+			if (!links[i].isAnnotationPresent(Link.class)) {
+				throw new RuntimeException("the class is not a link kind");
+			}
+
+			list.add(new ClassificationType(links[i].getAnnotation(Link.class).schema(), links[i].getAnnotation(Link.class).term()));
+		}
+		return list;
 	}
 
 	private static void appendLinkClassification(ClassificationDocument doc,
@@ -108,6 +154,20 @@ public final class ClassificationRegistry {
 		}
 	}
 
+	private static List<ClassificationType> getMixinClassificationTypes(Classification classification) {
+		Class<? extends Category>[] mixins = classification.mixins();
+		ArrayList<ClassificationType> list = new ArrayList<ClassificationType>();
+		for (int i = 0; i < mixins.length; i++) {
+
+			if (!mixins[i].isAnnotationPresent(Mixin.class)) {
+				throw new RuntimeException("the class is not a mixin");
+			}
+
+			list.add(new ClassificationType(mixins[i].getAnnotation(Mixin.class).schema(), mixins[i].getAnnotation(Mixin.class).term()));
+		}
+		return list;
+	}
+
 	private static void appendMixinClassification(ClassificationDocument doc,
 			Classification classification) {
 		Class<? extends Category>[] mixins = classification.mixins();
@@ -132,26 +192,40 @@ public final class ClassificationRegistry {
 		}
 	}
 
-	private static void appendKindClassification(ClassificationDocument doc,
-			Classification classification) {
+	private static ClassificationType getKindClassificationType(Classification classification) {
 		Class<? extends Category> kind = classification.kind();
 		if (kind.equals(Category.class)) {
 			// no kind is set
 			// this is not an exception!
-			return;
+			return null;
 		}
 
 		if (!kind.isAnnotationPresent(Kind.class)) {
-			// the class is no kind
+			// the class is not a kind
 			throw new RuntimeException("the class is not a kind");
+		}
+
+		return new ClassificationType(kind.getAnnotation(Kind.class).schema(),
+				kind.getAnnotation(Kind.class).term());
+	}
+
+	private static void appendKindClassification(ClassificationDocument doc,
+			Classification classification) {
+		Class<? extends Category> kind = classification.kind();
+
+		ClassificationType type = getKindClassificationType(classification);
+		if (type == null) {
+			// no kind is set
+			// this is not an exception!
+			return;
 		}
 
 		// create kind element
 		CategoryClassification docKind = doc.getClassification()
 				.addNewKindType();
 
-		docKind.setSchema(kind.getAnnotation(Kind.class).schema());
-		docKind.setTerm(kind.getAnnotation(Kind.class).term());
+		docKind.setSchema(type.getSchema());
+		docKind.setTerm(type.getTerm());
 		// TODO: add optional title
 
 		appendAttributeClassification(docKind, kind);

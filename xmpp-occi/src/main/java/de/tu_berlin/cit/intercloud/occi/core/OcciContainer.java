@@ -18,7 +18,10 @@ package de.tu_berlin.cit.intercloud.occi.core;
 
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
+import de.tu_berlin.cit.intercloud.occi.core.incarnation.ClassificationRegistry;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -44,6 +47,15 @@ public class OcciContainer extends ResourceContainer {
 					+ "Resource not found");
 		
 		return OcciXwadlBuilder.build(path, instance);
+	}
+
+	public List<String> getSupportedTypes() {
+		ArrayList<String> list = new ArrayList<String>();
+		List<ResourceInstance> resources = this.getResources();
+		for(int i=0; i<resources.size(); i++) {
+			list.addAll(ClassificationRegistry.buildTypeList(resources.get(i)));
+		}
+		return list;
 	}
 
 	@Override

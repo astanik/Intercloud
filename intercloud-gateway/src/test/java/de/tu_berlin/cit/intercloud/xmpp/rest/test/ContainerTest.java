@@ -50,6 +50,7 @@ public class ContainerTest {
 			Assert.assertTrue(cmp != null);
 			System.out.println("Compute absolute path: " + cmp.getPath());
 			ResourceTypeDocument doc = container.getXWADL("/compute");
+			System.out.println(container.getSupportedTypes());
 			// client test
 			OcciClient client = new OcciClient(doc);
 			List<Method> list = client.getMethods(MethodType.POST);

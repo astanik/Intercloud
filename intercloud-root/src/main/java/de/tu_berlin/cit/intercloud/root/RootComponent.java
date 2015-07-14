@@ -16,7 +16,6 @@
 
 package de.tu_berlin.cit.intercloud.root;
 
-import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
@@ -37,12 +36,6 @@ public class RootComponent extends ResourceContainerComponent {
 	@Override
 	public String getDescription() {
 		return "This is the Intercloud Root service.";
-	}
-
-	@Override
-	protected String[] discoInfoFeatureNamespaces() {
-		return (new String[] { "urn:xmpp:rest:xwadl", "urn:xmpp:rest:xml",
-				ServiceCatalogMixin.CatalogSchema + ServiceCatalogMixin.CatalogTerm});
 	}
 
 	@Override

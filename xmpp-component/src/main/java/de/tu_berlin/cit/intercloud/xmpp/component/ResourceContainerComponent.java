@@ -16,6 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.component;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.xmlbeans.XmlException;
@@ -25,6 +26,7 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.AbstractComponent;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
@@ -63,7 +65,13 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 
 	@Override
 	protected String[] discoInfoFeatureNamespaces() {
-		return (new String[] { NAMESPACE_REST_XWADL, NAMESPACE_REST_XML });
+		ArrayList<String> features = new ArrayList<String>();
+		features.add(NAMESPACE_REST_XWADL);
+		features.add(NAMESPACE_REST_XML);
+		if(this.container instanceof OcciContainer) {
+			features.addAll(((OcciContainer)this.container).getSupportedTypes());
+		}
+		return features.toArray(new String[0]);
 	}
 
 	@Override

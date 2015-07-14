@@ -16,7 +16,8 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.rest;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -156,8 +157,8 @@ public abstract class ResourceInstance {
 			return instance.getResource(relativePath);
 	}
 
-	public Collection<ResourceInstance> getResources() {
-		return this.resourceMap.values();
+	public List<ResourceInstance> getResources() {
+		return new ArrayList<ResourceInstance>(this.resourceMap.values());
 	}
 
 }
