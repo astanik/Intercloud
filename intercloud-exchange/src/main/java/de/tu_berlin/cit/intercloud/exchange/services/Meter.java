@@ -22,6 +22,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Path("/meter")
 @Summary("This resource allows for manage meter resources "
 		+ "used for agreement evaluation.")

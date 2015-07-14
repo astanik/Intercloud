@@ -16,6 +16,11 @@
 
 package de.tu_berlin.cit.intercloud.util.constants;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class ServiceNames {
 
 	public static final String RootComponentName = "Intercloud Root";

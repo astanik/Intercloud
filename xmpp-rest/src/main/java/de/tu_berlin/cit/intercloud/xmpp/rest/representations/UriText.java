@@ -22,6 +22,11 @@ import java.util.List;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class UriText extends Representation {
 
 	public static final String MEDIA_TYPE = "text/uri";

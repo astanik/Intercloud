@@ -22,6 +22,11 @@ import org.jivesoftware.smack.packet.id.StanzaIdUtil;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class GetXwadlIQ extends IQ {
 
 	public static final String ELEMENT = "resource_type";

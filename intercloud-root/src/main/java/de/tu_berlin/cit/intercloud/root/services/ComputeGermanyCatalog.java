@@ -18,6 +18,11 @@ package de.tu_berlin.cit.intercloud.root.services;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Path("/de")
 public class ComputeGermanyCatalog extends AbstractComputeCatalog {
 

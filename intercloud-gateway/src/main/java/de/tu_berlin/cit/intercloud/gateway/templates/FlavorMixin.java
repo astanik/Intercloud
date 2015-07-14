@@ -25,6 +25,11 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class FlavorMixin extends OcciXml {
 
 	@Override

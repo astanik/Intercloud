@@ -39,6 +39,11 @@ import org.xml.sax.SAXException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class ExampleXmlHelper {
 
 	private static final String xsdFolder = "src/main/xsd/";

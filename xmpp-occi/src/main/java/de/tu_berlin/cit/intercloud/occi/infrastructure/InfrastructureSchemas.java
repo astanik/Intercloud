@@ -1,5 +1,10 @@
 package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class InfrastructureSchemas {
 	
 	

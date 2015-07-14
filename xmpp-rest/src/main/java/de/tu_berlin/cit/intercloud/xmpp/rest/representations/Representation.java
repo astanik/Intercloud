@@ -18,6 +18,11 @@ package de.tu_berlin.cit.intercloud.xmpp.rest.representations;
 
 import java.util.List;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public abstract class Representation {
 
 	public abstract List<Representation> getTemplates();

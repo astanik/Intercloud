@@ -28,6 +28,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Result;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @PathID
 @Summary("This resource allows for manage a particular virtual machine.")
 @Classification(kind = ComputeKind.class)

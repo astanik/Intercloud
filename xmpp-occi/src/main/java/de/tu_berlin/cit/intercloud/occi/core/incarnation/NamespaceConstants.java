@@ -30,6 +30,11 @@ import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
 import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class NamespaceConstants {
 
 	public static final Map<String, Class<? extends Category>> mapping;

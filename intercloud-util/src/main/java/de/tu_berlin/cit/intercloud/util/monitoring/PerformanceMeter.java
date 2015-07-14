@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class PerformanceMeter {
 
 	private final ConcurrentHashMap<Integer, Long> startTimes;

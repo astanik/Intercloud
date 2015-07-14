@@ -13,6 +13,11 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class RepresentationBuilder {
 
 	public static CategoryDocument buildRepresentation(Category categoryInstance) throws IllegalArgumentException, IllegalAccessException {

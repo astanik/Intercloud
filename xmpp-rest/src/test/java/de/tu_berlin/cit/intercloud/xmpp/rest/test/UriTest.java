@@ -24,8 +24,12 @@ import org.junit.Test;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class UriTest {
-
 
 	@Test
 	public void componentJID() {

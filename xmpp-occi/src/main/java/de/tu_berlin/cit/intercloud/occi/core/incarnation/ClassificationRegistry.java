@@ -38,6 +38,11 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassificati
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public final class ClassificationRegistry {
 
 	private final static Logger logger = LoggerFactory

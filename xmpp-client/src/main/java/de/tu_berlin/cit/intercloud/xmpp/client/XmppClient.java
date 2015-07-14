@@ -34,6 +34,11 @@ import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQProvider;
 
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class XmppClient {
 
 	private static String hostURL = "cit-mac1.cit.tu-berlin.de";

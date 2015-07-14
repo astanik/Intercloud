@@ -29,6 +29,11 @@ import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class RootApplication {
 
 	private final static Logger logger = LoggerFactory
@@ -49,7 +54,7 @@ public class RootApplication {
 	/**
 	 * Inner class for shutting down.
 	 * 
-	 * @author stanik
+	 * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
 	 *
 	 */
 	public class RunWhenShuttingDown extends Thread {

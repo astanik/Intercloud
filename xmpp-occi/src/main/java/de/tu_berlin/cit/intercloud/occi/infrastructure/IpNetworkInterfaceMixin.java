@@ -21,6 +21,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Mixin(schema = InfrastructureSchemas.NetworkInterfaceMixinSchema, term = IpNetworkInterfaceMixin.IpNetworkInterfaceTerm,
 	applies = InfrastructureSchemas.NetworkInterfaceSchema + NetworkInterfaceLink.NetworkInterfaceTerm)
 public class IpNetworkInterfaceMixin extends Category{

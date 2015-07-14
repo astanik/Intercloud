@@ -23,6 +23,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument.ResourceType;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class XwadlIQ extends IQ {
 
 	public static final String ELEMENT = "resource_type";

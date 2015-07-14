@@ -24,6 +24,11 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @PathID
 @Summary("This resource allows for manage "
 		+ "SLA offer creation and agreement negotiation.")

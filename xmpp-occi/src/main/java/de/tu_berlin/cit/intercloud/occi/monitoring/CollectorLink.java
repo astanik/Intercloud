@@ -21,6 +21,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Link(schema = SensorKind.SensorSchema, term = CollectorLink.CollectorTerm,
 		relation = MeterKind.MeterSchema + MeterKind.MeterTerm)
 public class CollectorLink extends LinkCategory {

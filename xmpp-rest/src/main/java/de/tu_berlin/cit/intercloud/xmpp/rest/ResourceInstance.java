@@ -27,6 +27,11 @@ import org.slf4j.LoggerFactory;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public abstract class ResourceInstance {
 
 	protected final static Logger logger = LoggerFactory.getLogger(ResourceInstance.class);

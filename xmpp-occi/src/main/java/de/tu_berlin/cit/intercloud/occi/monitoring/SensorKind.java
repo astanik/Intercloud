@@ -21,6 +21,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Kind(schema = SensorKind.SensorSchema, term = SensorKind.SensorTerm)
 public class SensorKind extends Category {
 

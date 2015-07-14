@@ -32,6 +32,11 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.dom2_builder.DOM2XmlPullBuilder;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class XmlPullParserConverter {
 
 	public static String convert2String(XmlPullParser parser) throws XmlPullParserException, IOException {

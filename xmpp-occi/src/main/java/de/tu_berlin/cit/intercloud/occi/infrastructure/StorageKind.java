@@ -21,6 +21,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Kind(schema = InfrastructureSchemas.StorageSchema, term = StorageKind.StorageTerm)
 public class StorageKind extends Category {
 

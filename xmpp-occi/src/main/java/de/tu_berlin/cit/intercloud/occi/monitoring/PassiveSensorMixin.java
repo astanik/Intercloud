@@ -19,6 +19,11 @@ package de.tu_berlin.cit.intercloud.occi.monitoring;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Mixin(schema = SensorKind.SensorMixinSchema, term = PassiveSensorMixin.PassiveSensorTerm,
 		applies = SensorKind.SensorSchema + SensorKind.SensorTerm)
 public class PassiveSensorMixin extends Category {

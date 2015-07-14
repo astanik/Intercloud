@@ -22,6 +22,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Path("/manager")
 @Summary("This resource allows for manage overall tasks, "
 		+ "espesially agreement management, monitoring, "

@@ -28,6 +28,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument.ResourceType;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class OcciXwadlBuilder extends XwadlBuilder {
 
 	protected final static Logger logger = LoggerFactory.getLogger(OcciXwadlBuilder.class);

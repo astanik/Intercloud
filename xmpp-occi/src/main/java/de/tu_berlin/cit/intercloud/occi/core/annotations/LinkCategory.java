@@ -16,6 +16,11 @@
 
 package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class LinkCategory extends Category {
 
 	private String target = "";

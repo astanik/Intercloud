@@ -16,6 +16,11 @@
 
 package de.tu_berlin.cit.intercloud.root.services;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class CatalogSearch {
 
 }

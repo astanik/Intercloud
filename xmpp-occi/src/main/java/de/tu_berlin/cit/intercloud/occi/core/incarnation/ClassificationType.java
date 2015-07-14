@@ -17,6 +17,11 @@
 package de.tu_berlin.cit.intercloud.occi.core.incarnation;
 
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class ClassificationType {
 	
 	private final String schema;

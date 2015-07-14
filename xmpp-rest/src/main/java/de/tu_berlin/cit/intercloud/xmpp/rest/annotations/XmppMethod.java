@@ -19,6 +19,11 @@ package de.tu_berlin.cit.intercloud.xmpp.rest.annotations;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Target(java.lang.annotation.ElementType.METHOD)
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 public @interface XmppMethod {

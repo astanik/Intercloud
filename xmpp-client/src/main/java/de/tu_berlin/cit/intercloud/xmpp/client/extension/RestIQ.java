@@ -27,6 +27,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ActionDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class RestIQ extends IQ {
 
 	public static final String ELEMENT = "resource";

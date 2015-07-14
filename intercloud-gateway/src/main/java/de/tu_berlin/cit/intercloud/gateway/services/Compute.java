@@ -31,6 +31,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Path("/compute")
 @Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")
 @Classification(kind = ComputeKind.class,

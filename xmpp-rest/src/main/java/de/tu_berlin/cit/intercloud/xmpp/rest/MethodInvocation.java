@@ -25,6 +25,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.RequestDocument.Request;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class MethodInvocation {
 
 	private final ResourceDocument doc;

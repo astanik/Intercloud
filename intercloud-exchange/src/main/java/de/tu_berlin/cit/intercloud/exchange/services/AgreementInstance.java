@@ -23,6 +23,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @PathID
 @Summary("This resource allows for manage service level agreements.")
 @Classification(kind = AgreementKind.class)

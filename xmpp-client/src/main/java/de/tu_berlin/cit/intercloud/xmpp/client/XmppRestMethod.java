@@ -35,6 +35,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument.Method;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class XmppRestMethod extends OcciMethodInvocation {
 
 	protected final static Logger logger = LoggerFactory.getLogger(XmppRestMethod.class);

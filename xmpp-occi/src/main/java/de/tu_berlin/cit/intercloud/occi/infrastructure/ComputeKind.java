@@ -22,6 +22,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Kind(schema = InfrastructureSchemas.ComputeSchema, term = ComputeKind.ComputeTerm)
 public class ComputeKind extends Category {
 

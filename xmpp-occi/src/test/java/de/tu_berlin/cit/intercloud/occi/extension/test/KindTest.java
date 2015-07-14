@@ -21,6 +21,11 @@ import org.junit.Test;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class KindTest {
 
 	@Test

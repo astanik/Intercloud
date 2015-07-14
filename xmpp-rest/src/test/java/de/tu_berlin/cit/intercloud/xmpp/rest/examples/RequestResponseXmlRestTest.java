@@ -24,6 +24,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class RequestResponseXmlRestTest {
 
 	private static final String xsdFile = "xml-rest.xsd";

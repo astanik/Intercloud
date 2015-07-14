@@ -28,6 +28,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType.Enum;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class ResourceClient {
 
 	private final ResourceTypeDocument doc;

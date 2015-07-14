@@ -26,6 +26,11 @@ import de.tu_berlin.cit.intercloud.occi.monitoring.PassiveSensorMixin;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Path("/sensor")
 @Summary("This resource allows for manage sensor resources.")
 @Classification(kind = SensorKind.class,

@@ -23,6 +23,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @PathID
 @Summary("This resource allows for manage sensor resources.")
 @Classification(kind = SensorKind.class)

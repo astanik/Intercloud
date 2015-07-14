@@ -19,6 +19,11 @@ package de.tu_berlin.cit.intercloud.xmpp.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public final class XmppURI {
 
 	private final URI uri;

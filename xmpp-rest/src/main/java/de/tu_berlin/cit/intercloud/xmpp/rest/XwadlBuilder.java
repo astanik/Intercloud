@@ -31,6 +31,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.RequestDocument.Request;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument.ResourceType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResponseDocument.Response;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class XwadlBuilder {
 
 	protected final static Logger logger = LoggerFactory.getLogger(XwadlBuilder.class);

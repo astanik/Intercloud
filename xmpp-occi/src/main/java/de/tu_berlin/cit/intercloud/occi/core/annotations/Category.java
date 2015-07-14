@@ -17,6 +17,11 @@
 package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class Category {
 
 	public final static String CategorySchema = "http://schema.ogf.org/occi/core#";

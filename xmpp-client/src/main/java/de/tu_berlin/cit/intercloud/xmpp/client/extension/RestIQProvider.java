@@ -26,6 +26,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 public class RestIQProvider extends IQProvider<RestIQ> {
 
 	@Override

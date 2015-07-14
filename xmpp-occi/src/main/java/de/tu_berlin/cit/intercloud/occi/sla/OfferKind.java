@@ -19,6 +19,11 @@ package de.tu_berlin.cit.intercloud.occi.sla;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 
+/**
+ * TODO
+ * 
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ */
 @Kind(schema = OfferKind.OfferSchema, term = OfferKind.OfferTerm)
 public class OfferKind extends Category {
 
