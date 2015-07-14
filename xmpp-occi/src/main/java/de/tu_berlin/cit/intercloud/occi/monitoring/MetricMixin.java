@@ -16,29 +16,69 @@
 
 package de.tu_berlin.cit.intercloud.occi.monitoring;
 
+import org.apache.xmlbeans.GDuration;
+
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Mixin(schema = SensorKind.SensorMixinSchema, term = MetricMixin.PassiveSensorTerm,
-		applies = SensorKind.SensorSchema + SensorKind.SensorTerm)
+@Mixin(schema = MonitoringSchemas.CollectorMixinSchema, term = MetricMixin.MetricSensorTerm,
+		applies = MonitoringSchemas.CollectorSchema + CollectorLink.CollectorTerm)
 public class MetricMixin extends Category {
 
-	public final static String PassiveSensorTitle = "Active Sensor Mixin";
+	public final static String MetricSensorTitle = "Metric Mixin";
 	
-	public final static String PassiveSensorTerm = "activesensor";
+	public final static String MetricSensorTerm = "metric";
 	
 	public MetricMixin() {
-		super(PassiveSensorTitle);
+		super(MetricSensorTitle);
 	}
 
 	public MetricMixin(String title) {
 		super(title);
 	}
+	
+	/**
+	 * Time period in which the measurement is calculated.
+	 */
+	@Attribute(name = "occi.collector.period",
+			type = AttributeType.DURATION,
+			mutable = false,
+			required = true,
+			description = "Time period in which the measurement is calculated.")
+	public GDuration period = null;
+	
+	public enum Method {
+		continuously,
+		periodically
+	}
+	
+	/**
+	 * The method indicates how often a measurement is calculated for a period of time.
+	 */
+	@Attribute(name = "occi.collector.method",
+			type = AttributeType.ENUM,
+			mutable = false,
+			required = true,
+			description = "The method indicates how often a measurement is calculated for a period of time.")
+	public Method method = null;
+	
+	/**
+	 * Policies define the algorithm with which the measurement is calculated.
+	 */
+	@Attribute(name = "occi.collector.policies",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = true,
+			description = "Policies define the algorithm with which the measurement is calculated.")
+	public String policies = null;
 
 
 }

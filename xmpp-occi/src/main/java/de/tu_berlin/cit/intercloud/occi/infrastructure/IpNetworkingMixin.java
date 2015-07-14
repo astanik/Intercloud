@@ -27,6 +27,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Mixin(schema = InfrastructureSchemas.NetworkMixinSchema, term = IpNetworkingMixin.IpNetworkingTerm,
 	  	applies = InfrastructureSchemas.NetworkSchema + NetworkKind.NetworkTerm)

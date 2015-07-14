@@ -25,9 +25,10 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Link(schema = SensorKind.SensorSchema, term = CollectorLink.CollectorTerm,
-		relation = MeterKind.MeterSchema + MeterKind.MeterTerm)
+@Link(schema = MonitoringSchemas.CollectorSchema, term = CollectorLink.CollectorTerm,
+		relation = MonitoringSchemas.MeterSchema + MeterKind.MeterTerm)
 public class CollectorLink extends LinkCategory {
 
 	public final static String CollectorTitle = "Collector Link";
@@ -48,15 +49,34 @@ public class CollectorLink extends LinkCategory {
 		obsolete
 	}
 	
+	/**
+	 * The unit of the measurement.
+	 */
+	@Attribute(name = "occi.collector.unit",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "The unit of the measurement.")
+	public String unit = null;
+	
+	/**
+	 * Current state of the instance: Enum{upToDate, obsolete}
+	 */
 	@Attribute(name = "occi.collector.state",
 			type = AttributeType.ENUM,
+			mutable = false,
 			required = true,
 			description = "Current state of the instance: Enum{upToDate, obsolete}")
-	public State state;
+	public State state = null;
 
+	/**
+	 * Human-readable explanation of the current instance state
+	 */
 	@Attribute(name = "occi.collector.message",
 			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
 			description = "Human-readable explanation of the current instance state")
-	public String message;
+	public String message = null;
 
 }

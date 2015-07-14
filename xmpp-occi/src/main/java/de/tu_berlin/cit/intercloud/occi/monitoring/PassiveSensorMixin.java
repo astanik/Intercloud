@@ -16,16 +16,21 @@
 
 package de.tu_berlin.cit.intercloud.occi.monitoring;
 
+import java.util.Calendar;
+
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Mixin(schema = SensorKind.SensorMixinSchema, term = PassiveSensorMixin.PassiveSensorTerm,
-		applies = SensorKind.SensorSchema + SensorKind.SensorTerm)
+@Mixin(schema = MonitoringSchemas.SensorMixinSchema, term = PassiveSensorMixin.PassiveSensorTerm,
+		applies = MonitoringSchemas.SensorSchema + SensorKind.SensorTerm)
 public class PassiveSensorMixin extends Category {
 
 	public final static String PassiveSensorTitle = "Active Sensor Mixin";
@@ -39,6 +44,17 @@ public class PassiveSensorMixin extends Category {
 	public PassiveSensorMixin(String title) {
 		super(title);
 	}
+	
+	/**
+	 * Timestamp of the last occurrence of an sampling event.
+	 */
+	@Attribute(name = "occi.sensor.lastoccurrence",
+			type = AttributeType.DATETIME,
+			mutable = false,
+			required = true,
+			description = "Timestamp of the last occurrence of an sampling event.")
+	public Calendar lastoccurrence = null;
+
 
 
 }

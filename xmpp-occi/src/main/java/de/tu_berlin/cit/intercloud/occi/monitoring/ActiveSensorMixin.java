@@ -16,16 +16,22 @@
 
 package de.tu_berlin.cit.intercloud.occi.monitoring;
 
+import org.apache.xmlbeans.GDuration;
+
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
+
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Mixin(schema = SensorKind.SensorMixinSchema, term = ActiveSensorMixin.ActiveSensorTerm,
-		applies = SensorKind.SensorSchema + SensorKind.SensorTerm)
+@Mixin(schema = MonitoringSchemas.SensorMixinSchema, term = ActiveSensorMixin.ActiveSensorTerm,
+		applies = MonitoringSchemas.SensorSchema + SensorKind.SensorTerm)
 public class ActiveSensorMixin extends Category {
 
 	public final static String ActiveSensorTitle = "Active Sensor Mixin";
@@ -39,6 +45,16 @@ public class ActiveSensorMixin extends Category {
 	public ActiveSensorMixin(String title) {
 		super(title);
 	}
+	
+	/**
+	 * Sampling rate with which the sensor scans an object periodically.
+	 */
+	@Attribute(name = "occi.sensor.samplerate",
+			type = AttributeType.DURATION,
+			mutable = true,
+			required = true,
+			description = "Sampling rate with which the sensor scans an object periodically.")
+	public GDuration samplerate = null;
 
 
 }

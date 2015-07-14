@@ -25,6 +25,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Kind(schema = InfrastructureSchemas.NetworkSchema, term = NetworkKind.NetworkTerm)
 public class NetworkKind extends Category {

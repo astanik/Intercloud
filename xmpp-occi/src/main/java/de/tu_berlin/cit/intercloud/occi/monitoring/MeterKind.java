@@ -16,20 +16,21 @@
 
 package de.tu_berlin.cit.intercloud.occi.monitoring;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = MeterKind.MeterSchema, term = MeterKind.MeterTerm)
+@Kind(schema = MonitoringSchemas.MeterSchema, term = MeterKind.MeterTerm)
 public class MeterKind extends Category {
 
 	public final static String MeterTitle = "Meter Resource";
-	
-	public final static String MeterSchema = "http://schema.cit.tu-berlin.de/occi/monitoring#";
 	
 	public final static String MeterTerm = "meter";
 	
@@ -40,6 +41,44 @@ public class MeterKind extends Category {
 	public MeterKind(String title) {
 		super(title);
 	}
+	
+	/**
+	 * The unit of the value.
+	 */
+	@Attribute(name = "occi.meter.unit",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "The unit of the value.")
+	public String unit = null;
+	
+	
+	
+	public enum State {
+		valid,
+		invalid
+	}
+	
+	/**
+	 * Current state of the instance.
+	 */
+	@Attribute(name = "occi.sensor.state",
+			type = AttributeType.ENUM,
+			mutable = false,
+			required = true,
+			description = "Current state of the instance.")
+	public State state = null;
+	
+	/**
+	 * Human-readable explanation of the current instance state.
+	 */
+	@Attribute(name = "occi.network.state.message",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "Human-readable explanation of the current instance state.")
+	public String message = null;
+	
 
 
 }

@@ -25,16 +25,13 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = SensorKind.SensorSchema, term = SensorKind.SensorTerm)
+@Kind(schema = MonitoringSchemas.SensorSchema, term = SensorKind.SensorTerm)
 public class SensorKind extends Category {
 
 	public final static String SensorTitle = "Sensor Resource";
 	
-	public final static String SensorSchema = "http://schema.cit.tu-berlin.de/occi/monitoring#";
-
-	public final static String SensorMixinSchema = "http://schema.cit.tu-berlin.de/occi/monitoring/sensor#";
-
 	public final static String SensorTerm = "sensor";
 	
 	public SensorKind() {
@@ -45,10 +42,43 @@ public class SensorKind extends Category {
 		super(title);
 	}
 
-	@Attribute(name = "occi.sensor.lastmeasurand",
-			type = AttributeType.FLOAT,
-			description = "Current measurand of the last sample.")
-	public Float lastMeasurand;
+	/**
+	 * The unit of the measurand.
+	 */
+	@Attribute(name = "occi.sensor.unit",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "The unit of the measurand.")
+	public String unit = null	;
+	
+	
+	public enum State {
+		active, 
+		inactive,  
+		error
+	}
+	
+	/**
+	 * Current state of the instance.
+	 */
+	@Attribute(name = "occi.sensor.state",
+			type = AttributeType.ENUM,
+			mutable = false,
+			required = true,
+			description = "Current state of the instance.")
+	public State state = null;
+	
+	/**
+	 * Human-readable explanation of the current instance state.
+	 */
+	@Attribute(name = "occi.network.state.message",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "Human-readable explanation of the current instance state.")
+	public String message = null;
+	
 	
 
 }

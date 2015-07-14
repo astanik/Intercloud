@@ -25,6 +25,7 @@ import de.tu_berlin.cit.intercloud.occi.infrastructure.InfrastructureSchemas;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkKind;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageKind;
 import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
+import de.tu_berlin.cit.intercloud.occi.monitoring.MonitoringSchemas;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
 import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
@@ -50,9 +51,9 @@ public class NamespaceConstants {
 				StorageKind.class);
 
 		// monitoring classification
-		mapping.put(SensorKind.SensorSchema + SensorKind.SensorTerm,
+		mapping.put(MonitoringSchemas.SensorSchema + SensorKind.SensorTerm,
 				SensorKind.class);
-		mapping.put(MeterKind.MeterSchema + MeterKind.MeterTerm,
+		mapping.put(MonitoringSchemas.MeterSchema + MeterKind.MeterTerm,
 				MeterKind.class);
 
 		// sla classification

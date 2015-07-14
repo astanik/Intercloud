@@ -25,6 +25,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Link(schema = InfrastructureSchemas.NetworkInterfaceSchema, term = NetworkInterfaceLink.NetworkInterfaceTerm,
 		relation = InfrastructureSchemas.NetworkSchema + NetworkKind.NetworkTerm)

@@ -4,6 +4,7 @@ package de.tu_berlin.cit.intercloud.occi.infrastructure;
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 public class InfrastructureSchemas {
 	
