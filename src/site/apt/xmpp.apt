@@ -9,4 +9,56 @@ Alexander Stanik
  
 Extensible Messaging and Presence Protocol (XMPP)
 
-  TBD
+  The Extensible Messaging and Presence
+Protocol (XMPP) was developed by the {{{http://xmpp.org/}XMPP Standard Foundation}}.
+It is a message-oriented communication protocol that is based on
+XML and TCP. Even though XMPP is located in the ISO Open Systems
+Interconnection model on the same layer as HTTP, XMPP supports also extensions to provide
+HTTP transport over XMPP. In particular, while the XMPP core
+specification defines protocol methods such as setup and teardown of XML streams,
+channel encryption, authentication, error handling, communication
+primitives for messaging, network availability, and
+request-response interactions, a set of additional XMPP Extensions (XEP) specify 
+protocol add-ons.
+
+  XMPP enables the near-real-time exchange of small
+pieces of structured data which are called <XML stanzas>.
+XMPP specifies three types of XML stanzas: message, presence, and IQ (short
+for Info/Query). Message stanzas are used to exchange messages among two
+entities over the XMPP overlay network. Presence stanzas are used to expose the
+availability of an entity in the XMPP overlay network and IQ stanzas allow for 
+exchange request and response XML stanza. All these stanza types have a kind of
+header in common. In particular, the XML root elements (<message>, <presence>, and
+<iq>) can have besides stanza specific attributes
+also addressing attributes such are a <from> and a <to> attribute. 
+The value of these attributes have to be either a
+"bare JID" (e.g. localpart@domainpart) or a "full JID" (e.g.
+localpart@domainpart/resourcepart). Thus individual addressing is possible and
+enable a secure, standardized, and fast exchange of XML stanzas within the
+overlay network.
+
+  An IQ stanza has additionally to the two addressing attributes also a
+required <type> and a required <id> attribute. While the
+<id> attribute has the purpose to associate a response to a request,
+the <type> attribute identifies the kind of the IQ. Four types are
+specified: <get>, <set>, <result>, and <error>.
+The IQ types <get> and <set>
+are operations of a request IQ stanza and return in case of a successful
+request processing a response IQ stanza of type <result>. If a
+failure occures in the request processing, an IQ stanza of type <error>
+is returned. Examples of IQ stanza processing are presented in the subsequent
+REST with XMPP section.
+
+  Services are distributed at different locations inside the XMPP overlay network.
+In order to discover desired services within the network, the XMPP Standard
+Foundation had specified an XMPP Extension called XEP-0030: Service Discovery.
+This protocol extension enables to discover information about other XMPP
+entities. It defines two kinds of information that can be discovered:
+
+  * <<disco#info>> allows for retrieving information about 
+	the identity of an entity, the protocols, and the
+	features that this entity supports
+
+  * <<disco#item>> allows for retrieving items
+	associated with an entity, such as the list of components connected to a XMPP
+	server instance.

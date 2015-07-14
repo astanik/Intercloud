@@ -14,73 +14,75 @@
  * limitations under the License.
  */
 
+
 package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
-@Kind(schema = InfrastructureSchemas.NetworkSchema, term = NetworkKind.NetworkTerm)
-public class NetworkKind extends Category {
+@Link(schema = InfrastructureSchemas.StorageLinkSchema, term = StorageLink.StorageLinkTerm,
+relation = InfrastructureSchemas.StorageSchema + StorageLink.StorageLinkTerm)
+public class StorageLink extends LinkCategory{
 
-	public final static String NetworkTitle = "Network Resource";
+	public final static String StorageLinkTitle = "StorageLink Link";
 	
-	public final static String NetworkTerm = "network";
+	public final static String StorageLinkTerm = "storagelink";
 	
-	public NetworkKind() {
-		super(NetworkTitle);
+	public StorageLink(){
+		super(StorageLinkTitle);
 	}
-
-	public NetworkKind(String title) {
+	
+	public StorageLink(String title){
 		super(title);
 	}
-
-	/**
-	 * 802.1q VLAN Ientifier (e.g. 343).
-	 */
-	@Attribute(name = "occi.network.vlan",
-			type = AttributeType.INTEGER,
-			mutable = true,
-			required = false,
-			description = "802.1q VLAN Ientifier (e.g. 343).")
-	public Integer vlan = null;
 	
 	/**
-	 * Tag based VLANs (e.g. external-dmz).
+	 * Device identifier as defined by the OCCI service provider.
 	 */
-	@Attribute(name = "cci.network.label",
+	@Attribute(name = "occi.storagelink.deviceid",
+			type = AttributeType.STRING,
+			mutable = true,
+			required = true,
+			description = "Device identifier as defined by the OCCI service provider.")
+	public String deviceid = null;
+	
+	/**
+	 * Point to where the storage is mounted in the guest OS.
+	 */
+	@Attribute(name = "occi.storagelink.mountpoint",
 			type = AttributeType.STRING,
 			mutable = true,
 			required = false,
-			description = "Tag based VLANs (e.g. external-dmz).")
-	public String label = null;
+			description = "Point to where the storage is mounted in the guest OS.")
+	public String mountpoint = null;
 	
 	public enum State {
-		active, 
-		inactive,  
+		active,
+		inactive,
 		error
-	}
+	} 
 	
 	/**
-	 * Current state of the instance
+	 * Current status of the instance.
 	 */
-	@Attribute(name = "occi.network.state",
+	@Attribute(name = "occi.storagelink.state",
 			type = AttributeType.ENUM,
 			mutable = false,
 			required = true,
-			description = "Current state of the instance")
+			description = "Current status of the instance.")
 	public State state = null;
+	
 	
 	/**
 	 * Human-readable explanation of the current instance state.
 	 */
-	@Attribute(name = "occi.network.state.message",
+	@Attribute(name = "occi.storagelink.state.message",
 			type = AttributeType.STRING,
 			mutable = false,
 			required = false,
 			description = "Human-readable explanation of the current instance state.")
 	public String message = null;
 	
-
 }

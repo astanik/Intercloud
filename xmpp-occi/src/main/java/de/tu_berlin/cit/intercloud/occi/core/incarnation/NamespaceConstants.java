@@ -5,6 +5,7 @@ import java.util.Map;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.InfrastructureSchemas;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkKind;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageKind;
 import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
@@ -20,11 +21,11 @@ public class NamespaceConstants {
 		mapping = new HashMap<String, Class<? extends Category>>();
 
 		// infrastructure classification
-		mapping.put(ComputeKind.ComputeSchema + ComputeKind.ComputeTerm,
+		mapping.put(InfrastructureSchemas.ComputeSchema + ComputeKind.ComputeTerm,
 				ComputeKind.class);
-		mapping.put(NetworkKind.NetworkSchema + NetworkKind.NetworkTerm,
+		mapping.put(InfrastructureSchemas.NetworkSchema + NetworkKind.NetworkTerm,
 				NetworkKind.class);
-		mapping.put(StorageKind.StorageSchema + StorageKind.StorageTerm,
+		mapping.put(InfrastructureSchemas.StorageSchema + StorageKind.StorageTerm,
 				StorageKind.class);
 
 		// monitoring classification

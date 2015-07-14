@@ -9,9 +9,53 @@ Alexander Stanik
 
 Welcome to CIT's Intercloud Project
 
-  The Intercloud project aims to provide an Extensible Messaging and Presence Protocol (XMPP) and
-  Open Cloud Computing Interface (OCCI) based network overlay for cloud to cloud interoperability.
-  It is an approaching implementation of the {{{http://www.intercloudtestbed.org/}IEEE Intercloud Testbed}}.
+  Since the cloud paradigm appeared, a lot of research and implementation effort
+has been invested in order to federate cloud middleware solutions. 
+The main issues in this context are related to resource management, identity
+management, portability, service discovery, and interoperability in general.
+Most solutions are focusing on federations between a private and a public cloud.
+Thus companies can run a private cloud in their own data center and make use
+of additional external cloud resources when all local resources are in use.
+Load peaks can thus be cushioned in order to ensure high quality levels of
+provided services within the cloud environment.
+However, most federations are build between a set of public clouds and implicate
+a vendor lock-in for a particular federation.
+
+
+  Some years ago, the Intercloud project emerged with the goal to overcome
+the vendor lock-in by building a global federation network of clouds. The vision
+of this intercloud network is to facilitate interconnections between
+cloud provider around the world. These provider should been verified and
+classified for trust in order to establish a global confidentiality cloud
+overlay network. 
+For this reason, the {{{http://cloudcomputing.ieee.org/}IEEE Cloud Computing Initiative}},
+the IEEE Cloud Computing Standards Committee, and the 
+{{{http://standards.ieee.org/index.html}IEEE Standards Association}}
+established two work groups (WG) and an
+associated testbed project:
+
+  * <<{{{https://standards.ieee.org/develop/project/2301.html} IEEE P2301}}>>
+    The IEEE P2301 work group develop a Guide for Cloud
+    Portability and Interoperability Profiles (CPIP), 
+  
+  * <<{{{https://standards.ieee.org/develop/project/2302.html} IEEE P2302}}>>
+    The IEEE P2302 work group develop a Standard
+    for Intercloud Interoperability and Federation (SIIF), and 
+  
+  * <<{{{http://www.intercloudtestbed.org/}IEEE Intercloud Testbed}}>>
+    The IEEE Intercloud Testbed is a global lab to prove and improve the
+    Intercloud technology according the development of the standardization initiatives.
+
+* Goal of this Implementation
+
+  These initiatives have the goal to develop standards and a testbed for a world
+wide cloud provider overlay network. Such intercloud network would achieve
+better Quality-of-Service, higher reliability, increased flexibility and scalability, and allows for
+discovering specific cloud resources with individual prices offered by
+participating providers at a global distributed marketplace.
+This Intercloud implementation is based the Extensible Messaging and Presence Protocol (XMPP) and
+the Open Cloud Computing Interface (OCCI) standard. 
+It is an approaching implementation which may be used for the {{{http://www.intercloudtestbed.org/}IEEE Intercloud Testbed}}.
   
 * Learn more about CIT's Intercloud Project
 
@@ -23,6 +67,10 @@ Welcome to CIT's Intercloud Project
     This section gives details about what components the Intercloud project consists of
 	and how they relate.
    
+  *  <<{{{./restImplementation.html}REST with XMPP Implementation Concept}}>>
+  
+    This section describes how to implement and to deploy resources to Intercloud components.
+
   *  <<{{{./installation.html}Installation}}>>
   
     This section describes how to setup and install an the Intercloud components.
