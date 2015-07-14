@@ -16,10 +16,6 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.rest.test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -54,9 +50,6 @@ public class ContainerTest {
 			Assert.assertTrue(cmp != null);
 			System.out.println("Compute absolute path: " + cmp.getPath());
 			ResourceTypeDocument doc = container.getXWADL("/compute");
-			Writer out = new FileWriter(new File("target/computeXWADL.xml").getAbsoluteFile());
-			doc.save(out);
-			out.close();
 			// client test
 			OcciClient client = new OcciClient(doc);
 			List<Method> list = client.getMethods(MethodType.POST);
@@ -69,8 +62,6 @@ public class ContainerTest {
 				}
 			}
 		} catch (URISyntaxException e) {
-	        Assert.fail(e.getMessage());
-		} catch (IOException e) {
 	        Assert.fail(e.getMessage());
 		}
 	}
