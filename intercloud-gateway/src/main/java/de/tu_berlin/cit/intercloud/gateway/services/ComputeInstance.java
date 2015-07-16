@@ -23,6 +23,9 @@ import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageLink;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Parameter;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Result;
@@ -32,10 +35,13 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @PathID
 @Summary("This resource allows for manage a particular virtual machine.")
-@Classification(kind = ComputeKind.class)
+@Classification(kind = ComputeKind.class,
+				mixins = {IpNetworkInterfaceMixin.class},
+				links = {StorageLink.class, NetworkInterfaceLink.class} )
 public class ComputeInstance extends Resource {
 
 	private static UUID TemplateID = UUID.fromString("f509099b-0da9-4f96-8fe6-7b20f6614381");

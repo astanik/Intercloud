@@ -24,7 +24,9 @@ import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageLink;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
@@ -39,7 +41,8 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 @Path("/compute")
 @Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")
 @Classification(kind = ComputeKind.class,
-				links = {NetworkInterfaceLink.class})
+				mixins = {IpNetworkInterfaceMixin.class},
+				links = {StorageLink.class, NetworkInterfaceLink.class})
 public class Compute extends Collection {
 
 	public Compute() {
