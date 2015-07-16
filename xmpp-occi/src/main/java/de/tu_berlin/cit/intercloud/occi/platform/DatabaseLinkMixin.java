@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.tu_berlin.cit.intercloud.occi.monitoring;
+package de.tu_berlin.cit.intercloud.occi.platform;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
-
 
 /**
  * TODO
@@ -27,29 +26,39 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Mixin(schema = MonitoringSchemas.MeterMixinSchema, term = AggregationMixin.AggregationTerm,
-applies = MonitoringSchemas.MeterSchema + MeterKind.MeterTerm)
-public class AggregationMixin extends Category{
+@Mixin(schema = PlatformSchemas.ComponentLinkMixinSchema, term = DatabaseLinkMixin.DatabaseLinkTerm,
+	applies = PlatformSchemas.ComponentLinkSchema + ComponentLink.ComponentLinkTerm)
+public class DatabaseLinkMixin extends Category{
 
-    public final static String AggregationTitle = "Aggregation Mixin";
+	public final static String DatabaseLinkTitle = "DatabaseLinkMixin Mixin";
 	
-	public final static String AggregationTerm = "aggregation";
+	public final static String DatabaseLinkTerm = "databaseLink";
 	
-	public AggregationMixin(){
-		super(AggregationTitle);
+	public DatabaseLinkMixin() {
+		super(DatabaseLinkTitle);
 	}
-	
-	public AggregationMixin(String title){
+
+	public DatabaseLinkMixin(String title) {
 		super(title);
 	}
 	
 	/**
-	 * A domain-specific String that describes the aggregation operation.
+	 * Username.
 	 */
-	@Attribute(name = "occi.meter.operation",
+	@Attribute(name = "occi.database.username",
 			type = AttributeType.STRING,
 			mutable = false,
-			required = true,
-			description = "A domain-specific String that describes the aggregation operation.")
-	public String operation = null	;
+			required = false,
+			description = "Username.")
+	public String username = null;
+	
+	/**
+	 * Token.
+	 */
+	@Attribute(name = "occi.network.token",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "Token.")
+	public String token = null;
 }

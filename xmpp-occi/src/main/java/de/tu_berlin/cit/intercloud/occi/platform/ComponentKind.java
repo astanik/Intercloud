@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.monitoring;
+package de.tu_berlin.cit.intercloud.occi.platform;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
+
 
 /**
  * TODO
@@ -27,58 +28,45 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = MonitoringSchemas.SensorSchema, term = SensorKind.SensorTerm)
-public class SensorKind extends Category {
+@Kind(schema = PlatformSchemas.ComponentSchema, term = ApplicationKind.ApplicationTerm)
+public class ComponentKind extends Category{
 
-	public final static String SensorTitle = "Sensor Resource";
+	public final static String ComponentTitle = "Component Resource";
 	
-	public final static String SensorTerm = "sensor";
+	public final static String ComponentTerm = "component";
 	
-	public SensorKind() {
-		super(SensorTitle);
+	public ComponentKind(){
+		super(ComponentTitle);
 	}
-
-	public SensorKind(String title) {
+	
+	public ComponentKind(String title){
 		super(title);
 	}
-
-	/**
-	 * The unit of the measurand.
-	 */
-	@Attribute(name = "occi.sensor.unit",
-			type = AttributeType.STRING,
-			mutable = false,
-			required = false,
-			description = "The unit of the measurand.")
-	public String unit = null;
-	
 	
 	public enum State {
 		active, 
-		inactive,  
+		inactive, 
 		error
 	}
 	
 	/**
-	 * Current state of the instance.
+	 * Current state of the component.
 	 */
-	@Attribute(name = "occi.sensor.state",
+	@Attribute(name = "occi.component.state",
 			type = AttributeType.ENUM,
 			mutable = false,
 			required = true,
-			description = "Current state of the instance.")
+			description = "current state of the component.")
 	public State state = null;
-	
+
 	/**
-	 * Human-readable explanation of the current instance state.
+	 * Human-readable explanation of the current instance state
 	 */
-	@Attribute(name = "occi.network.state.message",
+	@Attribute(name = "occi.component.state.message",
 			type = AttributeType.STRING,
 			mutable = false,
 			required = false,
-			description = "Human-readable explanation of the current instance state.")
+			description = "Human-readable explanation of the current instance state")
 	public String message = null;
 	
-	
-
 }

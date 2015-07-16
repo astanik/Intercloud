@@ -1,4 +1,4 @@
-/** 
+/**
  * Copyright 2010-2015 Complex and Distributed IT Systems, TU Berlin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,43 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.tu_berlin.cit.intercloud.occi.monitoring;
+package de.tu_berlin.cit.intercloud.occi.platform;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
-
 /**
  * TODO
  * 
- * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Alexander Stanik <alexander.stanik@tu-berlin.de>+
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Mixin(schema = MonitoringSchemas.MeterMixinSchema, term = AggregationMixin.AggregationTerm,
-applies = MonitoringSchemas.MeterSchema + MeterKind.MeterTerm)
-public class AggregationMixin extends Category{
+@Mixin(schema = PlatformSchemas.ComponentMixinSchema, term = DatabaseMixin.DatabaseTerm,
+	applies = PlatformSchemas.ComponentSchema + ComponentKind.ComponentTerm)
+public class DatabaseMixin extends Category{
 
-    public final static String AggregationTitle = "Aggregation Mixin";
+	public final static String DatabaseTitle = "Database Mixin";
 	
-	public final static String AggregationTerm = "aggregation";
+	public final static String DatabaseTerm = "database";
 	
-	public AggregationMixin(){
-		super(AggregationTitle);
+	public DatabaseMixin(){
+		super(DatabaseTitle);
 	}
 	
-	public AggregationMixin(String title){
+	public DatabaseMixin(String title){
 		super(title);
 	}
 	
 	/**
-	 * A domain-specific String that describes the aggregation operation.
+	 * Version of the database.
 	 */
-	@Attribute(name = "occi.meter.operation",
+	@Attribute(name = "occi.database.version",
 			type = AttributeType.STRING,
 			mutable = false,
 			required = true,
-			description = "A domain-specific String that describes the aggregation operation.")
-	public String operation = null	;
+			description = "Version of the database.")
+	public String version = null;
+	
+	
+	
 }

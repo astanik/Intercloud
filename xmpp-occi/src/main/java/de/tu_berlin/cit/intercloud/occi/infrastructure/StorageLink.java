@@ -29,7 +29,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Link(schema = InfrastructureSchemas.StorageLinkSchema, term = StorageLink.StorageLinkTerm,
-relation = InfrastructureSchemas.StorageSchema + StorageLink.StorageLinkTerm)
+relation = InfrastructureSchemas.StorageLinkSchema + StorageLink.StorageLinkTerm)
 public class StorageLink extends LinkCategory{
 
 	public final static String StorageLinkTitle = "StorageLink Link";
@@ -62,7 +62,7 @@ public class StorageLink extends LinkCategory{
 			mutable = true,
 			required = false,
 			description = "Point to where the storage is mounted in the guest OS.")
-	public String mountpoint = null;
+	public String mountpoint = null;		
 	
 	public enum State {
 		active,
