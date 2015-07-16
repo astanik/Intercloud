@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package de.tu_berlin.cit.intercloud.exchange.services;
+package de.tu_berlin.cit.intercloud.gateway.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.monitoring.AggregationMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
+import de.tu_berlin.cit.intercloud.occi.monitoring.ActiveSensorMixin;
+import de.tu_berlin.cit.intercloud.occi.monitoring.CollectorLink;
+import de.tu_berlin.cit.intercloud.occi.monitoring.MetricMixin;
+import de.tu_berlin.cit.intercloud.occi.monitoring.PassiveSensorMixin;
+import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 /**
@@ -29,13 +31,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Path("/meter")
-@Summary("This resources are generic meter resources e.g. a service availability meters or work traffic meters.")
-@Classification(kind = MeterKind.class,
-				mixins = {AggregationMixin.class})
-public class Meter extends Collection {
+@Path("/component")
+@Summary("This resource allows for manage sensor resources.")
+@Classification(kind = SensorKind.class,
+				mixins = {ActiveSensorMixin.class, PassiveSensorMixin.class, MetricMixin.class},
+				links = {CollectorLink.class})
+public class Component extends Collection{
 
-	public Meter(){
-		super();
-	}
 }

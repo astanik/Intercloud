@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package de.tu_berlin.cit.intercloud.gateway.services;
 
-package de.tu_berlin.cit.intercloud.exchange.services;
-
-import de.tu_berlin.cit.intercloud.occi.core.Collection;
+import de.tu_berlin.cit.intercloud.occi.core.Link;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.monitoring.AggregationMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.occi.monitoring.CollectorLink;
+import de.tu_berlin.cit.intercloud.occi.monitoring.MetricMixin;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
  * TODO
@@ -29,13 +29,15 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Path("/meter")
-@Summary("This resources are generic meter resources e.g. a service availability meters or work traffic meters.")
-@Classification(kind = MeterKind.class,
-				mixins = {AggregationMixin.class})
-public class Meter extends Collection {
+@PathID
+@Summary("")
+@Classification(kind = CollectorLink.class,
+				mixins = {MetricMixin.class})
+public class Collector extends Link{
 
-	public Meter(){
-		super();
+	public Collector(LinkType linkRepresentation) {
+		super(linkRepresentation);
+		// TODO Auto-generated constructor stub
 	}
+
 }

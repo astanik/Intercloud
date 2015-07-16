@@ -27,7 +27,9 @@ import org.junit.Test;
 
 import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.gateway.services.Manager;
+import de.tu_berlin.cit.intercloud.gateway.services.Network;
 import de.tu_berlin.cit.intercloud.gateway.services.Sensor;
+import de.tu_berlin.cit.intercloud.gateway.services.Storage;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -37,6 +39,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 public class ResourceTest {
 
@@ -90,6 +93,34 @@ public class ResourceTest {
 			ResourceInstance cmp = container.getResource("/sensor");
 			Assert.assertTrue(cmp != null);
 			writeXWADL(container.getXWADL("/sensor"), "sensor");
+		} catch (URISyntaxException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void networkTest() {
+		try {
+			XmppURI uri = new XmppURI(testURI, "/occi");
+			OcciContainer container = new OcciContainer(uri);
+			container.addResource(new Network());
+			ResourceInstance cmp = container.getResource("/network");
+			Assert.assertTrue(cmp != null);
+			writeXWADL(container.getXWADL("/network"), "network");
+		} catch (URISyntaxException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void storageTest() {
+		try {
+			XmppURI uri = new XmppURI(testURI, "/occi");
+			OcciContainer container = new OcciContainer(uri);
+			container.addResource(new Storage());
+			ResourceInstance cmp = container.getResource("/storage");
+			Assert.assertTrue(cmp != null);
+			writeXWADL(container.getXWADL("/storage"), "storage");
 		} catch (URISyntaxException e) {
 			Assert.fail(e.getMessage());
 		}

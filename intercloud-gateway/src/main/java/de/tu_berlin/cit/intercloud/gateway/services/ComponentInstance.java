@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package de.tu_berlin.cit.intercloud.gateway.services;
 
-package de.tu_berlin.cit.intercloud.exchange.services;
-
-import de.tu_berlin.cit.intercloud.occi.core.Collection;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.monitoring.AggregationMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.MeterKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Resource;
 
 /**
  * TODO
@@ -29,13 +24,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Path("/meter")
-@Summary("This resources are generic meter resources e.g. a service availability meters or work traffic meters.")
-@Classification(kind = MeterKind.class,
-				mixins = {AggregationMixin.class})
-public class Meter extends Collection {
+public class ComponentInstance extends Resource{
 
-	public Meter(){
-		super();
+	public ComponentInstance(OcciXml occiRepresentation) {
+		super(occiRepresentation);
+		// TODO Auto-generated constructor stub
 	}
+
 }

@@ -43,6 +43,7 @@ public class MonitoringSchemas {
 		 * ---MeterKind
 		 * -----AggregationMixin
 		 * ---CollectorLink
+		 * -----MetricMixin
 		 */
 		
 		//Kinds/Links
