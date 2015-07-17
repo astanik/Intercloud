@@ -18,11 +18,8 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.monitoring.ActiveSensorMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.CollectorLink;
-import de.tu_berlin.cit.intercloud.occi.monitoring.MetricMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.PassiveSensorMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
+import de.tu_berlin.cit.intercloud.occi.platform.ComponentKind;
+import de.tu_berlin.cit.intercloud.occi.platform.DatabaseMixin;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 /**
@@ -32,10 +29,13 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Path("/component")
-@Summary("This resource allows for manage sensor resources.")
-@Classification(kind = SensorKind.class,
-				mixins = {ActiveSensorMixin.class, PassiveSensorMixin.class, MetricMixin.class},
-				links = {CollectorLink.class})
+@Summary("")
+@Classification(kind = ComponentKind.class,
+				mixins = {DatabaseMixin.class})
 public class Component extends Collection{
 
+	public Component(){
+		super();
+	}
+	
 }

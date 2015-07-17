@@ -17,6 +17,13 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkingMixin;
+import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkKind;
+import de.tu_berlin.cit.intercloud.occi.platform.ComponentKind;
+import de.tu_berlin.cit.intercloud.occi.platform.DatabaseMixin;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
  * TODO
@@ -24,11 +31,14 @@ import de.tu_berlin.cit.intercloud.occi.core.Resource;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
+@PathID
+@Summary("")
+@Classification(kind = ComponentKind.class,
+				mixins = {DatabaseMixin.class})
 public class ComponentInstance extends Resource{
 
 	public ComponentInstance(OcciXml occiRepresentation) {
 		super(occiRepresentation);
-		// TODO Auto-generated constructor stub
 	}
 
 }

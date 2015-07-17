@@ -28,7 +28,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = PlatformSchemas.ComponentSchema, term = ApplicationKind.ApplicationTerm)
+@Kind(schema = PlatformSchemas.ComponentSchema, term = ComponentKind.ComponentTerm)
 public class ComponentKind extends Category{
 
 	public final static String ComponentTitle = "Component Resource";

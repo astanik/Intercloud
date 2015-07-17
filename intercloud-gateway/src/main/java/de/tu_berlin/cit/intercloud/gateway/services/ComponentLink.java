@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.tu_berlin.cit.intercloud.occi.platform;
+package de.tu_berlin.cit.intercloud.gateway.services;
 
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Resource;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.platform.DatabaseLinkMixin;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+
 
 /**
  * TODO
@@ -24,23 +29,14 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Link(schema = PlatformSchemas.ComponentLinkSchema, term = ComponentLink.ComponentLinkTerm,
-relation = PlatformSchemas.ComponentSchema + ComponentKind.ComponentTerm)
-public class ComponentLink extends LinkCategory{
+@PathID
+@Summary("")
+@Classification(kind = de.tu_berlin.cit.intercloud.occi.platform.ComponentLink.class,
+				mixins = {DatabaseLinkMixin.class})
+public class ComponentLink extends Resource{
+	
+	public ComponentLink(OcciXml occiRepresentation) {
+		super(occiRepresentation);
+	}
 
-	public final static String ComponentLinkTitle = "ComponentLink Link";
-	
-	public final static String ComponentLinkTerm = "componentLink";
-	
-	public ComponentLink(){
-		super(ComponentLinkTitle);
-	}
-	
-	public ComponentLink(String title){
-		super(title);
-	}
-	
-	
-	
-	
 }
