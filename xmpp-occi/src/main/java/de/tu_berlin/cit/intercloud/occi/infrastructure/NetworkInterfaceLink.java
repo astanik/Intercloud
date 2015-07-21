@@ -27,8 +27,8 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Link(schema = InfrastructureSchemas.NetworkInterfaceSchema, term = NetworkInterfaceLink.NetworkInterfaceTerm,
-		relation = InfrastructureSchemas.NetworkSchema + NetworkKind.NetworkTerm)
+@Link(schema = InfrastructureSchemas.InfrastructureSchema, term = NetworkInterfaceLink.NetworkInterfaceTerm,
+		relation = InfrastructureSchemas.InfrastructureSchema + NetworkKind.NetworkTerm)
 public class NetworkInterfaceLink extends LinkCategory {
 
 	public final static String NetworkInterfaceTitle = "NetworkInterface Link";

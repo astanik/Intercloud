@@ -27,7 +27,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = MonitoringSchemas.MeterSchema, term = MeterKind.MeterTerm)
+@Kind(schema = MonitoringSchemas.MonitoringSchema, term = MeterKind.MeterTerm)
 public class MeterKind extends Category {
 
 	public final static String MeterTitle = "Meter Resource";

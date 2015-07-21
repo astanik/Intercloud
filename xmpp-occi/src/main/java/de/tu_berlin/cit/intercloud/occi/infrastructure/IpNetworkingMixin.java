@@ -22,7 +22,6 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 
-
 /**
  * TODO
  * 
@@ -30,7 +29,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Mixin(schema = InfrastructureSchemas.NetworkMixinSchema, term = IpNetworkingMixin.IpNetworkingTerm,
-	  	applies = InfrastructureSchemas.NetworkSchema + NetworkKind.NetworkTerm)
+	  	applies = InfrastructureSchemas.InfrastructureSchema + NetworkKind.NetworkTerm)
 public class IpNetworkingMixin extends Category{
 	
 	public final static String IpNetworkingTitle = "IPNetworking Mixin";

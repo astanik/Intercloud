@@ -30,7 +30,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Mixin(schema = MonitoringSchemas.SensorMixinSchema, term = PassiveSensorMixin.PassiveSensorTerm,
-		applies = MonitoringSchemas.SensorSchema + SensorKind.SensorTerm)
+		applies = MonitoringSchemas.MonitoringSchema + SensorKind.SensorTerm)
 public class PassiveSensorMixin extends Category {
 
 	public final static String PassiveSensorTitle = "Active Sensor Mixin";

@@ -16,47 +16,41 @@
 
 package de.tu_berlin.cit.intercloud.occi.infrastructure;
 
+import de.tu_berlin.cit.intercloud.occi.core.IntercloudSchemas;
+
+
 /**
- * TODO
+ * Constants definition for the OCCI Infrastructure Module.
+ *  
+ * -infrastructure Kinds/Links
+ * ---Compute
+ * ---Storage
+ * ---storageLink
+ * ---Network
+ * -----IpNetworkMixin
+ * ---NetworkInterfaceLink
+ * -----IpNetworkInterfaceMixin
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-public class InfrastructureSchemas {
+public final class InfrastructureSchemas {
 	
+	public final static String InfrastructureTag = "infrastructure";
 	
-	private final static String SchemaURL = "http://schema.ogf.org/occi/";
+	public final static String InfrastructureExtension = IntercloudSchemas.OgfSchemaURL + InfrastructureTag;
 	
-	private final static String InfrastructureTag = "infrastructure";
+	public final static String InfrastructureSchema = InfrastructureExtension +"#";
 	
-	private final static String InfrastructureSchema = SchemaURL + InfrastructureTag +"#";
+	//Mixin Predefinitions
+	public final static String ComputeMixinSchema = InfrastructureExtension + "/" + ComputeKind.ComputeTerm + "#";
 	
-	/**
-	 * 
-	 * -infrastructure Kinds/Links
-	 * ---Compute
-	 * ---Storage
-	 * ---storageLink
-	 * ---Network
-	 * -----IpNetworkMixin
-	 * ---NetworkInterfaceLink
-	 * -----IpNetworkInterfaceMixin
-	 */
+	public final static String StorageMixinSchema = InfrastructureExtension + "/" + StorageKind.StorageTerm + "#";
 	
-	//Kinds/Links
-	public final static String ComputeSchema = InfrastructureSchema;
+	public final static String StorageLinkMixinSchema = InfrastructureExtension + "/" + StorageLink.StorageLinkTerm + "#";
 	
-	public final static String StorageSchema = InfrastructureSchema;
+	public final static String NetworkMixinSchema = InfrastructureExtension + "/" + NetworkKind.NetworkTerm + "#";
 	
-	public final static String StorageLinkSchema = InfrastructureSchema;
-	
-	public final static String NetworkSchema = InfrastructureSchema;
-	
-	public final static String NetworkInterfaceSchema = InfrastructureSchema;
-	
-	
-	//Mixins
-	public final static String NetworkInterfaceMixinSchema = SchemaURL + InfrastructureTag + NetworkInterfaceLink.NetworkInterfaceTerm + "#";
-	
-	public final static String NetworkMixinSchema = SchemaURL + InfrastructureTag + NetworkKind.NetworkTerm + "#";
+	public final static String NetworkInterfaceMixinSchema = InfrastructureExtension + "/" + NetworkInterfaceLink.NetworkInterfaceTerm + "#";
+
 }

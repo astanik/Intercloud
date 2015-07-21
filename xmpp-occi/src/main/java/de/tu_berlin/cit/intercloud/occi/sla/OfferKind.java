@@ -24,12 +24,10 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-@Kind(schema = OfferKind.OfferSchema, term = OfferKind.OfferTerm)
+@Kind(schema = SlaSchemas.SlaSchema, term = OfferKind.OfferTerm)
 public class OfferKind extends Category {
 
 	public final static String OfferTitle = "Offer Resource";
-	
-	public final static String OfferSchema = "http://schema.cit.tu-berlin.de/occi/sla#";
 	
 	public final static String OfferTerm = "offer";
 	

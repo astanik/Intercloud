@@ -24,13 +24,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-@Kind(schema = ManagerKind.ManagerSchema, term = ManagerKind.ManagerTerm)
+@Kind(schema = SlaSchemas.SlaSchema, term = ManagerKind.ManagerTerm)
 public class ManagerKind extends Category {
 
 	public final static String ManagerTitle = "Manager Resource";
-	
-	public final static String ManagerSchema = "http://schema.cit.tu-berlin.de/occi/sla#";
-	
+		
 	public final static String ManagerTerm = "manager";
 	
 	public ManagerKind() {

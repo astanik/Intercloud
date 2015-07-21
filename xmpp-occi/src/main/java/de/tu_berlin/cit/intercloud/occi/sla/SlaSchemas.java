@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.monitoring;
+package de.tu_berlin.cit.intercloud.occi.sla;
 
 import de.tu_berlin.cit.intercloud.occi.core.IntercloudSchemas;
 
 
 /**
- * Constants definition for the CIT Monitoring Module.
+ * Constants definition for the CIT SLA Module.
  *  
- * -monitoring Kinds/Links
+ * -sla Kinds/Links
  * ---SensorKind
  * -----ActiveSensorMixin
  * -----PassiveSensorMixin
@@ -32,22 +32,21 @@ import de.tu_berlin.cit.intercloud.occi.core.IntercloudSchemas;
  * -----MetricMixin
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
- * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 
-public class MonitoringSchemas {
+public class SlaSchemas {
 	
-	public final static String MonitoringTag = "monitoring";
+	public final static String SlaTag = "sla";
 		
-	public final static String MonitoringExtension = IntercloudSchemas.CitSchemaURL + MonitoringTag;
+	public final static String SlaExtension = IntercloudSchemas.CitSchemaURL + SlaTag;
 
-	public final static String MonitoringSchema = MonitoringExtension +"#";
+	public final static String SlaSchema = SlaExtension +"#";
 
 	//Mixin Predefinition
-	public final static String SensorMixinSchema = MonitoringExtension + "/" + SensorKind.SensorTerm + "#";
+	public final static String AgreementMixinSchema = SlaExtension + "/" + AgreementKind.AgreementTerm + "#";
 
-	public final static String MeterMixinSchema = MonitoringExtension + "/" + MeterKind.MeterTerm + "#";
+	public final static String OfferMixinSchema = SlaExtension + "/" + OfferKind.OfferTerm + "#";
 
-	public final static String CollectorMixinSchema = MonitoringExtension + "/" + CollectorLink.CollectorTerm + "#";
+	public final static String ManagerMixinSchema = SlaExtension + "/" + ManagerKind.ManagerTerm + "#";
 
 }

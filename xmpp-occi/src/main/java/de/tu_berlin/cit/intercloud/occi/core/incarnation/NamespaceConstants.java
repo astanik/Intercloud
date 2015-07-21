@@ -30,6 +30,7 @@ import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
 import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
 import de.tu_berlin.cit.intercloud.occi.sla.ManagerKind;
 import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
+import de.tu_berlin.cit.intercloud.occi.sla.SlaSchemas;
 
 /**
  * TODO
@@ -43,26 +44,25 @@ public class NamespaceConstants {
 		mapping = new HashMap<String, Class<? extends Category>>();
 
 		// infrastructure classification
-		mapping.put(InfrastructureSchemas.ComputeSchema + ComputeKind.ComputeTerm,
+		mapping.put(InfrastructureSchemas.InfrastructureSchema + ComputeKind.ComputeTerm,
 				ComputeKind.class);
-		mapping.put(InfrastructureSchemas.NetworkSchema + NetworkKind.NetworkTerm,
+		mapping.put(InfrastructureSchemas.InfrastructureSchema + NetworkKind.NetworkTerm,
 				NetworkKind.class);
-		mapping.put(InfrastructureSchemas.StorageSchema + StorageKind.StorageTerm,
+		mapping.put(InfrastructureSchemas.InfrastructureSchema + StorageKind.StorageTerm,
 				StorageKind.class);
 
 		// monitoring classification
-		mapping.put(MonitoringSchemas.SensorSchema + SensorKind.SensorTerm,
+		mapping.put(MonitoringSchemas.MonitoringSchema + SensorKind.SensorTerm,
 				SensorKind.class);
-		mapping.put(MonitoringSchemas.MeterSchema + MeterKind.MeterTerm,
+		mapping.put(MonitoringSchemas.MonitoringSchema + MeterKind.MeterTerm,
 				MeterKind.class);
 
 		// sla classification
-		mapping.put(ManagerKind.ManagerSchema + ManagerKind.ManagerTerm,
+		mapping.put(SlaSchemas.SlaSchema + ManagerKind.ManagerTerm,
 				ManagerKind.class);
-		mapping.put(OfferKind.OfferSchema + OfferKind.OfferTerm,
+		mapping.put(SlaSchemas.SlaSchema + OfferKind.OfferTerm,
 				OfferKind.class);
-		mapping.put(
-				AgreementKind.AgreementSchema + AgreementKind.AgreementTerm,
+		mapping.put(SlaSchemas.SlaSchema + AgreementKind.AgreementTerm,
 				AgreementKind.class);
 	}
 }

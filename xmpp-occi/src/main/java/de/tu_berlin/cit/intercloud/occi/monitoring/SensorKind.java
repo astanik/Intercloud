@@ -27,7 +27,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = MonitoringSchemas.SensorSchema, term = SensorKind.SensorTerm)
+@Kind(schema = MonitoringSchemas.MonitoringSchema, term = SensorKind.SensorTerm)
 public class SensorKind extends Category {
 
 	public final static String SensorTitle = "Sensor Resource";

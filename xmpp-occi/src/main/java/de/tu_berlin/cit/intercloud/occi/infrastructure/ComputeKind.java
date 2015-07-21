@@ -28,7 +28,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = InfrastructureSchemas.ComputeSchema, term = ComputeKind.ComputeTerm)
+@Kind(schema = InfrastructureSchemas.InfrastructureSchema, term = ComputeKind.ComputeTerm)
 public class ComputeKind extends Category {
 
 	public final static String ComputeTitle = "Compute Resource";

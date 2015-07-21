@@ -24,14 +24,13 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 
-
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = PlatformSchemas.ApplicationSchema, term = ApplicationKind.ApplicationTerm)
+@Kind(schema = PlatformSchemas.PlatformSchema, term = ApplicationKind.ApplicationTerm)
 public class ApplicationKind extends Category{
 
 	public final static String ApplicationTitle = "Application Resource";

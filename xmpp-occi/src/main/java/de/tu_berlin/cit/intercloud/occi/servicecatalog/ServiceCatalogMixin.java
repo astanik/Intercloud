@@ -16,6 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.occi.servicecatalog;
 
+import de.tu_berlin.cit.intercloud.occi.core.IntercloudSchemas;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
@@ -31,7 +32,7 @@ public class ServiceCatalogMixin extends Category {
 
 	public final static String CatalogTitle = "Service Catalog Resource";
 	
-	public final static String CatalogSchema = "http://schema.cit.tu-berlin.de/occi/catalog#";
+	public final static String CatalogSchema = IntercloudSchemas.IntercloudSchemaURL + "catalog#";
 	
 	public final static String CatalogTerm = "service";
 	

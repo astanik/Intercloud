@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package de.tu_berlin.cit.intercloud.occi.platform;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
@@ -24,8 +25,8 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Link(schema = PlatformSchemas.ComponentLinkSchema, term = ComponentLink.ComponentLinkTerm,
-relation = PlatformSchemas.ComponentSchema + ComponentKind.ComponentTerm)
+@Link(schema = PlatformSchemas.PlatformSchema, term = ComponentLink.ComponentLinkTerm,
+		relation = PlatformSchemas.PlatformSchema + ComponentKind.ComponentTerm)
 public class ComponentLink extends LinkCategory{
 
 	public final static String ComponentLinkTitle = "ComponentLink Link";

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package de.tu_berlin.cit.intercloud.occi.monitoring;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
@@ -28,7 +29,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Mixin(schema = MonitoringSchemas.MeterMixinSchema, term = AggregationMixin.AggregationTerm,
-applies = MonitoringSchemas.MeterSchema + MeterKind.MeterTerm)
+		applies = MonitoringSchemas.MonitoringSchema + MeterKind.MeterTerm)
 public class AggregationMixin extends Category{
 
     public final static String AggregationTitle = "Aggregation Mixin";

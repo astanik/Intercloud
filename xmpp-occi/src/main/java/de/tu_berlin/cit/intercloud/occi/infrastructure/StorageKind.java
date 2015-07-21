@@ -27,7 +27,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Kind(schema = InfrastructureSchemas.StorageSchema, term = StorageKind.StorageTerm)
+@Kind(schema = InfrastructureSchemas.InfrastructureSchema, term = StorageKind.StorageTerm)
 public class StorageKind extends Category {
 
 	public final static String StorageTitle = "Storage Resource";

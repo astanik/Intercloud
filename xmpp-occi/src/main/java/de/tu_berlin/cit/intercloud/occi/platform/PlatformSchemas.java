@@ -16,8 +16,17 @@
 
 package de.tu_berlin.cit.intercloud.occi.platform;
 
+import de.tu_berlin.cit.intercloud.occi.core.IntercloudSchemas;
+
 /**
- * TODO
+ * Constants definition for the OCCI Platform Module.
+ * 
+ * -platform Kinds/Links
+ * ---ApplicationKind
+ * ---ComponentKind
+ * -----DatabaseMixin
+ * ---ComponentLink
+ * -----DatabasLinkMixin
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
@@ -25,37 +34,17 @@ package de.tu_berlin.cit.intercloud.occi.platform;
 public class PlatformSchemas {
 	
 	
-	private final static String SchemaURL = "http://schema.ogf.org/occi/";
+	public final static String PlatformTag = "platform";
 	
-	private final static String PlatformTag = "platform";
-	
-	private final static String PlatformSchema = SchemaURL + PlatformTag +"#";
-	
-	
-	/**
-	 * 
-	 * -infrastructure Kinds/Links
-	 * ---ApplicationKind
-	 * ---ComponentKind
-	 * -----DatabaseMixin
-	 * ---ComponentLink
-	 * -----DatabasLinkMixin
-	 */
-	
-	
-	//Kinds/Links
-	public final static String ApplicationSchema = PlatformSchema;
-	
-	public final static String ComponentSchema = PlatformSchema;
-	
-	public final static String ComponentLinkSchema = PlatformSchema;
-	
-	 
+	public final static String PlatformExtension = IntercloudSchemas.OgfSchemaURL + PlatformTag;
 
+	public final static String PlatformSchema = PlatformExtension +"#";
 	
-	//Mixins
-	public final static String ComponentMixinSchema = SchemaURL + PlatformTag + ComponentKind.ComponentTerm + "#";
+	//Mixin Predefinition
+	public final static String ApplicationMixinSchema = PlatformExtension + "/" + ApplicationKind.ApplicationTerm + "#";
+
+	public final static String ComponentMixinSchema = PlatformExtension + "/" + ComponentKind.ComponentTerm + "#";
 	
-	public final static String ComponentLinkMixinSchema = SchemaURL + PlatformTag + ComponentLink.ComponentLinkTerm + "#";
+	public final static String ComponentLinkMixinSchema = PlatformExtension + "/" + ComponentLink.ComponentLinkTerm + "#";
 
 }

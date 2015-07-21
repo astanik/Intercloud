@@ -28,7 +28,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Mixin(schema = InfrastructureSchemas.NetworkInterfaceMixinSchema, term = IpNetworkInterfaceMixin.IpNetworkInterfaceTerm,
-	applies = InfrastructureSchemas.NetworkInterfaceSchema + NetworkInterfaceLink.NetworkInterfaceTerm)
+	applies = InfrastructureSchemas.InfrastructureSchema + NetworkInterfaceLink.NetworkInterfaceTerm)
 public class IpNetworkInterfaceMixin extends Category{
 
 	public final static String IpNetworkInterfaceTitle = "IPNetworkInterface Mixin";

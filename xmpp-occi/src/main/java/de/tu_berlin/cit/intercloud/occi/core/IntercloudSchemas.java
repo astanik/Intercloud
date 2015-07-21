@@ -14,30 +14,20 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.sla;
+package de.tu_berlin.cit.intercloud.occi.core;
 
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-@Kind(schema = SlaSchemas.SlaSchema, term = AgreementKind.AgreementTerm)
-public class AgreementKind extends Category {
-
-	public final static String AgreementTitle = "Agreement Resource";
-		
-	public final static String AgreementTerm = "agreement";
+public final class IntercloudSchemas {
 	
-	public AgreementKind() {
-		super(AgreementTitle);
-	}
-
-	public AgreementKind(String title) {
-		super(title);
-	}
-
-
+	public final static String OgfSchemaURL = "http://schema.ogf.org/occi/";
+	
+	public final static String CitSchemaURL = "http://schema.cit.tu-berlin.de/occi/";
+	
+	public final static String IntercloudSchemaURL = "http://schema.ieee.org/occi/";
+	
 }

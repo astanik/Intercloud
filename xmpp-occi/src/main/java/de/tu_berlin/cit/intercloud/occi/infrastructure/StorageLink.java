@@ -28,8 +28,8 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>+
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Link(schema = InfrastructureSchemas.StorageLinkSchema, term = StorageLink.StorageLinkTerm,
-relation = InfrastructureSchemas.StorageSchema + StorageKind.StorageTerm)
+@Link(schema = InfrastructureSchemas.InfrastructureSchema, term = StorageLink.StorageLinkTerm,
+	relation = InfrastructureSchemas.InfrastructureSchema + StorageKind.StorageTerm)
 public class StorageLink extends LinkCategory{
 
 	public final static String StorageLinkTitle = "StorageLink Link";

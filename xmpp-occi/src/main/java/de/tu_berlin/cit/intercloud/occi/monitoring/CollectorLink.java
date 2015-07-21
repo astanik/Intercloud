@@ -27,8 +27,8 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
-@Link(schema = MonitoringSchemas.CollectorSchema, term = CollectorLink.CollectorTerm,
-		relation = MonitoringSchemas.MeterSchema + MeterKind.MeterTerm)
+@Link(schema = MonitoringSchemas.MonitoringSchema, term = CollectorLink.CollectorTerm,
+		relation = MonitoringSchemas.MonitoringSchema + MeterKind.MeterTerm)
 public class CollectorLink extends LinkCategory {
 
 	public final static String CollectorTitle = "Collector Link";

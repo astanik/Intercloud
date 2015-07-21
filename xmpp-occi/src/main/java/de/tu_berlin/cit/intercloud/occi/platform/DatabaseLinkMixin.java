@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package de.tu_berlin.cit.intercloud.occi.platform;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
@@ -27,7 +28,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Mixin(schema = PlatformSchemas.ComponentLinkMixinSchema, term = DatabaseLinkMixin.DatabaseLinkTerm,
-	applies = PlatformSchemas.ComponentLinkSchema + ComponentLink.ComponentLinkTerm)
+	applies = PlatformSchemas.PlatformSchema + ComponentLink.ComponentLinkTerm)
 public class DatabaseLinkMixin extends Category{
 
 	public final static String DatabaseLinkTitle = "DatabaseLinkMixin Mixin";

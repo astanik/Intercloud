@@ -30,7 +30,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType
  * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Mixin(schema = MonitoringSchemas.CollectorMixinSchema, term = MetricMixin.MetricSensorTerm,
-		applies = MonitoringSchemas.CollectorSchema + CollectorLink.CollectorTerm)
+		applies = MonitoringSchemas.MonitoringSchema + CollectorLink.CollectorTerm)
 public class MetricMixin extends Category {
 
 	public final static String MetricSensorTitle = "Metric Mixin";
