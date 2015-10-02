@@ -27,6 +27,7 @@ import de.tu_berlin.cit.intercloud.exchange.services.Agreement;
 import de.tu_berlin.cit.intercloud.exchange.services.Meter;
 import de.tu_berlin.cit.intercloud.exchange.services.Offer;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
+import de.tu_berlin.cit.intercloud.util.configuration.ExchangeConfig;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -40,14 +41,6 @@ public class ExchangeApplication {
 
 	private final static Logger logger = LoggerFactory.getLogger(ExchangeApplication.class);
 	
-	private final static String xmppServer = "cit-mac1.cit.tu-berlin.de";
-	
-	private final static String xmppDomain = "intercloud.cit.tu-berlin.de";
-
-	private final static String secretKey = "intercloud";
-
-	private final static String subDomain = "exchange";
-
 	private volatile boolean keepOn = true;
 	
 	private CpuMeter meter = null;
@@ -103,21 +96,23 @@ public class ExchangeApplication {
 	 *
 	 */
 	public static void main(String[] args) {
+		ExchangeConfig exchangeConf = ExchangeConfig.getInstance();
+
 		logger.info("Starting up...");
-		ExternalComponentManager mgr = new ExternalComponentManager(xmppServer,
+		ExternalComponentManager mgr = new ExternalComponentManager(exchangeConf.getXmppServer(),
 				5275);
-		mgr.setSecretKey(subDomain, secretKey);
+		mgr.setSecretKey(exchangeConf.getSubDomain(), exchangeConf.getSecretKey());
 		try {
-			XmppURI uri = new XmppURI(subDomain + "." + xmppDomain, "");
+			XmppURI uri = new XmppURI(exchangeConf.getSubDomain() + "." + exchangeConf.getXmppDomain(), "");
 			logger.info("Starting resource container: " + uri.toString());
 			OcciContainer container = new OcciContainer(uri);
 			container.addResource(new Offer());
 			container.addResource(new Agreement());
 			container.addResource(new Meter());
 			ExchangeComponent component = new ExchangeComponent(container);
-			mgr.addComponent(subDomain, component);
+			mgr.addComponent(exchangeConf.getSubDomain(), component);
 			logger.info("Container is up and running...");
-			component.discoverIntercloudServices(xmppDomain);
+			component.discoverIntercloudServices(exchangeConf.getXmppDomain());
 			new ExchangeApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {
 			logger.error(e.getMessage());

@@ -27,6 +27,7 @@ import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.gateway.services.Manager;
 import de.tu_berlin.cit.intercloud.gateway.services.Sensor;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
+import de.tu_berlin.cit.intercloud.util.configuration.GatewayConfig;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -40,12 +41,6 @@ public class GatewayApplication {
 
 	private final static Logger logger = LoggerFactory.getLogger(GatewayApplication.class);
 	
-	private final static String xmppServer = "cit-mac1.cit.tu-berlin.de";
-	
-	private final static String xmppDomain = "intercloud.cit.tu-berlin.de";
-
-	private final static String secretKey = "intercloud";
-
 //	private final static String subDomain = "gateway";
 
 	private volatile boolean keepOn = true;
@@ -103,8 +98,11 @@ public class GatewayApplication {
 	 *
 	 */
 	public static void main(String[] args) {
+		GatewayConfig gatewayConf = GatewayConfig.getInstance();
+			
+		
 		logger.info("Starting up...");
-		ExternalComponentManager mgr = new ExternalComponentManager(xmppServer,
+		ExternalComponentManager mgr = new ExternalComponentManager(gatewayConf.getXmppServer(),
 				5275);
 		
 		// allow domain naming by arguments
@@ -112,9 +110,9 @@ public class GatewayApplication {
 		if(args.length > 0)
 			subDomain = args[0];
 		
-		mgr.setSecretKey(subDomain, secretKey);
+		mgr.setSecretKey(subDomain, gatewayConf.getSecretKey());
 		try {
-			XmppURI uri = new XmppURI(subDomain + "." + xmppDomain, "");
+			XmppURI uri = new XmppURI(subDomain + "." + gatewayConf.getXmppDomain(), "");
 			logger.info("Starting resource container: " + uri.toString());
 			OcciContainer container = new OcciContainer(uri);
 			container.addResource(new Compute());
@@ -123,7 +121,7 @@ public class GatewayApplication {
 			GatewayComponent component = new GatewayComponent(container);
 			mgr.addComponent(subDomain, component);
 			logger.info("Container is up and running...");
-			component.discoverIntercloudServices(xmppDomain);
+			component.discoverIntercloudServices(gatewayConf.getXmppDomain());
 			new GatewayApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {
 			logger.error(e.getMessage());

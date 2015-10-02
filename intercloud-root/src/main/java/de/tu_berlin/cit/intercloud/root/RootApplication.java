@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.root.services.IaaSCatalog;
+import de.tu_berlin.cit.intercloud.util.configuration.RootConfig;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -36,16 +37,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
  */
 public class RootApplication {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(RootApplication.class);
-
-	private final static String xmppServer = "cit-mac1.cit.tu-berlin.de";
-
-	private final static String xmppDomain = "intercloud.cit.tu-berlin.de";
-
-	private final static String secretKey = "intercloud";
-
-	private final static String subDomain = "root";
+	private final static Logger logger = LoggerFactory.getLogger(RootApplication.class);
 
 	private volatile boolean keepOn = true;
 	
@@ -102,17 +94,19 @@ public class RootApplication {
 	 *
 	 */
 	public static void main(String[] args) {
+		RootConfig rootConf = RootConfig.getInstance();
+		
 		logger.info("Starting up...");
-		ExternalComponentManager mgr = new ExternalComponentManager(xmppServer,
+		ExternalComponentManager mgr = new ExternalComponentManager(rootConf.getXmppServer(),
 				5275);
-		mgr.setSecretKey(subDomain, secretKey);
+		mgr.setSecretKey(rootConf.getSubDomain(), rootConf.getSecretKey());
 		try {
-			XmppURI uri = new XmppURI(subDomain + "." + xmppDomain, "");
+			XmppURI uri = new XmppURI(rootConf.getSubDomain() + "." + rootConf.getXmppDomain(), "");
 			logger.info("Starting resource container: " + uri.toString());
 			OcciContainer container = new OcciContainer(uri);
 			container.addResource(new IaaSCatalog());
 			RootComponent component = new RootComponent(container);
-			mgr.addComponent(subDomain, component);
+			mgr.addComponent(rootConf.getSubDomain(), component);
 			logger.info("Container is up and running...");
 			new RootApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {

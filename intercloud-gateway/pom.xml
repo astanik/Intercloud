@@ -14,6 +14,11 @@
 
 	<name>Intercloud Gateway Module</name>
 
+	<properties>
+		<!-- jclouds.version>1.9.1</jclouds.version -->
+		<jclouds.version>2.0.0-SNAPSHOT</jclouds.version>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -24,7 +29,8 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>de.tu_berlin.cit.intercloud.gateway.GatewayApplication</mainClass>
+							<mainClass>de.tu_berlin.cit.intercloud.gateway.GatewayApplication
+							</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -67,5 +73,74 @@
 			<artifactId>util</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		<!-- jclouds dependencies -->
+		<dependency>
+			<groupId>org.apache.jclouds</groupId>
+			<artifactId>jclouds-all</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.driver</groupId>
+			<artifactId>jclouds-slf4j</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.driver</groupId>
+			<artifactId>jclouds-sshj</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<!-- jclouds OpenStack dependencies -->
+		<dependency>
+			<groupId>org.apache.jclouds.api</groupId>
+			<artifactId>openstack-keystone</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.api</groupId>
+			<artifactId>openstack-nova</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.api</groupId>
+			<artifactId>openstack-swift</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.api</groupId>
+			<artifactId>openstack-cinder</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.api</groupId>
+			<artifactId>openstack-trove</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.labs</groupId>
+			<artifactId>openstack-glance</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.labs</groupId>
+			<artifactId>openstack-marconi</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jclouds.labs</groupId>
+			<artifactId>openstack-neutron</artifactId>
+			<version>${jclouds.version}</version>
+		</dependency>
 	</dependencies>
+
+	<!-- remove this when jcloud version 2 is released -->
+	<repositories>
+		<repository>
+			<id>jclouds-snapshots</id>
+			<url>https://repository.apache.org/content/repositories/snapshots
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
