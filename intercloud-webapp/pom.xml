@@ -93,6 +93,12 @@
 	</build>
 
 	<dependencies>
+		<!-- PROJECT DEPENDENCIES -->
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-client</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		
 		<!--  WICKET DEPENDENCIES -->
 		<dependency>
@@ -111,13 +117,6 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-auth-roles</artifactId>
 			<version>6.11.0</version>
-		</dependency>
-
-		<!-- OPEN ID DEPENDENCY -->
-		<dependency>
-			<groupId>org.openid4java</groupId>
-			<artifactId>openid4java</artifactId>
-			<version>0.9.8</version>
 		</dependency>
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->

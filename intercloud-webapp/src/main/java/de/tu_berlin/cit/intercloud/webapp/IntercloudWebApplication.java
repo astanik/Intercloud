@@ -23,7 +23,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.RuntimeConfigurationType;
 
-import de.tu_berlin.cit.intercloud.webapp.auth.OpenIdLoginPage;
+import de.tu_berlin.cit.intercloud.webapp.auth.LoginPage;
 import de.tu_berlin.cit.intercloud.webapp.layout.Index;
 
 /**
@@ -49,8 +49,8 @@ public class IntercloudWebApplication extends AuthenticatedWebApplication {
     }
 
     @Override
-    protected Class<OpenIdLoginPage> getSignInPageClass() {
-        return OpenIdLoginPage.class;
+    protected Class<LoginPage> getSignInPageClass() {
+        return LoginPage.class;
 //        return LoginPage.class;
     }
 

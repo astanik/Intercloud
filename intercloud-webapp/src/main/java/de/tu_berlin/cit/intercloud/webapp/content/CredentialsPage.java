@@ -18,12 +18,8 @@ package de.tu_berlin.cit.intercloud.webapp.content;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
-import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.validation.validator.PatternValidator;
 
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.auth.User;
@@ -89,7 +85,7 @@ public class CredentialsPage extends BasePage {
 		}
 
 		// show user details
-		add(new Label("username", user.getUserName()));
+		add(new Label("username", user.getUsername()));
 		add(new Label("userroles", user.getRoles().toString()));
 
 		// password form

@@ -31,7 +31,7 @@ public class BasePage extends WebPage {
 	 * Default constructor
 	 */
 	public BasePage() {
-           
+		super();
 		// do nothing
 	}
 }

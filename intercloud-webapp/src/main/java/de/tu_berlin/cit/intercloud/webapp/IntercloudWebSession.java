@@ -16,13 +16,20 @@
 
 package de.tu_berlin.cit.intercloud.webapp;
 
+import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppUser;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
-import org.openid4java.discovery.DiscoveryInformation;
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
-import de.tu_berlin.cit.intercloud.webapp.auth.OpenIdUser;
 import de.tu_berlin.cit.intercloud.webapp.auth.User;
+
+import java.io.IOException;
 
 /**
  * Session class for user authentication.
@@ -36,28 +43,30 @@ public class IntercloudWebSession extends AbstractAuthenticatedWebSession {
 	/**
 	 * User of this web session.
 	 */
-	private User user = null;
+	private XmppUser user = null;
+	private AbstractXMPPConnection connection;
+	private boolean signIn = false;
 
-	private boolean isSignedIn = false;
-
-	private DiscoveryInformation discoveryInformation;
-
-	public static final String DISCOVERY_INFORMATION = "openid-disc";
-
-	/**
-	 * Construct.
-	 * 
-	 * @param request
-	 *            The current request object
-	 */
 	public IntercloudWebSession(Request request) {
 		super(request);
 	}
 
+	public boolean authenticate(XmppUser user, AbstractXMPPConnection connection) {
+		signOut();
 
-	/**
-	 * Returns the roles of the user.
-	 */
+		if (null != user && null != connection) {
+			this.user = user;
+			this.connection = connection;
+			this.signIn = true;
+		}
+
+		return isSignedIn();
+	}
+
+	public User getUser() {
+		return user;
+	}
+
 	@Override
 	public Roles getRoles() {
 		if (isSignedIn() && user != null) {
@@ -66,45 +75,18 @@ public class IntercloudWebSession extends AbstractAuthenticatedWebSession {
 		return null;
 	}
 
-	/**
-	 * gets the user that is bound to this session.
-	 * 
-	 * @return the user of this session.
-	 */
-	public User getUser() {
-		return user;
-	}
-
 	@Override
 	public boolean isSignedIn() {
-		return this.isSignedIn;
+		return signIn;
 	}
-
-	public void setDiscoveryInformation(DiscoveryInformation discoveryInformation) {
-		this.discoveryInformation = discoveryInformation;
-		setAttribute(DISCOVERY_INFORMATION, discoveryInformation);
-	}
-
-	public DiscoveryInformation getDiscoveryInformation() {
-		DiscoveryInformation ret = this.discoveryInformation;
-		ret = (DiscoveryInformation)getAttribute(DISCOVERY_INFORMATION);
-		return ret;
-	}
-
-
-	public final boolean authenticate(OpenIdUser user) {
-		// TODO Check db, save user 
-		this.user = user;
-		this.user.setRoles(new Roles(Roles.ADMIN));
-		this.isSignedIn = true;
-		
-		return this.isSignedIn;
-	}
-
 
 	public void signOut() {
-		this.user = null;
-		this.isSignedIn = false;
+		if (isSignedIn()) {
+			this.signIn = false;
+			this.user = null;
+			this.connection.disconnect();
+			this.connection = null;
+		}
 	}
 
 }

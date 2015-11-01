@@ -41,14 +41,14 @@ public interface User extends IClusterable {
 	 * 
 	 * @param name The user name.
 	 */
-	public void setUserName(String name);
+	public void setUsername(String name);
 
 	/**
 	 * Gets the user name.
 	 * 
 	 * @return the user name
 	 */
-	public String getUserName();
+	public String getUsername();
 
 
 }

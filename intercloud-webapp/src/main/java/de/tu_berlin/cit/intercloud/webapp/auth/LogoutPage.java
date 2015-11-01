@@ -17,6 +17,7 @@
 package de.tu_berlin.cit.intercloud.webapp.auth;
 
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
+import org.apache.wicket.markup.html.WebPage;
 
 
 /**
