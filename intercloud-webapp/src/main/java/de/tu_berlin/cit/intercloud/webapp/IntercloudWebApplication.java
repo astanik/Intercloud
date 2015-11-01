@@ -18,6 +18,7 @@ package de.tu_berlin.cit.intercloud.webapp;
 
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.Session;
+import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -65,6 +66,7 @@ public class IntercloudWebApplication extends AuthenticatedWebApplication {
         super.init();
         getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
+        getResourceSettings().getResourceFinders().add(new WebApplicationPath(getServletContext(), "pages"));
         // add your configuration here
     }
 
