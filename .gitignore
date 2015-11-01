@@ -9,3 +9,7 @@ release.properties
 *.project
 *.prefs
 .settings/
+
+# IntelliJ
+*.iml
+.idea/
