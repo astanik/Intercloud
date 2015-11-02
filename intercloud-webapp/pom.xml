@@ -16,7 +16,8 @@
 	<description>Webapp for Intercloud Component Management</description>
 
 	<properties>
-		<wicket.version>6.11.0</wicket.version>
+		<wicket.version>7.1.0</wicket.version>
+		<wicket.bootstrap.version>0.10.3</wicket.bootstrap.version>
 		<jetty.version>7.6.3.v20120416</jetty.version>
 	</properties>
 
@@ -99,24 +100,49 @@
 			<artifactId>xmpp-client</artifactId>
 			<version>0.0.1</version>
 		</dependency>
-		
+
 		<!--  WICKET DEPENDENCIES -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
-			<version>6.11.0</version>
+			<version>${wicket.version}</version>
 		</dependency>
-		
+
+		<!-- WICKET BOOTSTRAP -->
+		<dependency>
+			<groupId>de.agilecoders.wicket</groupId>
+			<artifactId>wicket-bootstrap-core</artifactId>
+			<version>${wicket.bootstrap.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.agilecoders.wicket</groupId>
+			<artifactId>wicket-bootstrap-extensions</artifactId>
+			<version>${wicket.bootstrap.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.agilecoders.wicket</groupId>
+			<artifactId>wicket-bootstrap-themes</artifactId>
+			<version>${wicket.bootstrap.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.agilecoders.wicket</groupId>
+			<artifactId>wicket-bootstrap-less</artifactId>
+			<version>${wicket.bootstrap.version}</version>
+		</dependency>
+
 		<!-- OPTIONAL DEPENDENCY -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>6.11.0</version>
+			<version>${wicket.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-auth-roles</artifactId>
-			<version>6.11.0</version>
+			<version>${wicket.version}</version>
 		</dependency>
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->

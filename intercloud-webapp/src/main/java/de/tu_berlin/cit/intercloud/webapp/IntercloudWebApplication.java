@@ -16,15 +16,19 @@
 
 package de.tu_berlin.cit.intercloud.webapp;
 
-import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.core.settings.BootstrapSettings;
+import de.agilecoders.wicket.core.settings.ThemeProvider;
+import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
+import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
+import de.tu_berlin.cit.intercloud.webapp.template.LoginPage;
+import de.tu_berlin.cit.intercloud.webapp.template.WelcomePage;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.RuntimeConfigurationType;
-
-import de.tu_berlin.cit.intercloud.webapp.auth.LoginPage;
-import de.tu_berlin.cit.intercloud.webapp.layout.Index;
 
 /**
  * Main class of the this web application.
@@ -68,11 +72,22 @@ public class IntercloudWebApplication extends AuthenticatedWebApplication {
 
         getResourceSettings().getResourceFinders().add(new WebApplicationPath(getServletContext(), "pages"));
         // add your configuration here
+
+        initBootstrap();
+    }
+
+    private void initBootstrap() {
+        BootstrapSettings settings = new BootstrapSettings();
+
+        final ThemeProvider themeProvider = new BootswatchThemeProvider(BootswatchTheme.Spacelab);
+        settings.setThemeProvider(themeProvider);
+
+        Bootstrap.install(this, settings);
     }
 
 	@Override
-	public Class<Index> getHomePage() {
-		return Index.class;
+	public Class<WelcomePage> getHomePage() {
+		return WelcomePage.class;
 	}
 
 }
