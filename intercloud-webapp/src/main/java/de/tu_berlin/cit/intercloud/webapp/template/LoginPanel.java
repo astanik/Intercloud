@@ -1,76 +1,69 @@
 package de.tu_berlin.cit.intercloud.webapp.template;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
-import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.layout.Index;
-import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppService;
-import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppUser;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LoginPanel extends Panel {
-    private final static Logger logger = LoggerFactory.getLogger(LoginForm.class);
     private final Alert alert;
 
     public LoginPanel(String id) {
         super(id);
 
-        add(new LoginForm());
-
-        alert = new Alert("loginAlert", Model.of());
-        alert.setOutputMarkupId(true);
-        alert.setCloseButtonVisible(true);
-        alert.add(new AttributeModifier("style", new Model("display:none")));
+        alert = newAlert("loginAlert");
         add(alert);
+
+        add(new LoginForm("loginForm"));
     }
 
-    public class LoginForm extends Form<XmppUser> {
-        private XmppUser modelObject;
+    private Alert newAlert(String markupId) {
+        Alert alert = new Alert(markupId, Model.of());
+        alert.setOutputMarkupId(true);
+        alert.type(Alert.Type.Warning);
+        alert.withMessage(Model.of("Could not log in."));
+        displayNone(alert);
+        return alert;
+    }
 
-        public LoginForm() {
-            super("loginForm", new CompoundPropertyModel(XmppService.getInstance().generateXmppUser()));
-            this.modelObject = getModelObject();
+    private <T extends Component> T displayNone(T component) {
+        component.add(new AttributeModifier("style", new Model("display:none")));
+        return component;
+    }
 
-            this.add(new TextField("username", new PropertyModel<String>(modelObject, "username")).setRequired(true));
-            this.add(new PasswordTextField("password", new PropertyModel(modelObject, "password")).setRequired(true));
-            this.add(new TextField("serviceName", new PropertyModel<String>(modelObject, "serviceName")).setRequired(true));
-            this.add(new TextField("host", new PropertyModel<String>(modelObject, "host")).setRequired(true));
-            this.add(new NumberTextField("port", new PropertyModel<Integer>(modelObject, "port")).setRequired(true));
+    private <T extends Component> T displayBlock(T component) {
+        component.add(new AttributeModifier("style", new Model("display:block")));
+        return component;
+    }
+
+    public class LoginForm extends Form {
+        private String username;
+        private String password;
+
+        public LoginForm(String markupId) {
+            super(markupId);
+            this.setDefaultModel(new CompoundPropertyModel<Object>(this));
+
+            this.add(new TextField("username").setRequired(true));
+            this.add(new PasswordTextField("password").setRequired(true));
 
             this.add(new AjaxButton("loginBtn", Model.of("Sign In")) {
-
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    IntercloudWebSession session = (IntercloudWebSession) this.getSession();
-
-                    try {
-                        AbstractXMPPConnection connection = XmppService.getInstance().connect(modelObject);
-                        session.authenticate(modelObject, connection);
-                    } catch (Exception e) {
-                        error("Failed to connect to XMPP server.");
-                        logger.error("Failed to connect to XMPP server.", e);
-
-                        alert.add(new AttributeModifier("style", new Model("display:block")));
-                        alert.type(Alert.Type.Danger);
-                        alert.withMessage(Model.of(e.getMessage()));
-                        alert.withHeader(Model.of("Failed!"));
-                        target.add(alert);
-                    }
-
-                    if (session.isSignedIn()) {
+                    AuthenticatedWebSession session = (AuthenticatedWebSession) this.getSession();
+                    if (session.signIn(username, password))
                         setResponsePage(Index.class);
+                    else {
+                        target.add(displayBlock(alert));
                     }
                 }
             });

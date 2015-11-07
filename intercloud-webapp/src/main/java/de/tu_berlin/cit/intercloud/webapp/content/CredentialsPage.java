@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
-import de.tu_berlin.cit.intercloud.webapp.auth.User;
+import de.tu_berlin.cit.intercloud.webapp.auth.IUser;
 import de.tu_berlin.cit.intercloud.webapp.layout.BasePage;
 
 
@@ -61,11 +61,11 @@ public class CredentialsPage extends BasePage {
 	}
 
 	/**
-	 * gets the User of the current web session associated to the page request.
+	 * gets the IUser of the current web session associated to the page request.
 	 * 
 	 * @return the user of the current web session.
 	 */
-	private User getSessionUser() {
+	private IUser getSessionUser() {
 		IntercloudWebSession currentSession = (IntercloudWebSession) IntercloudWebSession.get();
 		return currentSession.getUser();
 	}
@@ -75,7 +75,7 @@ public class CredentialsPage extends BasePage {
 	 * form.
 	 */
 	private void init() {
-		User user = getSessionUser();
+		IUser user = getSessionUser();
 
 		if (user == null) {
 			// should actually never happen as long as role based access is
@@ -93,14 +93,14 @@ public class CredentialsPage extends BasePage {
 
 			@Override
 			protected void onSubmit() {
-				User user = getSessionUser();
+				IUser user = getSessionUser();
 
 				// check validity of old password
 				boolean isOldValid = user.isValidPassword(oldPassword.getModelObject());
 				if (isOldValid) {
 
 					// update the password of the user
-					User newUser = UserAccounts.getInstance().createUser(user.getName(), newPassword.getModelObject(), user.getRoles().toString(), user.isActivated());
+					IUser newUser = UserAccounts.getInstance().createUser(user.getName(), newPassword.getModelObject(), user.getRoles().toString(), user.isActivated());
 					if(UserAccounts.getInstance().setUser(newUser)) {
 						info("Password changed.");
 					}

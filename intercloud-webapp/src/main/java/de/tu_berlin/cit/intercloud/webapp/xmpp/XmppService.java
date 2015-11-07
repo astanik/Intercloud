@@ -1,7 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.xmpp;
 
-import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
-import de.tu_berlin.cit.intercloud.util.exceptions.ConfigurationException;
+import de.tu_berlin.cit.intercloud.xmpp.core.packet.JID;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -29,36 +28,15 @@ public class XmppService {
         return instance;
     }
 
-    public AbstractXMPPConnection connect(XmppUser user) throws IOException, XMPPException, SmackException {
+    public AbstractXMPPConnection getConnection(String jabberId, String password) {
+        JID jid = new JID(jabberId);
         XMPPTCPConnectionConfiguration configuration = XMPPTCPConnectionConfiguration.builder()
-                .setUsernameAndPassword(user.getUsername(), user.getPassword())
-                .setServiceName(user.getServiceName())
-                .setHost(user.getHost()) // somehow needs to be set
-                .setPort(user.getPort())
+                .setUsernameAndPassword(jid.getNode(), password)
+                .setServiceName(jid.getDomain())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setDebuggerEnabled(true)
                 .build();
 
-        AbstractXMPPConnection connection = new XMPPTCPConnection(configuration);
-        connection.connect();
-        connection.login();
-
-        return connection;
-    }
-
-    public XmppUser generateXmppUser() {
-        ClientConfig clientConfig = ClientConfig.getInstance();
-        XmppUser user = new XmppUser();
-
-        user.setUsername(clientConfig.getUsername());
-        user.setPassword(clientConfig.getPassword());
-        user.setServiceName(clientConfig.getServiceName());
-        user.setHost(clientConfig.getHost());
-        try {
-            user.setPort(clientConfig.getPort());
-        } catch (ConfigurationException e) {
-            logger.error("Failure during xmpp user generation.", e);
-        }
-        return user;
+        return new XMPPTCPConnection(configuration);
     }
 }

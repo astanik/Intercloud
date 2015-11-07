@@ -16,17 +16,39 @@
 
 package de.tu_berlin.cit.intercloud.webapp.auth;
 
-import de.tu_berlin.cit.intercloud.webapp.template.LoginPanel;
 
-public class LoginPage extends AbstractAuthPage {
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.util.io.IClusterable;
+
+public interface IUser extends IClusterable {
 
 	/**
-	 * Constructor
+	 * sets the Wicket Roles for this user.
+	 * 
+	 * @param roles
+	 *            the roles that belong to this user.
 	 */
-	public LoginPage() {
-		super();
+	public void setRoles(Roles roles);
 
-		// add form
-		add(new LoginPanel("loginPanel"));
-	}
+	/**
+	 * 
+	 * @return the Wicket roles of this user
+	 */
+	public Roles getRoles();
+
+	/**
+	 * Set the user name.
+	 * 
+	 * @param name The user name.
+	 */
+	public void setUsername(String name);
+
+	/**
+	 * Gets the user name.
+	 * 
+	 * @return the user name
+	 */
+	public String getUsername();
+
+
 }
