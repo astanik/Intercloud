@@ -31,7 +31,7 @@ import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackApi;
  */
 public class CloudApiTest {
 
-
+/*
 	@Test
 	public void computeTest() {
 		OpenStackApi jcloudsNova = new OpenStackApi();
@@ -54,5 +54,5 @@ public class CloudApiTest {
 			}
         }
 	}
-
+*/
 }

@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.root.services;
+package de.tu_berlin.cit.intercloud.occi.servicecatalog;
 
-import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.occi.core.Resource;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.intercloud.occi.core.IntercloudSchemas;
+
 
 /**
- * TODO
+ * Constants definition for the OCCI Intercloud Root Module.
+ *  
+ * -service catalog Kinds/Links
+ * ---ServiceCatalog
+ * ---ProviderLink
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-@PathID
-public class TemplateInstance extends Resource {
-
+public final class CatalogSchemas {
 	
-	public TemplateInstance(OcciXml template) {
-		super(template);
-	}
-
+	public final static String CatalogTag = "catalog";
+	
+	public final static String CatalogExtension = IntercloudSchemas.CitSchemaURL + CatalogTag;
+	
+	public final static String CatalogSchema = CatalogExtension +"#";
+	
+	//Mixin Predefinitions
+//	public final static String ComputeMixinSchema = InfrastructureExtension + "/" + ComputeKind.ComputeTerm + "#";
+	
 }
