@@ -44,6 +44,10 @@ public class Link extends ResourceInstance {
 		return new OcciXml(doc);
 	}
 	
+	public LinkType getLinkTypeRepresentation() {
+		return this.linkRepresentation;
+	}
+	
 	@XmppMethod(XmppMethod.DELETE)
 	public void deleteResource() {
 		this.getParent().removeResource(this);

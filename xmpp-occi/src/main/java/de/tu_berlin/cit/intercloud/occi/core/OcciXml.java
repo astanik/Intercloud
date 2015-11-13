@@ -65,7 +65,20 @@ public class OcciXml extends Representation {
 	public LinkType[] getLinks() {
 		return this.catDoc.getCategory().getLinkArray();
 	}
+	
+	public void removeLinks() {
+		for(int i = this.catDoc.getCategory().sizeOfLinkArray() - 1; i >= 0; i--)
+			this.catDoc.getCategory().removeLink(i);
+	}
 
+	public void addLink(LinkType linkTypeRepresentation) {
+		this.catDoc.getCategory().addNewLink().set(linkTypeRepresentation);
+	}
+	
+	public OcciXml getCopy() {
+		return new OcciXml(this.catDoc.toString());
+	}
+	
 	@Override
 	public List<Representation> getTemplates() {
 		return null;
@@ -87,5 +100,5 @@ public class OcciXml extends Representation {
 		representationBuilder.append(this.catDoc.toString());
 		return representationBuilder;
 	}
-	
+
 }

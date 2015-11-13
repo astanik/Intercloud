@@ -17,52 +17,50 @@
 package de.tu_berlin.cit.intercloud.occi.servicecatalog;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
+ * 
  */
-@Mixin(schema = CatalogSchemas.CatalogSchema, term = ServiceCatalogMixin.CatalogTerm)
-public class ServiceCatalogMixin extends Category {
+@Link(schema = CatalogSchemas.CatalogSchema, term = ProviderLink.ProviderLinkTerm,
+		relation = CatalogSchemas.CatalogSchema + ServiceCatalogMixin.CatalogTerm)
+public class ProviderLink extends LinkCategory {
 
-	public final static String CatalogTitle = "Service Catalog Resource";
+	public final static String ProviderLinkTitle = "Provider Link";
 	
-	public final static String CatalogTerm = "service";
+	public final static String ProviderLinkTerm = "provider";
 	
-	public ServiceCatalogMixin() {
-		super(CatalogTitle);
+	public ProviderLink() {
+		super(ProviderLinkTitle);
 	}
 
-	public ServiceCatalogMixin(String title) {
+	public ProviderLink(String title) {
 		super(title);
 	}
 
-	@Attribute(name = "intercloud.catalog.price",
-			type = AttributeType.DOUBLE,
-			mutable = true,
-			required = true,
-			description = "The price for the described service")
-	public double price;
-
-	@Attribute(name = "intercloud.catalog.currency",
+	/**
+	 * The name of the organization that provides the service
+	 */
+	@Attribute(name = "intercloud.provider.organization",
 			type = AttributeType.STRING,
 			mutable = true,
 			required = true,
-			value = "Euro",
-			description = "The currency of the price")
-	public String currency;
-
-	@Attribute(name = "intercloud.catalog.billingincrements",
-			type = AttributeType.STRING,
-			mutable = true,
-			required = true,
-			value = "per hour",
-			description = "The billing increments of the price, e.g. per GB, per hour, per second, etc.")
-	public String billingIncrements;
+			description = "The name of the organization that provides the service")
+	public String organization = null;
 	
+	/**
+	 * MAC address associated with the link's device interface
+	 */
+	@Attribute(name = "intercloud.provider.ipin",
+			type = AttributeType.STRING,
+			mutable = true,
+			required = true,
+			description = "The International Providers Identification Number")
+	public String ipin = null;
 
 }

@@ -13,28 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.tu_berlin.cit.intercloud.gateway.services;
+
+package de.tu_berlin.cit.intercloud.root.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.Link;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.occi.servicecatalog.ProviderLink;
+import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
- * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @PathID
-@Summary("This resource allows for manage a particular storage.")
-@Classification(kind = de.tu_berlin.cit.intercloud.occi.infrastructure.StorageLink.class)
-public class StorageLink extends Link {
+@Summary("This resource is a particular service entry offered by a provider.")
+@Classification(mixins = {ServiceCatalogMixin.class},
+				links = {ProviderLink.class})
+public class ServiceEntry extends Resource {
 
-	public StorageLink(LinkType linkRepresentation) {
-		super(linkRepresentation);
-		// TODO Auto-generated constructor stub
+	
+	public ServiceEntry(OcciXml rep) {
+		super(rep);
 	}
 
+	@Override
+	public String createLink(LinkType link) {
+		// create a provider link and return its path
+		Link ln = new Provider(link);
+		return this.addResource(ln);
+	}
+	
 }

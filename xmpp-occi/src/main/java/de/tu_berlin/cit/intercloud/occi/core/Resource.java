@@ -16,7 +16,9 @@
 
 package de.tu_berlin.cit.intercloud.occi.core;
 
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
@@ -32,17 +34,34 @@ public class Resource extends CollectionResourceInstance {
 	public Resource(OcciXml occiRepresentation) {
 		super();
 		this.representation = occiRepresentation;
+		LinkType[] links = this.representation.getLinks();
+		for(int i = 0; i < links.length; i++) {
+			createLink(links[i]);
+		}
+		this.representation.removeLinks();
 	}
 	
 	@XmppMethod(XmppMethod.GET)
 	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
 	public OcciXml getRepresentation() {
-		return this.representation;
+		OcciXml newRep = this.representation.getCopy();
+		for(ResourceInstance potLink : this.getResources()) {
+			if(potLink instanceof Link) {
+				newRep.addLink(((Link) potLink).getLinkTypeRepresentation());
+			}
+		}
+		return newRep;
 	}
 	
 	@XmppMethod(XmppMethod.DELETE)
 	public void deleteResource() {
 		this.getParent().removeResource(this);
+	}
+	
+	public String createLink(LinkType link) {
+		// create a simple link and return its path
+		Link ln = new Link(link);
+		return this.addResource(ln);
 	}
 
 }

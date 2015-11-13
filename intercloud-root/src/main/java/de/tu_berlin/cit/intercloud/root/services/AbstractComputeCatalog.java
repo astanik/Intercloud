@@ -50,17 +50,16 @@ public abstract class AbstractComputeCatalog extends Collection {
 	@XmppMethod(XmppMethod.GET)
     @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
 	@Produces(value = OcciListXml.MEDIA_TYPE, serializer = OcciListXml.class)
-	public OcciListXml searchSlaTemplates(OcciXml requirements) {
+	public OcciListXml searchServiceOfferings(OcciXml requirements) {
 		CategoryListDocument catalogList = CategoryListDocument.Factory.newInstance();
 		catalogList.addNewCategoryList();
-		java.util.Collection<ResourceInstance> resources = this.getResources();
-		for(ResourceInstance res : resources) {
-			if(res instanceof TemplateInstance) {
-				TemplateInstance templateInst = (TemplateInstance) res;
-				if(matchRequirements(templateInst.getRepresentation(), requirements)) {
+		for(ResourceInstance res : this.getResources()) {
+			if(res instanceof ServiceEntry) {
+				ServiceEntry offering = (ServiceEntry) res;
+				if(matchRequirements(offering.getRepresentation(), requirements)) {
 					// add template to list
 					Category cat = catalogList.getCategoryList().addNewCategory();
-					Category templCat = templateInst.getRepresentation().getDocument().getCategory();
+					Category templCat = offering.getRepresentation().getDocument().getCategory();
 					if(templCat.isSetKind())
 						cat.setKind(templCat.getKind());
 					if(templCat.getMixinArray().length > 0)
@@ -68,7 +67,7 @@ public abstract class AbstractComputeCatalog extends Collection {
 				}
 			} else if(res instanceof AbstractComputeCatalog) {
 				AbstractComputeCatalog catalogInst = (AbstractComputeCatalog) res;
-				OcciListXml subList = catalogInst.searchSlaTemplates(requirements);
+				OcciListXml subList = catalogInst.searchServiceOfferings(requirements);
 				// copy all elements
 				Category[] categories = subList.getDocument().getCategoryList().getCategoryArray();
 				for(int i=0; i < categories.length; i++) {
@@ -149,10 +148,10 @@ public abstract class AbstractComputeCatalog extends Collection {
 	@XmppMethod(XmppMethod.POST)
     @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
     @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
-	public UriText addSlaTemplate(OcciXml template) {
-		// create a virtual machine and return its uri
-		TemplateInstance templateInst = new TemplateInstance(template);
-		String path = this.addResource(templateInst);
+	public UriText addServiceOffer(OcciXml offer) {
+		// create a service entry in the catalog and return its uri
+		ServiceEntry service = new ServiceEntry(offer);
+		String path = this.addResource(service);
 		try {
 			UriText uri = new UriText(path);
 			return uri;
