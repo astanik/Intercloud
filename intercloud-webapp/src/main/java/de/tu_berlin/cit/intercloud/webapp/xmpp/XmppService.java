@@ -1,16 +1,14 @@
 package de.tu_berlin.cit.intercloud.webapp.xmpp;
 
-import de.tu_berlin.cit.intercloud.xmpp.core.packet.JID;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class XmppService {
     private final static Logger logger = LoggerFactory.getLogger(XmppService.class);
@@ -28,11 +26,14 @@ public class XmppService {
         return instance;
     }
 
-    public AbstractXMPPConnection getConnection(String jabberId, String password) {
-        JID jid = new JID(jabberId);
+    public AbstractXMPPConnection getConnection(String jabberId, String password) throws URISyntaxException {
+        return getConnection(new XmppURI(jabberId, ""), password);
+    }
+
+    public AbstractXMPPConnection getConnection(XmppURI uri, String password) {
         XMPPTCPConnectionConfiguration configuration = XMPPTCPConnectionConfiguration.builder()
-                .setUsernameAndPassword(jid.getNode(), password)
-                .setServiceName(jid.getDomain())
+                .setUsernameAndPassword(uri.getNode(), password)
+                .setServiceName(uri.getDomain())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setDebuggerEnabled(true)
                 .build();

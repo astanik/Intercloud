@@ -67,11 +67,6 @@
 			<artifactId>util</artifactId>
 			<version>0.0.1</version>
 		</dependency>
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>xmpp-core</artifactId>
-			<version>0.0.1</version>
-		</dependency>
 		<!-- smack -->
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
