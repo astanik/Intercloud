@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.PacketListener;
@@ -67,9 +72,9 @@ import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
  */
 public class TestClient {
 
-	private static String testDomain = "intercloud.cit.tu-berlin.de";
+	private static final String TEST_DOMAIN = ClientConfig.getInstance().getHost();
 
-	private static String servicePath = "/iaas/compute/de";
+	private static final String SERVICE_PATH = "/iaas/compute/de";
 	
 	private XmppURI rootURI = null;
 	
@@ -77,24 +82,23 @@ public class TestClient {
 
 	private final AbstractXMPPConnection connection;
 	
-	public TestClient(AbstractXMPPConnection connection) throws XMPPErrorException, URISyntaxException, SmackException {
+	public TestClient(AbstractXMPPConnection connection) throws XMPPErrorException, URISyntaxException, SmackException, XmlException {
 		this.connection = connection;
 		
 		discover();
 	}
 	
-	private void discover() throws XMPPErrorException, URISyntaxException, SmackException {
+	private void discover() throws XMPPErrorException, URISyntaxException, SmackException, XmlException {
 		// discover root services
 		// Obtain the ServiceDiscoveryManager associated with my XMPPConnection
 		ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
 		// Get the items of a given XMPP entity
 		// This gets the items associated with online catalog service
-		DiscoverItems discoItems = discoManager.discoverItems(testDomain);
+		DiscoverItems discoItems = discoManager.discoverItems(TEST_DOMAIN);
 		// Get the discovered items of the queried XMPP entity
 		List<Item> items = discoItems.getItems();
 		// set exchange and root server
-		for(int i=0; i < items.size(); i++) {
-			Item item = items.get(i);
+		for(Item item : items) {
 			System.out.println(item.getEntityID());
 			if(ServiceNames.RootComponentName.equals(item.getName()))
 				rootURI = new XmppURI(item.getEntityID());
@@ -104,61 +108,46 @@ public class TestClient {
 
 		// discover root features
 		if(rootURI != null) {
-			// Get the information of a given XMPP entity
-			System.out.println("Discover root: " + rootURI.getJID());
-			// This gets the information of a root component
-			DiscoverInfo discoInfo = discoManager.discoverInfo(rootURI.getJID());
-			// Get the discovered identities of the remote XMPP entity
-			List<Identity> identities = discoInfo.getIdentities();
-			// Display the identities of the remote XMPP entity
-			for(int k=0; k < identities.size(); k++) {
-				Identity identity = identities.get(k);
-				System.out.println(identity.getName());
-				System.out.println(identity.getType());
-				System.out.println(identity.getCategory());
-			}
-			// Check if root supports rest
-			if(discoInfo.containsFeature("urn:xmpp:rest:xwadl"))
-				System.out.println("XWADL is supported");
-			else
-				throw new SmackException("XWADL is not supported");
-
-			if(discoInfo.containsFeature("urn:xmpp:rest:xml"))
-				System.out.println("REST is supported");
-			else
-				throw new SmackException("REST is not supported");
-		} else {
-			throw new SmackException("Root not found");
+			checkFeatures(discoManager, rootURI);
 		}
 
 		// discover exchange features
 		if(exchangeURI != null) {
-			// Get the information of a given XMPP entity
-			System.out.println("Discover exchange: " + exchangeURI.getJID());
-			// This gets the information of a root component
-			DiscoverInfo discoInfo = discoManager.discoverInfo(exchangeURI.getJID());
-			// Get the discovered identities of the remote XMPP entity
-			List<Identity> identities = discoInfo.getIdentities();
-			// Display the identities of the remote XMPP entity
-			for(int k=0; k < identities.size(); k++) {
-				Identity identity = identities.get(k);
-				System.out.println(identity.getName());
-				System.out.println(identity.getType());
-				System.out.println(identity.getCategory());
-			}
-			// Check if root supports rest
-			if(discoInfo.containsFeature("urn:xmpp:rest:xwadl"))
-				System.out.println("XWADL is supported");
-			else
-				throw new SmackException("XWADL is not supported");
-
-			if(discoInfo.containsFeature("urn:xmpp:rest:xml"))
-				System.out.println("REST is supported");
-			else
-				throw new SmackException("REST is not supported");
-		} else {
-			throw new SmackException("Exchange not found");
+			checkFeatures(discoManager, exchangeURI);
 		}
+
+		XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(rootURI.toString(), SERVICE_PATH));
+		Method method = client.getMethod(MethodType.GET, null, UriListText.MEDIA_TYPE);
+		if (null != method) {
+			XmppRestMethod xmppRestMethod = client.buildMethodInvocation(method);
+			Representation representation = xmppRestMethod.invoke();
+			if (representation == null);
+		}
+	}
+
+	private void checkFeatures(ServiceDiscoveryManager discoManager, XmppURI uri) throws SmackException, XMPPErrorException {
+		// Get the information of a given XMPP entity
+		System.out.println("Discover: " + uri.getJID());
+		// This gets the information of the component
+		DiscoverInfo discoInfo = discoManager.discoverInfo(uri.getJID());
+		// Get the discovered identities of the remote XMPP entity
+		List<Identity> identities = discoInfo.getIdentities();
+		// Display the identities of the remote XMPP entity
+		for(Identity identity : identities) {
+			System.out.println(identity.getName());
+			System.out.println(identity.getType());
+			System.out.println(identity.getCategory());
+		}
+		// Check if component supports rest
+		if(discoInfo.containsFeature(XwadlIQ.NAMESPACE))
+			System.out.println("XWADL is supported");
+		else
+			throw new SmackException("XWADL is not supported");
+
+		if(discoInfo.containsFeature(RestIQ.NAMESPACE))
+			System.out.println("REST is supported");
+		else
+			throw new SmackException("REST is not supported");
 	}
 
 	public void performTest() throws FileNotFoundException, UnsupportedEncodingException, 
@@ -220,7 +209,7 @@ public class TestClient {
 
 		// search iterate over resources on server
 /*
-			XmppURI uri = new XmppURI(rootURI.getJID(), servicePath);
+			XmppURI uri = new XmppURI(rootURI.getJID(), SERVICE_PATH);
 			System.out.println("Create client for uri: " + uri);
 			XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, uri);
 			Method method = client.getMethod(MethodType.GET, new OcciXml(), new OcciListXml());

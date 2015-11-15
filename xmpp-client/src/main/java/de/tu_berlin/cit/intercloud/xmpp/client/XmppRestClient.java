@@ -105,44 +105,42 @@ public class XmppRestClient extends OcciClient {
 
 
 	public Method getMethod(Enum type, OcciText occiText, UriText uriText) {
-		List<Method> list = this.getMethods(type);
-		for(Method method : list) {
-			Boolean requestMatch = false;
-			if(method.isSetRequest() && occiText != null)
-				if(method.getRequest().getMediaType().equals(occiText.MEDIA_TYPE))
-					requestMatch = true;
-			
-			if(!method.isSetRequest() && occiText == null)
-				requestMatch = true;
-			
-			if(requestMatch && method.isSetResponse() && uriText != null)
-				if(method.getResponse().getMediaType().equals(uriText.MEDIA_TYPE))
-					return method;
-
-			if(requestMatch && !method.isSetResponse() && uriText == null)
-				return method;
-		}
-		return null;
+		String requestMediaType = null == occiText ? null : occiText.MEDIA_TYPE;
+		String responseMediaType = null == uriText ? null : uriText.MEDIA_TYPE;
+		return getMethod(type, requestMediaType, responseMediaType);
 	}
 
 	public Method getMethod(Enum type, OcciXml occiXml, OcciListXml occiListXml) {
-		List<Method> list = this.getMethods(type);
-		for(Method method : list) {
-			Boolean requestMatch = false;
-			if(method.isSetRequest() && occiXml != null)
-				if(method.getRequest().getMediaType().equals(occiXml.MEDIA_TYPE))
-					requestMatch = true;
-			
-			if(!method.isSetRequest() && occiXml == null)
-				requestMatch = true;
-			
-			if(requestMatch && method.isSetResponse() && occiListXml != null)
-				if(method.getResponse().getMediaType().equals(occiListXml.MEDIA_TYPE))
-					return method;
+		String requestMediaType = null == occiXml ? null : occiXml.MEDIA_TYPE;
+		String responseMediaType = null == occiListXml ? null : occiListXml.MEDIA_TYPE;
+		return getMethod(type, requestMediaType, responseMediaType);
+	}
 
-			if(requestMatch && !method.isSetResponse() && occiListXml == null)
-				return method;
+	public Method getMethod(final Enum methodType, final String requestMediaType, final String responseMediaType) {
+		List<Method> list = this.getMethods(methodType);
+		for(Method method : list) {
+			boolean requestMatch = false;
+			if(method.isSetRequest() && null != requestMediaType) {
+				if (requestMediaType.equals(method.getRequest().getMediaType())) {
+					requestMatch = true;
+				}
+			}
+			if(!method.isSetRequest() && null == requestMediaType) {
+				requestMatch = true;
+			}
+
+			if (requestMatch) {
+				if (method.isSetResponse() && null != responseMediaType) {
+					if (responseMediaType.equals(method.getResponse().getMediaType())) {
+						return method;
+					}
+				}
+				if (!method.isSetResponse() && null == responseMediaType) {
+					return method;
+				}
+			}
 		}
+
 		return null;
 	}
 
