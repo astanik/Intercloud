@@ -16,7 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.webapp.auth;
 
-import de.tu_berlin.cit.intercloud.webapp.template.LoginPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.LoginPanel;
 
 public class LoginPage extends AbstractAuthPage {
 

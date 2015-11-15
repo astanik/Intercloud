@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.auth;
+package de.tu_berlin.cit.intercloud.webapp.model;
 
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 

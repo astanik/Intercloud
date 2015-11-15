@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
-import de.tu_berlin.cit.intercloud.webapp.auth.IUser;
+import de.tu_berlin.cit.intercloud.webapp.model.IUser;
 import de.tu_berlin.cit.intercloud.webapp.layout.BasePage;
 
 

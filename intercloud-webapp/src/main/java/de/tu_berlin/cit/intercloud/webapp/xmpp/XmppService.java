@@ -51,16 +51,16 @@ public class XmppService {
         return new XMPPTCPConnection(configuration);
     }
 
-    public List<DiscoverItems.Item> discoverXmppRestfulItems(AbstractXMPPConnection connection, XmppURI uri) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
+    public List<String> discoverXmppRestfulItems(AbstractXMPPConnection connection, XmppURI uri) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
         return discoverItemsByFeature(connection, uri, Arrays.asList(XwadlIQ.NAMESPACE, RestIQ.NAMESPACE));
     }
 
-    private List<DiscoverItems.Item> discoverItemsByFeature(AbstractXMPPConnection connection, XmppURI uri, List<String> features) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
+    private List<String> discoverItemsByFeature(AbstractXMPPConnection connection, XmppURI uri, List<String> features) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
         // discover items
         ServiceDiscoveryManager discoveryManager = ServiceDiscoveryManager.getInstanceFor(connection);
         DiscoverItems discoverItems = discoveryManager.discoverItems(uri.getDomain());
         List<DiscoverItems.Item> items = discoverItems.getItems();
-        List<DiscoverItems.Item> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
         // discover infos per item and check if specified feature set is supported
         for (DiscoverItems.Item item : items) {
             DiscoverInfo discoverInfo = discoveryManager.discoverInfo(item.getEntityID());
@@ -72,7 +72,7 @@ public class XmppService {
                 }
             }
             if (conatinsAllFeatures) {
-                result.add(item);
+                result.add(item.getEntityID());
             } else if (logger.isDebugEnabled()) {
                 logger.debug("Entity {} does not support the specified features.", item.getEntityID());
             }

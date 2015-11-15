@@ -16,8 +16,8 @@
 
 package de.tu_berlin.cit.intercloud.webapp;
 
-import de.tu_berlin.cit.intercloud.webapp.auth.IUser;
-import de.tu_berlin.cit.intercloud.webapp.auth.User;
+import de.tu_berlin.cit.intercloud.webapp.model.IUser;
+import de.tu_berlin.cit.intercloud.webapp.model.User;
 import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppService;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -54,6 +54,10 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
 
     public IUser getUser() {
         return user;
+    }
+
+    public AbstractXMPPConnection getConnection() {
+        return connection;
     }
 
     @Override

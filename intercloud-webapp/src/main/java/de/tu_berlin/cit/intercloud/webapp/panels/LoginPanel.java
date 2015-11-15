@@ -1,9 +1,8 @@
-package de.tu_berlin.cit.intercloud.webapp.template;
+package de.tu_berlin.cit.intercloud.webapp.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
-import de.tu_berlin.cit.intercloud.webapp.layout.Index;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
+import de.tu_berlin.cit.intercloud.webapp.ComponentUtils;
+import de.tu_berlin.cit.intercloud.webapp.pages.DiscoverItemsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
@@ -31,18 +30,8 @@ public class LoginPanel extends Panel {
         alert.setOutputMarkupId(true);
         alert.type(Alert.Type.Warning);
         alert.withMessage(Model.of("Could not log in."));
-        displayNone(alert);
+        ComponentUtils.displayNone(alert);
         return alert;
-    }
-
-    private <T extends Component> T displayNone(T component) {
-        component.add(new AttributeModifier("style", new Model("display:none")));
-        return component;
-    }
-
-    private <T extends Component> T displayBlock(T component) {
-        component.add(new AttributeModifier("style", new Model("display:block")));
-        return component;
     }
 
     public class LoginForm extends Form {
@@ -61,9 +50,9 @@ public class LoginPanel extends Panel {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     AuthenticatedWebSession session = (AuthenticatedWebSession) this.getSession();
                     if (session.signIn(username, password))
-                        setResponsePage(Index.class);
+                        setResponsePage(DiscoverItemsPage.class);
                     else {
-                        target.add(displayBlock(alert));
+                        target.add(ComponentUtils.displayBlock(alert));
                     }
                 }
             });

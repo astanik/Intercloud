@@ -21,14 +21,16 @@ import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.ThemeProvider;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
-import de.tu_berlin.cit.intercloud.webapp.template.LoginPage;
-import de.tu_berlin.cit.intercloud.webapp.template.WelcomePage;
+import de.tu_berlin.cit.intercloud.webapp.pages.LoginPage;
+import de.tu_berlin.cit.intercloud.webapp.pages.WelcomePage;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
+import org.apache.wicket.request.resource.caching.version.LastModifiedResourceVersion;
 
 /**
  * Main class of the this web application.
@@ -70,8 +72,9 @@ public class IntercloudWebApplication extends AuthenticatedWebApplication {
         super.init();
         getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
-        getResourceSettings().getResourceFinders().add(new WebApplicationPath(getServletContext(), "pages"));
         // add your configuration here
+        // put html pages into webapp/pages
+        //getResourceSettings().getResourceFinders().add(new WebApplicationPath(getServletContext(), "pages"));
 
         initBootstrap();
     }
