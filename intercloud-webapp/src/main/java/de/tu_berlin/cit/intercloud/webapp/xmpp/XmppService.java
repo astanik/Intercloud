@@ -1,12 +1,15 @@
 package de.tu_berlin.cit.intercloud.webapp.xmpp;
 
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQProvider;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQProvider;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -15,18 +18,25 @@ import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class XmppService {
     private final static Logger logger = LoggerFactory.getLogger(XmppService.class);
+    // map holding xmpp connections of connected jabber ids
+    private final static ConcurrentMap<String, AbstractXMPPConnection> connectionMap = new ConcurrentHashMap<>();
 
     private static XmppService instance;
 
     private XmppService() {
-
+        // add xmpp rest provider
+        ProviderManager.addIQProvider(XwadlIQ.ELEMENT, XwadlIQ.NAMESPACE, new XwadlIQProvider());
+        ProviderManager.addIQProvider(RestIQ.ELEMENT, RestIQ.NAMESPACE, new RestIQProvider());
     }
 
     public static XmppService getInstance() {
@@ -36,19 +46,42 @@ public class XmppService {
         return instance;
     }
 
-    public AbstractXMPPConnection getConnection(String jabberId, String password) throws URISyntaxException {
-        return getConnection(new XmppURI(jabberId, ""), password);
+    public AbstractXMPPConnection getConnection(String jabberId) throws IOException, XMPPException, SmackException {
+        AbstractXMPPConnection connection = connectionMap.get(jabberId);
+        if (null != connection && !connection.isConnected()) {
+            // reconnect if ran into timeout
+            connection.connect();
+            connection.login();
+        }
+        return connection;
     }
 
-    public AbstractXMPPConnection getConnection(XmppURI uri, String password) {
+    public void disconnect(String jabberId) {
+        AbstractXMPPConnection connection = connectionMap.get(jabberId);
+        if (null != connection) {
+            connection.disconnect();
+            connectionMap.remove(jabberId);
+        }
+    }
+
+    public AbstractXMPPConnection getNewConnection(String jabberId, String password) throws URISyntaxException, XMPPException, IOException, SmackException {
+        return getNewConnection(new XmppURI(jabberId, ""), password);
+    }
+
+    public AbstractXMPPConnection getNewConnection(XmppURI uri, String password) throws IOException, XMPPException, SmackException {
+        disconnect(uri.getJID()); // drop previous connection
+
         XMPPTCPConnectionConfiguration configuration = XMPPTCPConnectionConfiguration.builder()
                 .setUsernameAndPassword(uri.getNode(), password)
                 .setServiceName(uri.getDomain())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setDebuggerEnabled(true)
                 .build();
-
-        return new XMPPTCPConnection(configuration);
+        AbstractXMPPConnection connection = new XMPPTCPConnection(configuration);
+        connection.connect();
+        connection.login();
+        connectionMap.put(uri.getJID(), connection);
+        return connection;
     }
 
     public List<String> discoverXmppRestfulItems(AbstractXMPPConnection connection, XmppURI uri) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {

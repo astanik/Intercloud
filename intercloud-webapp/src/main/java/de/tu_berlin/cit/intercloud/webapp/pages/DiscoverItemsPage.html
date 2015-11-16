@@ -30,13 +30,13 @@
                     <wicket:container wicket:id="radioGroup">
                         <div wicket:id="radioView" class="radio">
                             <label>
-                                <input wicket:id="radioItem" type="radio" name="ticker"/>
+                                <input wicket:id="radioItem" type="radio" required />
                                 <wicket:container wicket:id="radioLabel"/>
                             </label>
                         </div>
                     </wicket:container>
                 </div>
-                <button type="submit" class="btn btn-default">Connect</button>
+                <button wicket:id="connectBtn" type="submit" class="btn btn-default">Connect</button>
             </form>
         </div>
     </div>

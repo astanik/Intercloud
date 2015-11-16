@@ -1,7 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.tu_berlin.cit.intercloud.webapp.ComponentUtils;
-import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -18,6 +17,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public class DiscoverItemsPage extends UserTemplate {
     }
 
     private class DiscoverForm extends Form {
-        private String domain; // TODO: take value from session user
+        private String domain = getIntercloudWebSession().getUser().getUri().getDomain();
 
         public DiscoverForm(String markupId) {
             super(markupId);
@@ -54,9 +54,8 @@ public class DiscoverItemsPage extends UserTemplate {
             this.add(new AjaxButton("discoverBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    IntercloudWebSession session = (IntercloudWebSession) this.getSession();
                     try {
-                        AbstractXMPPConnection connection = session.getConnection();
+                        AbstractXMPPConnection connection = getIntercloudWebSession().getConnection();
                         XmppURI uri = new XmppURI(domain, "");
                         discoItems.clear();
                         discoItems.addAll(XmppService.getInstance().discoverXmppRestfulItems(connection, uri));
@@ -80,17 +79,30 @@ public class DiscoverItemsPage extends UserTemplate {
     }
 
     private class ItemsForm extends Form {
+        private final RadioGroup radioGroup;
+
         public ItemsForm(String markupId) {
             super(markupId);
 
-            RadioGroup radioGroup = new RadioGroup("radioGroup", new Model<String>());
-            this.add(radioGroup);
-
+            radioGroup = new RadioGroup<>("radioGroup", new Model<>());
             radioGroup.add(new ListView<String>("radioView", discoItems) {
                 @Override
                 protected void populateItem(ListItem<String> listItem) {
-                    listItem.add(new Radio("radioItem", listItem.getModel()));
+                    listItem.add(new Radio<>("radioItem", listItem.getModel()));
                     listItem.add(new Label("radioLabel", listItem.getModelObject()));
+                }
+            });
+            this.add(radioGroup);
+
+            this.add(new AjaxButton("connectBtn") {
+                @Override
+                protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                    String domain = radioGroup.getDefaultModelObjectAsString();
+                    if (null != domain && !domain.trim().isEmpty()) {
+                        setResponsePage(GetXwadlPage.class, new PageParameters().add(GetXwadlPage.PARAM_DOMAIN, domain));
+                    } else {
+                        target.appendJavaScript("alert('Please select a value from the radio group!');");
+                    }
                 }
             });
         }

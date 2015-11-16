@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head/>
+<body>
+
+<wicket:extend>
+    <div class="row">
+        <h1 class="page-header">Get XWADL....</h1>
+    </div>
+
+    <div class="row">
+        <form wicket:id="xwadlForm">
+            <div class="form-group col-md-10">
+                <div class="input-group">
+                    <div wicket:id="domain" class="input-group-addon">[domain]</div>
+                    <input wicket:id="path" type="text" class="form-control" placeholder="Path">
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <button wicket:id="getXwadlBtn" type="submit" class="btn btn-block btn-default">Get Xwadl</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <pre>
+                <code wicket:id="xwadlCode">[xwadl]</code>
+            </pre>
+        </div>
+    </div>
+
+</wicket:extend>
+
+</body>
+</html>

@@ -16,7 +16,6 @@
 
 package de.tu_berlin.cit.intercloud.webapp;
 
-import de.tu_berlin.cit.intercloud.webapp.model.IUser;
 import de.tu_berlin.cit.intercloud.webapp.model.User;
 import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppService;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
@@ -29,8 +28,8 @@ import org.slf4j.LoggerFactory;
 public class IntercloudWebSession extends AuthenticatedWebSession {
     private static final Logger logger = LoggerFactory.getLogger(IntercloudWebSession.class);
 
-    private IUser user = null;
-    private AbstractXMPPConnection connection;
+    private User user = null;
+    private final XmppService xmppService = XmppService.getInstance();
 
     public IntercloudWebSession(Request request) {
         super(request);
@@ -39,11 +38,7 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
     @Override
     protected boolean authenticate(String username, String password) {
         try {
-            AbstractXMPPConnection newConnection = XmppService.getInstance().getConnection(username, password);
-            newConnection.connect();
-            newConnection.login();
-
-            this.connection = newConnection;
+            xmppService.getNewConnection(username, password);
             this.user = new User(username, Roles.USER);
             return true;
         } catch (Exception e) {
@@ -52,12 +47,20 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
         }
     }
 
-    public IUser getUser() {
+    public User getUser() {
         return user;
     }
 
     public AbstractXMPPConnection getConnection() {
-        return connection;
+        if (isSignedIn()) {
+            try {
+                return xmppService.getConnection(this.user.getUsername());
+            } catch (Exception e) {
+                logger.error("Failed to get connection for jid {}. Sign out...", this.user.getUsername(), e);
+                signOut();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -72,9 +75,8 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
     public void signOut() {
         if (isSignedIn()) {
             super.signOut();
+            xmppService.disconnect(this.user.getUsername());
             this.user = null;
-            this.connection.disconnect();
-            this.connection = null;
         }
     }
 

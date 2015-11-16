@@ -48,8 +48,7 @@ public class LoginPanel extends Panel {
             this.add(new AjaxButton("loginBtn", Model.of("Sign In")) {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    AuthenticatedWebSession session = (AuthenticatedWebSession) this.getSession();
-                    if (session.signIn(username, password))
+                    if (AuthenticatedWebSession.get().signIn(username, password))
                         setResponsePage(DiscoverItemsPage.class);
                     else {
                         target.add(ComponentUtils.displayBlock(alert));
