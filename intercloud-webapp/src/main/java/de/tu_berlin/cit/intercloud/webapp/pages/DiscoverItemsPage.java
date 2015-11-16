@@ -84,7 +84,7 @@ public class DiscoverItemsPage extends UserTemplate {
         public ItemsForm(String markupId) {
             super(markupId);
 
-            radioGroup = new RadioGroup<>("radioGroup", new Model<>());
+            radioGroup = new RadioGroup<String>("radioGroup", new Model<>());
             radioGroup.add(new ListView<String>("radioView", discoItems) {
                 @Override
                 protected void populateItem(ListItem<String> listItem) {

@@ -46,25 +46,25 @@ public class GetXwadlPage extends UserTemplate {
     }
 
     private class XwadlForm extends Form {
-        private String path = "/iaas";
+        private String resourcePath = "/iaas";
 
         public XwadlForm(String markupId) {
             super(markupId);
             this.setDefaultModel(new CompoundPropertyModel<Object>(this));
 
             this.add(new Label("domain", Model.of(domain)));
-            this.add(new TextField<>("path", new PropertyModel<>(this, "path")).setRequired(true));
+            this.add(new TextField<>("resourcePath", new PropertyModel<>(this, "resourcePath")).setRequired(true));
             this.add(new AjaxButton("getXwadlBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
                         AbstractXMPPConnection connection = getIntercloudWebSession().getConnection();
-                        XmppRestClient restClient = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(domain, path));
+                        XmppRestClient restClient = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(domain, resourcePath));
                         xwadlStr = restClient.getResourceTypeDocument().toString();
                         target.add(xwadlCodePanel);
                     } catch (Exception e) {
                         StringBuilder s = new StringBuilder();
-                        s.append("Failed to receive xwadl from xmpp://").append(domain).append("#").append(path).append(".");
+                        s.append("Failed to receive xwadl from xmpp://").append(domain).append("#").append(resourcePath).append(".");
                         logger.error(s.toString(), e);
                         target.appendJavaScript(s.insert(0, "alert('").append("');").toString());
                     }

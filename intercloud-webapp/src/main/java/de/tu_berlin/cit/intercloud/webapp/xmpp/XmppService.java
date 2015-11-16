@@ -57,10 +57,9 @@ public class XmppService {
     }
 
     public void disconnect(String jabberId) {
-        AbstractXMPPConnection connection = connectionMap.get(jabberId);
+        AbstractXMPPConnection connection = connectionMap.remove(jabberId);
         if (null != connection) {
             connection.disconnect();
-            connectionMap.remove(jabberId);
         }
     }
 
