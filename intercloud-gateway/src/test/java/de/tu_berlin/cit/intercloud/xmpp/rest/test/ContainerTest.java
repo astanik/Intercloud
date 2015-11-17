@@ -57,16 +57,16 @@ public class ContainerTest {
 			ResourceTypeDocument doc = container.getXWADL("/compute");
 			System.out.println(container.getSupportedTypes());
 			// client test
-			OcciClient client = new OcciClient(doc);
-			List<Method> list = client.getMethods(MethodType.POST);
-			for(Method method : list) {
-				MethodInvocation invocable = client.buildMethodInvocation(method);
-				List<Representation> rep = client.getRequestTemplates(method);
-				for(Representation representation : rep) {
-					invocable.setRequestRepresentation(representation);
-					container.execute(invocable.getXmlDocument());
-				}
-			}
+//			OcciClient client = new OcciClient(doc);
+//			List<Method> list = client.getMethods(MethodType.POST);
+//			for(Method method : list) {
+//				MethodInvocation invocable = client.buildMethodInvocation(method);
+//				List<Representation> rep = client.getRequestTemplates(method);
+//				for(Representation representation : rep) {
+//					invocable.setRequestRepresentation(representation);
+//					container.execute(invocable.getXmlDocument());
+//				}
+//			}
 		} catch (URISyntaxException e) {
 	        Assert.fail(e.getMessage());
 		}
