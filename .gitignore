@@ -9,3 +9,4 @@ release.properties
 *.project
 *.prefs
 .settings/
+cpuMeasurements.txt
