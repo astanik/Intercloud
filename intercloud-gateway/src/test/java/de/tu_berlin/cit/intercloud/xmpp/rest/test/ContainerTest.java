@@ -29,6 +29,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
@@ -57,16 +58,16 @@ public class ContainerTest {
 			ResourceTypeDocument doc = container.getXWADL("/compute");
 			System.out.println(container.getSupportedTypes());
 			// client test
-//			OcciClient client = new OcciClient(doc);
-//			List<Method> list = client.getMethods(MethodType.POST);
-//			for(Method method : list) {
-//				MethodInvocation invocable = client.buildMethodInvocation(method);
+			OcciClient client = new OcciClient(doc);
+			Method method = client.getMethod(MethodType.GET, null, UriListText.MEDIA_TYPE);
+			if(method != null) {
+				MethodInvocation invocable = client.buildMethodInvocation(method);
 //				List<Representation> rep = client.getRequestTemplates(method);
 //				for(Representation representation : rep) {
 //					invocable.setRequestRepresentation(representation);
-//					container.execute(invocable.getXmlDocument());
+				container.execute(invocable.getXmlDocument());
 //				}
-//			}
+			}
 		} catch (URISyntaxException e) {
 	        Assert.fail(e.getMessage());
 		}

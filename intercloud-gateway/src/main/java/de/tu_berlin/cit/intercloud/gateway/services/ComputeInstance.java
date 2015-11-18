@@ -16,14 +16,20 @@
 
 package de.tu_berlin.cit.intercloud.gateway.services;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+import org.jclouds.openstack.nova.v2_0.domain.Address;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 import org.jclouds.openstack.nova.v2_0.domain.Image;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApi;
 import org.jclouds.openstack.nova.v2_0.features.ImageApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
+
+import com.google.common.collect.Multimap;
 
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackComputeMixin;
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackImageMixin;
@@ -43,7 +49,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Result;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
 
 /**
- * TODO
+ * Open Stack implementation for compute instances.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
@@ -77,6 +83,15 @@ public class ComputeInstance extends Resource {
 		this.flavorApi = flavorApi;
 		this.imageApi = imageApi;
 		this.server = server;
+		Map<String, Collection<Address>> networks = this.server.getAddresses().asMap();
+		Set<String> netIDs = networks.keySet();
+		for(String net : netIDs) {
+			System.out.println("Networks: " + net);
+			Collection<Address> addresses = networks.get(net);
+			for(Address add : addresses) {
+				System.out.println("Addresses: " + add.toString());
+			}
+		}
 	}
 
 	@Override

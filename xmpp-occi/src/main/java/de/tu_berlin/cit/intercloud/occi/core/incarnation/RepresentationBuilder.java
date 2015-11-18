@@ -186,7 +186,7 @@ public class RepresentationBuilder {
 							break;
 						case ENUM:
 							@SuppressWarnings("rawtypes")
-							Class cls = field.getClass();
+							Class cls = field.getType();
 							if (attributes[i].isSetENUM() && cls.isEnum()) {
 								String str = new String(attributes[i].getENUM());
 								@SuppressWarnings("unchecked")

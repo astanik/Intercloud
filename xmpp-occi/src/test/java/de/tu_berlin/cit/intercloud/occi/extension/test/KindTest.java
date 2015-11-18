@@ -16,10 +16,14 @@
 
 package de.tu_berlin.cit.intercloud.occi.extension.test;
 
+import java.util.Map;
+import java.util.Set;
+
+import org.junit.Assert;
 import org.junit.Test;
 
-import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
-import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
+import de.tu_berlin.cit.intercloud.occi.core.incarnation.ClassificationRegistry;
 
 /**
  * TODO
@@ -29,15 +33,23 @@ import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
 public class KindTest {
 
 	@Test
-	public void computeKindTest() {
-		ComputeKind kind = new ComputeKind();
-		System.out.println(kind.toString());
-	}
-	
-	@Test
-	public void catalogKindTest() {
-		ServiceCatalogMixin kind = new ServiceCatalogMixin();
-		System.out.println(kind.toString());
+	public void registryTest() {
+		// get all registered kinds, mixins, and links
+		Map<String, Class<? extends Category>> classMapping;
+		classMapping = ClassificationRegistry.getInstance().getClassMapping();
+		// get a set of identifying schema and terms
+		Set<String> schemata = classMapping.keySet();
+		for(String schema : schemata) {
+			Class<? extends Category> cls = classMapping.get(schema);
+			try {
+				Category cat = cls.newInstance();
+				Assert.assertNotNull(cat);
+				System.out.println(schema + " is mapped to " + cls.getName() 
+						+ " and have by default: " + cat.toString());
+			} catch (InstantiationException | IllegalAccessException e) {
+				Assert.fail(e.getMessage());
+			}
+		}
 	}
 	
 }

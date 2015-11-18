@@ -36,7 +36,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 public class ResourceClient {
 
 	private final ResourceTypeDocument doc;
-	
+
 	public ResourceClient(ResourceTypeDocument doc) {
 		this.doc = doc;
 	}
@@ -44,13 +44,51 @@ public class ResourceClient {
 	public List<Method> getMethods(Enum type) {
 		Method[] xmlMethods = this.doc.getResourceType().getMethodArray();
 		ArrayList<Method> list = new ArrayList<Method>();
-		for(int i=0; i<xmlMethods.length; i++)
-			if(xmlMethods[i].getType().toString().equals(type.toString()))
+		for (int i = 0; i < xmlMethods.length; i++)
+			if (xmlMethods[i].getType().toString().equals(type.toString()))
 				list.add(xmlMethods[i]);
-		
+
 		return list;
 	}
-	
+
+	public Method getMethod(Enum type, String requestMediaType,
+			String responseMediaType) {
+		boolean requestMatchs = false;
+		boolean responseMatchs = false;
+		// get methods of type
+		List<Method> list = this.getMethods(type);
+		for (Method method : list) {
+			// check request
+			if (method.isSetRequest() && requestMediaType != null) {
+				String mediaType = method.getRequest().getMediaType();
+				if (mediaType.equals(requestMediaType)) {
+					requestMatchs = true;
+				}
+			} else if (!method.isSetRequest() && requestMediaType == null) {
+				requestMatchs = true;
+			}
+			// check response
+			if (method.isSetResponse() && responseMediaType != null) {
+				String mediaType = method.getResponse().getMediaType();
+				if (mediaType.equals(responseMediaType)) {
+					responseMatchs = true;
+				}
+			} else if (!method.isSetRequest() && requestMediaType == null) {
+				responseMatchs = true;
+			}
+			// check matching
+			if (requestMatchs && responseMatchs) {
+				return method;
+			} else {
+				requestMatchs = false;
+				responseMatchs = false;
+			}
+		}
+
+		// return null if no matching method has been found
+		return null;
+	}
+
 	public MethodInvocation buildMethodInvocation(Method method) {
 		ResourceDocument resourceDoc = createBasicResourceDocument();
 		return new MethodInvocation(resourceDoc, method);
@@ -58,29 +96,31 @@ public class ResourceClient {
 
 	protected ResourceDocument createBasicResourceDocument() {
 		ResourceDocument resourceDoc = ResourceDocument.Factory.newInstance();
-		resourceDoc.addNewResource().setPath(this.doc.getResourceType().getPath());
+		resourceDoc.addNewResource().setPath(
+				this.doc.getResourceType().getPath());
 		return resourceDoc;
 	}
-	
-	public Class<? extends Representation> getRequestRepresentationClass(Method method) {
-		if(method.isSetRequest()) {
+
+	public Class<? extends Representation> getRequestRepresentationClass(
+			Method method) {
+		if (method.isSetRequest()) {
 			String mediaType = method.getRequest().getMediaType();
-			if(mediaType.equals(PlainText.MEDIA_TYPE)) {
+			if (mediaType.equals(PlainText.MEDIA_TYPE)) {
 				return PlainText.class;
-			} else if(mediaType.equals(UriText.MEDIA_TYPE)) {
+			} else if (mediaType.equals(UriText.MEDIA_TYPE)) {
 				return UriText.class;
-			} else if(mediaType.equals(UriListText.MEDIA_TYPE)) {
+			} else if (mediaType.equals(UriListText.MEDIA_TYPE)) {
 				return UriListText.class;
 			}
 		}
 		return null;
 	}
-	
+
 	public Representation getRequestRepresentation(Method method) {
 		Class<? extends Representation> repClass = getRequestRepresentationClass(method);
 		Representation rep = null;
 		try {
-			if(repClass != null)
+			if (repClass != null)
 				rep = repClass.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
@@ -88,12 +128,12 @@ public class ResourceClient {
 		}
 		return rep;
 	}
-	
+
 	public List<Representation> getRequestTemplates(Method method) {
 		List<Representation> templates = new ArrayList<Representation>();
-		if(method.isSetRequest()) {
+		if (method.isSetRequest()) {
 			String[] tmpl = method.getRequest().getTemplateArray();
-			for(int i=0; i<tmpl.length; i++) {
+			for (int i = 0; i < tmpl.length; i++) {
 				Representation rep = getRequestRepresentation(method);
 				rep.readRepresentation(tmpl[i]);
 				templates.add(rep);
@@ -101,5 +141,5 @@ public class ResourceClient {
 		}
 		return templates;
 	}
-	
+
 }

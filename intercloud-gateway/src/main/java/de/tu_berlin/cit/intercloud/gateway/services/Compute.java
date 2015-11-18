@@ -56,7 +56,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 
 /**
- * TODO
+ * Open Stack implementation for compute instances.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */

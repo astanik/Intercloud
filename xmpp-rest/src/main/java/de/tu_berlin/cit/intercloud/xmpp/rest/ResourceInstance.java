@@ -17,6 +17,7 @@
 package de.tu_berlin.cit.intercloud.xmpp.rest;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,6 +56,17 @@ public abstract class ResourceInstance {
 
 	private void setPath(String newPath) {
 		this.path = newPath;
+		// update sub resources
+		Enumeration<String> subPathes = this.resourceMap.keys();
+		while(subPathes.hasMoreElements()) {
+			String subPath = subPathes.nextElement();
+			ResourceInstance instance = resourceMap.get(subPath);
+			// set absolute path in resource
+			String absolutePath = this.path + subPath;
+			instance.setPath(absolutePath);
+			logger.info("Updated the path of ResourceInstance with path=" + subPath
+					+ " and absolute path=" + absolutePath);
+		}
 	}
 	
 	/**
@@ -133,7 +145,7 @@ public abstract class ResourceInstance {
 	}
 	
 	public ResourceInstance getResource(String resPath) {
-//		logger.info("Lookup ResourceInstance for path=" + resPath);
+		logger.info("Lookup ResourceInstance for path=" + resPath);
 		String myPath = "";
 		// find my resource path
 		String[] elements = resPath.split("/");
@@ -142,10 +154,10 @@ public abstract class ResourceInstance {
 		else
 			myPath = "/" + elements[1];
 
-//		logger.info("myPath=" + myPath + "  and elements.length=" + elements.length);
+		logger.info("myPath=" + myPath + "  and elements.length=" + elements.length);
 		// check if this resource map contains the requested resource
 		if(elements.length == 2) {
-//			logger.info("Lookup ResourceInstance in my resource map with path=" + myPath);
+			logger.info("Lookup ResourceInstance in my resource map with path=" + myPath);
 			return this.resourceMap.get(myPath);
 		}
 		
