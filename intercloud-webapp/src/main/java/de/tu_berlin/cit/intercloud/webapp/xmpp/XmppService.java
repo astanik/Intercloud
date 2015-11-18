@@ -28,10 +28,10 @@ import java.util.concurrent.ConcurrentMap;
 
 public class XmppService {
     private final static Logger logger = LoggerFactory.getLogger(XmppService.class);
-    // map holding xmpp connections of connected jabber ids
-    private final static ConcurrentMap<String, AbstractXMPPConnection> connectionMap = new ConcurrentHashMap<>();
+    private final static XmppService instance = new XmppService();
 
-    private static XmppService instance;
+    // map holding xmpp connections of connected jabber ids
+    private final ConcurrentMap<String, AbstractXMPPConnection> connectionMap = new ConcurrentHashMap<>();
 
     private XmppService() {
         // add xmpp rest provider
@@ -40,9 +40,6 @@ public class XmppService {
     }
 
     public static XmppService getInstance() {
-        if (null == instance) {
-            instance = new XmppService();
-        }
         return instance;
     }
 
@@ -51,7 +48,6 @@ public class XmppService {
         if (null != connection && !connection.isConnected()) {
             // reconnect if ran into timeout
             connection.connect();
-            connection.login();
         }
         return connection;
     }
