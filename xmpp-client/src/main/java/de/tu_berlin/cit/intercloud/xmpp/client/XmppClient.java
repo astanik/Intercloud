@@ -19,6 +19,8 @@ package de.tu_berlin.cit.intercloud.xmpp.client;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
+import de.tu_berlin.cit.intercloud.util.exceptions.ConfigurationException;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
@@ -41,25 +43,23 @@ import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQProvider;
  */
 public class XmppClient {
 
-	private static String hostURL = "cit-mac1.cit.tu-berlin.de";
-
-	private static String baseURL = "intercloud.cit.tu-berlin.de";
+	private static ClientConfig clientConfig = ClientConfig.getInstance();
 
 	/**
      * Main
      *
      */
-	public static void main(String [] args) {
+	public static void main(String [] args) throws ConfigurationException {
 		// Create a connection configuration
 		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-				  .setUsernameAndPassword("alex", "alex")
-				  .setServiceName(baseURL)
-				  .setHost(hostURL)
-				  .setPort(5222)
+				  .setUsernameAndPassword(clientConfig.getUsername(), clientConfig.getPassword())
+				  .setServiceName(clientConfig.getServiceName())
+				  .setHost(clientConfig.getHost())
+				  .setPort(clientConfig.getPort())
 				  .setSecurityMode(SecurityMode.disabled)
 				  .build();
 
-		System.out.println("Server Domain: " + baseURL);
+		System.out.println("Server Domain: " + clientConfig.getServiceName());
 
 		// Create a connection to the xmpp server.
 		AbstractXMPPConnection connection = new XMPPTCPConnection(config);

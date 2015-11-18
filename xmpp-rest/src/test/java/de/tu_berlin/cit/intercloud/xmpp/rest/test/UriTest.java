@@ -16,12 +16,11 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.rest.test;
 
-import java.net.URISyntaxException;
-
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import java.net.URISyntaxException;
 
 
 /**
@@ -49,7 +48,11 @@ public class UriTest {
 	    	Assert.assertEquals(gen.toString(), uri.toString());
 	    	gen = new XmppURI(uri.getJID(), uri.getPath());
 	    	Assert.assertEquals(gen.toString(), uri.toString());
-	    	
+
+			Assert.assertEquals("xmpp://exchange.cit.tu-berlin.de/rest#/occi/compute", uri.toString());
+			Assert.assertNull(uri.getNode());
+			Assert.assertEquals("exchange.cit.tu-berlin.de", uri.getDomain());
+			Assert.assertEquals("/rest", uri.getResource());
 		} catch (URISyntaxException e) {
 	        Assert.fail(e.getMessage());
 		}
@@ -70,11 +73,25 @@ public class UriTest {
 	    	
 	    	XmppURI gen = new XmppURI(uri.toString());
 	    	Assert.assertEquals(gen.toString(), uri.toString());
-	    	
+
+			Assert.assertEquals("xmpp://alex@cit.tu-berlin.de/client#/occi/meter", uri.toString());
+			Assert.assertEquals("alex", uri.getNode());
+			Assert.assertEquals("cit.tu-berlin.de", uri.getDomain());
+			Assert.assertEquals("/client", uri.getResource());
 		} catch (URISyntaxException e) {
 	        Assert.fail(e.getMessage());
 		}
 	}
 
+	@Test
+	public void simpleUserJID() throws URISyntaxException {
+		XmppURI uri = new XmppURI("user@cit.tu-berlin.de", "");
 
+		Assert.assertEquals("xmpp://user@cit.tu-berlin.de#", uri.toString());
+		Assert.assertEquals("user", uri.getNode());
+		Assert.assertEquals("cit.tu-berlin.de", uri.getDomain());
+		Assert.assertEquals("", uri.getResource());
+		Assert.assertEquals("", uri.getPath());
+		Assert.assertEquals("user@cit.tu-berlin.de", uri.getJID());
+	}
 }

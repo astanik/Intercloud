@@ -33,7 +33,7 @@ public abstract class DefaultPage extends BasePage {
 
 	// DOCUMENT_ME: description
 	public DefaultPage() {
-		
+		super();
 		// set credentials page as default page
 		setResponsePage(new CredentialsPage());
 	}

@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.webapp.layout;
+package de.tu_berlin.cit.intercloud.webapp.auth;
 
-import org.apache.wicket.markup.html.WebPage;
+import de.tu_berlin.cit.intercloud.webapp.panels.LoginPanel;
 
-/**
- * Page that all web pages of this webapp should inherit from.
- * 
- * @author Alexander Stanik
- * 
- */
-@SuppressWarnings("serial")
-public class BasePage extends WebPage {
+public class LoginPage extends AbstractAuthPage {
 
 	/**
-	 * Default constructor
+	 * Constructor
 	 */
-	public BasePage() {
+	public LoginPage() {
 		super();
-		// do nothing
+
+		// add form
+		add(new LoginPanel("loginPanel"));
 	}
 }

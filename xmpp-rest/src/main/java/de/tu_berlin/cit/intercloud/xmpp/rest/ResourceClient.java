@@ -142,4 +142,8 @@ public class ResourceClient {
 		return templates;
 	}
 
+	public ResourceTypeDocument getResourceTypeDocument() {
+		return doc;
+	}
+
 }

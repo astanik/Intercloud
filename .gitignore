@@ -10,3 +10,5 @@ release.properties
 *.prefs
 .settings/
 cpuMeasurements.txt
+*.iml
+.idea/

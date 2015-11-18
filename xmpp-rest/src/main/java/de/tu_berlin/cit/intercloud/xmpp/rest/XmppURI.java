@@ -56,16 +56,32 @@ public final class XmppURI {
 	public String getPath() {
 		return this.uri.getFragment();
 	}
-	
+
+	public String getNode() {
+		return this.uri.getUserInfo();
+	}
+
+	public String getDomain() {
+		return this.uri.getHost();
+	}
+
+	public String getResource() {
+		return this.uri.getPath();
+	}
+
 	public String getJID() {
-		String jid = "";
-		if(this.uri.getUserInfo() != null)
-			jid = jid + this.uri.getUserInfo() + "@";
-		if(this.uri.getHost() != null)
-			jid = jid + this.uri.getHost();
-		if(this.uri.getPath() != null)
-			jid = jid + this.uri.getPath();
-		return jid;
+		StringBuilder jid = new StringBuilder("");
+		String node = this.getNode();
+		String domain = this.getDomain();
+		String resource = this.getResource();
+
+		if(node != null)
+			jid.append(node).append("@");
+		if(domain != null)
+			jid.append(domain);
+		if(resource != null)
+			jid.append(resource);
+		return jid.toString();
 	}
 	
 	@Override

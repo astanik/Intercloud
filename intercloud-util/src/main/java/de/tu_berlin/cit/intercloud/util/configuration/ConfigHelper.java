@@ -26,12 +26,11 @@ public abstract class ConfigHelper {
 	protected ConfigHelper(String fileName) {
 		logger.info("Reading config...");
 		String homeDir = System.getProperty("user.home");
-		File path = new File(homeDir + File.separatorChar + ".intercloud");
+		File path = new File(homeDir, ".intercloud");
 		if(!path.isDirectory()) {
 			path.mkdir();
 		}
-		File file = new File(path.toString() + File.separatorChar + fileName
-				+ fileExtension);
+		File file = new File(path, fileName + fileExtension);
 		if (!file.isFile()) {
 			createExampleFile(file);
 			throw new RuntimeException(
@@ -51,13 +50,13 @@ public abstract class ConfigHelper {
 			// load a properties file
 			prop.load(input);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("Failed to read configuration. file: {}", file, ex);
 		} finally {
 			if (input != null) {
 				try {
 					input.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Failed to close configuration. file: {}", file, e);
 				}
 			}
 		}
@@ -75,13 +74,13 @@ public abstract class ConfigHelper {
 			prop.store(output, null);
 
 		} catch (IOException io) {
-			io.printStackTrace();
+			logger.error("Failed to create example configuration. file: {}", file, io);
 		} finally {
 			if (output != null) {
 				try {
 					output.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Failed to close example configuration. file: {}", file, e);
 				}
 			}
 

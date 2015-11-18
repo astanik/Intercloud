@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.webapp.auth;
+package de.tu_berlin.cit.intercloud.webapp.model;
 
 
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.util.io.IClusterable;
 
-public interface User extends IClusterable {
+public interface IUser extends IClusterable {
 
 	/**
 	 * sets the Wicket Roles for this user.
@@ -28,27 +28,20 @@ public interface User extends IClusterable {
 	 * @param roles
 	 *            the roles that belong to this user.
 	 */
-	public void setRoles(Roles roles);
+	void setRoles(Roles roles);
 
 	/**
 	 * 
 	 * @return the Wicket roles of this user
 	 */
-	public Roles getRoles();
-
-	/**
-	 * Set the user name.
-	 * 
-	 * @param name The user name.
-	 */
-	public void setUserName(String name);
+	Roles getRoles();
 
 	/**
 	 * Gets the user name.
 	 * 
 	 * @return the user name
 	 */
-	public String getUserName();
+	String getUsername();
 
 
 }
