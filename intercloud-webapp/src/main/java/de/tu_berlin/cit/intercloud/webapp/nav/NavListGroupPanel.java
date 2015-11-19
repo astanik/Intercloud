@@ -1,21 +1,19 @@
 package de.tu_berlin.cit.intercloud.webapp.nav;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.list.ListItem;
 
 public class NavListGroupPanel extends AbstractNavPanel {
     public NavListGroupPanel(String id) {
-        super(id, "navLinks");
+        super(id, "navItems");
     }
 
     @Override
-    public void addNavItem(NavItem navItem) {
-        BookmarkablePageLink<Page> link = navItem.getLink(this.navItems.newChildId());
-        if (navItem.isActive()) {
-            link.add(new AttributeAppender("class", Model.of(" active")));
-        }
-        this.navItems.add(link);
+    protected void populateNavItem(ListItem<NavItem> listItem) {
+        NavItem navItem = listItem.getModelObject();
+        BookmarkablePageLink<Page> link = newNavLink("navLink", navItem);
+        setActive(link, navItem.getPage());
+        listItem.add(link);
     }
 }
