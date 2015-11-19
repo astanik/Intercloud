@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.webapp.pages.DiscoverItemsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
@@ -45,7 +46,7 @@ public class LoginPanel extends Panel {
             this.add(new TextField("username").setRequired(true));
             this.add(new PasswordTextField("password").setRequired(true));
 
-            this.add(new AjaxButton("loginBtn", Model.of("Sign In")) {
+            Button submitBtn = new AjaxButton("loginBtn", Model.of("Sign In")) {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     if (AuthenticatedWebSession.get().signIn(username, password))
@@ -54,7 +55,9 @@ public class LoginPanel extends Panel {
                         target.add(ComponentUtils.displayBlock(alert));
                     }
                 }
-            });
+            };
+            this.add(submitBtn);
+            this.setDefaultButton(submitBtn);
         }
 
     }
