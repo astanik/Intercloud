@@ -39,5 +39,6 @@ public @interface XmppAction {
 	 * The optional documentation for this action.
 	 * @return documentation
 	 */
-	String documentation();
+	String documentation() default "";
+
 }

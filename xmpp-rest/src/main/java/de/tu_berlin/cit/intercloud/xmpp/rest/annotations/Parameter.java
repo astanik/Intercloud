@@ -39,5 +39,5 @@ public @interface Parameter {
 	 * The optional documentation for this parameter.
 	 * @return documentation
 	 */
-	String documentation();
+	String documentation() default "";
 }

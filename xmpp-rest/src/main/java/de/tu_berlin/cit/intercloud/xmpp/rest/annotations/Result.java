@@ -33,5 +33,5 @@ public @interface Result {
 	 * The optional documentation for this action.
 	 * @return documentation
 	 */
-	String documentation();
+	String documentation() default "";
 }

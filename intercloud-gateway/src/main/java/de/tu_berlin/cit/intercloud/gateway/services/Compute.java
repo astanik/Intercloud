@@ -117,7 +117,7 @@ public class Compute extends Collection  implements Closeable {
 		}
 	}
 
-	@XmppMethod(XmppMethod.POST)
+	@XmppMethod(value = XmppMethod.POST, documentation = "This method creates a new virtual machine.")
     @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OpenStackComputeTemplates.class)
     @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
 	public UriText createVM(OpenStackComputeTemplates rep) {

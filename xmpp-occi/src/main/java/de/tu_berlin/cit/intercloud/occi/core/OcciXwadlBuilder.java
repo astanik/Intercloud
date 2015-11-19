@@ -24,6 +24,7 @@ import de.tu_berlin.cit.intercloud.occi.core.incarnation.ClassificationRegistry;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XwadlBuilder;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument.ResourceType;
@@ -60,8 +61,11 @@ public class OcciXwadlBuilder extends XwadlBuilder {
 			// create method entry
 			if(method.isAnnotationPresent(XmppMethod.class))
 				XwadlBuilder.createMethodXWADL(method, resType.addNewMethod());
+			
+			// create action entry
+			if (method.isAnnotationPresent(XmppAction.class))
+				XwadlBuilder.createActionXWADL(method, resType.addNewAction());
 		}
-		// TODO Actions
 		
 		logger.info("Finished building xwadl document: " + xwadl.toString());
 		return xwadl;
