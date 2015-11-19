@@ -47,11 +47,7 @@ public class OcciXwadlBuilder extends XwadlBuilder {
 		resType.setPath(path);
 		logger.info("resource path=" + path);
 		// check summary annotation
-		if (instance.getClass().isAnnotationPresent(Summary.class)) {
-			String summary = instance.getClass().getAnnotation(Summary.class).value();
-			resType.addNewDocumentation().setTitle("Summary");
-			resType.getDocumentation().setStringValue(summary);
-		}
+		resType = checkSummaryAnnotation(instance.getClass(), resType);
 		// add occi classification grammar
 		if(instance instanceof Collection || instance instanceof Resource ||
 				instance instanceof Link) {
@@ -69,6 +65,20 @@ public class OcciXwadlBuilder extends XwadlBuilder {
 		
 		logger.info("Finished building xwadl document: " + xwadl.toString());
 		return xwadl;
+	}
+
+	private static ResourceType checkSummaryAnnotation(Class<? extends Object> resourceClass, ResourceType resType) {
+		if (resourceClass.isAnnotationPresent(Summary.class)) {
+			String summary = resourceClass.getAnnotation(Summary.class).value();
+			resType.addNewDocumentation().setTitle("Summary");
+			resType.getDocumentation().setStringValue(summary);
+		} else {
+			Class<? extends Object> superClass = resourceClass.getSuperclass();
+			if (superClass != null) {
+				resType = checkSummaryAnnotation(superClass, resType);
+			}
+		}
+		return resType;
 	}
 
 }

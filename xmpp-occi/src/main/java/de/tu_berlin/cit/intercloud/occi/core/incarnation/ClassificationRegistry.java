@@ -72,12 +72,35 @@ public final class ClassificationRegistry {
 
 	// }
 
+	/**
+	 * Method to build a list of supported Kind, Mixins, and Links.
+	 * 
+	 * @param instance The instance to analyze
+	 * @return
+	 */
 	public static List<String> buildTypeList(ResourceInstance instance) {
 		logger.info("Start building " + instance.getClass().getSimpleName()
 				+ " type list ...");
 		ArrayList<String> list = new ArrayList<String>();
-		if (instance.getClass().isAnnotationPresent(Classification.class)) {
-			Classification classification = instance.getClass().getAnnotation(
+		list = buildTypeList(instance.getClass(), list);
+
+		logger.info("Type list has been build: ");
+		logger.info(list.toString());
+		return list;
+	}
+
+	/**
+	 * Recursive method to build a list of supported Kind, Mixins, and Links.
+	 * This method selects the classification annotation of the sub class and
+	 * allows thus to override classification annotations of super classes.
+	 * 
+	 * @param resourceClass
+	 * @param list
+	 * @return
+	 */
+	private static ArrayList<String> buildTypeList(Class<? extends Object> resourceClass, ArrayList<String> list) {
+		if (resourceClass.isAnnotationPresent(Classification.class)) {
+			Classification classification = resourceClass.getAnnotation(
 					Classification.class);
 			// add kind
 			ClassificationType kind = getKindClassificationType(classification);
@@ -94,13 +117,23 @@ public final class ClassificationRegistry {
 			for(int i=0; i<links.size(); i++) {
 				list.add(links.get(i).getCategory());
 			}
+		} else {
+			Class<? extends Object> superClass = resourceClass.getSuperclass();
+			if (superClass != null) {
+				list = buildTypeList(superClass, list);
+			}
 		}
-
-		logger.info("Type list has been build: ");
-		logger.info(list.toString());
 		return list;
 	}
 
+	/**
+	 * Method to build a classification document 
+	 * of supported Kind, Mixins, and Links according to
+	 * the OCCI classification schema.
+	 * 
+	 * @param instance The instance to analyze
+	 * @return
+	 */
 	public static ClassificationDocument buildClassification(ResourceInstance instance) {
 		logger.info("Start building " + instance.getClass().getSimpleName()
 				+ " classification ...");
@@ -108,16 +141,38 @@ public final class ClassificationRegistry {
 				.newInstance();
 
 		doc.addNewClassification();
-		if (instance.getClass().isAnnotationPresent(Classification.class)) {
-			Classification classification = instance.getClass().getAnnotation(
+		doc = buildClassification(instance.getClass(), doc);
+
+		logger.info("Classification document has been build: ");
+		logger.info(doc.toString());
+		return doc;
+	}
+
+	/**
+	 * Recursive method to build a classification document 
+	 * of supported Kind, Mixins, and Links according to
+	 * the OCCI classification schema.
+	 * This method selects the classification annotation of the sub class and
+	 * allows thus to override classification annotations of super classes.
+	 * 
+	 * @param resourceClass
+	 * @param doc
+	 * @return
+	 */
+	private static ClassificationDocument buildClassification(Class<? extends Object> resourceClass,
+			ClassificationDocument doc) {
+		if (resourceClass.isAnnotationPresent(Classification.class)) {
+			Classification classification = resourceClass.getAnnotation(
 					Classification.class);
 			appendKindClassification(doc, classification);
 			appendMixinClassification(doc, classification);
 			appendLinkClassification(doc, classification);
+		} else {
+			Class<? extends Object> superClass = resourceClass.getSuperclass();
+			if (superClass != null) {
+				doc = buildClassification(superClass, doc);
+			}
 		}
-
-		logger.info("Classification document has been build: ");
-		logger.info(doc.toString());
 		return doc;
 	}
 
