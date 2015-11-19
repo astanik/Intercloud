@@ -26,7 +26,7 @@ public class Category {
 
 	public final static String CategorySchema = "http://schema.ogf.org/occi/core#";
 
-	private final String title;
+	private String title;
 
 	public Category() {
 		this("OCCI Core Model");
@@ -65,6 +65,10 @@ public class Category {
 			return this.title;
 		else
 			return "";
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String toTextPlain() {

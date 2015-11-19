@@ -62,6 +62,16 @@ public class OcciXml extends Representation {
 		return this.catDoc.getCategory().getMixinArray();
 	}
 
+	public CategoryType getMixin(String schema, String term) {
+		CategoryType[] mixins = this.getMixins();
+		for(int i=0; i < mixins.length; i++) {
+			if(schema.equals(mixins[i].getSchema()) && 
+					term.equals(mixins[i].getTerm()))
+				return mixins[i];
+		}
+		return null;
+	}
+
 	public LinkType[] getLinks() {
 		return this.catDoc.getCategory().getLinkArray();
 	}

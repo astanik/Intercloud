@@ -31,9 +31,26 @@ public class Resource extends CollectionResourceInstance {
 
 	protected final OcciXml representation;
 
+	/**
+	 * If this parameter is true, the representation for this resource is 
+	 * created on the fly by the createRepresentation method.
+	 */
+	private final boolean onTheFlyRepresentation;
+
+	public Resource() {
+		super();
+		// set representation creation mode
+		this.onTheFlyRepresentation = true;
+		this.representation = new OcciXml();
+	}
+	
 	public Resource(OcciXml occiRepresentation) {
 		super();
+		// set representation creation mode
+		this.onTheFlyRepresentation = false;
+		// set representation
 		this.representation = occiRepresentation;
+		// check for links
 		LinkType[] links = this.representation.getLinks();
 		for(int i = 0; i < links.length; i++) {
 			createLink(links[i]);
@@ -44,13 +61,27 @@ public class Resource extends CollectionResourceInstance {
 	@XmppMethod(XmppMethod.GET)
 	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
 	public OcciXml getRepresentation() {
-		OcciXml newRep = this.representation.getCopy();
+		OcciXml newRep;
+		if(this.onTheFlyRepresentation)
+			newRep = this.createRepresentation();
+		else
+			newRep = this.representation.getCopy();
+		
+		// add link representation to resource representation
 		for(ResourceInstance potLink : this.getResources()) {
 			if(potLink instanceof Link) {
 				newRep.addLink(((Link) potLink).getLinkTypeRepresentation());
 			}
 		}
 		return newRep;
+	}
+	
+	/**
+	 * Override this method in order to provide a representation on the fly.
+	 * @return
+	 */
+	public OcciXml createRepresentation() {
+		return this.representation;
 	}
 	
 	@XmppMethod(XmppMethod.DELETE)

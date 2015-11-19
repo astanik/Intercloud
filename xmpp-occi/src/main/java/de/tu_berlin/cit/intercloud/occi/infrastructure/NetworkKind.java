@@ -55,7 +55,7 @@ public class NetworkKind extends Category {
 	/**
 	 * Tag based VLANs (e.g. external-dmz).
 	 */
-	@Attribute(name = "cci.network.label",
+	@Attribute(name = "occi.network.label",
 			type = AttributeType.STRING,
 			mutable = true,
 			required = false,

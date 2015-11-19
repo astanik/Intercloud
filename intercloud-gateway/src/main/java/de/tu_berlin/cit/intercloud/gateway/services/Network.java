@@ -15,18 +15,35 @@
  */
 package de.tu_berlin.cit.intercloud.gateway.services;
 
+import java.util.Set;
+
+import org.jclouds.ContextBuilder;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
+import org.jclouds.openstack.neutron.v2.NeutronApi;
+import org.jclouds.openstack.neutron.v2.features.NetworkApi;
+import org.jclouds.openstack.nova.v2_0.NovaApi;
+import org.jclouds.openstack.nova.v2_0.domain.Server;
+import org.jclouds.openstack.nova.v2_0.features.FlavorApi;
+import org.jclouds.openstack.nova.v2_0.features.ImageApi;
+import org.jclouds.openstack.nova.v2_0.features.ServerApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
+
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkingMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkKind;
+import de.tu_berlin.cit.intercloud.util.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 /**
- * TODO
+ * Open Stack implementation for network instances.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
- * @author Daniel Thilo Schroeder <daniel.schroeder@mailbox.tu-berlin.de>
  */
 @Path("/network")
 @Summary("This resource allows for manage network instances.")
@@ -34,8 +51,54 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 				mixins = {IpNetworkingMixin.class})
 public class Network extends Collection{
 	
+	private final static Logger logger = LoggerFactory.getLogger(Network.class);
+	private final NeutronApi neutronApi;
+	private final Set<String> regions;
+	private String defaultZone = null;
+
 	public Network() {
 		super();
+		logger.info("Initializing network collection ...");
+		OpenStackConfig openStackConf = OpenStackConfig.getInstance();
+		Iterable<Module> modules = ImmutableSet
+				.<Module> of(new SLF4JLoggingModule());
+
+		String provider = "openstack-neutron";
+		String identity = openStackConf.getTenantName() + ":"
+				+ openStackConf.getUserName();
+		String credential = openStackConf.getPassword();
+
+		neutronApi = ContextBuilder.newBuilder(provider)
+				.endpoint(openStackConf.getEndpoint())
+				.credentials(identity, credential).modules(modules)
+				.buildApi(NeutronApi.class);
+
+		regions = neutronApi.getConfiguredRegions();
+		
+		if (defaultZone == null) {
+			defaultZone = regions.iterator().next();
+		}
+
+		checkExistingInstances();
+
+		logger.info("Initialized network collection successfully");
+	}
+
+	private void checkExistingInstances() {
+		for (String region : regions) {
+			NetworkApi networkApi = neutronApi.getNetworkApi(region);
+//			FlavorApi flavorApi = novaApi.getFlavorApi(region);
+//			ImageApi imageApi = novaApi.getImageApi(region);
+			logger.info("Checking for networks in " + region);
+			for (org.jclouds.openstack.neutron.v2.domain.Network network : networkApi.list().concat()) {
+				logger.info("Found network: " + network.getName());
+				
+				// create a network resource
+				NetworkInstance net = new NetworkInstance(networkApi, network);
+				String path = this.addResource(net, network.getName());
+				logger.info("New network resource is created at: " + path);
+			}
+		}
 	}
 
 }

@@ -9,7 +9,6 @@ release.properties
 *.project
 *.prefs
 .settings/
-
-# IntelliJ
+cpuMeasurements.txt
 *.iml
 .idea/
