@@ -1,9 +1,11 @@
 package de.tu_berlin.cit.intercloud.webapp.template;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapExternalLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.GlyphIconType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
+import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarExternalLink;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.pages.LoginPage;
 import de.tu_berlin.cit.intercloud.webapp.pages.WelcomePage;
@@ -26,7 +28,15 @@ public abstract class Template extends WebPage {
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT,
                 new NavbarButton(LoginPage.class, Model.of()).setIconType(GlyphIconType.login)));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                new NavbarButton(WelcomePage.class, Model.of("Welcome")).setIconType(GlyphIconType.home)));
+                new NavbarButton(WelcomePage.class, Model.of("Welcome")).setIconType(GlyphIconType.home),
+        		new NavbarExternalLink(Model.of("http://citlab.github.io/Intercloud/"))
+                .setLabel(Model.of("Documentation"))
+                .setTarget(BootstrapExternalLink.Target.blank)
+                .setIconType(GlyphIconType.paperclip),
+                new NavbarExternalLink(Model.of("https://github.com/citlab/Intercloud"))
+                .setLabel(Model.of("Github"))
+                .setTarget(BootstrapExternalLink.Target.blank)
+                .setIconType(GlyphIconType.export)));
 
         return navbar;
     }
