@@ -24,7 +24,7 @@ public abstract class Template extends WebPage {
 
     private Navbar navbar(String markupId) {
         Navbar navbar = new Navbar(markupId);
-        navbar.setBrandImage(new ContextRelativeResourceReference("images/intercloud-logo-small.png"), Model.of());
+        navbar.setBrandImage(new ContextRelativeResourceReference("images/intercloud-logo-small.png", false), Model.of());
 
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT,
                 new NavbarButton(LoginPage.class, Model.of()).setIconType(GlyphIconType.login)));
