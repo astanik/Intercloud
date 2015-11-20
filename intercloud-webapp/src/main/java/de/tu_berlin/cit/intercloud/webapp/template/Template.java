@@ -11,6 +11,7 @@ import de.tu_berlin.cit.intercloud.webapp.pages.LoginPage;
 import de.tu_berlin.cit.intercloud.webapp.pages.WelcomePage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.ContextRelativeResourceReference;
 
 public abstract class Template extends WebPage {
     public static String NAVBAR_ID = "navbar";
@@ -23,7 +24,7 @@ public abstract class Template extends WebPage {
 
     private Navbar navbar(String markupId) {
         Navbar navbar = new Navbar(markupId);
-        navbar.setBrandName(Model.of("Intercloud"));
+        navbar.setBrandImage(new ContextRelativeResourceReference("images/intercloud-logo-small.png"), Model.of());
 
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT,
                 new NavbarButton(LoginPage.class, Model.of()).setIconType(GlyphIconType.login)));

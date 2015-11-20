@@ -6,7 +6,9 @@
 <wicket:panel>
 
     <div class="list-group">
-        <a href="#" class="list-group-item" wicket:id="navLinks">[nav_links]</a>
+        <wicket:container wicket:id="navItems">
+            <a href="#" class="list-group-item" wicket:id="navLink">[nav_link]</a>
+        </wicket:container>
     </div>
 
 </wicket:panel>

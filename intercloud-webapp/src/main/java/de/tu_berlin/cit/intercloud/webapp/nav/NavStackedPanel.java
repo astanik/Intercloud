@@ -1,8 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.nav;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.list.ListItem;
 
 public class NavStackedPanel extends AbstractNavPanel {
     public NavStackedPanel(String id) {
@@ -10,12 +8,9 @@ public class NavStackedPanel extends AbstractNavPanel {
     }
 
     @Override
-    public void addNavItem(NavItem navItem) {
-        WebMarkupContainer itemContainer = new WebMarkupContainer(this.navItems.newChildId());
-        itemContainer.add(navItem.getLink("navLink"));
-        if (navItem.isActive()) {
-            itemContainer.add(new AttributeModifier("class", Model.of("active")));
-        }
-        this.navItems.add(itemContainer);
+    protected void populateNavItem(ListItem<NavItem> listItem) {
+        NavItem navItem = listItem.getModelObject();
+        listItem.add(newNavLink("navLink", navItem));
+        setActive(listItem, navItem.getPage());
     }
 }
