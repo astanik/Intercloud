@@ -21,8 +21,6 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackApi;
-
 
 /**
  * TODO
