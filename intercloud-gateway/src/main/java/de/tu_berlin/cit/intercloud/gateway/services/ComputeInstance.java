@@ -144,16 +144,15 @@ public class ComputeInstance extends Resource {
 			doc = RepresentationBuilder.appendMixin(doc, computeMixin);
 			doc = RepresentationBuilder.appendMixin(doc, imageMixin);
 			
+			// create representation
+			rep = new OcciXml(doc);
+
 			// add link representation to resource representation
 			for(ResourceInstance potLink : this.getResources()) {
 				if(potLink instanceof Link) {
-//					List<Category>
-	//				newRep.addLink(((Link) potLink).getLinkTypeRepresentation());
+					rep.addLink(((Link) potLink).getLinkTypeRepresentation());
 				}
 			}
-
-			// create representation
-			rep = new OcciXml(doc);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -163,7 +162,7 @@ public class ComputeInstance extends Resource {
 	}
 
 	@Override
-	@XmppMethod(XmppMethod.DELETE)
+	@XmppMethod(value = XmppMethod.DELETE, documentation = "Terminate and delete this virtual machine")
 	public void deleteResource() {
 		logger.info("Deleting VM " + server.getName() + " ...");
 		serverApi.delete(server.getId());

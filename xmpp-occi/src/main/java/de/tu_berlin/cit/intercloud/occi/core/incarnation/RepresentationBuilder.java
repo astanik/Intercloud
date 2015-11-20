@@ -8,10 +8,13 @@ import org.apache.xmlbeans.GDuration;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Link;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.LinkCategory;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 
 /**
  * TODO
@@ -282,6 +285,35 @@ public class RepresentationBuilder {
 				}
 			}
 		}
+		return rep;
+	}
+
+	public static LinkType buildLinkRepresentation(LinkCategory link) throws IllegalArgumentException, IllegalAccessException {
+		LinkType rep;
+		if (link.getClass().isAnnotationPresent(Link.class)) {
+			rep = LinkType.Factory.newInstance();
+			rep.setTarget(link.getTarget());
+		} else {
+			throw new RuntimeException(
+					"the class instance is not a link");
+		}
+
+		setClassification(rep, link);
+		setAttributes(rep, link);
+		return rep;
+	}
+
+	public static LinkType appendLinkMixin(LinkType rep, Category mixin) throws IllegalArgumentException, IllegalAccessException {
+		CategoryType categoryXml = null;
+		if (mixin.getClass().isAnnotationPresent(Mixin.class)) {
+			categoryXml = rep.addNewMixin();
+		} else {
+			throw new RuntimeException("the class instance is not a mixin");
+		}
+
+		setClassification(categoryXml, mixin);
+		setAttributes(categoryXml, mixin);
+
 		return rep;
 	}
 
