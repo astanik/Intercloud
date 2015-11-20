@@ -36,6 +36,10 @@ public class Link extends ResourceInstance {
 		this.linkRepresentation = linkRepresentation;
 	}
 	
+	public Link() {
+		this(LinkType.Factory.newInstance());
+	}
+
 	@XmppMethod(XmppMethod.GET)
 	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
 	public OcciXml getRepresentation() {

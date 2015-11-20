@@ -58,7 +58,7 @@ public class Resource extends CollectionResourceInstance {
 		this.representation.removeLinks();
 	}
 	
-	@XmppMethod(XmppMethod.GET)
+	@XmppMethod(value = XmppMethod.GET, documentation = "This method returns the representation of this resouce.")
 	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
 	public OcciXml getRepresentation() {
 		OcciXml newRep;

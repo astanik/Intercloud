@@ -34,7 +34,7 @@ public class CollectionResourceInstance extends ResourceInstance {
 		super();
 	}
 
-	@XmppMethod(XmppMethod.GET)
+	@XmppMethod(value = XmppMethod.GET, documentation = "This method returns a list of all sub resources.")
 	@Produces(value = UriListText.MEDIA_TYPE, serializer = UriListText.class)
 	public UriListText getSubResources() {
 		UriListText uriList = new UriListText();

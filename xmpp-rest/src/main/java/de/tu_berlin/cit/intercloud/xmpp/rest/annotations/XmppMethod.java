@@ -50,4 +50,10 @@ public @interface XmppMethod {
      */
     String value();
 
+	/**
+	 * The optional documentation for this method.
+	 * @return documentation
+	 */
+	String documentation() default "";
+
 }

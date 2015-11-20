@@ -17,6 +17,7 @@
 package de.tu_berlin.cit.intercloud.gateway.services;
 
 import org.jclouds.openstack.neutron.v2.features.NetworkApi;
+import org.jclouds.openstack.nova.v2_0.domain.Address;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 import org.jclouds.openstack.nova.v2_0.domain.Image;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
@@ -61,6 +62,7 @@ public class NetworkInstance extends Resource{
 		this.network = network;
 	}
 	
+
 	@Override
 	public OcciXml createRepresentation() {
 		OcciXml rep = new OcciXml();

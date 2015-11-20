@@ -19,20 +19,21 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.jclouds.openstack.nova.v2_0.domain.Address;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 import org.jclouds.openstack.nova.v2_0.domain.Image;
+import org.jclouds.openstack.nova.v2_0.domain.RebootType;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApi;
 import org.jclouds.openstack.nova.v2_0.features.ImageApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
-
-import com.google.common.collect.Multimap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackComputeMixin;
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackImageMixin;
+import de.tu_berlin.cit.intercloud.occi.core.Link;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
@@ -43,10 +44,12 @@ import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageLink;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Parameter;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Result;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
 
 /**
  * Open Stack implementation for compute instances.
@@ -55,14 +58,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
  */
 @PathID
 @Summary("This resource allows for manage a particular virtual machine.")
-@Classification(kind = ComputeKind.class, mixins = {
-		OpenStackComputeMixin.class, OpenStackImageMixin.class,
-		IpNetworkInterfaceMixin.class }, links = { StorageLink.class,
-		NetworkInterfaceLink.class })
+@Classification(kind = ComputeKind.class, mixins = { OpenStackComputeMixin.class, OpenStackImageMixin.class,
+		IpNetworkInterfaceMixin.class }, links = { StorageLink.class, NetworkInterfaceLink.class })
 public class ComputeInstance extends Resource {
 
-	// private static UUID TemplateID =
-	// UUID.fromString("f509099b-0da9-4f96-8fe6-7b20f6614381");
+	private final static Logger logger = LoggerFactory.getLogger(ComputeInstance.class);
 
 	private final ServerApi serverApi;
 
@@ -76,20 +76,31 @@ public class ComputeInstance extends Resource {
 	 * public ComputeInstance(OcciXml rep) { super(rep); }
 	 */
 
-	public ComputeInstance(ServerApi serverApi, FlavorApi flavorApi,
-			ImageApi imageApi, Server server) {
+	public ComputeInstance(ServerApi serverApi, FlavorApi flavorApi, ImageApi imageApi, Server server) {
 		super();
+		logger.info("Initializing compute instance " + server.getName() + " ...");
 		this.serverApi = serverApi;
 		this.flavorApi = flavorApi;
 		this.imageApi = imageApi;
 		this.server = server;
+		
+		checkExistingLinks();
+		logger.info("Initialized compute instance " + server.getName() + " successfully");
+	}
+
+	private void checkExistingLinks() {
 		Map<String, Collection<Address>> networks = this.server.getAddresses().asMap();
 		Set<String> netIDs = networks.keySet();
-		for(String net : netIDs) {
-			System.out.println("Networks: " + net);
+		logger.info("Checking for network interfaces of " + server.getName());
+		for (String net : netIDs) {
+			logger.info("Found network: " + net);
 			Collection<Address> addresses = networks.get(net);
-			for(Address add : addresses) {
-				System.out.println("Addresses: " + add.toString());
+			for (Address add : addresses) {
+				logger.info("Found network interface: " + add.toString());
+				// create a network interface link
+				NetworkInterface eth = new NetworkInterface(add);
+				String path = this.addResource(eth);
+				logger.info("New network interface link is created at: " + path);
 			}
 		}
 	}
@@ -132,6 +143,15 @@ public class ComputeInstance extends Resource {
 			doc = RepresentationBuilder.buildRepresentation(kind);
 			doc = RepresentationBuilder.appendMixin(doc, computeMixin);
 			doc = RepresentationBuilder.appendMixin(doc, imageMixin);
+			
+			// add link representation to resource representation
+			for(ResourceInstance potLink : this.getResources()) {
+				if(potLink instanceof Link) {
+//					List<Category>
+	//				newRep.addLink(((Link) potLink).getLinkTypeRepresentation());
+				}
+			}
+
 			// create representation
 			rep = new OcciXml(doc);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -142,20 +162,44 @@ public class ComputeInstance extends Resource {
 		return rep;
 	}
 
-	// @Action("start")
-	// @Result()
-	public Boolean start(String message) {
-		// starting vm
-		System.out.println("Stating vm with message: " + message);
+	@Override
+	@XmppMethod(XmppMethod.DELETE)
+	public void deleteResource() {
+		logger.info("Deleting VM " + server.getName() + " ...");
+		serverApi.delete(server.getId());
+		super.deleteResource();
+		logger.info("VM " + server.getName() + " has been deleted");
+	}
+
+	@XmppAction(value = "start", documentation = "Start this virtual machine")
+	@Result(documentation = "Returns true if the vm has been started successfully")
+	public Boolean start() {
+		// start the vm
+		logger.info("Starting VM " + server.getName() + " ...");
+		serverApi.start(server.getId());
+		logger.info("VM " + server.getName() + " has been started");
 		return true;
 	}
 
 	@XmppAction(value = "stop", documentation = "Stop this virtual machine")
 	@Result(documentation = "Returns true if the vm has been stopped successfully")
-	public Boolean stop(
-			@Parameter(value = "method", documentation = "The method used for stopping this vm") String method) {
-		// stop the vm after "delay" seconds
-		System.out.println("Stopping vm with method: " + method);
+	public Boolean stop() {
+		// stop the vm
+		logger.info("Stopping VM " + server.getName() + " ...");
+		serverApi.stop(server.getId());
+		logger.info("VM " + server.getName() + " has been stopped");
+		return true;
+	}
+
+	@XmppAction(value = "reboot", documentation = "Reboot this virtual machine")
+	@Result(documentation = "Returns true if the vm has been rebooted successfully")
+	public Boolean reboot(
+			@Parameter(value = "rebootType", documentation = "The type (HARD or SOFT) used for rebooting this vm") String type) {
+		// reboot the vm
+		logger.info("Rebooting (" + RebootType.HARD + "," + RebootType.SOFT + 
+				") VM " + server.getName() + " ..." + type);
+		serverApi.reboot(server.getId(), RebootType.valueOf(type));
+		logger.info("VM " + server.getName() + " has been rebooted");
 		return true;
 	}
 

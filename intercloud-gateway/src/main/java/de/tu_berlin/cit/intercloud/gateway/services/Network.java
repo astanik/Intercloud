@@ -100,5 +100,36 @@ public class Network extends Collection{
 			}
 		}
 	}
+	
+	/*
+	 * String nw = client.createNetwork("jcnetwork");
+	 * client.createSubnet(nw, "192.168.199.0/24");
+	 * client.createRouter("jcloudRouter");
+	 * 
+	 * 
+		public String createNetwork(String name) {
+			NetworkApi networkApi = neutronApi.getNetworkApiForZone(defaultZone);
+			CreateNetworkOptions createNetworkOptions = CreateNetworkOptions
+					.builder().name(name).build();
+			Network network = networkApi.create(createNetworkOptions);
+			return network.getId();
+		}
+
+		public String createSubnet(String network, String cidr) {
+			SubnetApi subnetApi = neutronApi.getSubnetApiForZone(defaultZone);
+			Subnet subnet = subnetApi.create(network, 4, cidr);
+			return subnet.getId();
+		}
+
+		public String createRouter(String name) {
+			RouterApi routerApi = neutronApi.getRouterExtensionForZone(defaultZone)
+					.get();
+			CreateRouterOptions options = CreateRouterOptions.builder().name(name)
+					.adminStateUp(true).build();
+			Router router = routerApi.create(options);
+			return router.getId();
+		}
+	*/
+
 
 }

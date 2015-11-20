@@ -19,20 +19,30 @@ package de.tu_berlin.cit.intercloud.gateway.services;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
+import org.jclouds.openstack.nova.v2_0.domain.Flavor;
+import org.jclouds.openstack.nova.v2_0.domain.Image;
+import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
+import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
+import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
+import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 import org.jclouds.openstack.nova.v2_0.features.FlavorApi;
 import org.jclouds.openstack.nova.v2_0.features.ImageApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
+import org.jclouds.openstack.v2_0.domain.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.inject.Module;
@@ -117,7 +127,7 @@ public class Compute extends Collection  implements Closeable {
 		}
 	}
 
-	@XmppMethod(XmppMethod.POST)
+	@XmppMethod(value = XmppMethod.POST, documentation = "This method creates a new virtual machine.")
     @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OpenStackComputeTemplates.class)
     @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
 	public UriText createVM(OpenStackComputeTemplates rep) {
@@ -158,7 +168,8 @@ public class Compute extends Collection  implements Closeable {
 			return new UriText(); 
 		}
 	}
-	
+
+/*
 	private String launchVM(String name, String image, String flavor,
 			String keypair, String network, Iterable<String> secGroup,
 			String userData) {
@@ -169,6 +180,122 @@ public class Compute extends Collection  implements Closeable {
 		ServerCreated ser = serverApi.create(name, image,
 				flavor, options);
 		return ser.getId();
+	}
+*/
+	public void listServers() {
+		for (String region : regions) {
+			ServerApi serverApi = novaApi.getServerApi(region);
+
+			logger.info("Servers in " + region);
+
+			for (Server server : serverApi.listInDetail().concat()) {
+				logger.info("  " + server);
+			}
+		}
+	}
+
+	public void listFlavors() {
+		for (String region : regions) {
+			FlavorApi flavorApi = novaApi.getFlavorApi(region);
+
+			logger.info("Flavors in " + region);
+
+			for (Flavor server : flavorApi.listInDetail().concat()) {
+				logger.info("  " + server);
+			}
+		}
+	}
+
+	public void listImages() {
+		for (String region : regions) {
+			ImageApi api = novaApi.getImageApi(region);
+
+			logger.info("Images in " + region);
+
+			for (Image server : api.listInDetail().concat()) {
+				logger.info("  " + server);
+			}
+		}
+	}
+
+	public void listKeyPairs() {
+		for (String region : regions) {
+			Optional<KeyPairApi> apiSet = novaApi.getKeyPairApi(region);
+
+			if (!apiSet.isPresent())
+				return;
+
+			KeyPairApi api = apiSet.get();
+
+			logger.info("KeyPairs in " + region);
+
+			FluentIterable<KeyPair> keyPairList = api.list();
+
+			for (int i = 0; i < keyPairList.size(); i++) {
+				KeyPair pair = keyPairList.get(i);
+				logger.info("  " + pair);
+			}
+		}
+	}
+
+
+	public String getServerId(String server) {
+		ServerApi serverApi = this.novaApi.getServerApi(defaultZone);
+		try {
+			Server serverObj = serverApi.get(server);
+			return serverObj.getId();
+		} catch (NullPointerException e) {
+			for (Resource s : serverApi.list().concat()) {
+				if (s.getName().equalsIgnoreCase(server))
+					return s.getId();
+			}
+		}
+		throw new NullPointerException("Server not found");
+	}
+
+	public String getImageId(String image) {
+		ImageApi imageApi = this.novaApi.getImageApi(defaultZone);
+		try {
+			Image imageObj = imageApi.get(image);
+			return imageObj.getId();
+		} catch (NullPointerException e) {
+			for (Resource i : imageApi.list().concat()) {
+				if (i.getName().equalsIgnoreCase(image))
+					return i.getId();
+			}
+		}
+		throw new NullPointerException("Image not found");
+	}
+
+	public String getFlavorId(String flavor) {
+		FlavorApi flavorApi = this.novaApi.getFlavorApi(defaultZone);
+		try {
+			Flavor flavorObj = flavorApi.get(flavor);
+			return flavorObj.getId();
+		} catch (NullPointerException e) {
+			for (Resource f : flavorApi.list().concat()) {
+				if (f.getName().equalsIgnoreCase(flavor))
+					return f.getId();
+			}
+		}
+		throw new NullPointerException("Flavor not found");
+	}
+
+	public String getSecurityGroupId(String sg) {
+		SecurityGroupApi securityGroupApi = novaApi.getSecurityGroupApi(defaultZone).get();
+		try {
+			SecurityGroup securityGroup = securityGroupApi.get(sg);
+			return securityGroup.getId();
+		} catch (Exception e) {
+			Iterator<? extends SecurityGroup> sgList = securityGroupApi.list()
+					.iterator();
+			while (sgList.hasNext()) {
+				SecurityGroup group = sgList.next();
+				if (group.getName().equalsIgnoreCase(sg))
+					return group.getId();
+			}
+		}
+		throw new NullPointerException("Security Group not found");
 	}
 	
 	@Override
@@ -182,4 +309,105 @@ public class Compute extends Collection  implements Closeable {
 		this.close();
 	   super.finalize( );  
 	 }
+	
+/**	main >>
+ * 		client.createKeyPair(keyName, "/home/masco/masco_id_rsa.pub");
+		client.createSecurityGroup("mySecGroup", "this is discription");
+		String nw = client.createNetwork("jcnetwork");
+		client.createSubnet(nw, "192.168.199.0/24");
+		client.createRouter("jcloudRouter");
+		HashSet<String> secGroup = new HashSet<String>();
+		secGroup.add(client.getSecurityGroupId("default"));
+		String s = client.launch_instance("jcinstance", "cirrosbrowse",
+				"s1.cw.small-1", keyName, nw, secGroup, "Simple User Data");
+		String volume = client.createVolume(1, "jcVolume");
+		String floatingIP = client.getOrCreateFloatingIP(); 
+		// sleep for some time so the instance will be
+		// ready so we can attach the ip and volume.
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		client.attachIP(floatingIP, s);
+		client.attachVolume(volume, s);
+		client.rebootServer(s, RebootType.SOFT);
+		client.deleteServer(s);
+
+ * 
+ * 
+	public void createKeyPair(String name, String path) throws IOException {
+		KeyPairApi keypairApi = this.novaApi.getKeyPairExtensionForZone(
+				this.defaultZone).get();
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(path));
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+			line = sb.toString();
+			keypairApi.createWithPublicKey(name, line);
+		} catch (IOException e) {
+			System.out.println("ERROR::Given file path is not valid.");
+		} finally {
+			br.close();
+		}
+	}
+	public String createSecurityGroup(String name, String description) {
+		SecurityGroupApi securityGroupApi = novaApi
+				.getSecurityGroupExtensionForZone(defaultZone).get();
+		SecurityGroup securityGroup = securityGroupApi.createWithDescription(
+				name, description);
+		return securityGroup.getId();
+	}
+
+	public String getOrCreateFloatingIP() {
+		List<FloatingIP> freeIP = new LinkedList<FloatingIP>();
+		FloatingIPApi floatingIPApi = this.novaApi
+				.getFloatingIPExtensionForZone(this.defaultZone).get();
+		Iterator<? extends FloatingIP> floatingIP = floatingIPApi.list()
+				.iterator();
+		while (floatingIP.hasNext()) {
+			FloatingIP ip = floatingIP.next();
+			if (ip.getInstanceId() == null) {
+				freeIP.add(ip);
+			}
+		}
+		if (freeIP.size() > 0) {
+			return freeIP.get(0).getIp();
+		} else {
+			return floatingIPApi.create().getIp();
+		}
+	}
+
+	public void attachIP(String ip, String server) {
+		FloatingIPApi floatingIPApi = this.novaApi
+				.getFloatingIPExtensionForZone(this.defaultZone).get();
+		floatingIPApi.addToServer(ip, this.getServerId(server));
+	}
+
+	public String createVolume(int size, String name) {
+		VolumeApi volumeApi = this.novaApi.getVolumeExtensionForZone(
+				this.defaultZone).get();
+		Volume vol = volumeApi
+				.create(1, CreateVolumeOptions.Builder.name(name));
+		return vol.getId();
+	}
+
+	public void attachVolume(String volume, String server, String device) {
+		if (device == null)
+			device = "";
+		VolumeAttachmentApi volumeAttachmentApi = this.novaApi
+				.getVolumeAttachmentExtensionForZone(this.defaultZone).get();
+		volumeAttachmentApi.attachVolumeToServerAsDevice(
+				this.getVolumeId(volume), this.getServerId(server), device);
+	}
+
+	public void attachVolume(String volume, String server) {
+		this.attachVolume(volume, server, "");
+	}
+*/
+	
 }

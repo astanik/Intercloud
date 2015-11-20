@@ -17,7 +17,6 @@
 package de.tu_berlin.cit.intercloud.xmpp.rest.test;
 
 import java.net.URISyntaxException;
-import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,11 +24,12 @@ import org.junit.Test;
 import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.occi.core.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
-import de.tu_berlin.cit.intercloud.xmpp.rest.MethodInvocation;
+import de.tu_berlin.cit.intercloud.occi.core.OcciMethodInvocation;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
@@ -46,7 +46,7 @@ public class ContainerTest {
 	@Test
 	public void computeTest() {
 	    try {
-			XmppURI uri = new XmppURI("exchange.cit-mac1.cit.tu-berlin.de", "/occi");
+			XmppURI uri = new XmppURI("exchange.cit-mac1.cit.tu-berlin.de", "");
 			OcciContainer container = new OcciContainer(uri);
 			System.out.println("Container base path: " + container.getPath());
 			container.addResource(new Compute());
@@ -61,12 +61,28 @@ public class ContainerTest {
 			OcciClient client = new OcciClient(doc);
 			Method method = client.getMethod(MethodType.GET, null, UriListText.MEDIA_TYPE);
 			if(method != null) {
-				MethodInvocation invocable = client.buildMethodInvocation(method);
+				OcciMethodInvocation invocable = client.buildMethodInvocation(method);
 //				List<Representation> rep = client.getRequestTemplates(method);
 //				for(Representation representation : rep) {
 //					invocable.setRequestRepresentation(representation);
-				container.execute(invocable.getXmlDocument());
-//				}
+				ResourceDocument resp = container.execute(invocable.getXmlDocument());
+				if (resp.getResource().isSetMethod()) {
+					de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument.Method respMethod = resp.getResource().getMethod();
+					if(respMethod.isSetResponse()) {
+						String target = respMethod.getResponse().getRepresentation();
+						target = target.replace(";", "");
+						uri = new XmppURI(target);
+						doc = container.getXWADL(uri.getPath());
+						client = new OcciClient(doc);
+						method = client.getMethod(MethodType.GET, null, OcciXml.MEDIA_TYPE);
+						if(method != null) {
+							invocable = client.buildMethodInvocation(method);
+							resp = container.execute(invocable.getXmlDocument());
+							
+						}
+					}
+						
+				}
 			}
 		} catch (URISyntaxException e) {
 	        Assert.fail(e.getMessage());
