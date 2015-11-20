@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackComputeMixin;
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackImageMixin;
+import de.tu_berlin.cit.intercloud.occi.core.Link;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
@@ -43,6 +44,7 @@ import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageLink;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Parameter;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Result;
@@ -76,17 +78,29 @@ public class ComputeInstance extends Resource {
 
 	public ComputeInstance(ServerApi serverApi, FlavorApi flavorApi, ImageApi imageApi, Server server) {
 		super();
+		logger.info("Initializing compute instance " + server.getName() + " ...");
 		this.serverApi = serverApi;
 		this.flavorApi = flavorApi;
 		this.imageApi = imageApi;
 		this.server = server;
+		
+		checkExistingLinks();
+		logger.info("Initialized compute instance " + server.getName() + " successfully");
+	}
+
+	private void checkExistingLinks() {
 		Map<String, Collection<Address>> networks = this.server.getAddresses().asMap();
 		Set<String> netIDs = networks.keySet();
+		logger.info("Checking for network interfaces of " + server.getName());
 		for (String net : netIDs) {
-			logger.info("Networks: " + net);
+			logger.info("Found network: " + net);
 			Collection<Address> addresses = networks.get(net);
 			for (Address add : addresses) {
-				logger.info("Addresses: " + add.toString());
+				logger.info("Found network interface: " + add.toString());
+				// create a network interface link
+				NetworkInterface eth = new NetworkInterface(add);
+				String path = this.addResource(eth);
+				logger.info("New network interface link is created at: " + path);
 			}
 		}
 	}
@@ -129,6 +143,15 @@ public class ComputeInstance extends Resource {
 			doc = RepresentationBuilder.buildRepresentation(kind);
 			doc = RepresentationBuilder.appendMixin(doc, computeMixin);
 			doc = RepresentationBuilder.appendMixin(doc, imageMixin);
+			
+			// add link representation to resource representation
+			for(ResourceInstance potLink : this.getResources()) {
+				if(potLink instanceof Link) {
+//					List<Category>
+	//				newRep.addLink(((Link) potLink).getLinkTypeRepresentation());
+				}
+			}
+
 			// create representation
 			rep = new OcciXml(doc);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
