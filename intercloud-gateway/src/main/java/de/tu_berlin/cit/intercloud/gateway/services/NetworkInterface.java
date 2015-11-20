@@ -7,12 +7,14 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
+@PathID
 @Classification(mixins = {IpNetworkInterfaceMixin.class},
 				links = {NetworkInterfaceLink.class})
 public class NetworkInterface extends Link {
