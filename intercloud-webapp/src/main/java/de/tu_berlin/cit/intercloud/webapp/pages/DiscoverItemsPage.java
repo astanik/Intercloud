@@ -48,7 +48,6 @@ public class DiscoverItemsPage extends UserTemplate {
 
         public DiscoverForm(String markupId) {
             super(markupId);
-            this.setDefaultModel(new CompoundPropertyModel<Object>(this));
 
             this.add(new TextField<>("domain", new PropertyModel<>(this, "domain")).setRequired(true));
             this.add(new AjaxButton("discoverBtn") {

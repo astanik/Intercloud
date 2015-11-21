@@ -1,3 +1,7 @@
-.navbar-brand > img {
+.navbar .navbar-brand > img {
     height: 25px;
+}
+
+.form-label {
+    margin-bottom: 5px;
 }
