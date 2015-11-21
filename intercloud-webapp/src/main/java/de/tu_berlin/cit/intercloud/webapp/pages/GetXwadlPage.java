@@ -2,9 +2,11 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
+import de.tu_berlin.cit.intercloud.webapp.panels.KindPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
@@ -26,7 +28,9 @@ public class GetXwadlPage extends UserTemplate {
 
     private final String domain;
     private final Code xwadlCodePanel;
-    private String xwadlStr = "";
+    private ResourceTypeDocument xwadl;
+
+    private final KindPanel kindPanel;
 
     public GetXwadlPage(final PageParameters parameters) {
         super();
@@ -37,12 +41,16 @@ public class GetXwadlPage extends UserTemplate {
         this.xwadlCodePanel = new Code("xwadlCode", new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
-                return xwadlStr;
+                return xwadl == null ? "" : xwadl.toString();
             }
         });
         this.xwadlCodePanel.setLanguage(CodeBehavior.Language.XML);
         this.xwadlCodePanel.setOutputMarkupId(true);
         this.add(this.xwadlCodePanel);
+
+        this.kindPanel = new KindPanel("kindPanel", xwadl);
+        this.kindPanel.setOutputMarkupId(true);
+        this.add(this.kindPanel);
     }
 
     private class XwadlForm extends Form {
@@ -60,13 +68,22 @@ public class GetXwadlPage extends UserTemplate {
                     try {
                         AbstractXMPPConnection connection = getIntercloudWebSession().getConnection();
                         XmppRestClient restClient = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(domain, resourcePath));
-                        xwadlStr = restClient.getResourceTypeDocument().toString();
+                        xwadl = restClient.getResourceTypeDocument();
                         target.add(xwadlCodePanel);
                     } catch (Exception e) {
                         StringBuilder s = new StringBuilder();
                         s.append("Failed to receive xwadl from xmpp://").append(domain).append("#").append(resourcePath).append(".");
                         logger.error(s.toString(), e);
                         target.appendJavaScript(s.insert(0, "alert('").append("');").toString());
+                        return;
+                    }
+                    try {
+                        kindPanel.setKind(xwadl);
+                        target.add(kindPanel);
+                    } catch (Exception e) {
+                        logger.error("Failed to read kind attributes.", e);
+                        logger.error("Failed to read kind attributes.");
+                        return;
                     }
                 }
             });
