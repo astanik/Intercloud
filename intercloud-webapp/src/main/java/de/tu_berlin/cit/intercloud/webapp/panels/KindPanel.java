@@ -23,19 +23,17 @@ import java.util.List;
 
 public class KindPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(KindPanel.class);
-    private List<Attribute> attributes = new ArrayList<>();
+    private Kind kind;
 
     public KindPanel(String markupId, ResourceTypeDocument document) {
         super(markupId);
 
-        if (document != null) {
-            this.attributes.addAll(parseKind(parseClassification(document).getKindType()).getAttributes());
-        }
+        setKind(document);
         this.add(new KindForm("kindForm"));
     }
 
     public KindPanel setKind(ResourceTypeDocument document) {
-        attributes = parseKind(parseClassification(document).getKindType()).getAttributes();
+        this.kind = null == document ? new Kind("", "") : parseKind(parseClassification(document).getKindType());
         return this;
     }
 
@@ -59,22 +57,16 @@ public class KindPanel extends Panel {
         public KindForm(String markupId) {
             super(markupId);
 
-            add(new ListView<Attribute>("attributeList", new LoadableDetachableModel<List<Attribute>>() {
+            add(new AttributeInputPanel("attributePanel", new LoadableDetachableModel<List<Attribute>>() {
                 @Override
                 protected List<Attribute> load() {
-                    return attributes;
+                    return kind.getAttributes();
                 }
-            }) {
-                @Override
-                protected void populateItem(ListItem<Attribute> listItem) {
-                    listItem.add(AttributeIntegerInput.newInstance("attributeInput", listItem.getModelObject()));
-                }
-            });
-
+            }));
             add(new AjaxSubmitLink("kindSubmit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    for (Attribute a : attributes) {
+                    for (Attribute a : kind.getAttributes()) {
                         logger.info(a.toString());
                     }
                 }
