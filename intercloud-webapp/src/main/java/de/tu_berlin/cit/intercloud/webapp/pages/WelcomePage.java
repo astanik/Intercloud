@@ -11,9 +11,10 @@ public class WelcomePage extends Template {
         super();
 
         NavStackedPanel navPanel = new NavStackedPanel("navStacked");
-        navPanel.addNavItem(new NavItem("Page 1", WelcomePage.class));
+        navPanel.addNavItem(new NavItem("Welcome", WelcomePage.class));
         navPanel.addNavItem(new NavItem("Sing In", de.tu_berlin.cit.intercloud.webapp.auth.LoginPage.class));
         navPanel.addNavItem(new NavItem("Login", LoginPage.class));
+        navPanel.addNavItem(new NavItem("Examples", ExamplePage.class));
         add(navPanel);
 
         NavListGroupPanel navList = new NavListGroupPanel("navList");

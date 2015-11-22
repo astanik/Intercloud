@@ -30,14 +30,14 @@ public abstract class Template extends WebPage {
                 new NavbarButton(LoginPage.class, Model.of()).setIconType(GlyphIconType.login)));
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
                 new NavbarButton(WelcomePage.class, Model.of("Welcome")).setIconType(GlyphIconType.home),
-        		new NavbarExternalLink(Model.of("http://citlab.github.io/Intercloud/"))
-                .setLabel(Model.of("Documentation"))
-                .setTarget(BootstrapExternalLink.Target.blank)
-                .setIconType(GlyphIconType.paperclip),
+                new NavbarExternalLink(Model.of("http://citlab.github.io/Intercloud/"))
+                        .setLabel(Model.of("Documentation"))
+                        .setTarget(BootstrapExternalLink.Target.blank)
+                        .setIconType(GlyphIconType.paperclip),
                 new NavbarExternalLink(Model.of("https://github.com/citlab/Intercloud"))
-                .setLabel(Model.of("Github"))
-                .setTarget(BootstrapExternalLink.Target.blank)
-                .setIconType(GlyphIconType.export)));
+                        .setLabel(Model.of("Github"))
+                        .setTarget(BootstrapExternalLink.Target.blank)
+                        .setIconType(GlyphIconType.export)));
 
         return navbar;
     }

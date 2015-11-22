@@ -144,7 +144,7 @@ public class Attribute implements Serializable {
      */
 
     public boolean isFloat() {
-        return Type.INTEGER.equals(this.type);
+        return Type.FLOAT.equals(this.type);
     }
 
     public void setFloat(Float f) {
