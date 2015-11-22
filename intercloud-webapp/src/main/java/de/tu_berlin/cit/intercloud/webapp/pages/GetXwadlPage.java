@@ -62,7 +62,7 @@ public class GetXwadlPage extends UserTemplate {
 
             this.add(new Label("domain", Model.of(domain)));
             this.add(new TextField<>("resourcePath", new PropertyModel<>(this, "resourcePath")).setRequired(true));
-            this.add(new AjaxButton("getXwadlBtn") {
+            AjaxButton button = new AjaxButton("getXwadlBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
@@ -86,7 +86,9 @@ public class GetXwadlPage extends UserTemplate {
                         return;
                     }
                 }
-            });
+            };
+            this.add(button);
+            this.setDefaultButton(button);
         }
     }
 }

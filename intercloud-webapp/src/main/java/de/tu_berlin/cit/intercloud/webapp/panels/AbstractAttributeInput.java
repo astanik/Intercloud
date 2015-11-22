@@ -8,8 +8,7 @@ import org.apache.wicket.model.Model;
 public abstract class AbstractAttributeInput extends Panel {
     public AbstractAttributeInput(String markupId, Attribute attribute) {
         super(markupId);
-        this.add(new Label("attributeName", Model.of(attribute.getName())));
-
+        this.add(new Label("attributeName", Model.of(attribute.getName() + (attribute.isRequired() ? "*" : ""))));
         Model description = null == attribute.getDescription() ? Model.of() : Model.of(attribute.getDescription());
         this.add(new Label("attributeDescription", description));
     }
@@ -25,7 +24,9 @@ public abstract class AbstractAttributeInput extends Panel {
             case DOUBLE:
                 return new AttributeDoubleInput(markupId, attribute);
             case FLOAT:
+                return new AttributeFloatInput(markupId, attribute);
             case BOOLEAN:
+                return new AttributeBooleanInput(markupId, attribute);
             case URI:
             case SIGNATURE:
             case KEY:

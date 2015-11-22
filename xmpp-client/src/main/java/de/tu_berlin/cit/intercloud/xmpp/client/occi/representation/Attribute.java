@@ -63,19 +63,19 @@ public class Attribute implements Serializable {
      */
 
     public boolean isString() {
-        return Type.STRING.equals(type);
+        return Type.STRING.equals(this.type);
     }
 
     public void setString(String string) {
         if (isString()) {
-            value = string;
+            this.value = string;
         } else {
-            throw new IllegalArgumentException("Cannot set String argument for type " + type);
+            throw new IllegalArgumentException("Cannot set String argument for type " + this.type);
         }
     }
 
     public String getString() {
-        return isString() ? (String) value : null;
+        return isString() ? (String) this.value : null;
     }
 
     /*
@@ -83,19 +83,19 @@ public class Attribute implements Serializable {
      */
 
     public boolean isEnum() {
-        return Type.ENUM.equals(type);
+        return Type.ENUM.equals(this.type);
     }
 
     public void setEnum(String enumeration) {
         if (isEnum()) {
-            value = enumeration;
+            this.value = enumeration;
         } else {
-            throw new IllegalArgumentException("Cannot set Enum argument for type " + type);
+            throw new IllegalArgumentException("Cannot set Enum argument for type " + this.type);
         }
     }
 
     public String getEnum() {
-        return isEnum() ? (String) value : null;
+        return isEnum() ? (String) this.value : null;
     }
 
     /*
@@ -103,19 +103,19 @@ public class Attribute implements Serializable {
      */
 
     public boolean isInteger() {
-        return Type.INTEGER.equals(type);
+        return Type.INTEGER.equals(this.type);
     }
 
     public void setInteger(Integer integer) {
         if (isInteger()) {
-            value = integer;
+            this.value = integer;
         } else {
-            throw new IllegalArgumentException("Cannot set Integer argument for type " + type);
+            throw new IllegalArgumentException("Cannot set Integer argument for type " + this.type);
         }
     }
 
     public Integer getInteger() {
-        return isInteger() ? (Integer) value : null;
+        return isInteger() ? (Integer) this.value : null;
     }
 
     /*
@@ -123,19 +123,58 @@ public class Attribute implements Serializable {
      */
 
     public boolean isDouble() {
-        return Type.DOUBLE.equals(type);
+        return Type.DOUBLE.equals(this.type);
     }
 
     public void setDouble(Double d) {
         if (isDouble()) {
-            value = d;
+            this.value = d;
         } else {
-            throw new IllegalArgumentException("Cannot set Double argument for type " + type);
+            throw new IllegalArgumentException("Cannot set Double argument for type " + this.type);
         }
     }
 
     public Double getDouble() {
-        return isDouble() ? (Double) value : null;
+        return isDouble() ? (Double) this.value : null;
     }
 
+    /*
+        FLOAT
+     */
+
+    public boolean isFloat() {
+        return Type.INTEGER.equals(this.type);
+    }
+
+    public void setFloat(Float f) {
+        if (isFloat()) {
+            this.value = f;
+        } else {
+            throw new IllegalArgumentException("Cannot set Float argument for type " + this.type);
+        }
+    }
+
+    public Float getFloat() {
+        return isFloat() ? (Float) value : null;
+    }
+
+    /*
+        BOOLEAN
+     */
+
+    public boolean isBoolean() {
+        return Type.BOOLEAN.equals(this.type);
+    }
+
+    public void setBoolean(Boolean b) {
+        if (isBoolean()) {
+            this.value = b;
+        } else {
+            throw new IllegalArgumentException("Cannot set Boolean argument for type " + this.type);
+        }
+    }
+
+    public Boolean getBoolean() {
+        return isBoolean() ? (Boolean) value : null;
+    }
 }
