@@ -27,10 +27,11 @@ public abstract class AbstractAttributeInput extends Panel {
                 return new AttributeFloatInput(markupId, attribute);
             case BOOLEAN:
                 return new AttributeBooleanInput(markupId, attribute);
+            case DATETIME:
+                return new AttributeDatetimeInput(markupId, attribute);
             case URI:
             case SIGNATURE:
             case KEY:
-            case DATETIME:
             case DURATION:
             default:
                 throw new UnsupportedOperationException("Attribute Typ " + attribute.getType() + " is not supported.");

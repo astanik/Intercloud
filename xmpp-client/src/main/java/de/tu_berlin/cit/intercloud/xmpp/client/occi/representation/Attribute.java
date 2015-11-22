@@ -1,6 +1,7 @@
 package de.tu_berlin.cit.intercloud.xmpp.client.occi.representation;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Attribute implements Serializable {
     private static final long serialVersionUID = -4070567697021876585L;
@@ -176,5 +177,25 @@ public class Attribute implements Serializable {
 
     public Boolean getBoolean() {
         return isBoolean() ? (Boolean) value : null;
+    }
+
+    /*
+        DATETIME
+     */
+
+    public boolean isDatetime() {
+        return Type.DATETIME.equals(this.type);
+    }
+
+    public void setDatetime(Date datetime) {
+        if (isDatetime()) {
+            this.value = datetime;
+        } else {
+            throw new IllegalArgumentException("Cannot set Datetime argument for type " + this.type);
+        }
+    }
+
+    public Date getDatetime() {
+        return isDatetime() ? (Date) this.value : null;
     }
 }
