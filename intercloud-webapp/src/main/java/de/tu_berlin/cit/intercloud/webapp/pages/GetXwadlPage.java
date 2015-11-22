@@ -3,6 +3,7 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
 import de.tu_berlin.cit.intercloud.webapp.panels.KindPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.MethodTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -30,6 +31,7 @@ public class GetXwadlPage extends UserTemplate {
     private final Code xwadlCodePanel;
     private ResourceTypeDocument xwadl;
 
+    private final MethodTablePanel methodTablePanel;
     private final KindPanel kindPanel;
 
     public GetXwadlPage(final PageParameters parameters) {
@@ -47,6 +49,10 @@ public class GetXwadlPage extends UserTemplate {
         this.xwadlCodePanel.setLanguage(CodeBehavior.Language.XML);
         this.xwadlCodePanel.setOutputMarkupId(true);
         this.add(this.xwadlCodePanel);
+
+        this.methodTablePanel = new MethodTablePanel("methodTablePanel");
+        this.methodTablePanel.setOutputMarkupId(true);
+        this.add(methodTablePanel);
 
         this.kindPanel = new KindPanel("kindPanel", xwadl);
         this.kindPanel.setOutputMarkupId(true);
@@ -70,6 +76,8 @@ public class GetXwadlPage extends UserTemplate {
                         XmppRestClient restClient = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(domain, resourcePath));
                         xwadl = restClient.getResourceTypeDocument();
                         target.add(xwadlCodePanel);
+                        methodTablePanel.setMethodList(xwadl.getResourceType().getMethodArray());
+                        target.add(methodTablePanel);
                     } catch (Exception e) {
                         StringBuilder s = new StringBuilder();
                         s.append("Failed to receive xwadl from xmpp://").append(domain).append("#").append(resourcePath).append(".");
