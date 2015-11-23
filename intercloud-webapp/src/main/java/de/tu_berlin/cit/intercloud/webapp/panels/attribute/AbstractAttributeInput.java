@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels;
+package de.tu_berlin.cit.intercloud.webapp.panels.attribute;
 
 import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
 import org.apache.wicket.markup.html.basic.Label;
@@ -16,21 +16,21 @@ public abstract class AbstractAttributeInput extends Panel {
     public static AbstractAttributeInput newInstance(String markupId, Attribute attribute) {
         switch (attribute.getType()) {
             case STRING:
-                return new AttributeStringInput(markupId, attribute);
+                return new StringInput(markupId, attribute);
             case INTEGER:
-                return new AttributeIntegerInput(markupId, attribute);
+                return new IntegerInput(markupId, attribute);
             case ENUM:
-                return new AttributeEnumInput(markupId, attribute);
+                return new EnumInput(markupId, attribute);
             case DOUBLE:
-                return new AttributeDoubleInput(markupId, attribute);
+                return new DoubleInput(markupId, attribute);
             case FLOAT:
-                return new AttributeFloatInput(markupId, attribute);
+                return new FloatInput(markupId, attribute);
             case BOOLEAN:
-                return new AttributeBooleanInput(markupId, attribute);
+                return new BooleanInput(markupId, attribute);
             case DATETIME:
-                return new AttributeDatetimeInput(markupId, attribute);
+                return new DatetimeInput(markupId, attribute);
             case URI:
-                return new AttributeUriInput(markupId, attribute);
+                return new UriInput(markupId, attribute);
             case SIGNATURE:
             case KEY:
             case DURATION:

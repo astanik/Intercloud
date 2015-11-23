@@ -3,6 +3,7 @@ package de.tu_berlin.cit.intercloud.webapp.panels;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
+import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
 import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
 import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Kind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;

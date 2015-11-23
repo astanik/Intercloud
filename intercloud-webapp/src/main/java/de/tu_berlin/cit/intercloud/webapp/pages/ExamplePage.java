@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
-import de.tu_berlin.cit.intercloud.webapp.panels.AttributeInputPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
 import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
 import org.apache.wicket.ajax.AjaxRequestTarget;

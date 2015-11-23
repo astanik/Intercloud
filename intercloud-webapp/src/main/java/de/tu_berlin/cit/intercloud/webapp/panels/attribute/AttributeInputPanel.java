@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels;
+package de.tu_berlin.cit.intercloud.webapp.panels.attribute;
 
 import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
 import org.apache.wicket.markup.html.list.ListItem;
