@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:xmpp:occi-representation" xmlns="urn:xmpp:occi-representation"
+	elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:documentation>
+			The protocol documented by this schema is defined in
+			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="Category_List">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Category" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="Category">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Kind" type="CategoryType" minOccurs="0"
+					maxOccurs="1" />
+				<xs:element name="Mixin" type="CategoryType" minOccurs="0"
+					maxOccurs="unbounded" />
+				<xs:element name="Link" type="LinkType" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="LinkType">
+		<xs:complexContent>
+			<xs:extension base="CategoryType">
+				<xs:sequence>
+					<xs:element name="target" type="xs:anyURI" minOccurs="0"
+						maxOccurs="1" />
+					<xs:element name="Mixin" type="CategoryType" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="CategoryType">
+		<xs:sequence>
+			<xs:element name="term" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="schema" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="title" type="xs:string" minOccurs="0"
+				maxOccurs="1" />
+			<xs:element name="attribute" type="AttributeType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AttributeType">
+		<xs:choice>
+			<xs:element name="STRING" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="ENUM" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="INTEGER" type="xs:int" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="FLOAT" type="xs:float" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="DOUBLE" type="xs:double" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="URI" type="xs:anyURI" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="SIGNATURE" type="xs:base64Binary"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="KEY" type="xs:base64Binary" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="DATETIME" type="xs:dateTime" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="DURATION" type="xs:duration" minOccurs="1"
+				maxOccurs="1" />
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+
+</xs:schema>

@@ -82,6 +82,7 @@
 		<module>xmpp-core</module>
 		<module>xmpp-rest</module>
 		<module>xmpp-occi</module>
+		<module>xmpp-cep</module>
 		<module>xmpp-component</module>
 		<module>xmpp-client</module>
 		<module>intercloud-root</module>
