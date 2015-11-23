@@ -19,7 +19,9 @@ package de.tu_berlin.cit.intercloud.xmpp.core.packet;
 
 import org.dom4j.Element;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Message packet.<p>
@@ -231,6 +233,18 @@ public class Message extends Packet {
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Element> getChildElements(String name, String namespace) {
+    	ArrayList<Element> elements = new ArrayList<Element>();
+        for (Iterator<Element> i=element.elementIterator(name); i.hasNext(); ) {
+            Element element = i.next();
+            if (element.getNamespaceURI().equals(namespace)) {
+                elements.add(element);
+            }
+        }
+        return elements;
     }
 
     /**

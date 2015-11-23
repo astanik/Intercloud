@@ -1,89 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="urn:xmpp:occi-representation" xmlns="urn:xmpp:occi-representation"
-	elementFormDefault="qualified">
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
+	targetNamespace='urn:xmpp:eventlog' xmlns='urn:xmpp:eventlog'
+	elementFormDefault='qualified'>
 
-	<xs:annotation>
-		<xs:documentation>
-			The protocol documented by this schema is defined in
-			XEP-xxxx: http://www.xmpp.org/extensions/xep-xxxx.html
-		</xs:documentation>
-	</xs:annotation>
-
-	<xs:element name="Category_List">
+	<xs:element name='log'>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="Category" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name='message' type='xs:string' minOccurs='1'
+					maxOccurs='1' />
+				<xs:element name='tag' minOccurs='0' maxOccurs='unbounded'>
+					<xs:complexType>
+						<xs:attribute name='name' type='xs:string' use='required' />
+						<xs:attribute name='value' type='xs:string' use='required' />
+						<xs:attribute name='type' type='xs:QName' use='optional'
+							default='xs:string' />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name='stackTrace' type='xs:string' minOccurs='0'
+					maxOccurs='1' />
 			</xs:sequence>
+			<xs:attribute name='timestamp' type='xs:dateTime' use='required' />
+			<xs:attribute name='id' type='xs:string' use='optional' />
+			<xs:attribute name='type' type='EventType' use='optional'
+				default='Informational' />
+			<xs:attribute name='level' type='EventLevel' use='optional'
+				default='Minor' />
+			<xs:attribute name='object' type='xs:string' use='optional' />
+			<xs:attribute name='subject' type='xs:string' use='optional' />
+			<xs:attribute name='facility' type='xs:string' use='optional' />
+			<xs:attribute name='module' type='xs:string' use='optional' />
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="Category">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Kind" type="CategoryType" minOccurs="0"
-					maxOccurs="1" />
-				<xs:element name="Mixin" type="CategoryType" minOccurs="0"
-					maxOccurs="unbounded" />
-				<xs:element name="Link" type="LinkType" minOccurs="0"
-					maxOccurs="unbounded" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+	<xs:simpleType name='EventType'>
+		<xs:restriction base='xs:string'>
+			<xs:enumeration value='Debug' />
+			<xs:enumeration value='Informational' />
+			<xs:enumeration value='Notice' />
+			<xs:enumeration value='Warning' />
+			<xs:enumeration value='Error' />
+			<xs:enumeration value='Critical' />
+			<xs:enumeration value='Alert' />
+			<xs:enumeration value='Emergency' />
+		</xs:restriction>
+	</xs:simpleType>
 
-	<xs:complexType name="LinkType">
-		<xs:complexContent>
-			<xs:extension base="CategoryType">
-				<xs:sequence>
-					<xs:element name="target" type="xs:anyURI" minOccurs="0"
-						maxOccurs="1" />
-					<xs:element name="Mixin" type="CategoryType" minOccurs="0"
-						maxOccurs="unbounded" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="CategoryType">
-		<xs:sequence>
-			<xs:element name="term" type="xs:string" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="schema" type="xs:string" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="title" type="xs:string" minOccurs="0"
-				maxOccurs="1" />
-			<xs:element name="attribute" type="AttributeType"
-				minOccurs="0" maxOccurs="unbounded" />
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="AttributeType">
-		<xs:choice>
-			<xs:element name="STRING" type="xs:string" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="ENUM" type="xs:string" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="INTEGER" type="xs:int" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="FLOAT" type="xs:float" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="DOUBLE" type="xs:double" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="BOOLEAN" type="xs:boolean" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="URI" type="xs:anyURI" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="SIGNATURE" type="xs:base64Binary"
-				minOccurs="1" maxOccurs="1" />
-			<xs:element name="KEY" type="xs:base64Binary" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="DATETIME" type="xs:dateTime" minOccurs="1"
-				maxOccurs="1" />
-			<xs:element name="DURATION" type="xs:duration" minOccurs="1"
-				maxOccurs="1" />
-		</xs:choice>
-		<xs:attribute name="name" type="xs:string" use="required" />
-	</xs:complexType>
+	<xs:simpleType name='EventLevel'>
+		<xs:restriction base='xs:string'>
+			<xs:enumeration value='Major' />
+			<xs:enumeration value='Medium' />
+			<xs:enumeration value='Minor' />
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

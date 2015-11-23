@@ -15,6 +15,11 @@
 	<name>XMPP Complex Event Processing Module</name>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/xsd</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -136,6 +141,18 @@
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+		<!-- cep -->
+		<dependency>
+			<groupId>com.espertech</groupId>
+			<artifactId>esper</artifactId>
+			<version>5.3.0</version>
+			<exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 	</dependencies>
 
