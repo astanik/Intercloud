@@ -198,4 +198,24 @@ public class Attribute implements Serializable {
     public Date getDatetime() {
         return isDatetime() ? (Date) this.value : null;
     }
+
+    /*
+        URI
+     */
+
+    public boolean isUri() {
+        return Type.URI.equals(this.type);
+    }
+
+    public void setUri(String uri) {
+        if (isUri()) {
+            this.value = uri;
+        } else {
+            throw new IllegalArgumentException("Cannot set Uri argument for type " + this.type);
+        }
+    }
+
+    public String getUri() {
+        return isUri() ? (String) value : null;
+    }
 }

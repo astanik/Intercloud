@@ -40,6 +40,7 @@ public class GetXwadlPage extends UserTemplate {
 
         this.add(new XwadlForm("xwadlForm"));
 
+        // Code section, kind of debugging
         this.xwadlCodePanel = new Code("xwadlCode", new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
@@ -50,10 +51,12 @@ public class GetXwadlPage extends UserTemplate {
         this.xwadlCodePanel.setOutputMarkupId(true);
         this.add(this.xwadlCodePanel);
 
+        // method table
         this.methodTablePanel = new MethodTablePanel("methodTablePanel");
         this.methodTablePanel.setOutputMarkupId(true);
         this.add(methodTablePanel);
 
+        // attribute form
         this.kindPanel = new KindPanel("kindPanel", xwadl);
         this.kindPanel.setOutputMarkupId(true);
         this.add(this.kindPanel);

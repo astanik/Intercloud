@@ -30,6 +30,7 @@ public abstract class AbstractAttributeInput extends Panel {
             case DATETIME:
                 return new AttributeDatetimeInput(markupId, attribute);
             case URI:
+                return new AttributeUriInput(markupId, attribute);
             case SIGNATURE:
             case KEY:
             case DURATION:

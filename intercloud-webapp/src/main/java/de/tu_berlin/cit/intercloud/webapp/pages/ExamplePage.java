@@ -59,6 +59,7 @@ public class ExamplePage extends Template {
             attributeList.add(new Attribute("Boolean", false, Attribute.Type.BOOLEAN.toString(), "This is an Example for a Boolean Attribute."));
             attributeList.add(new Attribute("String", true, Attribute.Type.STRING.toString(), "This is an Example for a String Attribute."));
             attributeList.add(new Attribute("Enum", false, Attribute.Type.ENUM.toString(), "This is an Example for an Enum Attribute."));
+            attributeList.add(new Attribute("Uri", false, Attribute.Type.URI.toString(), "This is an Example for an URI Attribute."));
 
             return attributeList;
         }
