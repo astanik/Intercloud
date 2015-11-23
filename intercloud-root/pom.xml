@@ -21,7 +21,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
-					<mainClass>de.tu_berlin.cit.intercloud.exchange.ExchangeApplication</mainClass>
+					<mainClass>de.tu_berlin.cit.intercloud.root.RootApplication</mainClass>
 					<classpathScope>test</classpathScope>
 				</configuration>
 			</plugin>

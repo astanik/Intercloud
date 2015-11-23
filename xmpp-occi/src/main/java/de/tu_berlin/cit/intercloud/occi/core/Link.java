@@ -29,7 +29,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
  */
 public class Link extends ResourceInstance {
 
-	private final LinkType linkRepresentation;
+	private LinkType linkRepresentation;
 	
 	public Link(LinkType linkRepresentation) {
 		super();
@@ -40,12 +40,21 @@ public class Link extends ResourceInstance {
 		this(LinkType.Factory.newInstance());
 	}
 
+	public Link(String target) {
+		this();
+		this.linkRepresentation.setTarget(target);
+	}
+
 	@XmppMethod(XmppMethod.GET)
 	@Produces(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
 	public OcciXml getRepresentation() {
 		CategoryDocument doc = CategoryDocument.Factory.newInstance();
-		doc.addNewCategory().addNewLink().set(linkRepresentation);
+		doc.addNewCategory().addNewLink().set(this.getLinkTypeRepresentation());
 		return new OcciXml(doc);
+	}
+	
+	protected void setLinkTypeRepresentation(LinkType rep) {
+		this.linkRepresentation = rep;
 	}
 	
 	public LinkType getLinkTypeRepresentation() {
