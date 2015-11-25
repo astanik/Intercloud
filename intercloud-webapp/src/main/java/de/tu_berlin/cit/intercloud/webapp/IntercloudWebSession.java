@@ -18,6 +18,7 @@ package de.tu_berlin.cit.intercloud.webapp;
 
 import de.tu_berlin.cit.intercloud.webapp.model.User;
 import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppService;
+import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
@@ -78,6 +79,10 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
             xmppService.disconnect(this.user.getUsername());
             this.user = null;
         }
+    }
+
+    public static IntercloudWebSession get() {
+        return (IntercloudWebSession) Session.get();
     }
 
 }

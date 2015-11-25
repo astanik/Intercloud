@@ -9,8 +9,14 @@ public abstract class AbstractAttributeInput extends Panel {
     public AbstractAttributeInput(String markupId, Attribute attribute) {
         super(markupId);
         this.add(new Label("attributeName", Model.of(attribute.getName() + (attribute.isRequired() ? "*" : ""))));
-        Model description = null == attribute.getDescription() ? Model.of() : Model.of(attribute.getDescription());
-        this.add(new Label("attributeDescription", description));
+
+        Label descriptionLabel = new Label("attributeDescription");
+        if (null == attribute.getDescription() || attribute.getDescription().trim().isEmpty()) {
+            descriptionLabel.setVisible(false);
+        } else {
+            descriptionLabel.setDefaultModel(Model.of(attribute.getDescription()));
+        }
+        this.add(descriptionLabel);
     }
 
     public static AbstractAttributeInput newInstance(String markupId, Attribute attribute) {

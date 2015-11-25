@@ -53,7 +53,7 @@ public class ExamplePage extends Template {
         private List<Attribute> createExampleAttributeList() {
             List<Attribute> attributeList = new ArrayList<>();
             attributeList.add(new Attribute("Datetime", true, Attribute.Type.DATETIME.toString(), "This is an Example for a Datetime Attribute."));
-            attributeList.add(new Attribute("Integer", false, Attribute.Type.INTEGER.toString(), "This is an Example for an Integer Attribute."));
+            attributeList.add(new Attribute("Integer", false, Attribute.Type.INTEGER.toString(), null));
             attributeList.add(new Attribute("Double", false, Attribute.Type.DOUBLE.toString(), "This is an Example for a Double Attribute."));
             attributeList.add(new Attribute("Float", false, Attribute.Type.FLOAT.toString(), "This is an Example for a Float Attribute."));
             attributeList.add(new Attribute("Boolean", false, Attribute.Type.BOOLEAN.toString(), "This is an Example for a Boolean Attribute."));
