@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.client;
+package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.PacketCollector;

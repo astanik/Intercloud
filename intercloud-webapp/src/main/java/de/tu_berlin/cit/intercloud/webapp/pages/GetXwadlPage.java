@@ -6,7 +6,6 @@ import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.panels.KindPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.MethodTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
-import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -18,7 +17,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,9 +71,7 @@ public class GetXwadlPage extends UserTemplate {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
-                        AbstractXMPPConnection connection = IntercloudWebSession.get().getConnection();
-                        XmppRestClient restClient = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(domainModel.getObject(), resourcePath));
-                        xwadl = restClient.getResourceTypeDocument();
+                        xwadl = IntercloudWebSession.get().getXmppService().getXwadlDocument(new XmppURI(domainModel.getObject(), resourcePath));
                         target.add(xwadlCodePanel);
                         methodTablePanel.setMethodList(xwadl.getResourceType().getMethodArray());
                         target.add(methodTablePanel);

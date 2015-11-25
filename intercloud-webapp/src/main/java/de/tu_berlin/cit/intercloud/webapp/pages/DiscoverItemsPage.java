@@ -3,7 +3,6 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 import de.tu_berlin.cit.intercloud.webapp.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
-import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -17,7 +16,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +51,9 @@ public class DiscoverItemsPage extends UserTemplate {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
-                        AbstractXMPPConnection connection = IntercloudWebSession.get().getConnection();
                         XmppURI uri = new XmppURI(domain, "");
                         discoItems.clear();
-                        discoItems.addAll(XmppService.getInstance().discoverXmppRestfulItems(connection, uri));
+                        discoItems.addAll(IntercloudWebSession.get().getXmppService().discoverRestfulItems(uri));
                         if (!discoItems.isEmpty()) {
                             // display items form
                             target.add(ComponentUtils.displayBlock(itemsContainer));

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.client;
-
-import java.util.List;
+package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.PacketCollector;
@@ -31,13 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
-import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
-import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.GetXwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType.Enum;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 
@@ -99,40 +94,4 @@ public class XmppRestClient extends OcciClient {
 			return new XmppRestClient(connection, uri, xwadl);
 		}
 	}
-
-
-	public Method getMethod(Enum type, OcciXml occiXml, OcciListXml occiListXml) {
-		String requestMediaType = null == occiXml ? null : OcciXml.MEDIA_TYPE;
-		String responseMediaType = null == occiListXml ? null : OcciListXml.MEDIA_TYPE;
-		return getMethod(type, requestMediaType, responseMediaType);
-	}
-
-	public Method getMethod(final Enum methodType, final String requestMediaType, final String responseMediaType) {
-		List<Method> list = this.getMethods(methodType);
-		for(Method method : list) {
-			boolean requestMatch = false;
-			if(method.isSetRequest() && null != requestMediaType) {
-				if (requestMediaType.equals(method.getRequest().getMediaType())) {
-					requestMatch = true;
-				}
-			}
-			if(!method.isSetRequest() && null == requestMediaType) {
-				requestMatch = true;
-			}
-
-			if (requestMatch) {
-				if (method.isSetResponse() && null != responseMediaType) {
-					if (responseMediaType.equals(method.getResponse().getMediaType())) {
-						return method;
-					}
-				}
-				if (!method.isSetResponse() && null == responseMediaType) {
-					return method;
-				}
-			}
-		}
-
-		return null;
-	}
-
 }
