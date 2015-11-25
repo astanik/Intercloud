@@ -1,11 +1,11 @@
 package de.tu_berlin.cit.intercloud.webapp.panels;
 
+import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
-import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
-import de.tu_berlin.cit.intercloud.client.model.occi.Kind;
+import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class KindPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(KindPanel.class);
-    private Kind kind;
+    private KindModel kind;
 
     public KindPanel(String markupId, ResourceTypeDocument document) {
         super(markupId);
@@ -31,7 +31,7 @@ public class KindPanel extends Panel {
     }
 
     public KindPanel setKind(ResourceTypeDocument document) {
-        this.kind = null == document ? new Kind("", "") : parseKind(parseClassification(document).getKindType());
+        this.kind = null == document ? new KindModel("", "") : parseKind(parseClassification(document).getKindType());
         return this;
     }
 
@@ -41,10 +41,10 @@ public class KindPanel extends Panel {
         return (ClassificationDocument.Classification) classifications[0];
     }
 
-    private Kind parseKind(CategoryClassification classification) {
-        Kind kind = new Kind(classification.getTerm(), classification.getSchema());
+    private KindModel parseKind(CategoryClassification classification) {
+        KindModel kind = new KindModel(classification.getTerm(), classification.getSchema());
         for (AttributeClassificationDocument.AttributeClassification a : classification.getAttributeClassificationArray()) {
-            Attribute attribute = new Attribute(a.getName(), a.getRequired(), a.getType().toString(), a.getDescription());
+            AttributeModel attribute = new AttributeModel(a.getName(), a.getRequired(), a.getType().toString(), a.getDescription());
             kind.addAttribute(attribute);
         }
         return kind;
@@ -55,16 +55,16 @@ public class KindPanel extends Panel {
         public KindForm(String markupId) {
             super(markupId);
 
-            add(new AttributeInputPanel("attributePanel", new LoadableDetachableModel<List<Attribute>>() {
+            add(new AttributeInputPanel("attributePanel", new LoadableDetachableModel<List<AttributeModel>>() {
                 @Override
-                protected List<Attribute> load() {
+                protected List<AttributeModel> load() {
                     return kind.getAttributes();
                 }
             }));
             add(new AjaxSubmitLink("kindSubmit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    for (Attribute a : kind.getAttributes()) {
+                    for (AttributeModel a : kind.getAttributes()) {
                         logger.info(a.toString());
                     }
                 }

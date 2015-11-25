@@ -3,7 +3,7 @@ package de.tu_berlin.cit.intercloud.client.model.occi;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Attribute implements Serializable {
+public class AttributeModel implements Serializable {
     private static final long serialVersionUID = -4070567697021876585L;
 
     public enum Type {
@@ -26,7 +26,7 @@ public class Attribute implements Serializable {
     private final String description;
     private Object value;
 
-    public Attribute(String name, boolean required, String type, String description) {
+    public AttributeModel(String name, boolean required, String type, String description) {
         this.name = name;
         this.required = required;
         this.type = Type.valueOf(type.toString());
@@ -51,7 +51,7 @@ public class Attribute implements Serializable {
 
     @Override
     public String toString() {
-        return "Attribute{" +
+        return "AttributeModel{" +
                 "name='" + name + '\'' +
                 ", required=" + required +
                 ", type=" + type +

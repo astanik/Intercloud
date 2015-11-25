@@ -1,8 +1,8 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
+import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
-import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -23,15 +23,15 @@ public class ExamplePage extends Template {
     }
 
     private class AttributeForm extends Form {
-        private List<Attribute> attributeList;
+        private List<AttributeModel> attributeList;
 
         public AttributeForm(String markupId) {
             super(markupId);
             this.attributeList = createExampleAttributeList();
 
-            this.add(new AttributeInputPanel("attributePanel", new LoadableDetachableModel<List<Attribute>>() {
+            this.add(new AttributeInputPanel("attributePanel", new LoadableDetachableModel<List<AttributeModel>>() {
                 @Override
-                protected List<Attribute> load() {
+                protected List<AttributeModel> load() {
                     return attributeList;
                 }
             }));
@@ -43,23 +43,23 @@ public class ExamplePage extends Template {
 
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    for (Attribute a : attributeList) {
+                    for (AttributeModel a : attributeList) {
                            logger.info(a.toString());
                     }
                 }
             });
         }
 
-        private List<Attribute> createExampleAttributeList() {
-            List<Attribute> attributeList = new ArrayList<>();
-            attributeList.add(new Attribute("Datetime", true, Attribute.Type.DATETIME.toString(), "This is an Example for a Datetime Attribute."));
-            attributeList.add(new Attribute("Integer", false, Attribute.Type.INTEGER.toString(), null));
-            attributeList.add(new Attribute("Double", false, Attribute.Type.DOUBLE.toString(), "This is an Example for a Double Attribute."));
-            attributeList.add(new Attribute("Float", false, Attribute.Type.FLOAT.toString(), "This is an Example for a Float Attribute."));
-            attributeList.add(new Attribute("Boolean", false, Attribute.Type.BOOLEAN.toString(), "This is an Example for a Boolean Attribute."));
-            attributeList.add(new Attribute("String", true, Attribute.Type.STRING.toString(), "This is an Example for a String Attribute."));
-            attributeList.add(new Attribute("Enum", false, Attribute.Type.ENUM.toString(), "This is an Example for an Enum Attribute."));
-            attributeList.add(new Attribute("Uri", false, Attribute.Type.URI.toString(), "This is an Example for an URI Attribute."));
+        private List<AttributeModel> createExampleAttributeList() {
+            List<AttributeModel> attributeList = new ArrayList<>();
+            attributeList.add(new AttributeModel("Datetime", true, AttributeModel.Type.DATETIME.toString(), "This is an Example for a Datetime AttributeModel."));
+            attributeList.add(new AttributeModel("Integer", false, AttributeModel.Type.INTEGER.toString(), null));
+            attributeList.add(new AttributeModel("Double", false, AttributeModel.Type.DOUBLE.toString(), "This is an Example for a Double AttributeModel."));
+            attributeList.add(new AttributeModel("Float", false, AttributeModel.Type.FLOAT.toString(), "This is an Example for a Float AttributeModel."));
+            attributeList.add(new AttributeModel("Boolean", false, AttributeModel.Type.BOOLEAN.toString(), "This is an Example for a Boolean AttributeModel."));
+            attributeList.add(new AttributeModel("String", true, AttributeModel.Type.STRING.toString(), "This is an Example for a String AttributeModel."));
+            attributeList.add(new AttributeModel("Enum", false, AttributeModel.Type.ENUM.toString(), "This is an Example for an Enum AttributeModel."));
+            attributeList.add(new AttributeModel("Uri", false, AttributeModel.Type.URI.toString(), "This is an Example for an URI AttributeModel."));
 
             return attributeList;
         }

@@ -1,12 +1,12 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.attribute;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
+import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 public abstract class AbstractAttributeInput extends Panel {
-    public AbstractAttributeInput(String markupId, Attribute attribute) {
+    public AbstractAttributeInput(String markupId, AttributeModel attribute) {
         super(markupId);
         this.add(new Label("attributeName", Model.of(attribute.getName() + (attribute.isRequired() ? "*" : ""))));
 
@@ -19,7 +19,7 @@ public abstract class AbstractAttributeInput extends Panel {
         this.add(descriptionLabel);
     }
 
-    public static AbstractAttributeInput newInstance(String markupId, Attribute attribute) {
+    public static AbstractAttributeInput newInstance(String markupId, AttributeModel attribute) {
         switch (attribute.getType()) {
             case STRING:
                 return new StringInput(markupId, attribute);
@@ -41,7 +41,7 @@ public abstract class AbstractAttributeInput extends Panel {
             case KEY:
             case DURATION:
             default:
-                throw new UnsupportedOperationException("Attribute Typ " + attribute.getType() + " is not supported.");
+                throw new UnsupportedOperationException("AttributeModel Typ " + attribute.getType() + " is not supported.");
         }
     }
 }

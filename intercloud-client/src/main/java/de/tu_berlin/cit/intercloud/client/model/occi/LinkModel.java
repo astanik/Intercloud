@@ -3,11 +3,11 @@ package de.tu_berlin.cit.intercloud.client.model.occi;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Link extends Category {
+public class LinkModel extends CategoryModel {
     private String target;
-    private List<Mixin> mixins = new ArrayList<>();
+    private List<MixinModel> mixins = new ArrayList<>();
 
-    public Link(String term, String schema) {
+    public LinkModel(String term, String schema) {
         super(term, schema);
     }
 
@@ -19,11 +19,11 @@ public class Link extends Category {
         this.target = target;
     }
 
-    public void addMixin(Mixin mixin) {
+    public void addMixin(MixinModel mixin) {
         this.mixins.add(mixin);
     }
 
-    public List<Mixin> getMixins() {
+    public List<MixinModel> getMixins() {
         return mixins;
     }
 }

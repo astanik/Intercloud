@@ -16,6 +16,8 @@
 
 package de.tu_berlin.cit.intercloud.webapp;
 
+import de.tu_berlin.cit.intercloud.client.service.IIntercloudService;
+import de.tu_berlin.cit.intercloud.client.service.impl.IntercloudService;
 import de.tu_berlin.cit.intercloud.webapp.model.User;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.impl.XmppService;
@@ -31,6 +33,7 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
 
     private User user = null;
     private IXmppService xmppService;
+    private IIntercloudService intercloudService;
 
     public IntercloudWebSession(Request request) {
         super(request);
@@ -41,6 +44,7 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
         try {
             User user = new User(username, Roles.USER);
             this.xmppService = new XmppService(user.getUri(), password);
+            this.intercloudService = new IntercloudService(this.xmppService);
             this.user = user;
             return true;
         } catch (Exception e) {
@@ -67,12 +71,17 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
             super.signOut();
             this.xmppService.disconnect();
             this.xmppService = null;
+            this.intercloudService = null;
             this.user = null;
         }
     }
 
     public IXmppService getXmppService() {
         return xmppService;
+    }
+
+    public IIntercloudService getIntercloudService() {
+        return intercloudService;
     }
 
     public static IntercloudWebSession get() {

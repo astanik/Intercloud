@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Category implements Serializable {
+public abstract class CategoryModel implements Serializable {
     private static final long serialVersionUID = -158045063500836807L;
 
     private final String term;
     private final String schema;
-    private final List<Attribute> attributes = new ArrayList<>();
+    private final List<AttributeModel> attributes = new ArrayList<>();
 
-    public Category(String term, String schema) {
+    public CategoryModel(String term, String schema) {
         this.term = term;
         this.schema = schema;
     }
@@ -24,11 +24,11 @@ public abstract class Category implements Serializable {
         return schema;
     }
 
-    public void addAttribute(Attribute attribute) {
+    public void addAttribute(AttributeModel attribute) {
         attributes.add(attribute);
     }
 
-    public List<Attribute> getAttributes() {
+    public List<AttributeModel> getAttributes() {
        return attributes;
     }
 }

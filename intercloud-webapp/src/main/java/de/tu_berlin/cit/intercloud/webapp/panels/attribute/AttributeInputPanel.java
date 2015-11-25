@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.attribute;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
+import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -10,12 +10,12 @@ import java.util.List;
 
 public class AttributeInputPanel extends Panel {
 
-    public AttributeInputPanel(String markupId, IModel<List<Attribute>> attributesModel) {
+    public AttributeInputPanel(String markupId, IModel<List<AttributeModel>> attributesModel) {
         super(markupId);
 
-        this.add(new ListView<Attribute>("attributeList", attributesModel) {
+        this.add(new ListView<AttributeModel>("attributeList", attributesModel) {
             @Override
-            protected void populateItem(ListItem<Attribute> listItem) {
+            protected void populateItem(ListItem<AttributeModel> listItem) {
                 listItem.add(AbstractAttributeInput.newInstance("attributeInput", listItem.getModelObject()));
             }
         });

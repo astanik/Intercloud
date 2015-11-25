@@ -2,33 +2,42 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
+import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
-import de.tu_berlin.cit.intercloud.webapp.panels.KindPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.MethodTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetXwadlPage extends UserTemplate {
     private final Logger logger = LoggerFactory.getLogger(GetXwadlPage.class);
 
     private final IModel<String> domainModel;
-    private final Code xwadlCodePanel;
-    private ResourceTypeDocument xwadl;
+    private final Code codePanel;
+    private String codeString;
+    private final MethodTable methodTable;
 
-    private final MethodTablePanel methodTablePanel;
-    private final KindPanel kindPanel;
+    private IIntercloudClient intercloudClient;
+
 
     public GetXwadlPage(IModel<String> domainModel) {
         super();
@@ -37,25 +46,25 @@ public class GetXwadlPage extends UserTemplate {
         this.add(new XwadlForm("xwadlForm"));
 
         // Code section, kind of debugging
-        this.xwadlCodePanel = new Code("xwadlCode", new LoadableDetachableModel<String>() {
+        this.codePanel = new Code("code", new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
-                return xwadl == null ? "" : xwadl.toString();
+                return codeString;
             }
         });
-        this.xwadlCodePanel.setLanguage(CodeBehavior.Language.XML);
-        this.xwadlCodePanel.setOutputMarkupId(true);
-        this.add(this.xwadlCodePanel);
+        this.codePanel.setLanguage(CodeBehavior.Language.XML);
+        this.codePanel.setOutputMarkupId(true);
+        this.add(this.codePanel);
 
         // method table
-        this.methodTablePanel = new MethodTablePanel("methodTablePanel");
-        this.methodTablePanel.setOutputMarkupId(true);
-        this.add(methodTablePanel);
-
-        // attribute form
-        this.kindPanel = new KindPanel("kindPanel", xwadl);
-        this.kindPanel.setOutputMarkupId(true);
-        this.add(this.kindPanel);
+        this.methodTable = new MethodTable("methodTable", new LoadableDetachableModel<List<MethodModel>>() {
+            @Override
+            protected List<MethodModel> load() {
+                return null != intercloudClient ? intercloudClient.getMethods() : new ArrayList<>();
+            }
+        });
+        this.methodTable.setOutputMarkupId(true);
+        this.add(methodTable);
     }
 
     private class XwadlForm extends Form {
@@ -71,10 +80,10 @@ public class GetXwadlPage extends UserTemplate {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
-                        xwadl = IntercloudWebSession.get().getXmppService().getXwadlDocument(new XmppURI(domainModel.getObject(), resourcePath));
-                        target.add(xwadlCodePanel);
-                        methodTablePanel.setMethodList(xwadl.getResourceType().getMethodArray());
-                        target.add(methodTablePanel);
+                        intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(domainModel.getObject(), resourcePath);
+                        codeString = intercloudClient.toString();
+                        target.add(codePanel);
+                        target.add(methodTable);
                     } catch (Exception e) {
                         StringBuilder s = new StringBuilder();
                         s.append("Failed to receive xwadl from xmpp://").append(domainModel.getObject()).append("#").append(resourcePath).append(".");
@@ -82,18 +91,58 @@ public class GetXwadlPage extends UserTemplate {
                         target.appendJavaScript(s.insert(0, "alert('").append("');").toString());
                         return;
                     }
-                    try {
-                        kindPanel.setKind(xwadl);
-                        target.add(kindPanel);
-                    } catch (Exception e) {
-                        logger.error("Failed to read kind attributes.", e);
-                        logger.error("Failed to read kind attributes.");
-                        return;
-                    }
                 }
             };
             this.add(button);
             this.setDefaultButton(button);
+        }
+    }
+
+    private class MethodTable extends WebMarkupContainer {
+
+        public MethodTable(String id, IModel<List<MethodModel>> methodList) {
+            super(id);
+
+            this.add(new ListView<MethodModel>("methodList", methodList) {
+                @Override
+                protected void populateItem(ListItem<MethodModel> listItem) {
+                    MethodModel methodModel = listItem.getModelObject();
+                    listItem.add(newLink("method", methodModel));
+                    listItem.add(newLabel("documentation", methodModel.getDocumentation()));
+                    listItem.add(newLabel("request", methodModel.getRequestMediaType()));
+                    listItem.add(newLabel("response", methodModel.getResponseMediaType()));
+                }
+            });
+        }
+
+        private Label newLabel(String markupId, String s) {
+            Label label = new Label(markupId);
+            if (null != s) {
+                label.setDefaultModel(Model.of(s));
+            }
+            return label;
+        }
+
+        private AbstractLink newLink(String markupId, MethodModel methodModel) {
+            AbstractLink link = new AjaxLink(markupId) {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    try {
+                        if (!methodModel.hasRequest()) {
+                            codeString = intercloudClient.executeRequest(null, methodModel);
+                            target.add(codePanel);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Failed to execute request. {}", methodModel, e);
+                        target.appendJavaScript("alert('Failed to execute request.');");
+                    }
+                }
+            }.setBody(Model.of(methodModel.getMethodType()));
+
+            if (methodModel.hasRequest()) {
+                link.add(new AttributeAppender("class", " disabled"));
+            }
+            return link;
         }
     }
 }
