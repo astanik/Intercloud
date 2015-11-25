@@ -1,0 +1,15 @@
+<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config">
+
+	<xb:namespace uri="http://xml.apache.org/xmlbeans/2004/02/xbean/config">
+		<xb:package>de.tu_berlin.cit.intercloud.xmpp.cep.xmlbeans</xb:package>
+	</xb:namespace>
+
+	<xb:namespace uri="##any">
+		<xb:package>de.tu_berlin.cit.intercloud.xmpp.cep.xmlbeans</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace uri="urn:xmpp:eventlog">
+		<xb:package>de.tu_berlin.cit.intercloud.xmpp.cep.eventlog</xb:package>
+	</xb:namespace>
+	
+</xb:config>

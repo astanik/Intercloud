@@ -82,6 +82,7 @@
 		<module>xmpp-core</module>
 		<module>xmpp-rest</module>
 		<module>xmpp-occi</module>
+		<module>xmpp-cep</module>
 		<module>xmpp-component</module>
 		<module>xmpp-client</module>
 		<module>intercloud-root</module>
@@ -244,6 +245,11 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
 			<version>1.7.10</version>
 		</dependency>
 		<dependency>

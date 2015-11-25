@@ -16,11 +16,21 @@
 
 package de.tu_berlin.cit.intercloud.exchange;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.xmlbeans.XmlException;
+import org.dom4j.Element;
+
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
+import de.tu_berlin.cit.intercloud.xmpp.cep.ComplexEventProcessor;
+import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
+import de.tu_berlin.cit.intercloud.xmpp.core.packet.Message;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * TODO
@@ -29,6 +39,11 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
  */
 public class ExchangeComponent extends ResourceContainerComponent {
 	
+	/**
+	 * The 'eventlog' namespace
+	 * 
+	 */
+	public static final String NAMESPACE_EVENT_LOG = "urn:xmpp:eventlog";
 	
 	public ExchangeComponent(ResourceContainer container) {
 		super(container);
@@ -45,6 +60,16 @@ public class ExchangeComponent extends ResourceContainerComponent {
 	}
 
 	@Override
+	protected String[] discoInfoFeatureNamespaces() {
+		String[] array = super.discoInfoFeatureNamespaces();
+		@SuppressWarnings("unchecked")
+		List<String> asList = Arrays.asList(array);
+		ArrayList<String> features = new ArrayList<String>(asList);
+		features.add(NAMESPACE_EVENT_LOG);
+		return features.toArray(new String[0]);
+	}
+
+	@Override
 	protected void handleRestXWADL(ResourceTypeDocument parse) {
 		// TODO Auto-generated method stub
 		logger.info("handleRestXWADL");
@@ -56,7 +81,37 @@ public class ExchangeComponent extends ResourceContainerComponent {
 		logger.info("handleRestXML");
 	}
 
+	protected void handleEventLogXML(LogDocument parse) {
+		logger.info("handleEventLogXML");
+		ComplexEventProcessor.getInstance().processEvent(parse);
+	}
 
+	/**
+	 * This method handles the Message stanzas that are received by
+	 * the component. It passes all stanzas of type logevent to the
+	 * complex event processor.
+	 * 
+	 * @param message
+	 *            The Message stanza that was received by this component.
+	 */
+	@Override
+	protected void handleMessage(final Message message) {
+		logger.info("the following message stanza has been received:" +
+				message.toString());
+		
+		// check namespace.
+		final List<Element> eventElements = message.getChildElements("log", NAMESPACE_EVENT_LOG);
+		for(Element event : eventElements) {
+			logger.info("received event log message.");
+			try {
+				handleEventLogXML(LogDocument.Factory.parse(event.asXML()));
+			} catch (XmlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 //	public void postComponentStart() {
 //		String domain = this.getDomain().replace("exchange.", "");
 //	}

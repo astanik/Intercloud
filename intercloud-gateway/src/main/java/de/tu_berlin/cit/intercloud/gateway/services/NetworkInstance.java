@@ -17,20 +17,11 @@
 package de.tu_berlin.cit.intercloud.gateway.services;
 
 import org.jclouds.openstack.neutron.v2.features.NetworkApi;
-import org.jclouds.openstack.nova.v2_0.domain.Address;
-import org.jclouds.openstack.nova.v2_0.domain.Flavor;
-import org.jclouds.openstack.nova.v2_0.domain.Image;
-import org.jclouds.openstack.nova.v2_0.domain.Server;
 
-import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackComputeMixin;
-import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackImageMixin;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
-import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkingMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;

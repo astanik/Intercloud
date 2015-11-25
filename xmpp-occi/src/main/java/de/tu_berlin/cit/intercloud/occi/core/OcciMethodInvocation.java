@@ -46,8 +46,6 @@ public class OcciMethodInvocation extends MethodInvocation {
 				return UriText.class;
 			} else if(mediaType.equals(UriListText.MEDIA_TYPE)) {
 				return UriListText.class;
-			} else if(mediaType.equals(OcciText.MEDIA_TYPE)) {
-				return OcciText.class;
 			} else if(mediaType.equals(OcciXml.MEDIA_TYPE)) {
 				return OcciXml.class;
 			} else if(mediaType.equals(OcciListXml.MEDIA_TYPE)) {
