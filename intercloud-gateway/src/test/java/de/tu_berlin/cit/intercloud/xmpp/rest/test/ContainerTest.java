@@ -22,9 +22,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.tu_berlin.cit.intercloud.gateway.services.Compute;
-import de.tu_berlin.cit.intercloud.occi.core.OcciClient;
+import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
+import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
-import de.tu_berlin.cit.intercloud.occi.core.OcciMethodInvocation;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;

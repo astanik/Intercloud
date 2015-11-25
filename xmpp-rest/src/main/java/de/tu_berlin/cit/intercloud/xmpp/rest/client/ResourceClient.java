@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.rest;
+package de.tu_berlin.cit.intercloud.xmpp.rest.client;
 
 import java.util.ArrayList;
 import java.util.List;
