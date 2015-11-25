@@ -17,13 +17,11 @@
 package de.tu_berlin.cit.intercloud.xmpp.cep.sensor;
 
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 
 import com.sun.management.OperatingSystemMXBean;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 

@@ -16,7 +16,6 @@
 
 package de.tu_berlin.cit.intercloud.occi.core;
 
-import de.tu_berlin.cit.intercloud.occi.core.OcciText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
@@ -54,8 +53,6 @@ public class OcciClient extends ResourceClient {
 				return UriText.class;
 			} else if(mediaType.equals(UriListText.MEDIA_TYPE)) {
 				return UriListText.class;
-			} else if(mediaType.equals(OcciText.MEDIA_TYPE)) {
-				return OcciText.class;
 			} else if(mediaType.equals(OcciXml.MEDIA_TYPE)) {
 				return OcciXml.class;
 			} else if(mediaType.equals(OcciListXml.MEDIA_TYPE)) {

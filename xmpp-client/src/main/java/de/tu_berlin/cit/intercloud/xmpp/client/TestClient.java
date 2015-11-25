@@ -101,6 +101,7 @@ public class TestClient {
 		if (null != method) {
 			XmppRestMethod xmppRestMethod = client.buildMethodInvocation(method);
 			Representation representation = xmppRestMethod.invoke();
+			System.out.println(representation.toString());
 		}
 	}
 

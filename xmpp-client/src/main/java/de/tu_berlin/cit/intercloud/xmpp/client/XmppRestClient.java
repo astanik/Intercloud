@@ -32,15 +32,12 @@ import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
-import de.tu_berlin.cit.intercloud.occi.core.OcciText;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.GetXwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType.Enum;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
 
@@ -104,15 +101,9 @@ public class XmppRestClient extends OcciClient {
 	}
 
 
-	public Method getMethod(Enum type, OcciText occiText, UriText uriText) {
-		String requestMediaType = null == occiText ? null : occiText.MEDIA_TYPE;
-		String responseMediaType = null == uriText ? null : uriText.MEDIA_TYPE;
-		return getMethod(type, requestMediaType, responseMediaType);
-	}
-
 	public Method getMethod(Enum type, OcciXml occiXml, OcciListXml occiListXml) {
-		String requestMediaType = null == occiXml ? null : occiXml.MEDIA_TYPE;
-		String responseMediaType = null == occiListXml ? null : occiListXml.MEDIA_TYPE;
+		String requestMediaType = null == occiXml ? null : OcciXml.MEDIA_TYPE;
+		String responseMediaType = null == occiListXml ? null : OcciListXml.MEDIA_TYPE;
 		return getMethod(type, requestMediaType, responseMediaType);
 	}
 
