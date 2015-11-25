@@ -30,7 +30,7 @@ import org.jivesoftware.smack.packet.IQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.tu_berlin.cit.intercloud.occi.core.OcciClient;
+import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.GetXwadlIQ;

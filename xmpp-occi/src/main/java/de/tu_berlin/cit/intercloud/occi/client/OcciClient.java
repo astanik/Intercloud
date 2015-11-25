@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.core;
+package de.tu_berlin.cit.intercloud.occi.client;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceClient;
+import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.xmpp.rest.client.ResourceClient;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
