@@ -4,7 +4,6 @@ import java.lang.management.ManagementFactory;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.xml.namespace.QName;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,13 +15,10 @@ import com.espertech.esper.client.EventType;
 import com.espertech.esper.client.UpdateListener;
 import com.sun.management.OperatingSystemMXBean;
 
-import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.cep.ComplexEventProcessor;
-import de.tu_berlin.cit.intercloud.xmpp.cep.LogEventBuilder;
 import de.tu_berlin.cit.intercloud.xmpp.cep.StatementBuilder;
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
-import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument.Log;
-import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument.Log.Tag;
+import de.tu_berlin.cit.intercloud.xmpp.cep.events.CpuUtilizationEvent;
 
 public class CEPTest {
 
@@ -50,18 +46,7 @@ public class CEPTest {
 	    public void run() {
 	    	double sysCpu = osManager.getSystemCpuLoad() * 100;
 	    	double jvmCpu = osManager.getProcessCpuLoad() * 100;
-	    	LogDocument event = LogEventBuilder.build(sensorURI, vmURI);
-	    	Log log = event.getLog();
-	    	// set system cpu
-	    	Tag tag = log.addNewTag();
-	    	tag.setType(new QName("xs:double"));
-	    	tag.setName("sysCpu");
-	    	tag.setValue(new Double(sysCpu).toString());
-	    	// set jvm cpu
-	    	tag = log.addNewTag();
-	    	tag.setType(new QName("xs:double"));
-	    	tag.setName("jvmCpu");
-	    	tag.setValue(new Double(jvmCpu).toString());
+	    	LogDocument event = CpuUtilizationEvent.build(sensorURI, vmURI, sysCpu);
 	    	// process event
 	    	ComplexEventProcessor.getInstance().processEvent(event);
 	    	logger.info("Event had been processed");
@@ -106,7 +91,7 @@ public class CEPTest {
 	
 	@Test
 	public void cepTest() {
-		EPStatement st = StatementBuilder.build(sensorURI, vmURI);
+		EPStatement st = StatementBuilder.buildCpuUtilization(sensorURI, vmURI, 5);
 		MyListener listener = new MyListener();
 		st.addListener(listener);
 		// start measuring 

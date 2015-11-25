@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.cep;
+package de.tu_berlin.cit.intercloud.xmpp.cep.events;
 
 import java.util.Calendar;
 
@@ -25,13 +25,52 @@ import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument.Log;
 
 /**
- * TODO
+ * Basis class for all event types. This class also provides the constant
+ * string for the default event stream.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-public class LogEventBuilder {
+public class LogEvent {
 
-	protected final static Logger logger = LoggerFactory.getLogger(LogEventBuilder.class);
+	protected static final Logger logger = LoggerFactory.getLogger(LogEvent.class);
+
+	public static final String LogEventStream = "LogEvent";
+	
+	private String object;
+	
+	private String subject;
+	
+	private Calendar timestamp;
+	
+	protected LogEvent(String object, String subject, Calendar timestamp) {
+		this.object = object;
+		this.subject = subject;
+		this.timestamp = timestamp;
+	}
+	
+	public String getObject() {
+		return object;
+	}
+
+	public void setObject(String object) {
+		this.object = object;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public Calendar getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Calendar timestamp) {
+		this.timestamp = timestamp;
+	}
 
 	public static LogDocument build(String sensorPath, String subjectPath) {
 		logger.info("Start building log event document ...");
@@ -44,9 +83,16 @@ public class LogEventBuilder {
 		log.setSubject(subjectPath);
 		// set timestamp
 		log.setTimestamp(Calendar.getInstance());
-		// set message
-		log.setMessage("Test");
 		
+		logger.info("Finished building basic log event document: " + event.toString());
+		return event;
+	}
+
+	public static LogDocument build(String sensorPath, String subjectPath, String message) {
+		LogDocument event = LogEvent.build(sensorPath, subjectPath);
+		// set message
+		event.getLog().setMessage(message);
+
 		logger.info("Finished building log event document: " + event.toString());
 		return event;
 	}

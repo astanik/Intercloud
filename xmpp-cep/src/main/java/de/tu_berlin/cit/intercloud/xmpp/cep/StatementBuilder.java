@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 
+import de.tu_berlin.cit.intercloud.xmpp.cep.events.CpuUtilizationEvent;
+
 /**
  * TODO
  * 
@@ -35,7 +37,9 @@ public class StatementBuilder {
 		logger.info("Start building statement ...");
 
 		// create new expression
-		String expression = "select object, subject, timestamp, tag[0].type, tag[0].name, tag[0].value from LogEvent.win:time(3 sec)";
+		String expression = "select object, subject, timestamp, avg(utilization) from CpuUtilizationEvent.win:time(5 sec) ";
+//		String expression = "select object, subject, timestamp, utilization from CpuUtilizationEvent.win:time(5 sec)";
+//		String expression = "select object, subject, timestamp, tag[0].type, tag[0].name, tag[0].value from LogEvent.win:time(3 sec)";
 //		String expression = "select object, subject, timestamp, tag[0].type, tag[0].name, tag[0].value, min(tag[0].value), avg(tag[0].value), max(tag[0].value) from LogEvent.win:time(3 sec)";
 //		String expression = "select * from LogEvent";
 		// create new statement
@@ -44,6 +48,67 @@ public class StatementBuilder {
 		
 		logger.info("Finished building statement: " + expression);
 		return statement;
+	}
+
+	public static EPStatement buildCpuUtilization(String sensorPath, String subjectPath, int seconds) {
+		logger.info("Start building statement ...");
+		
+		// create the select clause
+		String expression = "select avg(" + CpuUtilizationEvent.CpuUtilizationTag + ")";
+		// create alias
+		expression = expression + " as AverageUtilization";
+		// set the event stream
+		expression = expression + buildFrom(CpuUtilizationEvent.CpuUtilizationStream);
+		// set time window
+		expression = expression + ".win:time(" + seconds + " sec)";
+		// build where clause
+		expression = expression + buildWhere(sensorPath, subjectPath);
+		
+		
+		
+		// create new expression
+//		String expression = "select object, subject, timestamp, avg(utilization) from CpuUtilizationEvent.win:time(5 sec) ";
+//		String expression = "select object, subject, timestamp, utilization from CpuUtilizationEvent.win:time(5 sec)";
+//		String expression = "select object, subject, timestamp, tag[0].type, tag[0].name, tag[0].value from LogEvent.win:time(3 sec)";
+//		String expression = "select object, subject, timestamp, tag[0].type, tag[0].name, tag[0].value, min(tag[0].value), avg(tag[0].value), max(tag[0].value) from LogEvent.win:time(3 sec)";
+//		String expression = "select * from LogEvent";
+		// create new statement
+		EPServiceProvider epService = ComplexEventProcessor.getInstance().getProvider();
+		EPStatement statement = epService.getEPAdministrator().createEPL(expression);
+		
+		logger.info("Finished building statement: " + expression);
+		return statement;
+	}
+
+	/**
+	 * Returns a from clause for a specific event stream
+	 * @param eventStream The particular event stream
+	 * @return The from clause
+	 */
+	private static String buildFrom(String eventStream) {
+		return " from " + eventStream;
+	}
+	
+	/**
+	 * Returns the where clause for a specific sensor and a specific subject
+	 * @param sensorPath The sensor's full jid
+	 * @param subjectPath The subject's full jid
+	 * @return The where clause
+	 */
+	private static String buildWhere(String sensorPath, String subjectPath) {
+		// create subject selection
+		String expression = buildWhere(sensorPath);
+		return expression + "and subject = '" + subjectPath + "'";
+	}
+
+	/**
+	 * Returns the where clause for a specific sensor
+	 * @param sensorPath The sensor's full jid
+	 * @return The where clause
+	 */
+	private static String buildWhere(String sensorPath) {
+		// create sensor selection
+		return " where object = '" + sensorPath + "'";
 	}
 
 }
