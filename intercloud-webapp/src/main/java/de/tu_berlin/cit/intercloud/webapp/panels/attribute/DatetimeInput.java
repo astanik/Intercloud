@@ -2,7 +2,7 @@ package de.tu_berlin.cit.intercloud.webapp.panels.attribute;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
-import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
+import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
 import org.apache.wicket.model.PropertyModel;
 
 class DatetimeInput extends TextInput {

@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.attribute;
 
-import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
+import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 

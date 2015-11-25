@@ -2,7 +2,7 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
-import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
+import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;

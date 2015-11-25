@@ -4,8 +4,8 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeClassif
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
-import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Attribute;
-import de.tu_berlin.cit.intercloud.xmpp.client.occi.representation.Kind;
+import de.tu_berlin.cit.intercloud.client.model.occi.Attribute;
+import de.tu_berlin.cit.intercloud.client.model.occi.Kind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.wicket.ajax.AjaxRequestTarget;

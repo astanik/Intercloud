@@ -97,7 +97,7 @@
 		<!-- PROJECT DEPENDENCIES -->
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>xmpp-client</artifactId>
+			<artifactId>intercloud-client</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 

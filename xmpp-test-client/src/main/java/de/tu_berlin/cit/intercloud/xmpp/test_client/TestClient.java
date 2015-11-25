@@ -14,7 +14,29 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.client;
+package de.tu_berlin.cit.intercloud.xmpp.test_client;
+
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
+import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
+import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
+import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestMethod;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
+import org.apache.xmlbeans.XmlException;
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo.Identity;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -22,28 +44,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
-
-import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
-import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
-import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
-import org.apache.xmlbeans.XmlException;
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException.XMPPErrorException;
-import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
-import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
-import org.jivesoftware.smackx.disco.packet.DiscoverItems;
-import org.jivesoftware.smackx.disco.packet.DiscoverInfo.Identity;
-import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
-
-import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
-import de.tu_berlin.cit.intercloud.xmpp.client.XmppRestClient;
 
 /**
  * TODO

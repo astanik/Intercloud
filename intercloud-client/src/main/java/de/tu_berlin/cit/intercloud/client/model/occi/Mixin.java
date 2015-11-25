@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.xmpp.client.occi.representation;
+package de.tu_berlin.cit.intercloud.client.model.occi;
 
 public class Mixin extends Category {
 
