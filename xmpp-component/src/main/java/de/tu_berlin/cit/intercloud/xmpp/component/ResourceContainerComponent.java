@@ -17,9 +17,7 @@
 package de.tu_berlin.cit.intercloud.xmpp.component;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import org.apache.xmlbeans.XmlException;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -27,10 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
-import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.AbstractComponent;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
-import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ.Type;
+import de.tu_berlin.cit.intercloud.xmpp.core.packet.Packet;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
@@ -59,13 +56,12 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 
 	private final ResourceContainer container;
 	
-	private String rootJID = null;
-
-	private String exchangeJID = null;
-
+	private final ResourceContainerSocketManager socketManager;
+	
 
 	protected ResourceContainerComponent(ResourceContainer container) {
 		this.container = container;
+		this.socketManager = ResourceContainerSocketManager.buildInstance(this);
 	}
 
 	@Override
@@ -180,90 +176,8 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 		logger.info("the following iq result stanza has been received:" +
 				iq.toString());
 		
-		// IQ get (and set) stanza's MUST be replied to.
-		final Element childElement = iq.getChildElement();
-		String namespace = null;
-		if (childElement != null) {
-			namespace = childElement.getNamespaceURI();
-		}
-		if (namespace == null) {
-			logger.info("(serving component '{}') Invalid XMPP "
-					+ "- no child element or namespace in IQ "
-					+ "request (packetId {})", getName(), iq.getID());
-			// this isn't valid XMPP.
-			return;
-		}
-		if (NAMESPACE_DISCO_ITEMS.equals(namespace)) {
-			logger.info("discovery item result.");
-			@SuppressWarnings("rawtypes")
-			Iterator iter = childElement.elementIterator();
-			while (iter.hasNext()) {
-				Element item = (Element) iter.next();
-				// filter
-				if(item.attributeValue("name").equals(ServiceNames.RootComponentName)) {
-					this.rootJID = item.attributeValue("jid");
-					System.out.println("Discovered root jid: " + this.rootJID);
-					discoverIntercloudFeatures(this.rootJID);
-				} else if(item.attributeValue("name").equals(ServiceNames.ExchangeComponentName)) {
-					this.exchangeJID = item.attributeValue("jid");
-					System.out.println("Discovered exchange jid: " + this.exchangeJID);
-					discoverIntercloudFeatures(this.exchangeJID);
-				}
-			}
-		} else if (NAMESPACE_DISCO_INFO.equals(namespace)) {
-			logger.info("discovery info result.");
-			@SuppressWarnings("rawtypes")
-			Iterator iter = childElement.elementIterator();
-			while (iter.hasNext()) {
-				Element feature = (Element) iter.next();
-				if(feature.getName().equals("feature")) {
-					String fet = feature.attributeValue("var");
-					System.out.println("Discovered feature: " + fet);
-				}
-			}
-			if(this.rootJID != null) {
-				if(iq.getFrom().equals(this.rootJID))
-					rootDiscovered();
-			}
-			if(this.exchangeJID != null) {
-				if(iq.getFrom().equals(this.exchangeJID))
-					exchangeDiscovered();
-			}
-		} else if (NAMESPACE_REST_XWADL.equals(namespace)) {
-			logger.info("received xwadl iq.");
-			try {
-				handleRestXWADL(ResourceTypeDocument.Factory.parse(childElement
-						.asXML()));
-			} catch (XmlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		} else if (NAMESPACE_REST_XML.equals(namespace)) {
-			logger.info("received rest xml iq.");
-			try {
-				handleRestXML(ResourceDocument.Factory.parse(childElement
-						.asXML()));
-			} catch (XmlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		this.socketManager.handleIQResult(iq);
 	}
-
-	protected void rootDiscovered() {
-		// Doesn't do anything. Override this method to process IQ stanzas.
-		logger.info("root discovery successfully completed!");
-	}
-
-	protected void exchangeDiscovered() {
-		// Doesn't do anything. Override this method to process IQ stanzas.
-		logger.info("exchange discovery successfully completed!");
-	}
-
-	protected abstract void handleRestXWADL(ResourceTypeDocument parse);
-
-	protected abstract void handleRestXML(ResourceDocument parse);
 
 	/**
 	 * Override this method to handle the IQ stanzas of type <tt>error</tt> that
@@ -274,44 +188,22 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	 *            The IQ stanza of type <tt>error</tt> that was received by this
 	 *            component.
 	 */
-	// @Override
-	// protected void handleIQError(IQ iq) {
-	// Doesn't do anything. Override this method to process IQ error
-	// stanzas.
-	// log.info("(serving component '{}') IQ stanza "
-	// + "of type <tt>error</tt> received: ", getName(), iq.toXML());
-	// }
-
-	public void discoverIntercloudServices(String domain) {
-		// discover services
-		IQ discoIQ = new IQ(Type.get);
-		logger.info("Start discovering domain: " + domain);
-		discoIQ.setTo(domain);
-		discoIQ.setFrom(getJID());
-		discoIQ.setChildElement("query", NAMESPACE_DISCO_ITEMS);
-		logger.info(discoIQ.toXML());
-		// the response have to be caught in handleIQResult
-		send(discoIQ);
+	@Override
+	protected void handleIQError(IQ iq) {
+		logger.info("the following iq error stanza has been received:" +
+				iq.toString());
+		
+		this.socketManager.handleIQError(iq);
 	}
 
-	public void discoverIntercloudFeatures(String jid) {
-		// discover services
-		IQ discoIQ = new IQ(Type.get);
-		logger.info("Start discovering features of: " + jid);
-		discoIQ.setTo(jid);
-		discoIQ.setFrom(getJID());
-		discoIQ.setChildElement("query", NAMESPACE_DISCO_INFO);
-		logger.info(discoIQ.toXML());
-		// the response have to be caught in handleIQResult
-		send(discoIQ);
-	}
-
-	public String getRootJID() {
-		return this.rootJID;
-	}
-	
-	public String getExchangeJID() {
-		return this.exchangeJID;
+	/**
+	 * Helper method for socket manager to send packets.
+	 * 
+	 * @param packet
+	 *            The packet to send.
+	 */
+	protected void sendPacket(Packet packet) {
+		send(packet);
 	}
 
 }

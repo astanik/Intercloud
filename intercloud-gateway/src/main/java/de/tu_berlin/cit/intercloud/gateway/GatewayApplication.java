@@ -121,7 +121,7 @@ public class GatewayApplication {
 			GatewayComponent component = new GatewayComponent(container);
 			mgr.addComponent(subDomain, component);
 			logger.info("Container is up and running...");
-			component.discoverIntercloudServices(gatewayConf.getXmppDomain());
+//			component.discoverIntercloudServices(gatewayConf.getXmppDomain());
 			new GatewayApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {
 			logger.error(e.getMessage());

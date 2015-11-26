@@ -19,8 +19,6 @@ package de.tu_berlin.cit.intercloud.root;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 /**
  * TODO
@@ -43,14 +41,4 @@ public class RootComponent extends ResourceContainerComponent {
 		return "This is the Intercloud Root service.";
 	}
 
-	@Override
-	protected void handleRestXWADL(ResourceTypeDocument parse) {
-		// Do nothing, because root should never receive result IQs
-	}
-
-	@Override
-	protected void handleRestXML(ResourceDocument parse) {
-		// Do nothing, because root should never receive result IQs
-	}
-	
 }

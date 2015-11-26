@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.gateway;
+package de.tu_berlin.cit.intercloud.xmpp.component;
 
-import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
-import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * TODO
+ * This class provides a white list for all known trusted root server. 
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-public class GatewayComponent extends ResourceContainerComponent {
-	
-	public GatewayComponent(ResourceContainer container) {
-		super(container);
+public class RootServerWhitelist {
+
+	public static final List<String> list;
+
+	static {
+		list = new ArrayList<String>();
+
+		// root server
+		list.add("root.intercloud-network.de");
+		// list.add("root.intercloudtestbed.org");
 	}
 
-	@Override
-	public String getName() {
-		return ServiceNames.GatewayComponentName;
-	}
-
-	@Override
-	public String getDescription() {
-		return "This is one Intercloud Gateway service.";
-	}
-	
 }

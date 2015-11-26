@@ -28,8 +28,6 @@ import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.Message;
 import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
@@ -67,18 +65,6 @@ public class ExchangeComponent extends ResourceContainerComponent {
 		ArrayList<String> features = new ArrayList<String>(asList);
 		features.add(NAMESPACE_EVENT_LOG);
 		return features.toArray(new String[0]);
-	}
-
-	@Override
-	protected void handleRestXWADL(ResourceTypeDocument parse) {
-		// TODO Auto-generated method stub
-		logger.info("handleRestXWADL");
-	}
-
-	@Override
-	protected void handleRestXML(ResourceDocument parse) {
-		// TODO Auto-generated method stub
-		logger.info("handleRestXML");
 	}
 
 	protected void handleEventLogXML(LogDocument parse) {
