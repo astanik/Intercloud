@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.xmpp.client;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
+package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
 import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
 import de.tu_berlin.cit.intercloud.util.exceptions.ConfigurationException;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQProvider;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQProvider;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
@@ -30,10 +31,8 @@ import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
-import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
-import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQProvider;
-import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
-import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQProvider;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 
 /**

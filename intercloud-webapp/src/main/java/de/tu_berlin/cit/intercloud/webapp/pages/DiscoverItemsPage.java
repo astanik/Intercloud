@@ -1,8 +1,8 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.tu_berlin.cit.intercloud.webapp.ComponentUtils;
+import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
-import de.tu_berlin.cit.intercloud.webapp.xmpp.XmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -14,11 +14,8 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,21 +41,19 @@ public class DiscoverItemsPage extends UserTemplate {
     }
 
     private class DiscoverForm extends Form {
-        private String domain = getIntercloudWebSession().getUser().getUri().getDomain();
+        private String domain = IntercloudWebSession.get().getUser().getUri().getDomain();
 
         public DiscoverForm(String markupId) {
             super(markupId);
-            this.setDefaultModel(new CompoundPropertyModel<Object>(this));
 
             this.add(new TextField<>("domain", new PropertyModel<>(this, "domain")).setRequired(true));
             this.add(new AjaxButton("discoverBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
-                        AbstractXMPPConnection connection = getIntercloudWebSession().getConnection();
                         XmppURI uri = new XmppURI(domain, "");
                         discoItems.clear();
-                        discoItems.addAll(XmppService.getInstance().discoverXmppRestfulItems(connection, uri));
+                        discoItems.addAll(IntercloudWebSession.get().getXmppService().discoverRestfulItems(uri));
                         if (!discoItems.isEmpty()) {
                             // display items form
                             target.add(ComponentUtils.displayBlock(itemsContainer));
@@ -99,7 +94,7 @@ public class DiscoverItemsPage extends UserTemplate {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     String domain = radioGroup.getDefaultModelObjectAsString();
                     if (null != domain && !domain.trim().isEmpty()) {
-                        setResponsePage(GetXwadlPage.class, new PageParameters().add(GetXwadlPage.PARAM_DOMAIN, domain));
+                        setResponsePage(new GetXwadlPage(Model.of(domain)));
                     } else {
                         target.appendJavaScript("alert('Please select a value from the radio group!');");
                     }

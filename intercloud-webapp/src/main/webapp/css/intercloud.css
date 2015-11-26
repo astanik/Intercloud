@@ -1,3 +1,12 @@
-.navbar-brand > img {
+.navbar .navbar-brand > img {
     height: 25px;
+}
+
+.form-label {
+    margin-bottom: 5px;
+}
+
+.table-noborder td, .table-noborder th, .table-noborder {
+    border: none !important;
+    margin-bottom: 0px;
 }

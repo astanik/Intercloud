@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head/>
+<body>
+
+<wicket:extend>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Examples</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Attribute Input Form</h2>
+        </div>
+        <div class="col-md-6">
+            <form wicket:id="attributeForm">
+                <wicket:panel wicket:id="attributePanel"/>
+                <button wicket:id="attributeSubmit" type="submit" class="btn btn-default">Test</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>XMPP Rest Method Selection</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well">
+                <table class="table table-noborder">
+                    <tr>
+                        <td>Documentation:</td>
+                        <td>This method creates a new virtual machine.</td>
+                    </tr>
+                    <tr>
+                        <td>Request Media Type:</td>
+                        <td>xml/occi</td>
+                    </tr>
+                    <tr>
+                        <td>Resonse Media Type:</td>
+                        <td>text/uri</td>
+                    </tr>
+
+                    <tr>
+                        <td><a class="btn btn-success">GET</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><a class="btn btn-info">POST</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><a class="btn btn-warning">PUT</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><a class="btn btn-danger">DELETE</a></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <tr>
+                    <th>Method</th>
+                    <th>Documentation</th>
+                    <th>Request</th>
+                    <th>Response</th>
+                </tr>
+                <tr>
+                    <td><a class="btn btn-info">POST</a></td>
+                    <td>This method creates a new virtual machine.</td>
+                    <td>xml/occi</td>
+                    <td>text/uri</td>
+                </tr>
+                <tr>
+                    <td><a class="btn btn-success">GET</a></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a class="btn btn-warning">PUT</a></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a class="btn btn-danger">DELETE</a></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</wicket:extend>
+
+</body>
+</html>

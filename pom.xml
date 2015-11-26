@@ -85,10 +85,12 @@
 		<module>xmpp-cep</module>
 		<module>xmpp-component</module>
 		<module>xmpp-client</module>
+		<module>xmpp-test-client</module>
 		<module>intercloud-root</module>
 		<module>intercloud-exchange</module>
 		<module>intercloud-gateway</module>
 		<module>intercloud-webapp</module>
+		<module>intercloud-client</module>
 	</modules>
 
 	<properties>
