@@ -1,15 +1,21 @@
 package de.tu_berlin.cit.intercloud.client.model.occi;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class CategoryModel implements Serializable {
     private static final long serialVersionUID = -158045063500836807L;
 
     private final String term;
     private final String schema;
-    private final List<AttributeModel> attributes = new ArrayList<>();
+    private final Map<String, AttributeModel> attributes = new LinkedHashMap<>();
+    private final Set<String> templates = new LinkedHashSet<>();
+
+    private String title;
 
     public CategoryModel(String term, String schema) {
         this.term = term;
@@ -17,18 +23,38 @@ public abstract class CategoryModel implements Serializable {
     }
 
     public String getTerm() {
-        return term;
+        return this.term;
     }
 
     public String getSchema() {
-        return schema;
+        return this.schema;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void addAttribute(AttributeModel attribute) {
-        attributes.add(attribute);
+        this.attributes.put(attribute.getName(), attribute);
     }
 
-    public List<AttributeModel> getAttributes() {
-       return attributes;
+    public AttributeModel getAttribute(String name) {
+        return this.attributes.get(name);
+    }
+
+    public Collection<AttributeModel> getAttributes() {
+       return this.attributes.values();
+    }
+
+    public void addTemplate(String templateTitle) {
+        addTemplate(templateTitle);
+    }
+
+    public Collection<String> getTemplates() {
+        return this.templates;
     }
 }

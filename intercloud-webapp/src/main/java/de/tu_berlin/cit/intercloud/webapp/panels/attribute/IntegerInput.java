@@ -5,8 +5,8 @@ import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.PropertyModel;
 
 class IntegerInput extends NumberInput {
-    public IntegerInput(String markupId, AttributeModel attribute) {
-        super(markupId, attribute);
+    public IntegerInput(String markupId, AttributeModel attribute, boolean enabled) {
+        super(markupId, attribute, enabled);
         this.add(new NumberTextField<Integer>("attributeValue", new PropertyModel<>(attribute, "integer"))
                 .setRequired(attribute.isRequired()));
     }

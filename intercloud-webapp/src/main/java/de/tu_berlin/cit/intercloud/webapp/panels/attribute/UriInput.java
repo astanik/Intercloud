@@ -5,10 +5,10 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
 class UriInput extends TextInput {
-    public UriInput(String markupId, AttributeModel attribute) {
-        super(markupId, attribute);
+    public UriInput(String markupId, AttributeModel attribute, boolean enabled) {
+        super(markupId, attribute, enabled);
         this.add(new TextField<String>("attributeValue", new PropertyModel<>(attribute, "uri"))
-                .setRequired(attribute.isRequired()));
+                .setRequired(attribute.isRequired()).setEnabled(enabled));
         // TODO xmpp uri validation???
     }
 }
