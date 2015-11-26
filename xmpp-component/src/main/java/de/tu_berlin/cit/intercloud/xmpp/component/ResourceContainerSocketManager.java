@@ -16,21 +16,19 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.component;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Exchanger;
 
 import org.apache.xmlbeans.XmlException;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
-import de.tu_berlin.cit.intercloud.xmpp.core.component.AbstractComponent;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ;
+import de.tu_berlin.cit.intercloud.xmpp.core.packet.Message;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.Packet;
 import de.tu_berlin.cit.intercloud.xmpp.core.packet.IQ.Type;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
@@ -59,7 +57,11 @@ public class ResourceContainerSocketManager {
 	/**
 	 * Map of connected sockets
 	 */
-	private ConcurrentHashMap<ResourceContainerSocket, String> connections = new ConcurrentHashMap<ResourceContainerSocket, String>();
+	private ConcurrentHashMap<String, ResourceContainerSocket> connections = new ConcurrentHashMap<String, ResourceContainerSocket>();
+	
+	private final Exchanger<IntercloudDiscoItems> discoItemExchanger = new Exchanger<IntercloudDiscoItems>();
+	
+	private final Exchanger<IntercloudDiscoFeatures> discoFeatureExchanger = new Exchanger<IntercloudDiscoFeatures>();
 	
 	/**
 	 * Default constructor
@@ -98,49 +100,26 @@ public class ResourceContainerSocketManager {
 		return ResourceContainerSocketManager.instance;
 	}
 	
-	public synchronized ResourceContainerSocket createRootSocket() {
-		this.getRootJID();
-		return new ResourceContainerSocket(this);
-	}
-	
-	public synchronized ResourceContainerSocket createExchangeSocket() {
-		return new ResourceContainerSocket(this);
-	}
-	
-	public synchronized ResourceContainerSocket createGatewaySocket() {
-		return new ResourceContainerSocket(this);
+	public ResourceContainerSocket createSocket(String jid) {
+		return new ResourceContainerSocket(this, jid);
 	}
 
-	private ResourceContainerSocket createSocket() {
-		return new ResourceContainerSocket(this);
-	}
-
-	protected void sendPacket(Packet packet) {
-		this.component.sendPacket(packet);
-	}
 	
-	protected void createConnection(ResourceContainerSocket resourceContainerSocket) {
-		this.connections.put(resourceContainerSocket, "todo");
-		// TODO Auto-generated method stub
+	public synchronized IntercloudDiscoItems discoverIntercloudServices() {
+		this.sendDiscoveryItems(this.component.getDomain());
+		// wait for discovery result
+		IntercloudDiscoItems discoItems = new IntercloudDiscoItems();
+		try {
+			discoItems = discoItemExchanger.exchange(discoItems);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-	}
-
-	protected void deleteConnection(ResourceContainerSocket resourceContainerSocket) {
-		this.connections.remove(resourceContainerSocket);
-		// TODO Auto-generated method stub
-		
+		return discoItems;
 	}
 	
-	private String getRootJID() {
-		//TODO
-		return ""; //this.rootJID;
-	}
-	
-	public String getExchangeJID() {
-		return ""; //this.exchangeJID;
-	}
-
-	private void discoverIntercloudServices(String domain) {
+	private void sendDiscoveryItems(String domain) {
 		// discover services
 		IQ discoIQ = new IQ(Type.get);
 		logger.info("Start discovering domain: " + domain);
@@ -149,10 +128,24 @@ public class ResourceContainerSocketManager {
 		discoIQ.setChildElement("query", ResourceContainerComponent.NAMESPACE_DISCO_ITEMS);
 		logger.info(discoIQ.toXML());
 		// the response have to be caught in handleIQResult
-		sendPacket(discoIQ);
+		this.sendPacket(discoIQ);
 	}
 
-	private void discoverIntercloudFeatures(String jid) {
+	public synchronized IntercloudDiscoFeatures discoverIntercloudFeatures(String jid) {
+		this.sendDiscoveryFeatures(jid);
+		// wait for discovery result
+		IntercloudDiscoFeatures discoFeatures = new IntercloudDiscoFeatures(jid);
+		try {
+			discoFeatures = discoFeatureExchanger.exchange(discoFeatures);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return discoFeatures;
+	}
+	
+	private void sendDiscoveryFeatures(String jid) {
 		// discover services
 		IQ discoIQ = new IQ(Type.get);
 		logger.info("Start discovering features of: " + jid);
@@ -161,7 +154,7 @@ public class ResourceContainerSocketManager {
 		discoIQ.setChildElement("query", ResourceContainerComponent.NAMESPACE_DISCO_INFO);
 		logger.info(discoIQ.toXML());
 		// the response have to be caught in handleIQResult
-		sendPacket(discoIQ);
+		this.sendPacket(discoIQ);
 	}
 	
 
@@ -176,7 +169,7 @@ public class ResourceContainerSocketManager {
 	protected void handleIQResult(IQ iq) {
 		logger.info("the following iq result stanza has been received:" +
 				iq.toString());
-/*		
+		
 		// IQ get (and set) stanza's MUST be replied to.
 		final Element childElement = iq.getChildElement();
 		String namespace = null;
@@ -186,87 +179,107 @@ public class ResourceContainerSocketManager {
 		if (namespace == null) {
 			logger.info("(serving component '{}') Invalid XMPP "
 					+ "- no child element or namespace in IQ "
-					+ "request (packetId {})", getName(), iq.getID());
+					+ "request (packetId {})", this.component.getName(), iq.getID());
 			// this isn't valid XMPP.
 			return;
 		}
-		if (NAMESPACE_DISCO_ITEMS.equals(namespace)) {
+		if (ResourceContainerComponent.NAMESPACE_DISCO_ITEMS.equals(namespace)) {
 			logger.info("discovery item result.");
 			@SuppressWarnings("rawtypes")
 			Iterator iter = childElement.elementIterator();
+			String rootJID = null;
+			ArrayList<String> exchangeJIDs = new ArrayList<String>();
+			ArrayList<String> gatewayJIDs = new ArrayList<String>();
 			while (iter.hasNext()) {
 				Element item = (Element) iter.next();
 				// filter
 				if(item.attributeValue("name").equals(ServiceNames.RootComponentName)) {
-					this.rootJID = item.attributeValue("jid");
-					System.out.println("Discovered root jid: " + this.rootJID);
-					discoverIntercloudFeatures(this.rootJID);
+					rootJID = item.attributeValue("jid");
 				} else if(item.attributeValue("name").equals(ServiceNames.ExchangeComponentName)) {
-					this.exchangeJID = item.attributeValue("jid");
-					System.out.println("Discovered exchange jid: " + this.exchangeJID);
-					discoverIntercloudFeatures(this.exchangeJID);
+					exchangeJIDs.add(item.attributeValue("jid"));
+				} else if(item.attributeValue("name").equals(ServiceNames.GatewayComponentName)) {
+					gatewayJIDs.add(item.attributeValue("jid"));
 				}
 			}
-		} else if (NAMESPACE_DISCO_INFO.equals(namespace)) {
+			IntercloudDiscoItems discoItems = new IntercloudDiscoItems(rootJID, exchangeJIDs, gatewayJIDs);
+			try {
+				discoItems = discoItemExchanger.exchange(discoItems);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (ResourceContainerComponent.NAMESPACE_DISCO_INFO.equals(namespace)) {
 			logger.info("discovery info result.");
 			@SuppressWarnings("rawtypes")
 			Iterator iter = childElement.elementIterator();
+			ArrayList<String> features = new ArrayList<String>();
 			while (iter.hasNext()) {
 				Element feature = (Element) iter.next();
 				if(feature.getName().equals("feature")) {
-					String fet = feature.attributeValue("var");
-					System.out.println("Discovered feature: " + fet);
+					features.add(feature.attributeValue("var"));
 				}
 			}
-			if(this.rootJID != null) {
-				if(iq.getFrom().equals(this.rootJID))
-					rootDiscovered();
+			IntercloudDiscoFeatures discoFeatures = new IntercloudDiscoFeatures(iq.getFrom().toBareJID(), features);
+			try {
+				discoFeatures = discoFeatureExchanger.exchange(discoFeatures);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if(this.exchangeJID != null) {
-				if(iq.getFrom().equals(this.exchangeJID))
-					exchangeDiscovered();
-			}
-		} else if (NAMESPACE_REST_XWADL.equals(namespace)) {
+		} else if (ResourceContainerComponent.NAMESPACE_REST_XWADL.equals(namespace)) {
 			logger.info("received xwadl iq.");
 			try {
-				handleRestXWADL(ResourceTypeDocument.Factory.parse(childElement
+				handleRestXWADL(iq.getID(), ResourceTypeDocument.Factory.parse(childElement
 						.asXML()));
 			} catch (XmlException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-		} else if (NAMESPACE_REST_XML.equals(namespace)) {
+		} else if (ResourceContainerComponent.NAMESPACE_REST_XML.equals(namespace)) {
 			logger.info("received rest xml iq.");
 			try {
-				handleRestXML(ResourceDocument.Factory.parse(childElement
+				handleRestXML(iq.getID(), ResourceDocument.Factory.parse(childElement
 						.asXML()));
 			} catch (XmlException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-*/
 	}
 
-	protected void rootDiscovered() {
-		// Doesn't do anything. Override this method to process IQ stanzas.
-		logger.info("root discovery successfully completed!");
-	}
-
-	protected void exchangeDiscovered() {
-		// Doesn't do anything. Override this method to process IQ stanzas.
-		logger.info("exchange discovery successfully completed!");
-	}
-
-	protected void handleRestXWADL(ResourceTypeDocument parse) {
-		// TODO Auto-generated method stub
+	protected void handleRestXWADL(String key, ResourceTypeDocument parse) {
 		logger.info("handleRestXWADL");
+		ResourceContainerSocket resourceContainerSocket = this.connections.get(key);
+		// remove key
+		this.connections.remove(key);
+		if(resourceContainerSocket == null) {
+			throw new RuntimeException("unable to find resource for key");
+		}
+		
+		try {
+			resourceContainerSocket.xwadlExchanger.exchange(parse);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	protected void handleRestXML(ResourceDocument parse) {
-		// TODO Auto-generated method stub
+	protected void handleRestXML(String key, ResourceDocument parse) {
 		logger.info("handleRestXML");
+		ResourceContainerSocket resourceContainerSocket = this.connections.get(key);
+		// remove key
+		this.connections.remove(key);
+		if(resourceContainerSocket == null) {
+			throw new RuntimeException("unable to find resource for key");
+		}
+		
+		try {
+			resourceContainerSocket.restXmlExchanger.exchange(parse);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -282,4 +295,22 @@ public class ResourceContainerSocketManager {
 				iq.toString());
 	}
 
+	protected void sendMessage(Message m) {
+		m.setFrom(this.component.getJID());
+		m.setType(Message.Type.normal);
+		this.sendPacket(m);
+	}
+
+	protected void sendIQ(IQ iq, ResourceContainerSocket resourceContainerSocket) {
+		iq.setFrom(this.component.getJID());
+		// register socket
+		this.connections.put(iq.getID(), resourceContainerSocket);
+		// send iq
+		this.sendPacket(iq);
+	}
+
+	protected void sendPacket(Packet packet) {
+		this.component.sendPacket(packet);
+	}
+	
 }
