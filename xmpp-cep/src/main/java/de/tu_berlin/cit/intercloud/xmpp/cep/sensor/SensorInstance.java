@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.gateway.services;
+package de.tu_berlin.cit.intercloud.xmpp.cep.sensor;
 
-import de.tu_berlin.cit.intercloud.occi.core.Collection;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.monitoring.ActiveSensorMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.CollectorLink;
-import de.tu_berlin.cit.intercloud.occi.monitoring.MetricMixin;
-import de.tu_berlin.cit.intercloud.occi.monitoring.PassiveSensorMixin;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-@Path("/sensor")
+@PathID
 @Summary("This resource allows for manage sensor resources.")
-@Classification(kind = SensorKind.class,
-				mixins = {ActiveSensorMixin.class, PassiveSensorMixin.class, MetricMixin.class},
-				links = {CollectorLink.class})
-public class Sensor extends Collection {
+@Classification(kind = SensorKind.class)
+public class SensorInstance extends Resource {
+
+	public SensorInstance(OcciXml occiRepresentation) {
+		super(occiRepresentation);
+		// TODO Auto-generated constructor stub
+	}
 
 }
