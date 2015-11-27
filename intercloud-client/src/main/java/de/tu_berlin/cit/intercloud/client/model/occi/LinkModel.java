@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkModel extends CategoryModel {
+    private final List<MixinModel> mixins = new ArrayList<>();
+    private final String relates;
     private String target;
-    private List<MixinModel> mixins = new ArrayList<>();
 
-    public LinkModel(String term, String schema) {
+    public LinkModel(String term, String schema, String relates) {
         super(term, schema);
+        this.relates = relates;
+    }
+
+    public String getRelates() {
+        return relates;
     }
 
     public String getTarget() {
