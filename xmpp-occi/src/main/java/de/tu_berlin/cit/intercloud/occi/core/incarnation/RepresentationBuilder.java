@@ -1,7 +1,11 @@
 package de.tu_berlin.cit.intercloud.occi.core.incarnation;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.xmlbeans.GDuration;
 
@@ -15,6 +19,9 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.ListType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.MapItem;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.MapType;
 
 /**
  * TODO
@@ -157,6 +164,24 @@ public class RepresentationBuilder {
 				case DURATION:
 					attXml.setDURATION((GDuration) field.get(categoryInstance));
 					break;
+				case LIST:
+					@SuppressWarnings("unchecked")
+					List<String> list = (List<String>) field.get(categoryInstance);
+					ListType xmlList = attXml.addNewLIST();
+					for(String item : list) {
+						xmlList.addItem(item);
+					}
+					break;
+				case MAP:
+					@SuppressWarnings("unchecked")
+					Map<String, String> map = (Map<String, String>) field.get(categoryInstance);
+					MapType xmlMap = attXml.addNewMAP();
+					for(String key : map.keySet()) {
+						MapItem item = xmlMap.addNewItem();
+						item.setKey(key);
+						item.setStringValue(map.get(key));
+					}
+					break;
 				default:
 					throw new RuntimeException("Undefined attribute type");
 				}
@@ -275,6 +300,32 @@ public class RepresentationBuilder {
 							} else
 								throw new RuntimeException(
 										"Attribute duration type mismatch");
+							break;
+						case LIST:
+							if (attributes[i].isSetLIST()) {
+								ListType value = attributes[i].getLIST();
+								ArrayList<String> list = new ArrayList<String>();
+								String[] array = value.getItemArray();
+								for(String item : array) {
+									list.add(item);
+								}
+								field.set(rep, list);
+							} else
+								throw new RuntimeException(
+										"Attribute list type mismatch");
+							break;
+						case MAP:
+							if (attributes[i].isSetMAP()) {
+								MapType value = attributes[i].getMAP();
+								HashMap<String, String> map = new HashMap<String, String>();
+								MapItem[] array = value.getItemArray();
+								for(MapItem item : array) {
+									map.put(item.getKey(), item.getStringValue());
+								}
+								field.set(rep, map);
+							} else
+								throw new RuntimeException(
+										"Attribute map type mismatch");
 							break;
 						default:
 							throw new RuntimeException(

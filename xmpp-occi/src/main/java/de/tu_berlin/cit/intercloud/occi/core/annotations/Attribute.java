@@ -40,7 +40,9 @@ public @interface Attribute {
 		SIGNATURE,
 		KEY,
 		DATETIME,
-		DURATION
+		DURATION,
+		LIST,
+		MAP
 	}
 	
 	/**

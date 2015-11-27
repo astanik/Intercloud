@@ -91,6 +91,8 @@
 			<xs:enumeration value="KEY" />
 			<xs:enumeration value="DATETIME" />
 			<xs:enumeration value="DURATION" />
+			<xs:enumeration value="LIST" />
+			<xs:enumeration value="MAP" />
 		</xs:restriction>
 	</xs:simpleType>
 

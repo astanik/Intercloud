@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.occi.extension.test;
+package de.tu_berlin.cit.intercloud.occi.test;
 
 import java.util.Map;
 import java.util.Set;
@@ -26,11 +26,11 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.incarnation.ClassificationRegistry;
 
 /**
- * TODO
+ * Test the classification registry.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-public class KindTest {
+public class ClassificationTest {
 
 	@Test
 	public void registryTest() {
