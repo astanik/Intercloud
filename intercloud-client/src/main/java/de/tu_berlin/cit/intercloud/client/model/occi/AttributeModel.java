@@ -19,17 +19,19 @@ public class AttributeModel implements Serializable {
         DATETIME,
         DURATION
     }
-    
+
     private final String name;
-    private final boolean required;
     private final Type type;
+    private final boolean required;
+    private final boolean mutable;
     private final String description;
     private Object value;
 
-    public AttributeModel(String name, boolean required, String type, String description) {
+    public AttributeModel(String name, String type, boolean required, boolean mutable, String description) {
         this.name = name;
-        this.required = required;
         this.type = Type.valueOf(type.toString());
+        this.required = required;
+        this.mutable = mutable;
         this.description = description;
     }
 
@@ -41,6 +43,10 @@ public class AttributeModel implements Serializable {
         return required;
     }
 
+    public boolean isMutable() {
+        return mutable;
+    }
+
     public Type getType() {
         return type;
     }
@@ -49,13 +55,18 @@ public class AttributeModel implements Serializable {
         return description;
     }
 
+    public boolean hasValue() {
+        return null != value;
+    }
+
     @Override
     public String toString() {
         return "AttributeModel{" +
                 "name='" + name + '\'' +
-                ", required=" + required +
                 ", type=" + type +
                 ", value=" + value +
+                ", required=" + required +
+                ", mutable=" + mutable +
                 '}';
     }
 

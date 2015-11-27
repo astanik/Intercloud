@@ -6,7 +6,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 public abstract class AbstractAttributeInput extends Panel {
-    public AbstractAttributeInput(String markupId, AttributeModel attribute) {
+    public AbstractAttributeInput(String markupId, AttributeModel attribute, boolean enabled) {
         super(markupId);
         this.add(new Label("attributeName", Model.of(attribute.getName() + (attribute.isRequired() ? "*" : ""))));
 
@@ -20,23 +20,30 @@ public abstract class AbstractAttributeInput extends Panel {
     }
 
     public static AbstractAttributeInput newInstance(String markupId, AttributeModel attribute) {
+        boolean enabled = attribute.isMutable();
+        boolean visible = attribute.isMutable() || (!attribute.isMutable() && attribute.hasValue());
+        return newInstance(markupId, attribute, enabled, visible);
+    }
+
+
+    public static AbstractAttributeInput newInstance(String markupId, AttributeModel attribute, boolean enabled, boolean visible) {
         switch (attribute.getType()) {
             case STRING:
-                return new StringInput(markupId, attribute);
+                return (AbstractAttributeInput) new StringInput(markupId, attribute, enabled).setVisible(visible);
             case INTEGER:
-                return new IntegerInput(markupId, attribute);
+                return (AbstractAttributeInput) new IntegerInput(markupId, attribute, enabled).setVisible(visible);
             case ENUM:
-                return new EnumInput(markupId, attribute);
+                return (AbstractAttributeInput) new EnumInput(markupId, attribute, enabled).setVisible(visible);
             case DOUBLE:
-                return new DoubleInput(markupId, attribute);
+                return (AbstractAttributeInput) new DoubleInput(markupId, attribute, enabled).setVisible(visible);
             case FLOAT:
-                return new FloatInput(markupId, attribute);
+                return (AbstractAttributeInput) new FloatInput(markupId, attribute, enabled).setVisible(visible);
             case BOOLEAN:
-                return new BooleanInput(markupId, attribute);
+                return (AbstractAttributeInput) new BooleanInput(markupId, attribute, enabled).setVisible(visible);
             case DATETIME:
-                return new DatetimeInput(markupId, attribute);
+                return (AbstractAttributeInput) new DatetimeInput(markupId, attribute, enabled).setVisible(visible);
             case URI:
-                return new UriInput(markupId, attribute);
+                return (AbstractAttributeInput) new UriInput(markupId, attribute, enabled).setVisible(visible);
             case SIGNATURE:
             case KEY:
             case DURATION:

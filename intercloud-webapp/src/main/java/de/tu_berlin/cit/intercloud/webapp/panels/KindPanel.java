@@ -17,6 +17,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class KindPanel extends Panel {
@@ -44,7 +45,7 @@ public class KindPanel extends Panel {
     private KindModel parseKind(CategoryClassification classification) {
         KindModel kind = new KindModel(classification.getTerm(), classification.getSchema());
         for (AttributeClassificationDocument.AttributeClassification a : classification.getAttributeClassificationArray()) {
-            AttributeModel attribute = new AttributeModel(a.getName(), a.getRequired(), a.getType().toString(), a.getDescription());
+            AttributeModel attribute = new AttributeModel(a.getName(), a.getType().toString(), a.getRequired(), a.getMutable(), a.getDescription());
             kind.addAttribute(attribute);
         }
         return kind;
@@ -58,7 +59,7 @@ public class KindPanel extends Panel {
             add(new AttributeInputPanel("attributePanel", new LoadableDetachableModel<List<AttributeModel>>() {
                 @Override
                 protected List<AttributeModel> load() {
-                    return kind.getAttributes();
+                    return new ArrayList<>(kind.getAttributes());
                 }
             }));
             add(new AjaxSubmitLink("kindSubmit") {

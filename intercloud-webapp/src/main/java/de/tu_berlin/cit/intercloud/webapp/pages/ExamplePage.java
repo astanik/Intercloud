@@ -44,7 +44,7 @@ public class ExamplePage extends Template {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     for (AttributeModel a : attributeList) {
-                           logger.info(a.toString());
+                        logger.info(a.toString());
                     }
                 }
             });
@@ -52,14 +52,21 @@ public class ExamplePage extends Template {
 
         private List<AttributeModel> createExampleAttributeList() {
             List<AttributeModel> attributeList = new ArrayList<>();
-            attributeList.add(new AttributeModel("Datetime", true, AttributeModel.Type.DATETIME.toString(), "This is an Example for a Datetime AttributeModel."));
-            attributeList.add(new AttributeModel("Integer", false, AttributeModel.Type.INTEGER.toString(), null));
-            attributeList.add(new AttributeModel("Double", false, AttributeModel.Type.DOUBLE.toString(), "This is an Example for a Double AttributeModel."));
-            attributeList.add(new AttributeModel("Float", false, AttributeModel.Type.FLOAT.toString(), "This is an Example for a Float AttributeModel."));
-            attributeList.add(new AttributeModel("Boolean", false, AttributeModel.Type.BOOLEAN.toString(), "This is an Example for a Boolean AttributeModel."));
-            attributeList.add(new AttributeModel("String", true, AttributeModel.Type.STRING.toString(), "This is an Example for a String AttributeModel."));
-            attributeList.add(new AttributeModel("Enum", false, AttributeModel.Type.ENUM.toString(), "This is an Example for an Enum AttributeModel."));
-            attributeList.add(new AttributeModel("Uri", false, AttributeModel.Type.URI.toString(), "This is an Example for an URI AttributeModel."));
+            attributeList.add(new AttributeModel("Datetime", AttributeModel.Type.DATETIME.toString(), true, true, "This is an Example for a Datetime AttributeModel."));
+            attributeList.add(new AttributeModel("Integer", AttributeModel.Type.INTEGER.toString(), false, true, null));
+            attributeList.add(new AttributeModel("Double", AttributeModel.Type.DOUBLE.toString(), false, true, "This is an Example for a Double AttributeModel."));
+            attributeList.add(new AttributeModel("Float", AttributeModel.Type.FLOAT.toString(), false, true, "This is an Example for a Float AttributeModel."));
+            attributeList.add(new AttributeModel("Boolean", AttributeModel.Type.BOOLEAN.toString(), false, true, "This is an Example for a Boolean AttributeModel."));
+            attributeList.add(new AttributeModel("String", AttributeModel.Type.STRING.toString(), true, true, "This is an Example for a String AttributeModel."));
+            attributeList.add(new AttributeModel("Enum", AttributeModel.Type.ENUM.toString(), false, true, "This is an Example for an Enum AttributeModel."));
+            attributeList.add(new AttributeModel("Uri", AttributeModel.Type.URI.toString(), false, true, "This is an Example for an URI AttributeModel."));
+
+            AttributeModel attributeModel = new AttributeModel("Show Immutable with value", AttributeModel.Type.STRING.toString(), false, false, "This is an immutable attribute with some value.");
+            attributeModel.setString("should be visible and disabled");
+            attributeList.add(attributeModel);
+
+            attributeList.add(new AttributeModel("Hide Immutable with no value", AttributeModel.Type.STRING.toString(), true, false, "This Example should not be displayed."));
+
 
             return attributeList;
         }

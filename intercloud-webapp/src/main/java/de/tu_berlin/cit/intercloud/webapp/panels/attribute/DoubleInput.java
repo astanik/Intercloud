@@ -5,9 +5,9 @@ import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.PropertyModel;
 
 class DoubleInput extends NumberInput {
-    public DoubleInput(String markupId, AttributeModel attribute) {
-        super(markupId, attribute);
+    public DoubleInput(String markupId, AttributeModel attribute, boolean enabled) {
+        super(markupId, attribute, enabled);
         this.add(new NumberTextField<Double>("attributeValue", new PropertyModel<>(attribute, "double"))
-                .setRequired(attribute.isRequired()));
+                .setRequired(attribute.isRequired()).setEnabled(enabled));
     }
 }
