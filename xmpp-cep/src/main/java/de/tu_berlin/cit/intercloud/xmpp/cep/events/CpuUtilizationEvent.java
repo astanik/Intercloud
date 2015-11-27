@@ -25,7 +25,7 @@ import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument.Log.Tag;
 
 /**
- * CPU utilization event that provides a double for the availability.
+ * CPU utilization event that provides an integer for the availability.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
@@ -42,7 +42,7 @@ public class CpuUtilizationEvent extends LogEvent {
 		this.setUtilization(utilization);
 	}
 	
-	public double getUtilization() {
+	public int getUtilization() {
 		return utilization;
 	}
 
@@ -50,7 +50,7 @@ public class CpuUtilizationEvent extends LogEvent {
 		this.utilization = utilization;
 	}
 
-	public static LogDocument build(String sensorPath, String subjectPath, double utilization) {
+	public static LogDocument build(String sensorPath, String subjectPath, int utilization) {
 		LogDocument event = LogEvent.build(sensorPath, subjectPath);
 		// set event id
 		event.getLog().setId(CpuUtilizationStream);
@@ -59,7 +59,7 @@ public class CpuUtilizationEvent extends LogEvent {
 		Tag tag = event.getLog().addNewTag();
 		tag.setName(CpuUtilizationTag);
 		tag.setType(new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "integer"));
-		tag.setValue(new Double(utilization).toString());
+		tag.setValue(new Integer(utilization).toString());
 		
 		logger.info("Finished building log event document: " + event.toString());
 		return event;

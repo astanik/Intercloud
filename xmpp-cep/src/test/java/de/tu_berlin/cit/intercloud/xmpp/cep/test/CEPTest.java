@@ -44,8 +44,8 @@ public class CEPTest {
 				
 	    @Override
 	    public void run() {
-	    	double sysCpu = osManager.getSystemCpuLoad() * 100;
-	    	double jvmCpu = osManager.getProcessCpuLoad() * 100;
+	    	int sysCpu = (int) osManager.getSystemCpuLoad() * 100;
+	    	int jvmCpu = (int) osManager.getProcessCpuLoad() * 100;
 	    	LogDocument event = CpuUtilizationEvent.build(sensorURI, vmURI, sysCpu);
 	    	// process event
 	    	ComplexEventProcessor.getInstance().processEvent(event);
