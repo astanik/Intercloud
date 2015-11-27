@@ -51,7 +51,9 @@ public abstract class CategoryModel implements Serializable {
     }
 
     public void addTemplate(String templateTitle) {
-        addTemplate(templateTitle);
+        if (null != templateTitle) {
+            this.templates.add(templateTitle);
+        }
     }
 
     public Collection<String> getTemplates() {

@@ -32,8 +32,8 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
     private static final Logger logger = LoggerFactory.getLogger(IntercloudWebSession.class);
 
     private User user = null;
-    private IXmppService xmppService;
-    private IIntercloudService intercloudService;
+    private transient IXmppService xmppService;
+    private transient IIntercloudService intercloudService;
 
     public IntercloudWebSession(Request request) {
         super(request);
@@ -87,5 +87,4 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
     public static IntercloudWebSession get() {
         return (IntercloudWebSession) Session.get();
     }
-
 }

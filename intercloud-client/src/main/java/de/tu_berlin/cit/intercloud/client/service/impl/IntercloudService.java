@@ -10,8 +10,12 @@ import org.jivesoftware.smack.XMPPException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IntercloudService implements IIntercloudService {
+    // TODO: clean up map
+    private final Map<XmppURI, IIntercloudClient> clientMap = new HashMap<>();
     private final IXmppService xmppService;
 
     public IntercloudService(IXmppService xmppService) {
@@ -19,9 +23,22 @@ public class IntercloudService implements IIntercloudService {
     }
 
     @Override
-    public IIntercloudClient newIntercloudClient(String entity, String path) throws URISyntaxException, XMPPException, IOException, SmackException {
+    public synchronized IIntercloudClient newIntercloudClient(String entity, String path) throws URISyntaxException, XMPPException, IOException, SmackException {
         XmppURI uri = new XmppURI(entity, path);
-        ResourceTypeDocument xwadl = xmppService.getXwadlDocument(uri);
-        return new IntercloudClient(this.xmppService, xwadl, uri);
+        this.clientMap.remove(uri);
+
+        ResourceTypeDocument xwadl = this.xmppService.getXwadlDocument(uri);
+        IntercloudClient intercloudClient = new IntercloudClient(this.xmppService, xwadl, uri);
+        clientMap.put(uri, new IntercloudClient(this.xmppService, xwadl, uri));
+        return intercloudClient;
+    }
+
+    @Override
+    public synchronized IIntercloudClient getIntercloudClient(String entity, String path) throws URISyntaxException, XMPPException, IOException, SmackException {
+        IIntercloudClient client = this.clientMap.get(new XmppURI(entity, path));
+        if (null == client) {
+            client = newIntercloudClient(entity, path);
+        }
+        return client;
     }
 }

@@ -2,7 +2,11 @@ package de.tu_berlin.cit.intercloud.webapp.nav;
 
 import org.apache.wicket.Page;
 
-public class NavItem {
+import java.io.Serializable;
+
+public class NavItem implements Serializable {
+    private static final long serialVersionUID = 3431192935034866885L;
+
     private String label;
     private Class<? extends Page> page;
 

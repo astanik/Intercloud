@@ -17,7 +17,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
@@ -32,11 +31,11 @@ public class GetXwadlPage extends UserTemplate {
     private final Logger logger = LoggerFactory.getLogger(GetXwadlPage.class);
 
     private final IModel<String> domainModel;
+    private String resourcePath;
     private final Code codePanel;
     private String codeString;
     private final MethodTable methodTable;
-
-    private IIntercloudClient intercloudClient;
+    private List<MethodModel> methodModelList = new ArrayList<>();
 
 
     public GetXwadlPage(IModel<String> domainModel) {
@@ -60,7 +59,7 @@ public class GetXwadlPage extends UserTemplate {
         this.methodTable = new MethodTable("methodTable", new LoadableDetachableModel<List<MethodModel>>() {
             @Override
             protected List<MethodModel> load() {
-                return null != intercloudClient ? intercloudClient.getMethods() : new ArrayList<>();
+                return methodModelList;
             }
         });
         this.methodTable.setOutputMarkupId(true);
@@ -68,20 +67,20 @@ public class GetXwadlPage extends UserTemplate {
     }
 
     private class XwadlForm extends Form {
-        private String resourcePath = "/iaas";
 
         public XwadlForm(String markupId) {
             super(markupId);
-            this.setDefaultModel(new CompoundPropertyModel<Object>(this));
 
-            this.add(new Label("domain", domainModel));
-            this.add(new TextField<>("resourcePath", new PropertyModel<>(this, "resourcePath")).setRequired(true));
+            this.add(new Label("domain", GetXwadlPage.this.domainModel));
+            this.add(new TextField<>("resourcePath", new PropertyModel<>(GetXwadlPage.this, "resourcePath")).setRequired(true));
             AjaxButton button = new AjaxButton("getXwadlBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
-                        intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(domainModel.getObject(), resourcePath);
+                        IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(domainModel.getObject(), resourcePath);
+//                      intercloudClient.getRequestModel(new MethodModel("POST", "xml/occi", "text/uri", null));
                         codeString = intercloudClient.toString();
+                        methodModelList = intercloudClient.getMethods();
                         target.add(codePanel);
                         target.add(methodTable);
                     } catch (Exception e) {
@@ -129,7 +128,8 @@ public class GetXwadlPage extends UserTemplate {
                 public void onClick(AjaxRequestTarget target) {
                     try {
                         if (!methodModel.hasRequest()) {
-                            codeString = intercloudClient.executeRequest(null, methodModel);
+                            codeString = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(domainModel.getObject(), GetXwadlPage.this.resourcePath)
+                                    .executeRequest(null, methodModel);
                             target.add(codePanel);
                         }
                     } catch (Exception e) {
