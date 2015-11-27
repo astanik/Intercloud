@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>de.tu_berlin.cit</groupId>
+		<artifactId>intercloud</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<groupId>de.tu_berlin.cit.intercloud</groupId>
+	<artifactId>intercloud-sla</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Intercloud SLA Module</name>
+
+	<dependencies>
+		<!-- intercloud dependencies -->
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-cep</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>xmpp-component</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+
+</project>

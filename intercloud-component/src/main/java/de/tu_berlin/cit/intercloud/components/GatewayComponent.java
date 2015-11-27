@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.exchange.services;
+package de.tu_berlin.cit.intercloud.components;
 
-import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.occi.core.Resource;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
-import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
-import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
+import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
+import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-@PathID
-@Summary("This resource allows for manage service level agreements.")
-@Classification(kind = AgreementKind.class)
-public class AgreementInstance extends Resource {
-
-
-	public AgreementInstance(OcciXml agreementXml) {
-		super(agreementXml);
+public class GatewayComponent extends ResourceContainerComponent {
+	
+	public GatewayComponent(ResourceContainer container) {
+		super(container);
 	}
 
+	@Override
+	public String getName() {
+		return ServiceNames.GatewayComponentName;
+	}
+
+	@Override
+	public String getDescription() {
+		return "This is one Intercloud Gateway service.";
+	}
+	
 }

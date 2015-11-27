@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.exchange;
+package de.tu_berlin.cit.intercloud.components;
 
 import java.util.ArrayList;
 import java.util.List;

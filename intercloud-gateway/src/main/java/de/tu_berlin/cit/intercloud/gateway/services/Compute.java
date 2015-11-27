@@ -48,6 +48,7 @@ import com.google.common.io.Closeables;
 import com.google.inject.Module;
 
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackComputeTemplates;
+import de.tu_berlin.cit.intercloud.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackComputeMixin;
 import de.tu_berlin.cit.intercloud.gateway.openstack.OpenStackImageMixin;
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
@@ -58,7 +59,6 @@ import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageLink;
-import de.tu_berlin.cit.intercloud.util.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;

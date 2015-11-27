@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.util.configuration;
+package de.tu_berlin.cit.intercloud.configuration;
 
 import java.util.Properties;
 

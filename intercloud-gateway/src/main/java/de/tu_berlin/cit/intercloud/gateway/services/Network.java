@@ -27,12 +27,12 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+import de.tu_berlin.cit.intercloud.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkingMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkKind;
-import de.tu_berlin.cit.intercloud.util.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
 
 /**

@@ -17,7 +17,6 @@
 package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;

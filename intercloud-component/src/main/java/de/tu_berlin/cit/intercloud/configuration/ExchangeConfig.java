@@ -1,30 +1,30 @@
-package de.tu_berlin.cit.intercloud.util.configuration;
+package de.tu_berlin.cit.intercloud.configuration;
 
 import java.util.Properties;
 
 
-public class GatewayConfig extends ConfigHelper {
+public class ExchangeConfig extends ConfigHelper {
 
-	private final static String fileName = "gateway";
+	private final static String fileName = "exchange";
 
 	/**
 	 * singleton instance
 	 */
-	private static GatewayConfig instance;
+	private static ExchangeConfig instance;
 
 	/**
 	 * default constructor
 	 * 
 	 */
-	private GatewayConfig() {
+	private ExchangeConfig() {
 		super(fileName);
 	}
 
-	public static synchronized GatewayConfig getInstance() {
-		if (GatewayConfig.instance == null) {
-			GatewayConfig.instance = new GatewayConfig();
+	public static synchronized ExchangeConfig getInstance() {
+		if (ExchangeConfig.instance == null) {
+			ExchangeConfig.instance = new ExchangeConfig();
 		}
-		return GatewayConfig.instance;
+		return ExchangeConfig.instance;
 	}
 
 	@Override
@@ -32,6 +32,7 @@ public class GatewayConfig extends ConfigHelper {
 		// set the example properties value
 		prop.setProperty("xmppServer", "server.example.org");
 		prop.setProperty("xmppDomain", "intercloud.example.org");
+		prop.setProperty("subDomain", "exchange");
 		prop.setProperty("secretKey", "myKey");
 	}
 	
@@ -41,6 +42,10 @@ public class GatewayConfig extends ConfigHelper {
 	
 	public String getXmppDomain() {
 		return this.getProperties().getProperty("xmppDomain");
+	}
+	
+	public String getSubDomain() {
+		return this.getProperties().getProperty("subDomain");
 	}
 	
 	public String getSecretKey() {

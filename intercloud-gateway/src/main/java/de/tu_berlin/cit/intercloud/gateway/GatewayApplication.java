@@ -23,11 +23,12 @@ import org.jivesoftware.whack.ExternalComponentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.components.GatewayComponent;
+import de.tu_berlin.cit.intercloud.configuration.GatewayConfig;
 import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.gateway.services.Manager;
 import de.tu_berlin.cit.intercloud.gateway.services.Sensor;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
-import de.tu_berlin.cit.intercloud.util.configuration.GatewayConfig;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;

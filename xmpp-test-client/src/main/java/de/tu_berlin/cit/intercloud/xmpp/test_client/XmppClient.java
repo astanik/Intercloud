@@ -16,7 +16,6 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
-import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
 import de.tu_berlin.cit.intercloud.util.exceptions.ConfigurationException;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQProvider;

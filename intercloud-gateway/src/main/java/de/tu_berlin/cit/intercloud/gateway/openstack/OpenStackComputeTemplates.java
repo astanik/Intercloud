@@ -33,12 +33,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.inject.Module;
 
+import de.tu_berlin.cit.intercloud.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
-import de.tu_berlin.cit.intercloud.util.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
 /**

@@ -17,7 +17,7 @@
 package de.tu_berlin.cit.intercloud.util.constants;
 
 /**
- * TODO
+ * Intercloud Service Name Constants
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */

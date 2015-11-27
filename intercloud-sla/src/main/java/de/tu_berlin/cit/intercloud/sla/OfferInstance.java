@@ -14,50 +14,35 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.exchange.services;
+package de.tu_berlin.cit.intercloud.sla;
 
-import java.net.URISyntaxException;
-
-import de.tu_berlin.cit.intercloud.occi.core.Collection;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.sla.OfferKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
  * TODO
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-@Path("/manager")
+@PathID
 @Summary("This resource allows for manage "
 		+ "SLA offer creation and agreement negotiation.")
 @Classification(kind = OfferKind.class)
-public class Offer extends Collection {
+public class OfferInstance extends Resource {
 
-	public Offer() {
-		super();
-	}
-	
-	@XmppMethod(XmppMethod.POST)
-    @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
-    @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
-	public UriText createOffer(OcciXml offerXml) {
-		// create an offer and return its uri
-		OfferInstance offer = new OfferInstance(offerXml);
-		String path = this.addResource(offer);
-		try {
-			UriText uri = new UriText(path);
-			return uri;
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new UriText(); 
+	public OfferInstance(OcciXml offerXml) {
+		super(offerXml);
+		// create Management instance at gateway
+		LinkType[] links = offerXml.getLinks();
+		for(int i = 0; i < links.length; i++) {
+//			if(links[i].getCategory().equals(ManagerSchema)) {
+				// send post
+//			}
 		}
 	}
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.exchange.services;
+package de.tu_berlin.cit.intercloud.sla;
 
 import java.net.URISyntaxException;
 

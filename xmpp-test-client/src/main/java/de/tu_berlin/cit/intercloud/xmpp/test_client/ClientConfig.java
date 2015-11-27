@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.util.configuration;
+package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
 import de.tu_berlin.cit.intercloud.util.exceptions.ConfigurationException;
 

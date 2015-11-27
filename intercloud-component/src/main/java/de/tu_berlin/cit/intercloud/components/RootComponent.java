@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.gateway;
+package de.tu_berlin.cit.intercloud.components;
 
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
@@ -25,20 +25,20 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-public class GatewayComponent extends ResourceContainerComponent {
+public class RootComponent extends ResourceContainerComponent {
 	
-	public GatewayComponent(ResourceContainer container) {
+	public RootComponent(ResourceContainer container) {
 		super(container);
 	}
 
 	@Override
 	public String getName() {
-		return ServiceNames.GatewayComponentName;
+		return ServiceNames.RootComponentName;
 	}
 
 	@Override
 	public String getDescription() {
-		return "This is one Intercloud Gateway service.";
+		return "This is the Intercloud Root service.";
 	}
-	
+
 }
