@@ -72,7 +72,7 @@ public class XmppClient {
 			// add provider
 			ProviderManager.addIQProvider(XwadlIQ.ELEMENT, XwadlIQ.NAMESPACE, new XwadlIQProvider());
 			ProviderManager.addIQProvider(RestIQ.ELEMENT, RestIQ.NAMESPACE, new RestIQProvider());
-			
+			System.out.println("Provider configured ");
 			// perform the test
 			TestClient client = new TestClient(connection);
 			System.out.println("Test Client created ");

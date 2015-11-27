@@ -13,6 +13,9 @@ public class ClientConfig extends ConfigHelper {
     private final static String PROP_SERVICE_NAME = "serviceName";
     private final static String PROP_PORT = "port";
 
+    private final static String SENSOR_URI = "sensorUri";
+    private final static String SUBJECT_URI = "subjectUri";
+
     private static ClientConfig instance;
 
     private ClientConfig() {
@@ -33,6 +36,8 @@ public class ClientConfig extends ConfigHelper {
         prop.setProperty(PROP_HOST, "");
         prop.setProperty(PROP_SERVICE_NAME, "");
         prop.setProperty(PROP_PORT, "5222");
+        prop.setProperty(SENSOR_URI, "xmpp://gateway.cit.tu-berlin.de#/sensor/senX");
+        prop.setProperty(SUBJECT_URI, "xmpp://gateway.cit.tu-berlin.de#/compute/vmX");
     }
 
     public String getUsername() {
@@ -59,4 +64,13 @@ public class ClientConfig extends ConfigHelper {
             throw new ConfigurationException("ClientConfig could not parse Integer of property " + PROP_PORT + ".");
         }
     }
+    
+    public String getSensorUri() {
+        return getProperties().getProperty(SENSOR_URI);
+    }
+
+    public String getSubjectUri() {
+        return getProperties().getProperty(SUBJECT_URI);
+    }
+
 }

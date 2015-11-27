@@ -18,6 +18,10 @@ package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
+import de.tu_berlin.cit.intercloud.xmpp.cep.ComplexEventProcessor;
+import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
+import de.tu_berlin.cit.intercloud.xmpp.cep.events.AvailabilityEvent;
+import de.tu_berlin.cit.intercloud.xmpp.cep.events.CpuUtilizationEvent;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -28,7 +32,9 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo.Identity;
@@ -36,11 +42,15 @@ import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 import org.jivesoftware.smackx.disco.packet.DiscoverItems.Item;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * TODO
@@ -49,13 +59,13 @@ import java.util.List;
  */
 public class TestClient {
 
-	private static final String TEST_DOMAIN = ClientConfig.getInstance().getHost();
+	private static final String TEST_DOMAIN = ClientConfig.getInstance().getServiceName();
 
-	private static final String SERVICE_PATH = "/iaas/compute/de";
+	private static final String SERVICE_PATH = "/Agreements/sla1";
 	
-	private XmppURI rootURI = null;
+	private String rootURI = null;
 	
-	private XmppURI exchangeURI = null;
+	private String exchangeURI = null;
 
 	private final AbstractXMPPConnection connection;
 	
@@ -66,7 +76,7 @@ public class TestClient {
 	}
 	
 	private void discover() throws XMPPErrorException, URISyntaxException, SmackException, XmlException {
-		// discover root services
+		System.out.println("discover root services");
 		// Obtain the ServiceDiscoveryManager associated with my XMPPConnection
 		ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
 		// Get the items of a given XMPP entity
@@ -78,9 +88,9 @@ public class TestClient {
 		for(Item item : items) {
 			System.out.println(item.getEntityID());
 			if(ServiceNames.RootComponentName.equals(item.getName()))
-				rootURI = new XmppURI(item.getEntityID());
+				rootURI = item.getEntityID();
 			else if(ServiceNames.ExchangeComponentName.equals(item.getName()))
-				exchangeURI = new XmppURI(item.getEntityID());
+				exchangeURI = item.getEntityID();
 		}
 
 		// discover root features
@@ -92,7 +102,7 @@ public class TestClient {
 		if(exchangeURI != null) {
 			checkFeatures(discoManager, exchangeURI);
 		}
-
+/*
 		XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(rootURI.toString(), SERVICE_PATH));
 		Method method = client.getMethod(MethodType.GET, null, UriListText.MEDIA_TYPE);
 		if (null != method) {
@@ -100,13 +110,14 @@ public class TestClient {
 			Representation representation = xmppRestMethod.invoke();
 			System.out.println(representation.toString());
 		}
+*/
 	}
 
-	private void checkFeatures(ServiceDiscoveryManager discoManager, XmppURI uri) throws SmackException, XMPPErrorException {
+	private void checkFeatures(ServiceDiscoveryManager discoManager, String uri) throws SmackException, XMPPErrorException {
 		// Get the information of a given XMPP entity
-		System.out.println("Discover: " + uri.getJID());
+		System.out.println("Discover: " + uri);
 		// This gets the information of the component
-		DiscoverInfo discoInfo = discoManager.discoverInfo(uri.getJID());
+		DiscoverInfo discoInfo = discoManager.discoverInfo(uri);
 		// Get the discovered identities of the remote XMPP entity
 		List<Identity> identities = discoInfo.getIdentities();
 		// Display the identities of the remote XMPP entity
@@ -127,18 +138,85 @@ public class TestClient {
 			throw new SmackException("REST is not supported");
 	}
 
+	
+	
+	
+	private class AvailabilityTimerTask extends TimerTask {
+		private final String sensorURI;
+
+		private final String vmURI;
+		
+		public AvailabilityTimerTask() {
+			this.sensorURI = ClientConfig.getInstance().getSensorUri();
+			this.vmURI = ClientConfig.getInstance().getSubjectUri();
+		}
+	    @Override
+	    public void run() {
+	    	Random r = new Random();
+	    	double availability = r.nextDouble() * 100;
+	    	LogDocument event = AvailabilityEvent.build(sensorURI, vmURI, availability);
+	    	// process event
+	    	EventLogExtension message = new EventLogExtension(event);
+//	    	Message m = new Message(exchangeURI, str1);
+	//    	m.addExtension(extension);
+	    	try {
+				connection.sendStanza(message.toMessage(exchangeURI));
+			} catch (NotConnectedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	System.out.println("Event had been processed: " + event.toString());
+	    }
+	}
+	
+	private Timer timer = null;
+
+	
+	public void start() {
+        TimerTask timerTask = new AvailabilityTimerTask();
+        //running timer task as daemon thread
+        this.timer = new Timer(true);
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+        System.out.println("TimerTask started");
+	}
+
+	public void stop() {
+        this.timer.cancel();
+        System.out.println("TimerTask cancelled");
+	}
+	
+	
 	public void performTest() throws FileNotFoundException, UnsupportedEncodingException, 
 			URISyntaxException, XMPPErrorException, XmlException, SmackException {
 		
 		System.out.println("Start test ...");
+		
+		// start measuring 
+		this.start();
+		System.out.println("CPU meter has been started.");
+		try {
+			// wait 10 seconds
+			System.out.println("Press enter to exit!!!");
+			System.in.read();
+//			Thread.sleep(10 * 1000);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.stop();
+		System.out.println("CPU meter has been stopped.");
+		
+		
+		
+		
 
-		OcciXml slaTemplate = searchService();
+//		OcciXml slaTemplate = searchService();
 		
-		XmppURI offerEndpoint = createOffer(slaTemplate);
+//		XmppURI offerEndpoint = createOffer(slaTemplate);
 		
-		XmppURI slaEndpoint = negotiateOffer(offerEndpoint);
+//		XmppURI slaEndpoint = negotiateOffer(offerEndpoint);
 		
-		observeSLA(slaEndpoint);
+//		observeSLA(slaEndpoint);
 /*		
 				// delete vm
 				deleteMeter.startTimer(i);

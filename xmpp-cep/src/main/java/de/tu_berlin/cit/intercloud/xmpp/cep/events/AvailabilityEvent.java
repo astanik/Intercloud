@@ -18,6 +18,7 @@ package de.tu_berlin.cit.intercloud.xmpp.cep.events;
 
 import java.util.Calendar;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
@@ -57,7 +58,7 @@ public class AvailabilityEvent extends LogEvent {
 		// set availability
 		Tag tag = event.getLog().addNewTag();
 		tag.setName(AvailabilityTag);
-		tag.setType(new QName("xs:double"));
+		tag.setType(new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "double"));
 		tag.setValue(new Double(availability).toString());
 		
 		logger.info("Finished building log event document: " + event.toString());
@@ -73,7 +74,7 @@ public class AvailabilityEvent extends LogEvent {
 		
 		// take the last matching tag
 		for(Tag tag : tags) {
-			if(tag.getName().equals(AvailabilityTag) && tag.getType().equals(new QName("xs:double")))
+			if(tag.getName().equals(AvailabilityTag) && tag.getType().equals(new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "double")))
 				value = Double.parseDouble(tag.getValue());
 		}
 
