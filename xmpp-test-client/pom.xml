@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>de.tu_berlin.cit.intercloud</groupId>
-            <artifactId>xmpp-cep</artifactId>
+            <artifactId>intercloud-component</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>

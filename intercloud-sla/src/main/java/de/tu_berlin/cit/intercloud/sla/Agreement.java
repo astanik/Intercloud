@@ -41,8 +41,17 @@ public class Agreement extends Collection {
 
 	public Agreement() {
 		super();
+		this.createTestSLA();
 	}
 	
+	private void createTestSLA() {
+		logger.info("create test SLA");
+		// create a sla resource
+		AgreementInstance sla = new AgreementInstance();
+		String path = this.addResource(sla, "/testSLA");
+		logger.info("Test SLA is created at: " + path);
+	}
+
 	@XmppMethod(XmppMethod.POST)
     @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
     @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
