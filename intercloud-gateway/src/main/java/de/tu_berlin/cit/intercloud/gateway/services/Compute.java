@@ -38,8 +38,6 @@ import org.jclouds.openstack.nova.v2_0.features.ImageApi;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.openstack.v2_0.domain.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
@@ -77,7 +75,6 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 				links = {StorageLink.class, NetworkInterfaceLink.class})
 public class Compute extends Collection  implements Closeable {
 
-	private final static Logger logger = LoggerFactory.getLogger(Compute.class);
 	private final NovaApi novaApi;
 	private final Set<String> regions;
 	private String defaultZone = null;
