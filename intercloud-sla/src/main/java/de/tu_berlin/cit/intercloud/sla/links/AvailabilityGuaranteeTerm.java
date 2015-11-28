@@ -18,17 +18,46 @@ package de.tu_berlin.cit.intercloud.sla.links;
 
 import de.tu_berlin.cit.intercloud.occi.core.Link;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
-import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
-import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
+import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
+import de.tu_berlin.cit.intercloud.sla.mixins.AvailabilityMixin;
+import de.tu_berlin.cit.intercloud.sla.mixins.EventLogMixin;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
- * TODO
+ * This class implements an evaluation link that measures the availability of
+ * service.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
 @PathID
-@Classification(mixins = { IpNetworkInterfaceMixin.class }, links = { NetworkInterfaceLink.class })
+@Classification(mixins = {EventLogMixin.class, AvailabilityMixin.class}, 
+				links  = {ServiceEvaluatorLink.class})
 public class AvailabilityGuaranteeTerm extends Link {
 
+	private ServiceEvaluatorLink serviceEvaluatorLink = new ServiceEvaluatorLink();
+	
+	private EventLogMixin eventLogMixin = new EventLogMixin();
+	
+	private AvailabilityMixin availabilityMixin = new AvailabilityMixin();
+	
+	public AvailabilityGuaranteeTerm(LinkType representation) {
+		super(representation);
+		
+		// incarnation
+		try {
+			this.serviceEvaluatorLink = RepresentationBuilder.buildLinkRepresentation(representation, this.serviceEvaluatorLink);
+			this.serviceEvaluatorLink = RepresentationBuilder.buildLinkRepresentation(representation, this.serviceEvaluatorLink);
+			this.serviceEvaluatorLink = RepresentationBuilder.buildLinkRepresentation(representation, this.serviceEvaluatorLink);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 }

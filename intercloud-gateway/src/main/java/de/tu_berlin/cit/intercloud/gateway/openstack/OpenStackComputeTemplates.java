@@ -37,7 +37,6 @@ import de.tu_berlin.cit.intercloud.configuration.OpenStackConfig;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
 
@@ -127,7 +126,7 @@ public class OpenStackComputeTemplates extends OcciXml {
 
 	public ComputeKind getComputeKind() {
 		ComputeKind kind = new ComputeKind();
-		CategoryType cat = this.getKind();
+		CategoryDocument cat = this.getDocument();
 		if (cat == null)
 			return kind;
 
@@ -142,7 +141,7 @@ public class OpenStackComputeTemplates extends OcciXml {
 
 	public OpenStackComputeMixin getComputeMixin() {
 		OpenStackComputeMixin mixin = new OpenStackComputeMixin();
-		CategoryType cat = this.getMixin(mixin.getSchema(), mixin.getTerm());
+		CategoryDocument cat = this.getDocument();
 		if (cat == null)
 			return mixin;
 
@@ -157,7 +156,7 @@ public class OpenStackComputeTemplates extends OcciXml {
 
 	public OpenStackImageMixin getImageMixin() {
 		OpenStackImageMixin mixin = new OpenStackImageMixin();
-		CategoryType cat = this.getMixin(mixin.getSchema(), mixin.getTerm());
+		CategoryDocument cat = this.getDocument();
 		if (cat == null)
 			return mixin;
 

@@ -24,7 +24,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 /**
- * TODO
+ * The service level agreement kind
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
@@ -90,7 +90,7 @@ public class AgreementKind extends Category {
 			type = AttributeType.DATETIME,
 			mutable = true,
 			required = false,
-			description = "When the the provider and the customer agreed at")
+			description = "When the provider and the customer agreed at")
 	public Calendar agreedAt = null;
 
 	/**
@@ -122,7 +122,7 @@ public class AgreementKind extends Category {
 	/**
 	 * Current state of the instance
 	 */
-	@Attribute(name = "intercloud.sla.serviceevaluator.state",
+	@Attribute(name = "intercloud.sla.agreement.state",
 			type = AttributeType.ENUM,
 			mutable = false,
 			required = true,
@@ -132,7 +132,7 @@ public class AgreementKind extends Category {
 	/**
 	 * Human-readable explanation of the current instance state
 	 */
-	@Attribute(name = "intercloud.sla.serviceevaluator.message",
+	@Attribute(name = "intercloud.sla.agreement.message",
 			type = AttributeType.STRING,
 			mutable = false,
 			required = false,
