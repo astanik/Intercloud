@@ -16,8 +16,12 @@
 
 package de.tu_berlin.cit.intercloud.occi.sla;
 
+import java.util.Calendar;
+
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Kind;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 
 /**
  * TODO
@@ -39,5 +43,100 @@ public class AgreementKind extends Category {
 		super(title);
 	}
 
+	/**
+	 * The domain of the provider
+	 */
+	@Attribute(name = "intercloud.sla.agreement.provider",
+			type = AttributeType.STRING,
+			mutable = true,
+			required = false,
+			description = "The domain of the provider")
+	public String providerDomain = null;
+
+	/**
+	 * The JID of the customer
+	 */
+	@Attribute(name = "intercloud.sla.agreement.customer",
+			type = AttributeType.STRING,
+			mutable = true,
+			required = false,
+			description = "The JID of the customer")
+	public String customerJID = null;
+
+	/**
+	 * The customer's signature
+	 */
+	@Attribute(name = "intercloud.sla.agreement.customersignature",
+			type = AttributeType.SIGNATURE,
+			mutable = true,
+			required = false,
+			description = "The customer's signature")
+	public byte[] customerSignature = null;
+
+	/**
+	 * The provider's signature
+	 */
+	@Attribute(name = "intercloud.sla.agreement.providersignature",
+			type = AttributeType.SIGNATURE,
+			mutable = true,
+			required = false,
+			description = "The provider's signature")
+	public byte[] providerSignature = null;
+
+	/**
+	 * When the provider and the customer agreed at
+	 */
+	@Attribute(name = "intercloud.sla.agreement.agreedat",
+			type = AttributeType.DATETIME,
+			mutable = true,
+			required = false,
+			description = "When the the provider and the customer agreed at")
+	public Calendar agreedAt = null;
+
+	/**
+	 * When the provider and the customer agreed from
+	 */
+	@Attribute(name = "intercloud.sla.agreement.agreedfrom",
+			type = AttributeType.DATETIME,
+			mutable = true,
+			required = false,
+			description = "When the provider and the customer agreed from")
+	public Calendar agreedFrom = null;
+
+	/**
+	 * When the the provider and the customer agreed until
+	 */
+	@Attribute(name = "intercloud.sla.agreement.agreementuntil",
+			type = AttributeType.DATETIME,
+			mutable = true,
+			required = false,
+			description = "When the provider and the customer agreed until")
+	public Calendar agreedUntil = null;
+
+	public enum State {
+		pending, 
+		observed, 
+		suspended
+	}
+	
+	/**
+	 * Current state of the instance
+	 */
+	@Attribute(name = "intercloud.sla.serviceevaluator.state",
+			type = AttributeType.ENUM,
+			mutable = false,
+			required = true,
+			description = "Current state of the instance: Enum{undefined, violated, fulfilled}")
+	public State state = null;
+
+	/**
+	 * Human-readable explanation of the current instance state
+	 */
+	@Attribute(name = "intercloud.sla.serviceevaluator.message",
+			type = AttributeType.STRING,
+			mutable = false,
+			required = false,
+			description = "Human-readable explanation of the current instance state")
+	public String message = null;
 
 }
