@@ -50,7 +50,7 @@ public class ServiceReferenceLink extends LinkCategory {
 	/**
 	 * Service Description Terms that the instance target have to fulfill
 	 */
-	@Attribute(name = "intercloud.servicereference.sdt",
+	@Attribute(name = "intercloud.sla.servicereference.sdt",
 			type = AttributeType.MAP,
 			mutable = true,
 			required = false,
@@ -60,7 +60,7 @@ public class ServiceReferenceLink extends LinkCategory {
 	/**
 	 * Assessment interval to check the SDT compliance in seconds
 	 */
-	@Attribute(name = "intercloud.servicereference.assessmentinterval",
+	@Attribute(name = "intercloud.sla.servicereference.assessmentinterval",
 			type = AttributeType.INTEGER,
 			mutable = true,
 			required = false,

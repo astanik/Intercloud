@@ -16,8 +16,6 @@
 
 package de.tu_berlin.cit.intercloud.occi.sla;
 
-import java.util.HashMap;
-
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
@@ -48,14 +46,22 @@ public class ServiceEvaluatorLink extends LinkCategory {
 	}
 
 	/**
-	 * Service Description Terms that the instance target have to fulfill
+	 * The sensor from which the link retrieves its measurements, i.e. the object
 	 */
-	@Attribute(name = "intercloud.ServiceEvaluator.interface",
-			type = AttributeType.MAP,
+	@Attribute(name = "intercloud.sla.serviceevaluator.sensor",
+			type = AttributeType.STRING,
 			mutable = true,
-			required = false,
-			description = "Service Description Terms that the instance target have to fulfill (i.e. key = attribute, value = value)")
-	public HashMap<String, String> serviceDescriptionTerm = null;
+			required = true,
+			description = "The sensor from which the link retrieves its measurements, i.e. the object")
+	public String sensor = null;
+	
+	public String getSubject() {
+		return this.getTarget();
+	}
+	
+	public void setSubject(String target) {
+		this.setTarget(target);
+	}
 	
 	public enum State {
 		undefined, 
@@ -66,7 +72,7 @@ public class ServiceEvaluatorLink extends LinkCategory {
 	/**
 	 * Current state of the instance
 	 */
-	@Attribute(name = "intercloud.sla.ServiceEvaluator.state",
+	@Attribute(name = "intercloud.sla.serviceevaluator.state",
 			type = AttributeType.ENUM,
 			mutable = false,
 			required = true,
@@ -76,7 +82,7 @@ public class ServiceEvaluatorLink extends LinkCategory {
 	/**
 	 * Human-readable explanation of the current instance state
 	 */
-	@Attribute(name = "intercloud.sla.ServiceEvaluator.message",
+	@Attribute(name = "intercloud.sla.serviceevaluator.message",
 			type = AttributeType.STRING,
 			mutable = false,
 			required = false,
