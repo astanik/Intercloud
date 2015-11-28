@@ -19,7 +19,6 @@ package de.tu_berlin.cit.intercloud.occi.core.incarnation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,15 +49,12 @@ public final class ClassificationRegistry {
 
 	private static ClassificationRegistry singleton = new ClassificationRegistry();
 
-	private final Map<String, Class<? extends Category>> classMapping;
-
 	
 	/**
 	 * A private Constructor prevents any other class from instantiating.
 	 */
 	private ClassificationRegistry() {
 		logger.info("Retrieving namespace constants ...");
-		this.classMapping = NamespaceConstants.mapping;
 	}
 
 	/**
@@ -310,11 +306,4 @@ public final class ClassificationRegistry {
 		}
 	}
 
-	public Map<String, Class<? extends Category>> getClassMapping() {
-		return this.classMapping;
-	}
-
-	public void addClassMapping(String key, Class<? extends Category> value) {
-		this.classMapping.put(key, value);
-	}
 }
