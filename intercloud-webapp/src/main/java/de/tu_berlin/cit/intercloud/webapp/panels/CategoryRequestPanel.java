@@ -27,7 +27,7 @@ public class CategoryRequestPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(CategoryRequestPanel.class);
     private final WebMarkupContainer container;
 
-    public CategoryRequestPanel(String markupId, IModel<MethodModel> methodModel, IModel<CategoryModel> categoryModel) {
+    public CategoryRequestPanel(String markupId, IModel<MethodModel> methodModel, IModel<? extends CategoryModel> categoryModel) {
         super(markupId);
 
         this.container = new WebMarkupContainer("container");

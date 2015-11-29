@@ -3,12 +3,13 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.RequestModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
+import de.tu_berlin.cit.intercloud.webapp.panels.OcciRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -16,8 +17,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
@@ -39,7 +42,6 @@ public class GetXwadlPage extends UserTemplate {
     private transient IModel<String> resourcePath = new Model<>();
     private transient String codeString;
     private transient List<MethodModel> methodModelList = new ArrayList<>();
-
 
     public GetXwadlPage(IModel<String> entity) {
         super();
@@ -67,6 +69,9 @@ public class GetXwadlPage extends UserTemplate {
         });
         this.methodTable.setOutputMarkupId(true);
         this.add(methodTable);
+
+        // request model
+        this.add(new EmptyPanel("requestModelPanel"));
     }
 
     private class XwadlForm extends Form {
@@ -83,14 +88,13 @@ public class GetXwadlPage extends UserTemplate {
                         XmppURI uri = new XmppURI(entity.getObject(), resourcePath.getObject());
                         IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
                                 .newIntercloudClient(uri);
-                        intercloudClient.getRequestModel(new MethodModel(uri, "POST", "xml/occi", "text/uri", null));
                         codeString = intercloudClient.toString();
                         methodModelList = intercloudClient.getMethods();
                         target.add(codePanel);
                         target.add(methodTable);
                     } catch (Exception e) {
                         StringBuilder s = new StringBuilder();
-                        s.append("Failed to receive xwadl from xmpp://").append(entity.getObject()).append("#").append(resourcePath).append(".");
+                        s.append("Failed to receive xwadl from xmpp://").append(entity.getObject()).append("#").append(resourcePath.getObject()).append(".");
                         logger.error(s.toString(), e);
                         target.appendJavaScript(s.insert(0, "alert('").append("');").toString());
                         return;
@@ -128,25 +132,39 @@ public class GetXwadlPage extends UserTemplate {
         }
 
         private AbstractLink newLink(String markupId, MethodModel methodModel) {
-            AbstractLink link = new AjaxLink(markupId) {
+            AbstractLink link = new Link(markupId) {
                 @Override
-                public void onClick(AjaxRequestTarget target) {
+                public void onClick() {
                     try {
                         if (!methodModel.hasRequest()) {
                             codeString = IntercloudWebSession.get().getIntercloudService()
                                     .getIntercloudClient(methodModel.getUri())
                                     .executeRequest(null, methodModel);
-                            target.add(codePanel);
                         }
                     } catch (Exception e) {
                         logger.error("Failed to execute request. {}", methodModel, e);
-                        target.appendJavaScript("alert('Failed to execute request.');");
+                    }
+
+                    try {
+                        if ("xml/occi".equals(methodModel.getRequestMediaType())) {
+                            RequestModel requestModel = IntercloudWebSession.get().getIntercloudService()
+                                    .getIntercloudClient(methodModel.getUri())
+                                    .getRequestModel(methodModel);
+                            GetXwadlPage.this.replace(new OcciRequestPanel("requestModelPanel", new Model<>(methodModel), new Model<>(requestModel)));
+                        }
+                    } catch (Exception e) {
+                        logger.error("Could not create occi request model.", e);
                     }
                 }
             }.setBody(Model.of(methodModel.getMethodType()));
 
-            if (methodModel.hasRequest()) {
-                link.add(new AttributeAppender("class", " disabled"));
+            if (!methodModel.hasRequest()) {
+                link.add(new AttributeAppender("class", " btn-success"));
+            } else if ("xml/occi".equals(methodModel.getRequestMediaType())) {
+                link.add(new AttributeAppender("class", " btn-info"));
+            } else {
+                link.setEnabled(false);
+                link.add(new AttributeAppender("class", " disables"));
             }
             return link;
         }

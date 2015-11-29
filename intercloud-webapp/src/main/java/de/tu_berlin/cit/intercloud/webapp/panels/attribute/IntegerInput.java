@@ -8,6 +8,6 @@ class IntegerInput extends NumberInput {
     public IntegerInput(String markupId, AttributeModel attribute, boolean enabled) {
         super(markupId, attribute, enabled);
         this.add(new NumberTextField<Integer>("attributeValue", new PropertyModel<>(attribute, "integer"))
-                .setRequired(attribute.isRequired()));
+                .setRequired(attribute.isRequired()).setEnabled(enabled));
     }
 }

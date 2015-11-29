@@ -3,9 +3,12 @@ package de.tu_berlin.cit.intercloud.client.model.rest;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RequestModel {
+public class RequestModel implements Serializable {
+    private static final long serialVersionUID = -2469751830303450595L;
+
     private KindModel kindModel;
     private List<MixinModel> mixinModels;
 

@@ -244,6 +244,7 @@ public class IntercloudClient implements IIntercloudClient {
             return null;
         }
         if (null == templateTitle) {
+            categoryModel.setTitle(null);
             // clear all attributes
             for (AttributeModel a : categoryModel.getAttributes()) {
                 a.clearValue();
