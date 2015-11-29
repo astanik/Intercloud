@@ -1,12 +1,17 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
+import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
+import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.webapp.panels.CategoryRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +21,20 @@ import java.util.List;
 public class ExamplePage extends Template {
     private static final Logger logger = LoggerFactory.getLogger(ExamplePage.class);
 
+    private final CategoryRequestPanel kindPanel;
     public ExamplePage() {
         super();
 
         this.add(new AttributeForm("attributeForm"));
+        this.kindPanel =new CategoryRequestPanel("kindPanel",
+                new Model<>(new MethodModel(null, null, null, null, null)),
+                new LoadableDetachableModel<CategoryModel>() {
+                    @Override
+                    protected CategoryModel load() {
+                        return createExampleKindModel();
+                    }
+                });
+        this.add(kindPanel);
     }
 
     private class AttributeForm extends Form {
@@ -70,5 +85,15 @@ public class ExamplePage extends Template {
 
             return attributeList;
         }
+    }
+
+
+    public KindModel createExampleKindModel() {
+        KindModel kindModel = new KindModel("compute", "http://schema.ogf.org/occi/infrastructure#");
+        kindModel.addTemplate("t0");
+        kindModel.addTemplate("t1");
+        kindModel.addAttribute(new AttributeModel("Datetime", AttributeModel.Type.DATETIME.toString(), false, true, null));
+        kindModel.addAttribute(new AttributeModel("String", AttributeModel.Type.STRING.toString(), true, true, null));
+        return kindModel;
     }
 }

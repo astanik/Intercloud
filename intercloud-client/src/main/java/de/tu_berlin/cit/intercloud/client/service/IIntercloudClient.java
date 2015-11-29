@@ -14,7 +14,7 @@ public interface IIntercloudClient {
 
     RequestModel getRequestModel(MethodModel methodModel);
 
-    CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String Template);
+    CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle);
 
     String executeRequest(RequestModel requestModel, MethodModel methodModel) throws XMPPException, IOException, SmackException;
 }

@@ -14,6 +14,8 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ public class DiscoverItemsPage extends UserTemplate {
     private static final Logger logger = LoggerFactory.getLogger(DiscoverItemsPage.class);
 
     private final WebMarkupContainer itemsContainer;
-    private final List<String> discoItems = new ArrayList<>();
+    private transient List<String> discoItems = new ArrayList<>();
 
     public DiscoverItemsPage() {
         super();
@@ -36,7 +38,12 @@ public class DiscoverItemsPage extends UserTemplate {
         itemsContainer = new WebMarkupContainer("itemsContainer");
         itemsContainer.setOutputMarkupId(true);
         ComponentUtils.displayNone(itemsContainer);
-        itemsContainer.add(new ItemsForm("itemsForm"));
+        itemsContainer.add(new ItemsForm("itemsForm", new LoadableDetachableModel<List<String>>() {
+            @Override
+            protected List<String> load() {
+                return discoItems;
+            }
+        }));
         this.add(itemsContainer);
     }
 
@@ -76,7 +83,7 @@ public class DiscoverItemsPage extends UserTemplate {
     private class ItemsForm extends Form {
         private final RadioGroup radioGroup;
 
-        public ItemsForm(String markupId) {
+        public ItemsForm(String markupId, IModel<List<String>> discoItems) {
             super(markupId);
 
             radioGroup = new RadioGroup<String>("radioGroup", new Model<>());

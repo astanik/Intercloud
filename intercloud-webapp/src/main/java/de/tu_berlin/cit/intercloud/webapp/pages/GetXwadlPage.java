@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
+import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -20,7 +21,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,17 +30,20 @@ import java.util.List;
 public class GetXwadlPage extends UserTemplate {
     private final Logger logger = LoggerFactory.getLogger(GetXwadlPage.class);
 
-    private final IModel<String> domainModel;
-    private String resourcePath;
+    private final IModel<String> entity;
+    // ajax components
     private final Code codePanel;
-    private String codeString;
     private final MethodTable methodTable;
-    private List<MethodModel> methodModelList = new ArrayList<>();
+
+    // don't serialize (not relevant for browser history)
+    private transient IModel<String> resourcePath = new Model<>();
+    private transient String codeString;
+    private transient List<MethodModel> methodModelList = new ArrayList<>();
 
 
-    public GetXwadlPage(IModel<String> domainModel) {
+    public GetXwadlPage(IModel<String> entity) {
         super();
-        this.domainModel = domainModel;
+        this.entity = entity;
 
         this.add(new XwadlForm("xwadlForm"));
 
@@ -71,21 +74,23 @@ public class GetXwadlPage extends UserTemplate {
         public XwadlForm(String markupId) {
             super(markupId);
 
-            this.add(new Label("domain", GetXwadlPage.this.domainModel));
-            this.add(new TextField<>("resourcePath", new PropertyModel<>(GetXwadlPage.this, "resourcePath")).setRequired(true));
+            this.add(new Label("domain", GetXwadlPage.this.entity));
+            this.add(new TextField<>("resourcePath", resourcePath).setRequired(true));
             AjaxButton button = new AjaxButton("getXwadlBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
-                        IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(domainModel.getObject(), resourcePath);
-//                      intercloudClient.getRequestModel(new MethodModel("POST", "xml/occi", "text/uri", null));
+                        XmppURI uri = new XmppURI(entity.getObject(), resourcePath.getObject());
+                        IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
+                                .newIntercloudClient(uri);
+                        intercloudClient.getRequestModel(new MethodModel(uri, "POST", "xml/occi", "text/uri", null));
                         codeString = intercloudClient.toString();
                         methodModelList = intercloudClient.getMethods();
                         target.add(codePanel);
                         target.add(methodTable);
                     } catch (Exception e) {
                         StringBuilder s = new StringBuilder();
-                        s.append("Failed to receive xwadl from xmpp://").append(domainModel.getObject()).append("#").append(resourcePath).append(".");
+                        s.append("Failed to receive xwadl from xmpp://").append(entity.getObject()).append("#").append(resourcePath).append(".");
                         logger.error(s.toString(), e);
                         target.appendJavaScript(s.insert(0, "alert('").append("');").toString());
                         return;
@@ -128,7 +133,8 @@ public class GetXwadlPage extends UserTemplate {
                 public void onClick(AjaxRequestTarget target) {
                     try {
                         if (!methodModel.hasRequest()) {
-                            codeString = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(domainModel.getObject(), GetXwadlPage.this.resourcePath)
+                            codeString = IntercloudWebSession.get().getIntercloudService()
+                                    .getIntercloudClient(methodModel.getUri())
                                     .executeRequest(null, methodModel);
                             target.add(codePanel);
                         }

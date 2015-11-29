@@ -16,6 +16,7 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassifi
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,50 +69,94 @@ public class IntercloudClient implements IIntercloudClient {
                 if (null != m.getDocumentation()) {
                     documentation = m.getDocumentation().getStringValue();
                 }
-                result.add(new MethodModel(m.getType().toString(), requestMediaType, responseMediaType, documentation));
+                result.add(new MethodModel(this.uri, m.getType().toString(), requestMediaType, responseMediaType, documentation));
             }
         }
         return result;
     }
 
+/*
+    TODO: create representation
+    Kind
+    List<Mixin>
+    List<Link> --> List<Mixin>
+    private Object getAny(Map map, List<String> keys) {
+        for (String key : keys) {
+            if (map.containsKey(key)) {
+                return map.get(key);
+            }
+        }
+        return null;
+    }
+    for (MixinModel mixin : mixinMap.values()) {
+        // default
+        if (mixin.getApplies().contains("http://schema.ogf.org/occi/core#category")) {
+            mixinList.add(mixin);
+            continue;
+        }
+        // applies to mixin?
+        if (kindModel != null && mixin.getApplies().contains(kindModel.getSchema() + kindModel.getTerm())) {
+            mixinList.add(mixin);
+            continue;
+        }
+        // applies to link?
+        LinkModel appliedLink = (LinkModel) getAny(linkMap, mixin.getApplies());
+        if (null != appliedLink) {
+            appliedLink.addMixin(mixin);
+            continue;
+        }
+        // applies to mixin?
+        MixinModel appliedMixin  = (MixinModel) getAny(mixinMap, mixin.getApplies());
+        if (null != appliedMixin && !appliedMixin.equals(mixin)) {
+        }
+    }
+    */
+
     @Override
     public RequestModel getRequestModel(MethodModel methodModel) {
-        RequestModel requestModel = null;
-        // occi/xml
-        if (OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+        if (!methodModel.hasRequest()) {
+            return null;
+        } else if (OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            // occi/xml
             MethodDocument.Method methodDocument = getMethodDocument(methodModel);
             if (null != methodDocument) {
-                Map<String, CategoryModel> categoryModelMap = new HashMap<>();
+                KindModel kindModel = null;
+                Map<String, LinkModel> linkMap = new HashMap<>();
+                Map<String, MixinModel> mixinMap = new HashMap<>();
+
                 ClassificationDocument.Classification classification = occiClient.getClassification();
                 // read kind from classification
                 if (null != classification.getKindType()) {
-                    KindModel kindModel = parseKindModel(classification.getKindType());
-                    categoryModelMap.put(kindModel.getSchema() + kindModel.getTerm(), kindModel);
+                    kindModel = parseKindModel(classification.getKindType());
                 }
                 // read links from classification
                 if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
                     for (LinkClassification c : classification.getLinkTypeArray()) {
                         LinkModel linkModel = parseLinkModel(c);
-                        categoryModelMap.put(linkModel.getSchema() + linkModel.getTerm(), linkModel);
+                        linkMap.put(linkModel.getSchema() + linkModel.getTerm(), linkModel);
                     }
                 }
                 // read mixins from classification
                 if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
                     for (MixinClassification c : classification.getMixinTypeArray()) {
                         MixinModel mixinModel = parseMixinModel(c);
-                        categoryModelMap.put(mixinModel.getSchema() + mixinModel.getTerm(), mixinModel);
+                        mixinMap.put(mixinModel.getSchema() + mixinModel.getTerm(), mixinModel);
                     }
                 }
                 // read templates from method document
-                addTemplates(categoryModelMap, methodDocument);
-                if (categoryModelMap!=null);
+                addTemplates(methodDocument, kindModel, mixinMap, linkMap);
+                // TODO: create representation structure
+                // result
+                RequestModel requestModel = new RequestModel();
+                requestModel.setKindModel(kindModel);
+                requestModel.setMixinModels(new ArrayList<>(mixinMap.values()));
+                return requestModel;
             } else {
-                throw new IllegalArgumentException("Cannot create Request model: method does not exist. " + methodModel);
+                throw new IllegalArgumentException("Failed to create Request model: method does not exist. " + methodModel);
             }
         } else {
             throw new UnsupportedOperationException("Cannot create Request model: media type is not supported. " + methodModel);
         }
-        return requestModel;
     }
 
     private KindModel parseKindModel(CategoryClassification classification) {
@@ -140,43 +186,52 @@ public class IntercloudClient implements IIntercloudClient {
         return categoryModel;
     }
 
-    private void addTemplates(Map<String, CategoryModel> categoryModelMap, MethodDocument.Method methodDocument) {
-        if (methodDocument.isSetRequest()) {
-            if (null != methodDocument.getRequest().getTemplateArray() && 0 < methodDocument.getRequest().getTemplateArray().length) {
-                for (String t : methodDocument.getRequest().getTemplateArray()) {
-                    try {
-                        CategoryDocument categoryDocument = CategoryDocument.Factory.parse(t);
-                        addTemplates(categoryModelMap, categoryDocument.getCategory());
-                    } catch (XmlException e) {
-                        logger.warn("Failed to parse Category Document. {}", t, e);
-                    }
+    private List<CategoryDocument> getTemplateDocuments(MethodDocument.Method methodDocument) {
+        List<CategoryDocument> result = new ArrayList<>();
+        if (methodDocument.isSetRequest()
+                && null != methodDocument.getRequest().getTemplateArray()
+                && 0 < methodDocument.getRequest().getTemplateArray().length) {
+            for (String template : methodDocument.getRequest().getTemplateArray()) {
+                try {
+                    CategoryDocument templateDocument = CategoryDocument.Factory.parse(template);
+                    result.add(templateDocument);
+                } catch (XmlException e) {
+                    logger.warn("Failed to parse Template. {}", template, e);
                 }
             }
         }
+        return result;
     }
 
-    private void addTemplates(Map<String, CategoryModel> categoryModelMap, CategoryDocument.Category categoryDocument) {
-        // TODO cache templates --> use cached templates in applyTemplate
+    private void addTemplates(MethodDocument.Method methodDocument, KindModel kindModel, Map<String, MixinModel> mixinMap, Map<String, LinkModel> linkMap) {
+        List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
+        for (CategoryDocument template : templateDocuments) {
+            addTemplates(template.getCategory(), kindModel, mixinMap, linkMap);
+        }
+    }
+
+    private void addTemplates(CategoryDocument.Category categoryDocument, KindModel kindModel, Map<String, MixinModel> mixinMap, Map<String, LinkModel> linkMap) {
         if (null != categoryDocument.getKind()) {
-            CategoryType kind = categoryDocument.getKind();
-            CategoryModel categoryModel = categoryModelMap.get(kind.getSchema() + kind.getTerm());
-            if (null != categoryModel && categoryModel instanceof KindModel) {
-                categoryModel.addTemplate(kind.getTitle());
+            CategoryType kindType = categoryDocument.getKind();
+            if (kindModel.getSchema().equals(kindType.getSchema()) && kindModel.getTerm().equals(kindType.getTerm())) {
+                kindModel.addTemplate(kindType.getTitle());
             } else {
-                logger.warn("Could not find Classification for Template: " + kind);
+                logger.warn("Could not find Kind Classification for Template: " + kindModel);
             }
         }
 
         if (null != categoryDocument.getMixinArray() && 0 < categoryDocument.getMixinArray().length) {
-            for (CategoryType mixin : categoryDocument.getMixinArray()) {
-                CategoryModel categoryModel = categoryModelMap.get(mixin.getSchema() + mixin.getTerm());
-                if (null != categoryModel && categoryModel instanceof MixinModel) {
-                    categoryModel.addTemplate(mixin.getTitle());
+            for (CategoryType mixinType : categoryDocument.getMixinArray()) {
+                MixinModel mixinModel = mixinMap.get(mixinType.getSchema() + mixinType.getTerm());
+                if (null != mixinModel) {
+                    mixinModel.addTemplate(mixinType.getTitle());
                 } else {
-                    logger.warn("Could not find Classification for Template: " + mixin);
+                    logger.warn("Could not find Mixin Classification for Template: " + mixinType);
                 }
             }
         }
+
+        // TODO Link
     }
 
     private MethodDocument.Method getMethodDocument(MethodModel methodModel) {
@@ -184,8 +239,111 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String Template) {
+    public CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) {
+        if (null == categoryModel || null == methodModel) {
+            return null;
+        }
+        if (null == templateTitle) {
+            // clear all attributes
+            for (AttributeModel a : categoryModel.getAttributes()) {
+                a.clearValue();
+            }
+            return categoryModel;
+        }
+        // apply template
+        MethodDocument.Method methodDocument = getMethodDocument(methodModel);
+        if (null == methodDocument) {
+            throw new IllegalArgumentException("Failed to apply template: method does not exist. " + methodModel);
+        }
+        List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
+        if (categoryModel instanceof KindModel) {
+            applyKindTemplate((KindModel) categoryModel, templateDocuments, templateTitle);
+        } else if (categoryModel instanceof MixinModel) {
+            applyMixinTemplate((MixinModel) categoryModel, templateDocuments, templateTitle);
+            // TODO mixins in link?
+        } // TODO Link
         return categoryModel;
+    }
+
+    private void applyKindTemplate(KindModel model, List<CategoryDocument> templateDocuments, String templateTitle) {
+        for (CategoryDocument templateDocument : templateDocuments) {
+            CategoryType type = templateDocument.getCategory().getKind();
+            if (null != type
+                    && model.getSchema().equals(type.getSchema())
+                    && model.getTerm().equals(type.getTerm())
+                    && templateTitle.equals(type.getTitle())) {
+                model.setTitle(templateTitle);
+                applyAttributes(model, type.getAttributeArray());
+                return;
+            }
+        }
+        logger.warn("Kind Template not found. title: {}, {}", templateTitle, model);
+    }
+
+    private void applyMixinTemplate(MixinModel model, List<CategoryDocument> templateDocuments, String templateTitle) {
+        for (CategoryDocument templateDocument : templateDocuments) {
+            CategoryType[] mixinArray = templateDocument.getCategory().getMixinArray();
+            if (null != mixinArray) {
+                for (CategoryType type : mixinArray) {
+                    if (model.getSchema().equals(type.getSchema())
+                            && model.getTerm().equals(type.getTerm())
+                            && templateTitle.equals(type.getTitle())) {
+                        model.setTitle(templateTitle);
+                        applyAttributes(model, type.getAttributeArray());
+                        return;
+                    }
+                }
+            }
+        }
+        logger.warn("Mixin Template not found. title: {}, {}", templateDocuments, model);
+    }
+
+    private void applyAttributes(CategoryModel categoryModel, AttributeType[] attributeTypes) {
+        if (attributeTypes != null) {
+            for (AttributeType type : attributeTypes) {
+                AttributeModel model = categoryModel.getAttribute(type.getName());
+                if (null != model) {
+                    try {
+                        switch (model.getType()) {
+                            case STRING:
+                                model.setString(type.getSTRING());
+                                break;
+                            case ENUM:
+                                model.setEnum(type.getENUM());
+                                break;
+                            case INTEGER:
+                                model.setInteger(type.getINTEGER());
+                                break;
+                            case DOUBLE:
+                                model.setDouble(type.getDOUBLE());
+                                break;
+                            case FLOAT:
+                                model.setFloat(type.getFLOAT());
+                                break;
+                            case BOOLEAN:
+                                model.setBoolean(type.getBOOLEAN());
+                                break;
+                            case URI:
+                                model.setUri(type.getURI());
+                                break;
+                            case DATETIME:
+                                model.setDatetime(new Date(type.getDATETIME().getTimeInMillis()));
+                                break;
+                            case SIGNATURE:
+                            case KEY:
+                            case DURATION:
+                            default:
+                                logger.info("Cannot set attribute, type is not supported. model: {}, type: {}", model, type);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        logger.error("Could not set attribute. model: {}, type: {}", model, type, e);
+                    }
+                } else {
+                    logger.warn("Could not find template attribute in classification. type: {}", type);
+                }
+            }
+        }
     }
 
     @Override

@@ -59,6 +59,10 @@ public class AttributeModel implements Serializable {
         return null != value;
     }
 
+    public void clearValue() {
+        this.value = null;
+    }
+
     @Override
     public String toString() {
         return "AttributeModel{" +
