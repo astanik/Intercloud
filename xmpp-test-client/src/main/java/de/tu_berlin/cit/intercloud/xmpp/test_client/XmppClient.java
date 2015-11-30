@@ -48,9 +48,12 @@ public class XmppClient {
      *
      */
 	public static void main(String [] args) throws ConfigurationException {
+		String user = clientConfig.getUsername();
+		if(args.length > 0)
+			user = args[0];
 		// Create a connection configuration
 		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-				  .setUsernameAndPassword(clientConfig.getUsername(), clientConfig.getPassword())
+				  .setUsernameAndPassword(user, clientConfig.getPassword())
 				  .setServiceName(clientConfig.getServiceName())
 				  .setHost(clientConfig.getHost())
 				  .setPort(clientConfig.getPort())
