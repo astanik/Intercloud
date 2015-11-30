@@ -30,22 +30,25 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetXwadlPage extends UserTemplate {
-    private final Logger logger = LoggerFactory.getLogger(GetXwadlPage.class);
+public class BrowserPage extends UserTemplate {
+    private final Logger logger = LoggerFactory.getLogger(BrowserPage.class);
 
     private final IModel<String> entity;
     // ajax components
     private final Code codePanel;
     private final MethodTable methodTable;
 
+    // serialize (relevant for browser history)
+    private IModel<String> resourcePath;
+
     // don't serialize (not relevant for browser history)
-    private transient IModel<String> resourcePath = new Model<>();
     private transient String codeString;
     private transient List<MethodModel> methodModelList = new ArrayList<>();
 
-    public GetXwadlPage(IModel<String> entity) {
+    public BrowserPage(IModel<XmppURI> uri) {
         super();
-        this.entity = entity;
+        this.entity = new Model<>(uri.getObject().getJID());
+        this.resourcePath = new Model<>(uri.getObject().getPath());
 
         this.add(new XwadlForm("xwadlForm"));
 
@@ -79,7 +82,7 @@ public class GetXwadlPage extends UserTemplate {
         public XwadlForm(String markupId) {
             super(markupId);
 
-            this.add(new Label("domain", GetXwadlPage.this.entity));
+            this.add(new Label("domain", BrowserPage.this.entity));
             this.add(new TextField<>("resourcePath", resourcePath).setRequired(true));
             AjaxButton button = new AjaxButton("getXwadlBtn") {
                 @Override
@@ -150,7 +153,7 @@ public class GetXwadlPage extends UserTemplate {
                             RequestModel requestModel = IntercloudWebSession.get().getIntercloudService()
                                     .getIntercloudClient(methodModel.getUri())
                                     .getRequestModel(methodModel);
-                            GetXwadlPage.this.replace(new OcciRequestPanel("requestModelPanel", new Model<>(methodModel), new Model<>(requestModel)));
+                            BrowserPage.this.replace(new OcciRequestPanel("requestModelPanel", new Model<>(methodModel), new Model<>(requestModel)));
                         }
                     } catch (Exception e) {
                         logger.error("Could not create occi request model.", e);

@@ -71,7 +71,6 @@ public class XmppConnectionManager implements IXmppConnectionManager {
     public void disconnect() {
         if (null != this.connection) {
             this.connection.disconnect();
-            this.connection = null;
         }
     }
 }

@@ -5,9 +5,9 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
 class EnumInput extends TextInput {
-    public EnumInput(String markupId, AttributeModel attribute, boolean enabled) {
-        super(markupId, attribute, enabled);
+    public EnumInput(String markupId, AttributeModel attribute) {
+        super(markupId, attribute);
         this.add(new TextField<String>("attributeValue", new PropertyModel<>(attribute, "enum"))
-                .setRequired(attribute.isRequired()).setEnabled(enabled));
+                .setRequired(attribute.isRequired()));
     }
 }

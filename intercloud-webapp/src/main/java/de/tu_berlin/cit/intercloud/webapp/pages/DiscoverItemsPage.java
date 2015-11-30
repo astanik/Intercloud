@@ -21,6 +21,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +60,7 @@ public class DiscoverItemsPage extends UserTemplate {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
                         XmppURI uri = new XmppURI(domain, "");
-                        discoItems.clear();
-                        discoItems.addAll(IntercloudWebSession.get().getXmppService().discoverRestfulItems(uri));
+                        discoItems = IntercloudWebSession.get().getXmppService().discoverRestfulItems(uri);
                         if (!discoItems.isEmpty()) {
                             // display items form
                             target.add(ComponentUtils.displayBlock(itemsContainer));
@@ -101,7 +101,17 @@ public class DiscoverItemsPage extends UserTemplate {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     String domain = radioGroup.getDefaultModelObjectAsString();
                     if (null != domain && !domain.trim().isEmpty()) {
-                        setResponsePage(new GetXwadlPage(Model.of(domain)));
+                        String path = "";
+                        if (domain.contains("root")) {
+                            path = "/iaas";
+                        } else if (domain.contains("gateway")) {
+                            path = "/compute";
+                        }
+                        try {
+                            setResponsePage(new BrowserPage(Model.of(new XmppURI(domain, path))));
+                        } catch (URISyntaxException e) {
+                            logger.error("Failed to parse xmpp uri. entity: " + domain + ", resource: " + path);
+                        }
                     } else {
                         target.appendJavaScript("alert('Please select a value from the radio group!');");
                     }

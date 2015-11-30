@@ -5,9 +5,9 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
 
 class StringInput extends TextInput {
-    public StringInput(String markupId, AttributeModel attribute, boolean enabled) {
-        super(markupId, attribute, enabled);
+    public StringInput(String markupId, AttributeModel attribute) {
+        super(markupId, attribute);
         this.add(new TextField<String>("attributeValue", new PropertyModel<>(attribute, "string"))
-                .setRequired(attribute.isRequired()).setEnabled(enabled));
+                .setRequired(attribute.isRequired()));
     }
 }
