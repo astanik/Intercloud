@@ -83,13 +83,13 @@ public class ExchangeApplication {
 
 	private void initialize() throws IOException {
 		this.meter = new CpuMeter();
-//		this.meter.start();
-//		logger.info("CPU meter has been started.");
+		this.meter.start();
+		logger.info("CPU meter has been started.");
 	}
 
 	private void cleanup() {
-//		this.meter.stop();
-//		logger.info("CPU meter has been stopped.");
+		this.meter.stop();
+		logger.info("CPU meter has been stopped.");
 	}
 
 	/**
@@ -113,7 +113,6 @@ public class ExchangeApplication {
 			ExchangeComponent component = new ExchangeComponent(container);
 			mgr.addComponent(exchangeConf.getSubDomain(), component);
 			logger.info("Container is up and running...");
-//			component.discoverIntercloudServices(exchangeConf.getXmppDomain());
 			new ExchangeApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {
 			logger.error(e.getMessage());

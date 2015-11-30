@@ -224,8 +224,8 @@ public class TestClient {
 		evaluator.aggregationOperator = ServiceEvaluatorLink.AggregationOperator.avg;
 		evaluator.relationalOperator = ServiceEvaluatorLink.RelationalOperator.GREATER_THAN_OR_EQUAL_TO;
 		TimeWindowMetricMixin timeWindow = new TimeWindowMetricMixin();
-		timeWindow.durationUnit = TimeWindowMetricMixin.TimeUnit.seconds;
-		timeWindow.windowDuration = 5;
+		timeWindow.durationUnit = TimeWindowMetricMixin.TimeUnit.minutes;
+		timeWindow.windowDuration = 15;
 		EventLogMixin eventLog = new EventLogMixin();
 		eventLog.eventID = AvailabilityEvent.AvailabilityStream;
 		AvailabilityMixin availability = new AvailabilityMixin();
