@@ -54,6 +54,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -71,10 +72,6 @@ public class TestClient {
 
 	private static final String SERVICE_PATH = "/agreement/testSLA";
 
-	private final String sensorURI;
-
-	private final String vmURI;
-	
 	private String rootURI = null;
 	
 	private String exchangeURI = null;
@@ -83,17 +80,6 @@ public class TestClient {
 	
 	public TestClient(AbstractXMPPConnection connection) throws XMPPErrorException, URISyntaxException, SmackException, XmlException {
 		this.connection = connection;
-		
-		String hostname;
-		try {
-			hostname = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			hostname = "gateway.cit.tu-berlin.de";
-		}
-		this.sensorURI = "xmpp://" + hostname + "#/sensor/senX";
-		this.vmURI = "xmpp://" + hostname + "#/compute/vmX";
 		
 		discover();
 	}
@@ -152,20 +138,76 @@ public class TestClient {
 			throw new SmackException("REST is not supported");
 	}
 
-	
-	
-	
-	private class AvailabilityTimerTask extends TimerTask {
+	private class PerformanceTimerTask extends TimerTask {
+
+		private final String sensorURI;
+
+		private final String vmURI;
+
+		private long id = 0;
 		
-		public AvailabilityTimerTask() {
+		public PerformanceTimerTask() {
+			String hostname;
+			try {
+				hostname = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				hostname = "gateway.cit.tu-berlin.de";
+			}
+			this.sensorURI = "xmpp://" + hostname + "#/sensor/senX";
+			this.vmURI = "xmpp://" + hostname + "#/compute/vmX";
+			
 //			this.sensorURI = ClientConfig.getInstance().getSensorUri();
 //			this.vmURI = ClientConfig.getInstance().getSubjectUri();
 		}
 	    @Override
 	    public void run() {
+	    	this.id++;
+	    	String sensor = this.sensorURI + this.id;
+	    	String vm = this.vmURI + this.id;
+	    	
+	    	OcciXml rep = createTestRepresentation(sensor, vm);
+	    	try {
+				createAvailabilityTerm(rep);
+			} catch (XMPPErrorException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (XmlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SmackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	TimerTask timerTask = new AvailabilityTimerTask(sensor, vm);
+	        //running timer task as daemon thread
+	        Timer timer = new Timer(true);
+	        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+	        System.out.println("TimerTask started");
+	        sensors.add(timer);
+	    }
+	}
+	
+	
+	private class AvailabilityTimerTask extends TimerTask {
+
+		private final String sensorURI;
+
+		private final String vmURI;
+
+		public AvailabilityTimerTask(String sen, String vm) {
+			this.sensorURI = sen;
+			this.vmURI = vm;
+		}
+	    @Override
+	    public void run() {
 	    	Random r = new Random();
 	    	double availability = r.nextDouble() * 100;
-	    	LogDocument event = AvailabilityEvent.build(sensorURI, vmURI, availability);
+	    	LogDocument event = AvailabilityEvent.build(this.sensorURI, this.vmURI, availability);
 	    	// process event
 	    	EventLogExtension message = new EventLogExtension(event);
 //	    	Message m = new Message(exchangeURI, str1);
@@ -182,21 +224,25 @@ public class TestClient {
 	
 	private Timer timer = null;
 
+	private ArrayList<Timer> sensors = new ArrayList<Timer>();
 	
 	public void start() {
-        TimerTask timerTask = new AvailabilityTimerTask();
+        TimerTask timerTask = new PerformanceTimerTask();
         //running timer task as daemon thread
         this.timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+        timer.scheduleAtFixedRate(timerTask, 0, 60 * 1000);
         System.out.println("TimerTask started");
 	}
 
 	public void stop() {
         this.timer.cancel();
+        for(Timer t : sensors) {
+        	t.cancel();
+        }
         System.out.println("TimerTask cancelled");
 	}
 	
-	private void createAvailabilityTerm() throws XMPPErrorException, XmlException, SmackException, URISyntaxException {
+	private void createAvailabilityTerm(Representation rep) throws XMPPErrorException, XmlException, SmackException, URISyntaxException {
 		XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(exchangeURI.toString(), SERVICE_PATH));
 		Method method = client.getMethod(MethodType.PUT, OcciXml.MEDIA_TYPE, UriListText.MEDIA_TYPE);
 		if (null != method) {
@@ -204,23 +250,22 @@ public class TestClient {
 //			if(rep.size() > 0) {
 //				if(rep.get(0) instanceof OcciXml) {
 //				Representation representation = (OcciXml) rep.get(0);
-					Representation representation = createTestRepresentation();
-					System.out.println("Request: " + representation.toString());
+					System.out.println("Request: " + rep.toString());
 					// create vm
 					XmppRestMethod invocable = client.buildMethodInvocation(method);
-					representation = invocable.invoke(representation);
-					System.out.println("Response: " + representation.toString());
+					rep = invocable.invoke(rep);
+					System.out.println("Response: " + rep.toString());
 //				}
 //			}
 		}
 	}
 	
-	private OcciXml createTestRepresentation() {
+	private OcciXml createTestRepresentation(String sensor, String vm) {
 		ServiceEvaluatorLink evaluator = new ServiceEvaluatorLink();
 //		evaluator.setObject(ClientConfig.getInstance().getSensorUri());
 //		evaluator.setSubject(ClientConfig.getInstance().getSubjectUri());
-		evaluator.setObject(this.sensorURI);
-		evaluator.setSubject(this.vmURI);
+		evaluator.setObject(sensor);
+		evaluator.setSubject(vm);
 		evaluator.aggregationOperator = ServiceEvaluatorLink.AggregationOperator.avg;
 		evaluator.relationalOperator = ServiceEvaluatorLink.RelationalOperator.GREATER_THAN_OR_EQUAL_TO;
 		TimeWindowMetricMixin timeWindow = new TimeWindowMetricMixin();
@@ -254,8 +299,6 @@ public class TestClient {
 		
 		System.out.println("Start test ...");
 		
-		this.createAvailabilityTerm();
-		System.out.println("Availability Guarantee Term has been created.");
 		
 		// start measuring 
 		this.start();
