@@ -230,7 +230,7 @@ public class TestClient {
         TimerTask timerTask = new PerformanceTimerTask();
         //running timer task as daemon thread
         this.timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 60 * 1000);
+        timer.scheduleAtFixedRate(timerTask, 0, 10 * 1000);
         System.out.println("TimerTask started");
 	}
 
