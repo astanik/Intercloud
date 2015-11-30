@@ -17,11 +17,17 @@
 package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
+import de.tu_berlin.cit.intercloud.occi.sla.TimeWindowMetricMixin;
+import de.tu_berlin.cit.intercloud.sla.mixins.AvailabilityMixin;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.cep.ComplexEventProcessor;
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
 import de.tu_berlin.cit.intercloud.xmpp.cep.events.AvailabilityEvent;
 import de.tu_berlin.cit.intercloud.xmpp.cep.events.CpuUtilizationEvent;
+import de.tu_berlin.cit.intercloud.xmpp.cep.mixins.EventLogMixin;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -45,7 +51,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -61,7 +69,11 @@ public class TestClient {
 
 	private static final String TEST_DOMAIN = ClientConfig.getInstance().getServiceName();
 
-	private static final String SERVICE_PATH = "/Agreements/sla1";
+	private static final String SERVICE_PATH = "/agreement/testSLA";
+
+	private final String sensorURI;
+
+	private final String vmURI;
 	
 	private String rootURI = null;
 	
@@ -71,6 +83,17 @@ public class TestClient {
 	
 	public TestClient(AbstractXMPPConnection connection) throws XMPPErrorException, URISyntaxException, SmackException, XmlException {
 		this.connection = connection;
+		
+		String hostname;
+		try {
+			hostname = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			hostname = "gateway.cit.tu-berlin.de";
+		}
+		this.sensorURI = "xmpp://" + hostname + "#/sensor/senX";
+		this.vmURI = "xmpp://" + hostname + "#/compute/vmX";
 		
 		discover();
 	}
@@ -102,15 +125,6 @@ public class TestClient {
 		if(exchangeURI != null) {
 			checkFeatures(discoManager, exchangeURI);
 		}
-/*
-		XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(rootURI.toString(), SERVICE_PATH));
-		Method method = client.getMethod(MethodType.GET, null, UriListText.MEDIA_TYPE);
-		if (null != method) {
-			XmppRestMethod xmppRestMethod = client.buildMethodInvocation(method);
-			Representation representation = xmppRestMethod.invoke();
-			System.out.println(representation.toString());
-		}
-*/
 	}
 
 	private void checkFeatures(ServiceDiscoveryManager discoManager, String uri) throws SmackException, XMPPErrorException {
@@ -142,13 +156,10 @@ public class TestClient {
 	
 	
 	private class AvailabilityTimerTask extends TimerTask {
-		private final String sensorURI;
-
-		private final String vmURI;
 		
 		public AvailabilityTimerTask() {
-			this.sensorURI = ClientConfig.getInstance().getSensorUri();
-			this.vmURI = ClientConfig.getInstance().getSubjectUri();
+//			this.sensorURI = ClientConfig.getInstance().getSensorUri();
+//			this.vmURI = ClientConfig.getInstance().getSubjectUri();
 		}
 	    @Override
 	    public void run() {
@@ -185,11 +196,66 @@ public class TestClient {
         System.out.println("TimerTask cancelled");
 	}
 	
+	private void createAvailabilityTerm() throws XMPPErrorException, XmlException, SmackException, URISyntaxException {
+		XmppRestClient client = XmppRestClient.XmppRestClientBuilder.build(connection, new XmppURI(exchangeURI.toString(), SERVICE_PATH));
+		Method method = client.getMethod(MethodType.PUT, OcciXml.MEDIA_TYPE, UriListText.MEDIA_TYPE);
+		if (null != method) {
+//			List<Representation> rep = client.getRequestTemplates(method);
+//			if(rep.size() > 0) {
+//				if(rep.get(0) instanceof OcciXml) {
+//				Representation representation = (OcciXml) rep.get(0);
+					Representation representation = createTestRepresentation();
+					System.out.println("Request: " + representation.toString());
+					// create vm
+					XmppRestMethod invocable = client.buildMethodInvocation(method);
+					representation = invocable.invoke(representation);
+					System.out.println("Response: " + representation.toString());
+//				}
+//			}
+		}
+	}
+	
+	private OcciXml createTestRepresentation() {
+		ServiceEvaluatorLink evaluator = new ServiceEvaluatorLink();
+//		evaluator.setObject(ClientConfig.getInstance().getSensorUri());
+//		evaluator.setSubject(ClientConfig.getInstance().getSubjectUri());
+		evaluator.setObject(this.sensorURI);
+		evaluator.setSubject(this.vmURI);
+		evaluator.aggregationOperator = ServiceEvaluatorLink.AggregationOperator.avg;
+		evaluator.relationalOperator = ServiceEvaluatorLink.RelationalOperator.GREATER_THAN_OR_EQUAL_TO;
+		TimeWindowMetricMixin timeWindow = new TimeWindowMetricMixin();
+		timeWindow.durationUnit = TimeWindowMetricMixin.TimeUnit.seconds;
+		timeWindow.windowDuration = 5;
+		EventLogMixin eventLog = new EventLogMixin();
+		eventLog.eventID = AvailabilityEvent.AvailabilityStream;
+		AvailabilityMixin availability = new AvailabilityMixin();
+		availability.slo = new Double(50);
+		
+		// create link document
+		LinkType link;
+		try {
+			link = RepresentationBuilder.buildLinkRepresentation(evaluator);
+			link = RepresentationBuilder.appendLinkMixin(link, timeWindow);
+			link = RepresentationBuilder.appendLinkMixin(link, eventLog);
+			link = RepresentationBuilder.appendLinkMixin(link, availability);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			link = LinkType.Factory.newInstance();
+		}
+		// add the link representation
+		OcciXml rep = new OcciXml();
+		rep.addLink(link);
+		return rep;
+	}
 	
 	public void performTest() throws FileNotFoundException, UnsupportedEncodingException, 
 			URISyntaxException, XMPPErrorException, XmlException, SmackException {
 		
 		System.out.println("Start test ...");
+		
+		this.createAvailabilityTerm();
+		System.out.println("Availability Guarantee Term has been created.");
 		
 		// start measuring 
 		this.start();

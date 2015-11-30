@@ -16,18 +16,21 @@
 
 package de.tu_berlin.cit.intercloud.sla;
 
-import java.net.URISyntaxException;
-
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.Link;
 import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
+import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
+import de.tu_berlin.cit.intercloud.sla.links.AvailabilityGuaranteeTerm;
+import de.tu_berlin.cit.intercloud.sla.mixins.AvailabilityMixin;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 
 /**
  * TODO
@@ -50,19 +53,34 @@ public class AgreementInstance extends Resource {
 
 	@XmppMethod(XmppMethod.PUT)
     @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
-    @Produces(value = UriText.MEDIA_TYPE, serializer = UriText.class)
-	public UriText createGuaranteeTerm(OcciXml agreementXml) {
-		// create a guarantee term link and return its uri
-		AgreementInstance agreement = new AgreementInstance(agreementXml);
-		String path = this.addResource(agreement);
-		try {
-			UriText uri = new UriText(path);
-			return uri;
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new UriText(); 
+    @Produces(value = UriListText.MEDIA_TYPE, serializer = UriListText.class)
+	public UriListText createTerm(OcciXml agreementXml) {
+		UriListText uriList = new UriListText();
+		LinkType[] links = agreementXml.getLinks();
+		for(LinkType link : links) {
+			uriList.addURI(this.createTerm(link));
 		}
+		return uriList;
 	}
 	
+	private String createTerm(LinkType link) {
+		Link linkInstance = null;
+		// create a term link and return its uri
+		try {
+			AvailabilityMixin availabilityMixin = RepresentationBuilder.buildLinkRepresentation(link, new AvailabilityMixin());
+			if(availabilityMixin.slo != null)
+				linkInstance = new AvailabilityGuaranteeTerm(link);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(linkInstance == null)
+			return "";
+		else
+			return this.addResource(linkInstance);
+	}
 }

@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>util</artifactId>
+			<artifactId>intercloud-util</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<!-- smack -->

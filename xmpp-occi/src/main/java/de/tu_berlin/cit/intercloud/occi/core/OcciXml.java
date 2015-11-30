@@ -37,6 +37,7 @@ public class OcciXml extends Representation {
 	private CategoryDocument catDoc = CategoryDocument.Factory.newInstance();
 	
 	public OcciXml() {
+		this.catDoc.addNewCategory();
 	}
 	
 	public OcciXml(String text) {

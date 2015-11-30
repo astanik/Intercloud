@@ -48,7 +48,7 @@ public class StatementBuilder {
 		// set time window
 		expression = expression + buildTimeWindow(timeWindow);
 		// build where clause
-		expression = expression + buildViolationWhere(evaluator, slo);
+		expression = expression + buildViolationWhere(evaluator, eventLog, slo);
 		
 		// create new statement
 		EPServiceProvider epService = ComplexEventProcessor.getInstance().getProvider();
@@ -69,7 +69,7 @@ public class StatementBuilder {
 		// set time window
 		expression = expression + buildTimeWindow(timeWindow);
 		// build where clause
-		expression = expression + buildFulfillWhere(evaluator, slo);
+		expression = expression + buildFulfillWhere(evaluator, eventLog, slo);
 		
 		// create new statement
 		EPServiceProvider epService = ComplexEventProcessor.getInstance().getProvider();
@@ -90,7 +90,7 @@ public class StatementBuilder {
 		// set time window
 		expression = expression + buildLengthWindow(lengthWindow);
 		// build where clause
-		expression = expression + buildViolationWhere(evaluator, slo);
+		expression = expression + buildViolationWhere(evaluator, eventLog, slo);
 		
 		// create new statement
 		EPServiceProvider epService = ComplexEventProcessor.getInstance().getProvider();
@@ -111,7 +111,7 @@ public class StatementBuilder {
 		// set time window
 		expression = expression + buildLengthWindow(lengthWindow);
 		// build where clause
-		expression = expression + buildFulfillWhere(evaluator, slo);
+		expression = expression + buildFulfillWhere(evaluator, eventLog, slo);
 		
 		// create new statement
 		EPServiceProvider epService = ComplexEventProcessor.getInstance().getProvider();
@@ -124,19 +124,24 @@ public class StatementBuilder {
 	
 
 	private static String buildSelect(ServiceEvaluatorLink evaluator, EventLogMixin eventLog) {
-		String expression = "select ";
+		return "select " + buildSelectorTag(evaluator, eventLog);
+		// create alias
+//		expression = expression + " as actualSLO";
+//		return expression;
+	}	
+	
+	private static String buildSelectorTag(ServiceEvaluatorLink evaluator, EventLogMixin eventLog) {
+		// create tag
+		String expression = "";
 		if(evaluator.aggregationOperator != null) {
-			expression = expression + evaluator.aggregationOperator.toString() + "(";
+			expression = evaluator.aggregationOperator.toString() + "(";
 			expression = expression + eventLog.getTag();
 			expression = expression + ")";
 		} else {
 			expression = expression + eventLog.getTag();
 		}
-		// create alias
-		expression = expression + " as slo";
-
 		return expression;
-	}	
+	}
 	
 	private static String buildFrom(EventLogMixin eventLog) {
 		return buildFrom(eventLog.getStream());
@@ -179,17 +184,20 @@ public class StatementBuilder {
 			return "";
 	}
 
-	private static String buildFulfillWhere(ServiceEvaluatorLink evaluator, String slo) {
+	private static String buildFulfillWhere(ServiceEvaluatorLink evaluator, EventLogMixin eventLog, String slo) {
 		// create slo selection
 		String expression = buildWhere(evaluator.getObject(), evaluator.getSubject());
-		if(slo != null && evaluator.relationalOperator != null)
-			return expression + " and " + buildFulfillExpression(slo, evaluator.relationalOperator);
-		else
-			return expression;
+
+		if(slo != null && evaluator.relationalOperator != null) {
+			expression = expression + " having " + buildSelectorTag(evaluator, eventLog);
+			expression = expression + buildFulfillExpression(slo, evaluator.relationalOperator);
+		}
+		
+		return expression;
 	}
 
 	private static String buildFulfillExpression(String slo, RelationalOperator relationalOperator) {
-		String expression = "slo ";
+		String expression = "";
 		switch(relationalOperator) {
 		case LESS_THAN:
 			expression = expression + "<";
@@ -216,17 +224,20 @@ public class StatementBuilder {
 		return expression + " " + slo;
 	}
 
-	private static String buildViolationWhere(ServiceEvaluatorLink evaluator, String slo) {
+	private static String buildViolationWhere(ServiceEvaluatorLink evaluator, EventLogMixin eventLog, String slo) {
 		// create slo selection
 		String expression = buildWhere(evaluator.getObject(), evaluator.getSubject());
-		if(slo != null && evaluator.relationalOperator != null)
-			return expression + " and " + buildViolationExpression(slo, evaluator.relationalOperator);
-		else
-			return expression;
+
+		if(slo != null && evaluator.relationalOperator != null) {
+			expression = expression + " having " + buildSelectorTag(evaluator, eventLog);
+			expression = expression + buildViolationExpression(slo, evaluator.relationalOperator);
+		}
+		
+		return expression;
 	}
 
 	private static String buildViolationExpression(String slo, RelationalOperator relationalOperator) {
-		String expression = "slo ";
+		String expression = "";
 		switch(relationalOperator) {
 		case LESS_THAN:
 			expression = expression + ">=";
