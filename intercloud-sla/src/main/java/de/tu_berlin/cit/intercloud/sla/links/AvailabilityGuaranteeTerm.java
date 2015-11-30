@@ -16,13 +16,13 @@
 
 package de.tu_berlin.cit.intercloud.sla.links;
 
-import de.tu_berlin.cit.intercloud.occi.core.Link;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
+import de.tu_berlin.cit.intercloud.occi.sla.TimeWindowMetricMixin;
 import de.tu_berlin.cit.intercloud.sla.mixins.AvailabilityMixin;
-import de.tu_berlin.cit.intercloud.sla.mixins.EventLogMixin;
+import de.tu_berlin.cit.intercloud.xmpp.cep.mixins.EventLogMixin;
 import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
 
 /**
@@ -32,13 +32,15 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
 @PathID
-@Classification(mixins = {EventLogMixin.class, AvailabilityMixin.class}, 
+@Classification(mixins = {EventLogMixin.class, TimeWindowMetricMixin.class, AvailabilityMixin.class}, 
 				links  = {ServiceEvaluatorLink.class})
-public class AvailabilityGuaranteeTerm extends Link {
+public class AvailabilityGuaranteeTerm extends AbstractGuaranteeTerm {
 
 	private ServiceEvaluatorLink serviceEvaluatorLink = new ServiceEvaluatorLink();
 	
 	private EventLogMixin eventLogMixin = new EventLogMixin();
+	
+	private TimeWindowMetricMixin timeWindowMetricMixin = new TimeWindowMetricMixin();
 	
 	private AvailabilityMixin availabilityMixin = new AvailabilityMixin();
 	
@@ -48,8 +50,9 @@ public class AvailabilityGuaranteeTerm extends Link {
 		// incarnation
 		try {
 			this.serviceEvaluatorLink = RepresentationBuilder.buildLinkRepresentation(representation, this.serviceEvaluatorLink);
-			this.serviceEvaluatorLink = RepresentationBuilder.buildLinkRepresentation(representation, this.serviceEvaluatorLink);
-			this.serviceEvaluatorLink = RepresentationBuilder.buildLinkRepresentation(representation, this.serviceEvaluatorLink);
+			this.eventLogMixin = RepresentationBuilder.buildLinkRepresentation(representation, this.eventLogMixin);
+			this.timeWindowMetricMixin = RepresentationBuilder.buildLinkRepresentation(representation, this.timeWindowMetricMixin);
+			this.availabilityMixin = RepresentationBuilder.buildLinkRepresentation(representation, this.availabilityMixin);
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,6 +61,17 @@ public class AvailabilityGuaranteeTerm extends Link {
 			e.printStackTrace();
 		}
 		
+		this.buildStatements(serviceEvaluatorLink, eventLogMixin, timeWindowMetricMixin, availabilityMixin.slo.toString());
+	}
+
+	@Override
+	protected void violated(String value) {
+		logger.info("The guarantee=" + this.getPath() + " is violated: Availability = " + value);
+	}
+
+	@Override
+	protected void fulfilled(String value) {
+		logger.info("The guarantee=" + this.getPath() + " is fulfilled: Availability = " + value);
 	}
 	
 }

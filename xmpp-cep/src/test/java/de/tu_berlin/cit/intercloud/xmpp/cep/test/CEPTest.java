@@ -15,10 +15,13 @@ import com.espertech.esper.client.EventType;
 import com.espertech.esper.client.UpdateListener;
 import com.sun.management.OperatingSystemMXBean;
 
+import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
+import de.tu_berlin.cit.intercloud.occi.sla.TimeWindowMetricMixin;
 import de.tu_berlin.cit.intercloud.xmpp.cep.ComplexEventProcessor;
 import de.tu_berlin.cit.intercloud.xmpp.cep.StatementBuilder;
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
 import de.tu_berlin.cit.intercloud.xmpp.cep.events.CpuUtilizationEvent;
+import de.tu_berlin.cit.intercloud.xmpp.cep.mixins.EventLogMixin;
 
 public class CEPTest {
 
@@ -44,8 +47,8 @@ public class CEPTest {
 				
 	    @Override
 	    public void run() {
-	    	int sysCpu = (int) osManager.getSystemCpuLoad() * 100;
-	    	int jvmCpu = (int) osManager.getProcessCpuLoad() * 100;
+	    	int sysCpu = (int) (osManager.getSystemCpuLoad() * 100);
+	    	int jvmCpu = (int) (osManager.getProcessCpuLoad() * 100);
 	    	LogDocument event = CpuUtilizationEvent.build(sensorURI, vmURI, sysCpu);
 	    	// process event
 	    	ComplexEventProcessor.getInstance().processEvent(event);
@@ -68,6 +71,9 @@ public class CEPTest {
 
 	public class MyListener implements UpdateListener {
 	    public void update(EventBean[] newEvents, EventBean[] oldEvents) {
+//	    	if(oldEvents.length > 0)
+	    	if(oldEvents != null)
+	    		return;
 	    	logger.info("Event occured: " + newEvents.length);
 	    	for(int i = 0; i < newEvents.length; i++) {
 	    		EventBean event = newEvents[i];
@@ -91,7 +97,15 @@ public class CEPTest {
 	
 	@Test
 	public void cepTest() {
-		EPStatement st = StatementBuilder.buildCpuUtilization(sensorURI, vmURI, 5);
+		ServiceEvaluatorLink evaluator = new ServiceEvaluatorLink();
+		evaluator.setObject(sensorURI);
+		evaluator.setSubject(vmURI);
+		TimeWindowMetricMixin timeWindow = new TimeWindowMetricMixin();
+		timeWindow.durationUnit = TimeWindowMetricMixin.TimeUnit.seconds;
+		timeWindow.windowDuration = 5;
+		EventLogMixin eventLog = new EventLogMixin();
+		eventLog.eventID = CpuUtilizationEvent.CpuUtilizationStream;
+		EPStatement st = StatementBuilder.buildFulfillStatement(evaluator, eventLog, timeWindow, null);
 		MyListener listener = new MyListener();
 		st.addListener(listener);
 		// start measuring 

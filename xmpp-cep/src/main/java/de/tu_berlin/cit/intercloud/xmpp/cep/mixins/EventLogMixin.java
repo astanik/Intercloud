@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package de.tu_berlin.cit.intercloud.sla.mixins;
+package de.tu_berlin.cit.intercloud.xmpp.cep.mixins;
 
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.sla.SlaSchemas;
+import de.tu_berlin.cit.intercloud.xmpp.cep.events.AvailabilityEvent;
+import de.tu_berlin.cit.intercloud.xmpp.cep.events.CpuUtilizationEvent;
+import de.tu_berlin.cit.intercloud.xmpp.cep.events.LogEvent;
 import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
 
 /**
@@ -52,8 +55,32 @@ public class EventLogMixin extends Category {
 	@Attribute(name = "intercloud.sla.serviceevaluator.eventid",
 			type = AttributeType.STRING,
 			mutable = false,
-			required = true,
+			required = false,
 			description = "The event id for this particular evaluator. If null, only string based conditions can be processed")
 	public String eventID = null;
+
+	public String getTag() {
+		// if no event id is set, use the default one
+		if(this.eventID == null)
+			return "tag[0].value";
+		
+		switch(this.eventID) {
+		case AvailabilityEvent.AvailabilityStream:
+			return AvailabilityEvent.AvailabilityTag;
+		case CpuUtilizationEvent.CpuUtilizationStream:
+			return CpuUtilizationEvent.CpuUtilizationTag;
+		default:
+			throw new RuntimeException(
+					"Unsupported event ID");
+		}
+	}
+
+	public String getStream() {
+		// if no event id is set, use the default one
+		if(this.eventID == null)
+			return LogEvent.LogEventStream;
+		else
+			return this.eventID;
+	}
 
 }

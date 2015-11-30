@@ -16,8 +16,10 @@
 
 package de.tu_berlin.cit.intercloud.sla.mixins;
 
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.sla.SlaSchemas;
 import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
 
@@ -43,5 +45,14 @@ public class AvailabilityMixin extends Category {
 		super(title);
 	}
 	
+	/**
+	 * The service level objective.
+	 */
+	@Attribute(name = "intercloud.sla.availability.slo",
+			type = AttributeType.DOUBLE,
+			mutable = true,
+			required = true,
+			description = "The service level objective.")
+	public Double slo = null;
 
 }

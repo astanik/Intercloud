@@ -52,9 +52,17 @@ public class ServiceEvaluatorLink extends LinkCategory {
 			type = AttributeType.STRING,
 			mutable = true,
 			required = true,
-			description = "The sensor from which the link retrieves its measurements, i.e. the object")
+			description = "The sensor from which the link retrieves its measurements, i.e. the object.")
 	public String sensor = null;
 	
+	public String getObject() {
+		return this.sensor;
+	}
+	
+	public void setObject(String sensor) {
+		this.sensor = sensor;
+	}
+
 	public String getSubject() {
 		return this.getTarget();
 	}
@@ -76,8 +84,9 @@ public class ServiceEvaluatorLink extends LinkCategory {
 			type = AttributeType.ENUM,
 			mutable = false,
 			required = true,
-			description = "Current state of the instance: Enum{undefined, violated, fulfilled}")
-	public State state = null;
+			value = "undefined",
+			description = "Current state of the instance: Enum{undefined, violated, fulfilled}.")
+	public State state = State.undefined;
 
 	/**
 	 * Human-readable explanation of the current instance state
@@ -86,7 +95,43 @@ public class ServiceEvaluatorLink extends LinkCategory {
 			type = AttributeType.STRING,
 			mutable = false,
 			required = false,
-			description = "Human-readable explanation of the current instance state")
+			description = "Human-readable explanation of the current instance state.")
 	public String message = null;
+
+	public enum RelationalOperator {
+		LESS_THAN,
+		LESS_THAN_OR_EQUAL_TO,
+		EQUAL_TO,
+		NOT_EQUAL_TO,
+		GREATER_THAN_OR_EQUAL_TO,
+		GREATER_THAN
+	}
+
+	/**
+	 * The relational operator to describe the guarantee
+	 */
+	@Attribute(name = "intercloud.sla.serviceevaluator.relationaloperator",
+			type = AttributeType.ENUM,
+			mutable = false,
+			required = true,
+			description = "The relational operator to describe the guarantee (e.g. LESS_THAN, LESS_THAN_OR_EQUAL_TO, EQUAL_TO, NOT_EQUAL_TO, GREATER_THAN_OR_EQUAL_TO, GREATER_THAN).")
+	public RelationalOperator relationalOperator = null;
+
+	public enum AggregationOperator {
+		min,
+		max,
+		sum,
+		avg
+	}
+
+	/**
+	 * The aggregation operator to specify how measurements are aggregated
+	 */
+	@Attribute(name = "intercloud.sla.serviceevaluator.aggregationoperator",
+			type = AttributeType.ENUM,
+			mutable = false,
+			required = true,
+			description = "The aggregation operator to specify how measurements are aggregated (e.g. min, max, sum, avg).")
+	public AggregationOperator aggregationOperator = null;
 
 }
