@@ -59,8 +59,12 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	private final ResourceContainerSocketManager socketManager;
 	
 
+	/**
+	 * Optimal container component configuration: 24 threads, queue 100,000
+	 * @param container
+	 */
 	protected ResourceContainerComponent(ResourceContainer container) {
-		super(256, 10000, true);
+		super(24, 100000, true);
 		this.container = container;
 		this.socketManager = ResourceContainerSocketManager.buildInstance(this);
 	}
