@@ -60,6 +60,7 @@ public abstract class ResourceContainerComponent extends AbstractComponent {
 	
 
 	protected ResourceContainerComponent(ResourceContainer container) {
+		super(256, 10000, true);
 		this.container = container;
 		this.socketManager = ResourceContainerSocketManager.buildInstance(this);
 	}
