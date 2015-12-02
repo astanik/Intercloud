@@ -66,7 +66,7 @@ public class DiscoverItemsPage extends UserTemplate {
                             target.add(ComponentUtils.displayBlock(itemsContainer));
                         } else {
                             // hide items form and display alert
-                            target.appendJavaScript("alert('Cannot find suitable entities for domain " + domain + "'.);");
+                            target.appendJavaScript("alert('Cannot find suitable entities for domain " + domain + ".');");
                             target.add(ComponentUtils.displayNone(itemsContainer));
                         }
                     } catch (Exception e) {

@@ -5,8 +5,12 @@ import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.RequestModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.TextRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
@@ -21,6 +25,8 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
@@ -33,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +87,8 @@ public class IntercloudClient implements IIntercloudClient {
     Kind
     List<Mixin>
     List<Link> --> List<Mixin>
+*/
+
     private Object getAny(Map map, List<String> keys) {
         for (String key : keys) {
             if (map.containsKey(key)) {
@@ -88,29 +97,25 @@ public class IntercloudClient implements IIntercloudClient {
         }
         return null;
     }
-    for (MixinModel mixin : mixinMap.values()) {
-        // default
-        if (mixin.getApplies().contains("http://schema.ogf.org/occi/core#category")) {
-            mixinList.add(mixin);
-            continue;
+    private OcciRepresentationModel createRepresentation(KindModel kindModel,
+                                                         Map<String, LinkModel> linkModelMap,
+                                                         Map<String, MixinModel> mixinModelMap) {
+        for (MixinModel mixin : mixinModelMap.values()) {
+            // default
+            if (mixin.getApplies().contains("http://schema.ogf.org/occi/core#category")) {
+
+            }
+            // applies to mixin?
+            if (kindModel != null && mixin.getApplies().contains(kindModel.getSchema() + kindModel.getTerm())) {
+
+            }
+            // applies to link?
+
+            // applies to mixin?
         }
-        // applies to mixin?
-        if (kindModel != null && mixin.getApplies().contains(kindModel.getSchema() + kindModel.getTerm())) {
-            mixinList.add(mixin);
-            continue;
-        }
-        // applies to link?
-        LinkModel appliedLink = (LinkModel) getAny(linkMap, mixin.getApplies());
-        if (null != appliedLink) {
-            appliedLink.addMixin(mixin);
-            continue;
-        }
-        // applies to mixin?
-        MixinModel appliedMixin  = (MixinModel) getAny(mixinMap, mixin.getApplies());
-        if (null != appliedMixin && !appliedMixin.equals(mixin)) {
-        }
+
+        return null;
     }
-    */
 
     @Override
     public RequestModel getRequestModel(MethodModel methodModel) {
@@ -348,18 +353,33 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public String executeRequest(RequestModel requestModel, MethodModel methodModel) throws XMPPException, IOException, SmackException {
+    public AbstractRepresentationModel executeRequest(RequestModel requestModel, MethodModel methodModel) throws XMPPException, IOException, SmackException {
         MethodDocument.Method methodDocument = getMethodDocument(methodModel);
         if (null == methodDocument) {
             throw new IllegalArgumentException("Cannot execute Request: method not supported by the resource. " + methodModel);
         }
+        AbstractRepresentationModel representationModel = null;
         if (null == requestModel && !methodModel.hasRequest()) {
             OcciMethodInvocation methodInvocation = occiClient.buildMethodInvocation(methodDocument);
             ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
-            return response.toString();
+            if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType()) || UriListText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())) {
+                // URI
+                UriRepresentationModel uriRepresentationModel = new UriRepresentationModel();
+                representationModel = uriRepresentationModel;
+                String s = response.getResource().getMethod().getResponse().getRepresentation();
+                if (null != s) {
+                    String[] links = s.split(";");
+                    if (null != links) {
+                        uriRepresentationModel.getUriList().addAll(Arrays.asList(links));
+                    }
+                }
+            } else {
+                representationModel = new TextRepresentationModel(response.toString());
+            }
         }
 
-        throw new UnsupportedOperationException("Cannot execute Request: method not supported. " + methodModel);
+        return representationModel;
+        //throw new UnsupportedOperationException("Cannot execute Request: method not supported. " + methodModel);
     }
 
     @Override

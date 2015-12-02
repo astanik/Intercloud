@@ -4,7 +4,9 @@ import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.panels.CategoryRequestPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.UriResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,20 +23,24 @@ import java.util.List;
 public class ExamplePage extends Template {
     private static final Logger logger = LoggerFactory.getLogger(ExamplePage.class);
 
-    private final CategoryRequestPanel kindPanel;
     public ExamplePage() {
         super();
 
         this.add(new AttributeForm("attributeForm"));
-        this.kindPanel =new CategoryRequestPanel("kindPanel",
+        this.add(new CategoryRequestPanel("kindPanel",
                 new Model<>(new MethodModel(null, null, null, null, null)),
                 new LoadableDetachableModel<CategoryModel>() {
                     @Override
                     protected CategoryModel load() {
                         return createExampleKindModel();
                     }
-                });
-        this.add(kindPanel);
+                }));
+        this.add(new UriResponsePanel("uriResponsePanel", new LoadableDetachableModel<UriRepresentationModel>() {
+            @Override
+            protected UriRepresentationModel load() {
+                return createEmapmleUriRepresentationModel();
+            }
+        }));
     }
 
     private class AttributeForm extends Form {
@@ -95,5 +101,12 @@ public class ExamplePage extends Template {
         kindModel.addAttribute(new AttributeModel("Datetime", AttributeModel.Type.DATETIME.toString(), false, true, null));
         kindModel.addAttribute(new AttributeModel("String", AttributeModel.Type.STRING.toString(), true, true, null));
         return kindModel;
+    }
+
+    public UriRepresentationModel createEmapmleUriRepresentationModel() {
+        UriRepresentationModel representationModel = new UriRepresentationModel();
+        representationModel.getUriList().add("xmpp://john@doe.de/asdf#/path");
+        representationModel.getUriList().add("xmpp://example.component.de/asdf#/path0/path1");
+        return representationModel;
     }
 }

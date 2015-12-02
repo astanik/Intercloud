@@ -1,6 +1,7 @@
 package de.tu_berlin.cit.intercloud.client.service;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.RequestModel;
 import org.jivesoftware.smack.SmackException;
@@ -16,5 +17,5 @@ public interface IIntercloudClient {
 
     CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle);
 
-    String executeRequest(RequestModel requestModel, MethodModel methodModel) throws XMPPException, IOException, SmackException;
+    AbstractRepresentationModel executeRequest(RequestModel requestModel, MethodModel methodModel) throws XMPPException, IOException, SmackException;
 }
