@@ -83,13 +83,13 @@ public class ExchangeApplication {
 
 	private void initialize() throws IOException {
 		this.meter = new CpuMeter();
-		this.meter.start();
-		logger.info("CPU meter has been started.");
+//		this.meter.start();
+//		logger.info("CPU meter has been started.");
 	}
 
 	private void cleanup() {
-		this.meter.stop();
-		logger.info("CPU meter has been stopped.");
+//		this.meter.stop();
+//		logger.info("CPU meter has been stopped.");
 	}
 
 	/**
