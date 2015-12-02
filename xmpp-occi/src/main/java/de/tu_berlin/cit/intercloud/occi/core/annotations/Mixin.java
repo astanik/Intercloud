@@ -28,7 +28,6 @@ import java.lang.annotation.Target;
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 public @interface Mixin {
 
-	static final String coreMixin = Category.CategorySchema + "category";
 	/**
 	 * The schema of this mixin.
 	 * @return schema
@@ -45,5 +44,5 @@ public @interface Mixin {
 	 * The type to which this mixin applies to.
 	 * @return applied type
 	 */
-	String[] applies() default coreMixin;
+	String applies() default Category.CategorySchema + Category.CategoryTerm;
 }

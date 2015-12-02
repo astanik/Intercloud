@@ -240,8 +240,7 @@ public final class ClassificationRegistry {
 
 			docMixin.setSchema(mixins[i].getAnnotation(Mixin.class).schema());
 			docMixin.setTerm(mixins[i].getAnnotation(Mixin.class).term());
-			docMixin.setAppliesArray(mixins[i].getAnnotation(Mixin.class)
-					.applies());
+			docMixin.setApplies(mixins[i].getAnnotation(Mixin.class).applies());
 			// TODO: add optional title
 
 			appendAttributeClassification(docMixin, mixins[i]);

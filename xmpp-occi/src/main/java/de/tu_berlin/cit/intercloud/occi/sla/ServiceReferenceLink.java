@@ -80,8 +80,9 @@ public class ServiceReferenceLink extends LinkCategory {
 			type = AttributeType.ENUM,
 			mutable = false,
 			required = true,
+			value = "undefined",
 			description = "Current state of the instance: Enum{undefined, violated, fulfilled}")
-	public State state = null;
+	public State state = State.undefined;
 
 	/**
 	 * Human-readable explanation of the current instance state

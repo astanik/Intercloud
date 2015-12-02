@@ -16,15 +16,19 @@
 
 package de.tu_berlin.cit.intercloud.occi.core.annotations;
 
+import de.tu_berlin.cit.intercloud.occi.core.IntercloudSchemas;
+
 
 /**
- * TODO
+ * Basis class for all kinds, links, and mixins.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
 public class Category {
 
-	public final static String CategorySchema = "http://schema.ogf.org/occi/core#";
+	public final static String CategorySchema = IntercloudSchemas.OgfSchemaURL + "core#";
+
+	public final static String CategoryTerm = "category";
 
 	private String title;
 
