@@ -16,7 +16,6 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.test_client;
 
-import de.tu_berlin.cit.intercloud.util.configuration.ClientConfig;
 import de.tu_berlin.cit.intercloud.util.exceptions.ConfigurationException;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQProvider;
@@ -49,9 +48,12 @@ public class XmppClient {
      *
      */
 	public static void main(String [] args) throws ConfigurationException {
+		String user = clientConfig.getUsername();
+		if(args.length > 0)
+			user = args[0];
 		// Create a connection configuration
 		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-				  .setUsernameAndPassword(clientConfig.getUsername(), clientConfig.getPassword())
+				  .setUsernameAndPassword(user, clientConfig.getPassword())
 				  .setServiceName(clientConfig.getServiceName())
 				  .setHost(clientConfig.getHost())
 				  .setPort(clientConfig.getPort())
@@ -73,7 +75,7 @@ public class XmppClient {
 			// add provider
 			ProviderManager.addIQProvider(XwadlIQ.ELEMENT, XwadlIQ.NAMESPACE, new XwadlIQProvider());
 			ProviderManager.addIQProvider(RestIQ.ELEMENT, RestIQ.NAMESPACE, new RestIQProvider());
-			
+			System.out.println("Provider configured ");
 			// perform the test
 			TestClient client = new TestClient(connection);
 			System.out.println("Test Client created ");

@@ -23,12 +23,13 @@ import org.jivesoftware.whack.ExternalComponentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tu_berlin.cit.intercloud.components.GatewayComponent;
+import de.tu_berlin.cit.intercloud.configuration.GatewayConfig;
 import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.gateway.services.Manager;
-import de.tu_berlin.cit.intercloud.gateway.services.Sensor;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
-import de.tu_berlin.cit.intercloud.util.configuration.GatewayConfig;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
+import de.tu_berlin.cit.intercloud.xmpp.cep.sensor.Sensor;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 
@@ -121,7 +122,7 @@ public class GatewayApplication {
 			GatewayComponent component = new GatewayComponent(container);
 			mgr.addComponent(subDomain, component);
 			logger.info("Container is up and running...");
-			component.discoverIntercloudServices(gatewayConf.getXmppDomain());
+//			component.discoverIntercloudServices(gatewayConf.getXmppDomain());
 			new GatewayApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {
 			logger.error(e.getMessage());

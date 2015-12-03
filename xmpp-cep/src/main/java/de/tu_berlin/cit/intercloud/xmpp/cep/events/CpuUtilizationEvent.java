@@ -18,13 +18,14 @@ package de.tu_berlin.cit.intercloud.xmpp.cep.events;
 
 import java.util.Calendar;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument.Log.Tag;
 
 /**
- * CPU utilization event that provides a double for the availability.
+ * CPU utilization event that provides an integer for the availability.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
@@ -34,22 +35,22 @@ public class CpuUtilizationEvent extends LogEvent {
 	
 	public static final String CpuUtilizationTag = "utilization";
 
-	private double utilization;
+	private int utilization;
 	
-	protected CpuUtilizationEvent(String object, String subject, Calendar timestamp, double utilization) {
+	protected CpuUtilizationEvent(String object, String subject, Calendar timestamp, int utilization) {
 		super(object, subject, timestamp);
 		this.setUtilization(utilization);
 	}
 	
-	public double getUtilization() {
+	public int getUtilization() {
 		return utilization;
 	}
 
-	public void setUtilization(double utilization) {
+	public void setUtilization(int utilization) {
 		this.utilization = utilization;
 	}
 
-	public static LogDocument build(String sensorPath, String subjectPath, double utilization) {
+	public static LogDocument build(String sensorPath, String subjectPath, int utilization) {
 		LogDocument event = LogEvent.build(sensorPath, subjectPath);
 		// set event id
 		event.getLog().setId(CpuUtilizationStream);
@@ -57,8 +58,8 @@ public class CpuUtilizationEvent extends LogEvent {
 		// set availability
 		Tag tag = event.getLog().addNewTag();
 		tag.setName(CpuUtilizationTag);
-		tag.setType(new QName("xs:double"));
-		tag.setValue(new Double(utilization).toString());
+		tag.setType(new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "integer"));
+		tag.setValue(new Integer(utilization).toString());
 		
 		logger.info("Finished building log event document: " + event.toString());
 		return event;
@@ -69,12 +70,12 @@ public class CpuUtilizationEvent extends LogEvent {
 		String subject = eventDoc.getLog().getSubject();
 		Calendar timestamp = eventDoc.getLog().getTimestamp();
 		Tag[] tags = eventDoc.getLog().getTagArray();
-		double value = -1;
+		int value = -1;
 		
 		// take the last matching tag
 		for(Tag tag : tags) {
-			if(tag.getName().equals(CpuUtilizationTag) && tag.getType().equals(new QName("xs:double")))
-				value = Double.parseDouble(tag.getValue());
+			if(tag.getName().equals(CpuUtilizationTag) && tag.getType().equals(new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "integer")))
+				value = Integer.parseInt(tag.getValue());
 		}
 
 		// TODO define exception

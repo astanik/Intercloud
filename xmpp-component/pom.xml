@@ -26,6 +26,11 @@
 			<artifactId>xmpp-occi</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>de.tu_berlin.cit.intercloud</groupId>
+			<artifactId>intercloud-util</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<!-- whack v1.0.0 dependencies -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

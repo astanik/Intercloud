@@ -82,8 +82,34 @@
 				maxOccurs="1" />
 			<xs:element name="DURATION" type="xs:duration" minOccurs="1"
 				maxOccurs="1" />
+			<xs:element name="LIST" type="ListType" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="MAP" type="MapType" minOccurs="1"
+				maxOccurs="1" />
 		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="ListType">
+		<xs:sequence>
+			<xs:element name="item" type="xs:string" 
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="MapType">
+		<xs:sequence>
+			<xs:element name="item" type="MapItem" 
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="MapItem">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="key" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:simpleContent>
 	</xs:complexType>
 
 </xs:schema>

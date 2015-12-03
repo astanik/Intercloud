@@ -40,6 +40,8 @@ public class CpuMeter {
 	
 	private Timer timer = null;
 	
+	private long seconds = 0;
+	
 	@SuppressWarnings("restriction")
 	public CpuMeter() throws FileNotFoundException, UnsupportedEncodingException {
 		java.lang.management.OperatingSystemMXBean bean = ManagementFactory.getOperatingSystemMXBean();
@@ -49,14 +51,14 @@ public class CpuMeter {
 			throw new RuntimeException("com.sun.management.OperatingSystemMXBean is not supported.");
 		
 		fileWriter = new PrintWriter("cpuMeasurements.txt", "UTF-8");
-		fileWriter.println("Date SystemCPU JvmCPU");
+		fileWriter.println("Seconds SystemCPU JvmCPU TotalMemBytes UsedMemBytes");
 	}
 
 	public void start() {
         TimerTask timerTask = new CpuTimerTask();
         //running timer task as daemon thread
         this.timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 100);
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
         System.out.println("TimerTask started");
 	}
 
@@ -71,7 +73,11 @@ public class CpuMeter {
 	    public void run() {
 	    	double sysCpu = osManager.getSystemCpuLoad() * 100;
 	    	double jvmCpu = osManager.getProcessCpuLoad() * 100;
-	        fileWriter.println(new Date().getTime() + " " + sysCpu + " " + jvmCpu);
+	    	long totMem = osManager.getTotalPhysicalMemorySize();
+	    	long useMem = totMem - osManager.getFreePhysicalMemorySize();
+//	        fileWriter.println(new Date().getTime() + " " + sysCpu + " " + jvmCpu + " " + totMem + " " + useMem);
+	        fileWriter.println(seconds + " " + sysCpu + " " + jvmCpu + " " + totMem + " " + useMem);
+	        seconds++;
 	    }
 	}
 }

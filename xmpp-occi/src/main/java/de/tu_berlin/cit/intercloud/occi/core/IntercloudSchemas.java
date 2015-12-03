@@ -18,7 +18,7 @@ package de.tu_berlin.cit.intercloud.occi.core;
 
 
 /**
- * TODO
+ * Fundamental schema constants.
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */

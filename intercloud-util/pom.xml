@@ -9,7 +9,7 @@
 	</parent>
 
 	<groupId>de.tu_berlin.cit.intercloud</groupId>
-	<artifactId>util</artifactId>
+	<artifactId>intercloud-util</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Intercloud Util Module</name>

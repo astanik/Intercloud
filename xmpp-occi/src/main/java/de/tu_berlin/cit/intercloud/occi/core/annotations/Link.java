@@ -44,5 +44,5 @@ public @interface Link {
 	 * The type of this link target
 	 * @return relation
 	 */
-	String relation();
+	String relation() default Category.CategorySchema + Category.CategoryTerm;;
 }

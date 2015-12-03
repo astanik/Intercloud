@@ -188,12 +188,6 @@
 	</build>
 
 	<dependencies>
-		<!-- intercloud dependencies -->
-		<dependency>
-			<groupId>de.tu_berlin.cit.intercloud</groupId>
-			<artifactId>util</artifactId>
-			<version>0.0.1</version>
-		</dependency>
 		<!-- xmlbeans -->
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>

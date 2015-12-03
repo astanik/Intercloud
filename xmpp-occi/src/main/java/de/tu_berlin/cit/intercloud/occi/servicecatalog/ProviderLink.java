@@ -54,7 +54,7 @@ public class ProviderLink extends LinkCategory {
 	public String organization = null;
 	
 	/**
-	 * MAC address associated with the link's device interface
+	 * The International Providers Identification Number
 	 */
 	@Attribute(name = "intercloud.provider.ipin",
 			type = AttributeType.STRING,

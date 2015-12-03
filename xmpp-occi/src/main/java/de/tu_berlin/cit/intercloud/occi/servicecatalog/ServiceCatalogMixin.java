@@ -16,6 +16,8 @@
 
 package de.tu_berlin.cit.intercloud.occi.servicecatalog;
 
+import java.util.HashMap;
+
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Attribute;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Mixin;
@@ -46,7 +48,7 @@ public class ServiceCatalogMixin extends Category {
 			mutable = true,
 			required = true,
 			description = "The price for the described service")
-	public double price;
+	public Double price = null;
 
 	@Attribute(name = "intercloud.catalog.currency",
 			type = AttributeType.STRING,
@@ -54,7 +56,7 @@ public class ServiceCatalogMixin extends Category {
 			required = true,
 			value = "Euro",
 			description = "The currency of the price")
-	public String currency;
+	public String currency = null;
 
 	@Attribute(name = "intercloud.catalog.billingincrements",
 			type = AttributeType.STRING,
@@ -62,7 +64,13 @@ public class ServiceCatalogMixin extends Category {
 			required = true,
 			value = "per hour",
 			description = "The billing increments of the price, e.g. per GB, per hour, per second, etc.")
-	public String billingIncrements;
+	public String billingIncrements = null;
 	
-
+	@Attribute(name = "intercloud.catalog.generaltermsandconditions",
+			type = AttributeType.MAP,
+			mutable = true,
+			required = false,
+			description = "The general terms and conditions (i.e. key = section title, value = section body)")
+	public HashMap<String, String> termsAndConditions = null;
+	
 }

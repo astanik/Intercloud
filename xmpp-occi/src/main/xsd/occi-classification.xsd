@@ -28,8 +28,9 @@
 		<xs:complexContent>
 			<xs:extension base="CategoryClassification">
 				<xs:sequence>
-					<xs:element name="applies" type="xs:string" minOccurs="0"
-						maxOccurs="unbounded" />
+					<xs:element name="applies" type="xs:string" 
+						minOccurs="1" maxOccurs="1" 
+						default="http://schema.ogf.org/occi/core#category" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -39,8 +40,9 @@
 		<xs:complexContent>
 			<xs:extension base="CategoryClassification">
 				<xs:sequence>
-					<xs:element name="relation" type="xs:string" minOccurs="0"
-						maxOccurs="1" />
+					<xs:element name="relation" type="xs:string" 
+						minOccurs="1" maxOccurs="1" 
+						default="http://schema.ogf.org/occi/core#category" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -91,6 +93,8 @@
 			<xs:enumeration value="KEY" />
 			<xs:enumeration value="DATETIME" />
 			<xs:enumeration value="DURATION" />
+			<xs:enumeration value="LIST" />
+			<xs:enumeration value="MAP" />
 		</xs:restriction>
 	</xs:simpleType>
 

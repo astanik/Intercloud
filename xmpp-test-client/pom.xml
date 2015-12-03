@@ -25,7 +25,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>de.tu_berlin.cit.intercloud.xmpp.de.tu_berlin.cit.intercloud.xmpp.test_client.XmppClient</mainClass>
+                            <mainClass>de.tu_berlin.cit.intercloud.xmpp.test_client.XmppClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -61,6 +61,11 @@
         <dependency>
             <groupId>de.tu_berlin.cit.intercloud</groupId>
             <artifactId>xmpp-client</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>de.tu_berlin.cit.intercloud</groupId>
+            <artifactId>intercloud-component</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>

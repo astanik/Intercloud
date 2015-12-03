@@ -50,11 +50,6 @@ public class ComplexEventProcessor {
 	protected final static Logger logger = LoggerFactory.getLogger(ComplexEventProcessor.class);
 
 	/**
-	 * singleton instance
-	 */
-	private static ComplexEventProcessor instance;
-
-	/**
 	 * Esper provider instance
 	 */
 	private final EPServiceProvider epService;
@@ -103,11 +98,19 @@ public class ComplexEventProcessor {
 		return epService;
 	}
 
-	public static synchronized ComplexEventProcessor getInstance() {
-		if (ComplexEventProcessor.instance == null) {
-			ComplexEventProcessor.instance = new ComplexEventProcessor();
-		}
-		return ComplexEventProcessor.instance;
+	/**
+	 * High-performance thread safe singleton instance implementation.
+	 * 
+	 */
+	private static class InstanceHolder {
+		/**
+		 * singleton instance
+		 */
+		private static final ComplexEventProcessor instance = new ComplexEventProcessor();
+	}
+
+	public static ComplexEventProcessor getInstance() {
+		return InstanceHolder.instance;
 	}
 
 	public void processEvent(LogDocument eventDoc) {

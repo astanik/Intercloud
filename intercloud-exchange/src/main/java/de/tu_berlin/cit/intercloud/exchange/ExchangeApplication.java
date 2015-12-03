@@ -23,11 +23,12 @@ import org.jivesoftware.whack.ExternalComponentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.tu_berlin.cit.intercloud.exchange.services.Agreement;
+import de.tu_berlin.cit.intercloud.components.ExchangeComponent;
+import de.tu_berlin.cit.intercloud.configuration.ExchangeConfig;
 import de.tu_berlin.cit.intercloud.exchange.services.Meter;
-import de.tu_berlin.cit.intercloud.exchange.services.Offer;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
-import de.tu_berlin.cit.intercloud.util.configuration.ExchangeConfig;
+import de.tu_berlin.cit.intercloud.sla.Agreement;
+import de.tu_berlin.cit.intercloud.sla.Offer;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
 import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -112,7 +113,6 @@ public class ExchangeApplication {
 			ExchangeComponent component = new ExchangeComponent(container);
 			mgr.addComponent(exchangeConf.getSubDomain(), component);
 			logger.info("Container is up and running...");
-			component.discoverIntercloudServices(exchangeConf.getXmppDomain());
 			new ExchangeApplication().runProgram();
 		} catch (InterruptedException | IOException | ComponentException | URISyntaxException e) {
 			logger.error(e.getMessage());

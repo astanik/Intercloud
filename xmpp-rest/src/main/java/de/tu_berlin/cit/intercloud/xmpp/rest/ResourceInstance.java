@@ -35,7 +35,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
  */
 public abstract class ResourceInstance {
 
-	protected final static Logger logger = LoggerFactory.getLogger(ResourceInstance.class);
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private final ConcurrentHashMap<String, ResourceInstance> resourceMap = new ConcurrentHashMap<String, ResourceInstance>();
 
