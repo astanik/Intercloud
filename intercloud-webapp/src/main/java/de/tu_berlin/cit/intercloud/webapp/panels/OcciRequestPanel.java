@@ -12,19 +12,21 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
+import java.util.ArrayList;
+
 public class OcciRequestPanel extends Panel {
     public OcciRequestPanel(String id, IModel<MethodModel> methodModel, IModel<OcciRepresentationModel> representationModel) {
         super(id);
 
         OcciRepresentationModel representation= representationModel.getObject();
-        KindModel kindModel = representation.getKindModel();
+        KindModel kindModel = representation.getKind();
         if (null != kindModel) {
             this.add(new CategoryRequestPanel("kindPanel", methodModel, new Model<>(kindModel)));
         } else {
             this.add(new EmptyPanel("kindPanel"));
         }
 
-        this.add(new ListView<MixinModel>("mixinContainer", new ListModel<>(representation.getMixinModels())) {
+        this.add(new ListView<MixinModel>("mixinContainer", new ListModel<>(new ArrayList<>(representation.getMixins()))) {
             @Override
             protected void populateItem(ListItem<MixinModel> listItem) {
                 listItem.add(new CategoryRequestPanel("mixinPanel", methodModel, listItem.getModel()));

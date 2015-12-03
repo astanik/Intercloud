@@ -2,6 +2,7 @@ package de.tu_berlin.cit.intercloud.client.service.impl;
 
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
+import de.tu_berlin.cit.intercloud.client.model.IMixinModelContainer;
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
@@ -19,6 +20,7 @@ import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
@@ -36,6 +38,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -87,79 +90,46 @@ public class IntercloudClient implements IIntercloudClient {
         return result;
     }
 
-/*
-    TODO: create representation
-    Kind
-    List<Mixin>
-    List<Link> --> List<Mixin>
-*/
-
-    private Object getAny(Map map, List<String> keys) {
-        for (String key : keys) {
-            if (map.containsKey(key)) {
-                return map.get(key);
-            }
-        }
-        return null;
-    }
-
-    private OcciRepresentationModel createRepresentation(KindModel kindModel,
-                                                         Map<String, LinkModel> linkModelMap,
-                                                         Map<String, MixinModel> mixinModelMap) {
-        OcciRepresentationModel representationModel = new OcciRepresentationModel();
-
-        for (MixinModel mixin : mixinModelMap.values()) {
-            // default
-            if (mixin.getApplies().contains("http://schema.ogf.org/occi/core#category")) {
-
-            }
-            // applies to mixin?
-            if (kindModel != null && mixin.getApplies().contains(kindModel.getSchema() + kindModel.getTerm())) {
-
-            }
-            // applies to link?
-
-            // applies to mixin?
-        }
-
-        return null;
-    }
-
     @Override
     public AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException {
         AbstractRepresentationModel result = null;
         if (null == methodModel.getRequestMediaType()) {
             // do nothing --> return null
         } else if (PlainText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            // text/plain
             result = new TextRepresentationModel();
         } else if (UriText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            // text/uri
             result = new UriRepresentationModel();
         } else if (UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            // text/uri-list
             result = new UriListRepresentationModel();
         } else if (OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // occi representation model
+            // xml/occi - occi representation model
             result = buildOcciRepresentationModel(methodModel);
         } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // occi list representation model
+            // xml/occi-list - occi list representation model
             OcciRepresentationModel representationModel = buildOcciRepresentationModel(methodModel);
             OcciListRepresentationModel listRepresentationModel = new OcciListRepresentationModel();
             listRepresentationModel.setOcciRepresentationModels(Arrays.asList(representationModel));
             result = listRepresentationModel;
         } else {
-            throw new UnsupportedMethodException("The request media type is not supported. " + methodModel);
+            throw new UnsupportedMethodException("The request media type is not supported.");
         }
 
         return result;
     }
 
     private OcciRepresentationModel buildOcciRepresentationModel(MethodModel methodModel) throws MissingClassificationException, UnsupportedMethodException {
+        long start = System.currentTimeMillis();
+
         MethodDocument.Method methodDocument = getMethodDocument(methodModel);
         if (null == methodDocument) {
-            throw new UnsupportedMethodException("Method is not specified in xwadl. " + methodModel);
+            throw new UnsupportedMethodException("Method is not specified in xwadl.");
         }
         ClassificationDocument.Classification classification = occiClient.getClassification();
         if (null == classification) {
-            throw new MissingClassificationException("Classification is not specified in xwadl.");
+            throw new MissingClassificationException("Classification is not specified in xwadl. ");
         }
 
         KindModel kindModel = null;
@@ -174,24 +144,103 @@ public class IntercloudClient implements IIntercloudClient {
         if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
             for (LinkClassification c : classification.getLinkTypeArray()) {
                 LinkModel linkModel = parseLinkModel(c);
-                linkMap.put(linkModel.getSchema() + linkModel.getTerm(), linkModel);
+                linkMap.put(linkModel.getId(), linkModel);
             }
         }
         // read mixins from classification
         if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
             for (MixinClassification c : classification.getMixinTypeArray()) {
                 MixinModel mixinModel = parseMixinModel(c);
-                mixinMap.put(mixinModel.getSchema() + mixinModel.getTerm(), mixinModel);
+                mixinMap.put(mixinModel.getId(), mixinModel);
             }
         }
         // read templates from method document
         addTemplates(methodDocument, kindModel, mixinMap, linkMap);
-        // TODO: create representation structure
         // result
-        OcciRepresentationModel representation = new OcciRepresentationModel();
-        representation.setKindModel(kindModel);
-        representation.setMixinModels(new ArrayList<>(mixinMap.values()));
+        OcciRepresentationModel representation = buildOcciRepresentationModel(kindModel, linkMap, mixinMap);
+
+        logger.info("XmlBean --> RepresentationModel: {} ms", System.currentTimeMillis() - start);
         return representation;
+    }
+
+    private OcciRepresentationModel buildOcciRepresentationModel(KindModel kindModel,
+                                                                 Map<String, LinkModel> linkModelMap,
+                                                                 Map<String, MixinModel> mixinModelMap) {
+        OcciRepresentationModel representationModel = new OcciRepresentationModel();
+        representationModel.setKind(kindModel);
+        representationModel.setLinks(linkModelMap.values());
+
+        // list of mixins that apply to other mixins
+        List<MixinModel> mixinAppliesMixin = new ArrayList<>();
+        // key = mixin.id | value = list of all containers that contain the key mixin
+        Map<String, List<IMixinModelContainer>> mixinContainersMap = new HashMap<>();
+
+        // apply mixins to representation and links
+        // collect mixins that apply to other mixins
+        for (MixinModel mixin : mixinModelMap.values()) {
+            if (null == mixin.getApplies()) {
+                logger.error("Mixin missing applies. {}", mixin);
+            } else if ((Category.CategorySchema + Category.CategoryTerm).equals(mixin.getApplies())) {
+                // default
+                List<IMixinModelContainer> mixinContainers = getMixinModelContainersNotNull(mixinContainersMap, mixin.getId());
+                // apply mixin to representation
+                representationModel.addMixin(mixin);
+                mixinContainers.add(representationModel);
+                // clone mixin to all links
+                for (LinkModel link : linkModelMap.values()) {
+                    MixinModel clone = SerializationUtils.clone(mixin);
+                    link.addMixin(clone);
+                    mixinContainers.add(link);
+                }
+            } else if (mixinModelMap.containsKey(mixin.getApplies())) {
+                // applies to Mixin?
+                mixinAppliesMixin.add(mixin);
+            } else if (null != kindModel && kindModel.getId().equals(mixin.getApplies())) {
+                // applies to Kind?
+                representationModel.addMixin(mixin);
+                getMixinModelContainersNotNull(mixinContainersMap, mixin.getId()).add(representationModel);
+            } else if (linkModelMap.containsKey(mixin.getApplies())) {
+                // applies to Link?
+                LinkModel link = linkModelMap.get(mixin.getApplies());
+                link.addMixin(mixin);
+                getMixinModelContainersNotNull(mixinContainersMap, mixin.getId()).add(link);
+            } else {
+                // applies to none
+                logger.error("Mixin does not apply to an Category. {}", mixin);
+            }
+        }
+
+        // mixinAppliesMixin stuff
+        int size = 0;
+        while (size != mixinAppliesMixin.size()) {
+            size = mixinAppliesMixin.size();
+            for (int i = 0; i < mixinAppliesMixin.size(); ) {
+                MixinModel mixin = mixinAppliesMixin.get(i);
+                List<IMixinModelContainer> mixinContainers = mixinContainersMap.get(mixin.getApplies());
+                if (null != mixinContainers && !mixinContainers.isEmpty()) {
+                    mixinAppliesMixin.remove(i);
+                    // apply first
+                    mixinContainers.get(0).addMixin(mixin);
+                    // clone others
+                    for (int k = 1; k < mixinContainers.size(); k++) {
+                        MixinModel clone = SerializationUtils.clone(mixin);
+                        mixinContainers.get(k).addMixin(clone);
+                    }
+                } else {
+                    i++;
+                }
+            }
+        }
+        return representationModel;
+    }
+
+    private List<IMixinModelContainer> getMixinModelContainersNotNull(Map<String, List<IMixinModelContainer>> mixinContainersMap, String key) {
+        List<IMixinModelContainer> mixinContainers = mixinContainersMap.get(key);
+        if (null == mixinContainers) {
+            mixinContainers = new ArrayList<>();
+            mixinContainersMap.put(key, mixinContainers);
+        }
+        return mixinContainers;
     }
 
     private KindModel parseKindModel(CategoryClassification classification) {
@@ -409,7 +458,6 @@ public class IntercloudClient implements IIntercloudClient {
         }
 
         return representationModel;
-        //throw new UnsupportedOperationException("Cannot execute Request: method not supported. " + methodModel);
     }
 
     @Override

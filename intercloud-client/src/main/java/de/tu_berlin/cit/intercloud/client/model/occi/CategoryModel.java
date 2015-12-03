@@ -10,6 +10,7 @@ import java.util.Set;
 public abstract class CategoryModel implements Serializable {
     private static final long serialVersionUID = -158045063500836807L;
 
+    private final String id;
     private final String term;
     private final String schema;
     private final Map<String, AttributeModel> attributes = new LinkedHashMap<>();
@@ -18,8 +19,13 @@ public abstract class CategoryModel implements Serializable {
     private String title;
 
     public CategoryModel(String term, String schema) {
+        this.id = schema + term;
         this.term = term;
         this.schema = schema;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getTerm() {
