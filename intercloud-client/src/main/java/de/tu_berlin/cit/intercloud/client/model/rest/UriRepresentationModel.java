@@ -1,12 +1,13 @@
 package de.tu_berlin.cit.intercloud.client.model.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UriRepresentationModel extends AbstractRepresentationModel {
-    List<String> uriList = new ArrayList<>();
+    String uri;
 
-    public List<String> getUriList() {
-        return uriList;
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

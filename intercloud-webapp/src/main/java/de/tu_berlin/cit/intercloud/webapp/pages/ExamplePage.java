@@ -4,7 +4,7 @@ import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.panels.CategoryRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.UriResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
@@ -35,9 +35,9 @@ public class ExamplePage extends Template {
                         return createExampleKindModel();
                     }
                 }));
-        this.add(new UriResponsePanel("uriResponsePanel", new LoadableDetachableModel<UriRepresentationModel>() {
+        this.add(new UriResponsePanel("uriResponsePanel", new LoadableDetachableModel<UriListRepresentationModel>() {
             @Override
-            protected UriRepresentationModel load() {
+            protected UriListRepresentationModel load() {
                 return createEmapmleUriRepresentationModel();
             }
         }));
@@ -103,8 +103,8 @@ public class ExamplePage extends Template {
         return kindModel;
     }
 
-    public UriRepresentationModel createEmapmleUriRepresentationModel() {
-        UriRepresentationModel representationModel = new UriRepresentationModel();
+    public UriListRepresentationModel createEmapmleUriRepresentationModel() {
+        UriListRepresentationModel representationModel = new UriListRepresentationModel();
         representationModel.getUriList().add("xmpp://john@doe.de/asdf#/path");
         representationModel.getUriList().add("xmpp://example.component.de/asdf#/path0/path1");
         return representationModel;

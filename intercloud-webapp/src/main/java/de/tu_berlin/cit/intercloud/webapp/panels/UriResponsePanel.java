@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels;
 
-import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.pages.BrowserPage;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 public class UriResponsePanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(UriResponsePanel.class);
 
-    public UriResponsePanel(String id, IModel<UriRepresentationModel> representationModel) {
+    public UriResponsePanel(String id, IModel<UriListRepresentationModel> representationModel) {
         super(id);
 
         this.add(new ListView<String>("uriList", new ListModel<>(representationModel.getObject().getUriList())) {

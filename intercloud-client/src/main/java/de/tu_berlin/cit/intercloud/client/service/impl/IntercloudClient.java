@@ -1,5 +1,7 @@
 package de.tu_berlin.cit.intercloud.client.service.impl;
 
+import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
+import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
@@ -7,13 +9,15 @@ import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.RequestModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.TextRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
+import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
@@ -25,6 +29,7 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
@@ -97,9 +102,25 @@ public class IntercloudClient implements IIntercloudClient {
         }
         return null;
     }
+
     private OcciRepresentationModel createRepresentation(KindModel kindModel,
                                                          Map<String, LinkModel> linkModelMap,
                                                          Map<String, MixinModel> mixinModelMap) {
+        OcciRepresentationModel representationModel = new OcciRepresentationModel();
+
+        Map<String, List<String>> mixinAppliesMap = new HashMap<>();
+        for (Map.Entry<String, MixinModel> entry : mixinModelMap.entrySet()) {
+            mixinAppliesMap.put(entry.getKey(), new ArrayList<>(entry.getValue().getApplies()));
+        }
+
+        for (String key : mixinAppliesMap.keySet()) {
+            List<String> applies = mixinAppliesMap.get(key);
+            if (applies.remove(kindModel.getSchema() + kindModel.getTerm())) {
+                representationModel.setKindModel(kindModel);
+            }
+        }
+
+
         for (MixinModel mixin : mixinModelMap.values()) {
             // default
             if (mixin.getApplies().contains("http://schema.ogf.org/occi/core#category")) {
@@ -118,50 +139,72 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public RequestModel getRequestModel(MethodModel methodModel) {
-        if (!methodModel.hasRequest()) {
-            return null;
+    public AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException {
+        AbstractRepresentationModel result = null;
+        if (null == methodModel.getRequestMediaType()) {
+            // do nothing --> return null
+        } else if (PlainText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            result = new TextRepresentationModel();
+        } else if (UriText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            result = new UriRepresentationModel();
+        } else if (UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            result = new UriListRepresentationModel();
         } else if (OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // occi/xml
-            MethodDocument.Method methodDocument = getMethodDocument(methodModel);
-            if (null != methodDocument) {
-                KindModel kindModel = null;
-                Map<String, LinkModel> linkMap = new HashMap<>();
-                Map<String, MixinModel> mixinMap = new HashMap<>();
-
-                ClassificationDocument.Classification classification = occiClient.getClassification();
-                // read kind from classification
-                if (null != classification.getKindType()) {
-                    kindModel = parseKindModel(classification.getKindType());
-                }
-                // read links from classification
-                if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
-                    for (LinkClassification c : classification.getLinkTypeArray()) {
-                        LinkModel linkModel = parseLinkModel(c);
-                        linkMap.put(linkModel.getSchema() + linkModel.getTerm(), linkModel);
-                    }
-                }
-                // read mixins from classification
-                if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
-                    for (MixinClassification c : classification.getMixinTypeArray()) {
-                        MixinModel mixinModel = parseMixinModel(c);
-                        mixinMap.put(mixinModel.getSchema() + mixinModel.getTerm(), mixinModel);
-                    }
-                }
-                // read templates from method document
-                addTemplates(methodDocument, kindModel, mixinMap, linkMap);
-                // TODO: create representation structure
-                // result
-                RequestModel requestModel = new RequestModel();
-                requestModel.setKindModel(kindModel);
-                requestModel.setMixinModels(new ArrayList<>(mixinMap.values()));
-                return requestModel;
-            } else {
-                throw new IllegalArgumentException("Failed to create Request model: method does not exist. " + methodModel);
-            }
+            // occi representation model
+            result = buildOcciRepresentationModel(methodModel);
+        } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            // occi list representation model
+            OcciRepresentationModel representationModel = buildOcciRepresentationModel(methodModel);
+            OcciListRepresentationModel listRepresentationModel = new OcciListRepresentationModel();
+            listRepresentationModel.setOcciRepresentationModels(Arrays.asList(representationModel));
+            result = listRepresentationModel;
         } else {
-            throw new UnsupportedOperationException("Cannot create Request model: media type is not supported. " + methodModel);
+            throw new UnsupportedMethodException("The request media type is not supported. " + methodModel);
         }
+
+        return result;
+    }
+
+    private OcciRepresentationModel buildOcciRepresentationModel(MethodModel methodModel) throws MissingClassificationException, UnsupportedMethodException {
+        MethodDocument.Method methodDocument = getMethodDocument(methodModel);
+        if (null == methodDocument) {
+            throw new UnsupportedMethodException("Method is not specified in xwadl. " + methodModel);
+        }
+        ClassificationDocument.Classification classification = occiClient.getClassification();
+        if (null == classification) {
+            throw new MissingClassificationException("Classification is not specified in xwadl.");
+        }
+
+        KindModel kindModel = null;
+        Map<String, LinkModel> linkMap = new HashMap<>();
+        Map<String, MixinModel> mixinMap = new HashMap<>();
+
+        // read kind from classification
+        if (null != classification.getKindType()) {
+            kindModel = parseKindModel(classification.getKindType());
+        }
+        // read links from classification
+        if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
+            for (LinkClassification c : classification.getLinkTypeArray()) {
+                LinkModel linkModel = parseLinkModel(c);
+                linkMap.put(linkModel.getSchema() + linkModel.getTerm(), linkModel);
+            }
+        }
+        // read mixins from classification
+        if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
+            for (MixinClassification c : classification.getMixinTypeArray()) {
+                MixinModel mixinModel = parseMixinModel(c);
+                mixinMap.put(mixinModel.getSchema() + mixinModel.getTerm(), mixinModel);
+            }
+        }
+        // read templates from method document
+        addTemplates(methodDocument, kindModel, mixinMap, linkMap);
+        // TODO: create representation structure
+        // result
+        OcciRepresentationModel representation = new OcciRepresentationModel();
+        representation.setKindModel(kindModel);
+        representation.setMixinModels(new ArrayList<>(mixinMap.values()));
+        return representation;
     }
 
     private KindModel parseKindModel(CategoryClassification classification) {
@@ -353,24 +396,24 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public AbstractRepresentationModel executeRequest(RequestModel requestModel, MethodModel methodModel) throws XMPPException, IOException, SmackException {
+    public AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel) throws XMPPException, IOException, SmackException {
         MethodDocument.Method methodDocument = getMethodDocument(methodModel);
         if (null == methodDocument) {
             throw new IllegalArgumentException("Cannot execute Request: method not supported by the resource. " + methodModel);
         }
         AbstractRepresentationModel representationModel = null;
-        if (null == requestModel && !methodModel.hasRequest()) {
+        if (null == requestRepresentationModel && null == methodModel.getRequestMediaType()) {
             OcciMethodInvocation methodInvocation = occiClient.buildMethodInvocation(methodDocument);
             ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
             if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType()) || UriListText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())) {
                 // URI
-                UriRepresentationModel uriRepresentationModel = new UriRepresentationModel();
+                UriListRepresentationModel uriRepresentationModel = new UriListRepresentationModel();
                 representationModel = uriRepresentationModel;
                 String s = response.getResource().getMethod().getResponse().getRepresentation();
                 if (null != s) {
                     String[] links = s.split(";");
                     if (null != links) {
-                        uriRepresentationModel.getUriList().addAll(Arrays.asList(links));
+                        uriRepresentationModel.setUriList(Arrays.asList(links));
                     }
                 }
             } else {

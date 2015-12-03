@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
 import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.RequestModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.TextRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.panels.OcciRequestPanel;
@@ -146,14 +146,14 @@ public class BrowserPage extends UserTemplate {
                 @Override
                 public void onClick() {
                     try {
-                        if (!methodModel.hasRequest()) {
+                        if (null == methodModel.getRequestMediaType()) {
                             AbstractRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
                                     .getIntercloudClient(methodModel.getUri())
-                                    .executeRequest(null, methodModel);
-                            if (representation instanceof UriRepresentationModel) {
+                                    .executeMethod(null, methodModel);
+                            if (representation instanceof UriListRepresentationModel) {
                                 codeString = null;
-                                BrowserPage.this.replace(new UriResponsePanel(ID_RESPONSE_PANEL, new Model<>((UriRepresentationModel) representation)));
-                            } else if (representation instanceof TextRepresentationModel){
+                                BrowserPage.this.replace(new UriResponsePanel(ID_RESPONSE_PANEL, new Model<>((UriListRepresentationModel) representation)));
+                            } else if (representation instanceof TextRepresentationModel) {
                                 codeString = ((TextRepresentationModel) representation).getText();
                             }
                         }
@@ -163,10 +163,12 @@ public class BrowserPage extends UserTemplate {
 
                     try {
                         if ("xml/occi".equals(methodModel.getRequestMediaType())) {
-                            RequestModel requestModel = IntercloudWebSession.get().getIntercloudService()
+                            AbstractRepresentationModel representationModel = IntercloudWebSession.get().getIntercloudService()
                                     .getIntercloudClient(methodModel.getUri())
-                                    .getRequestModel(methodModel);
-                            BrowserPage.this.replace(new OcciRequestPanel(ID_REQUEST_PANEL, new Model<>(methodModel), new Model<>(requestModel)));
+                                    .getRepresentationModel(methodModel);
+                            BrowserPage.this.replace(new OcciRequestPanel(ID_REQUEST_PANEL,
+                                    new Model<>(methodModel),
+                                    new Model<>((OcciRepresentationModel) representationModel)));
                         }
                     } catch (Exception e) {
                         logger.error("Could not create occi request model.", e);
@@ -174,7 +176,7 @@ public class BrowserPage extends UserTemplate {
                 }
             }.setBody(Model.of(methodModel.getMethodType()));
 
-            if (!methodModel.hasRequest()) {
+            if (null == methodModel.getRequestMediaType()) {
                 link.add(new AttributeAppender("class", " btn-success"));
             } else if ("xml/occi".equals(methodModel.getRequestMediaType())) {
                 link.add(new AttributeAppender("class", " btn-info"));

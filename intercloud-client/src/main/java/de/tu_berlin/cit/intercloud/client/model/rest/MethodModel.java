@@ -34,10 +34,6 @@ public class MethodModel implements Serializable {
         return requestMediaType;
     }
 
-    public boolean hasRequest() {
-        return null != requestMediaType && !requestMediaType.trim().isEmpty();
-    }
-
     public String getResponseMediaType() {
         return responseMediaType;
     }

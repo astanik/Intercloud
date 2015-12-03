@@ -1,9 +1,10 @@
 package de.tu_berlin.cit.intercloud.client.service;
 
+import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
+import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.RequestModel;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
@@ -13,9 +14,11 @@ import java.util.List;
 public interface IIntercloudClient {
     List<MethodModel> getMethods();
 
-    RequestModel getRequestModel(MethodModel methodModel);
+    AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException;
 
     CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle);
 
-    AbstractRepresentationModel executeRequest(RequestModel requestModel, MethodModel methodModel) throws XMPPException, IOException, SmackException;
+    AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel) throws XMPPException, IOException, SmackException;
+
+    // TODO executeAction
 }

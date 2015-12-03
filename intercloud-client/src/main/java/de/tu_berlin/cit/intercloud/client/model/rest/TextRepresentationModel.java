@@ -7,6 +7,13 @@ public class TextRepresentationModel extends AbstractRepresentationModel {
         this.text = text;
     }
 
+    public TextRepresentationModel() {
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public String getText() {
         return text;
     }
