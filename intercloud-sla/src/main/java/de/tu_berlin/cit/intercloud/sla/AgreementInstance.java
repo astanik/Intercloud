@@ -38,7 +38,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
 @PathID
-@Summary("This resource allows for manage service level agreements.")
+@Summary("This resource represents a particular service level agreements.")
 @Classification(kind = AgreementKind.class)
 public class AgreementInstance extends Resource {
 
@@ -51,7 +51,7 @@ public class AgreementInstance extends Resource {
 		// TODO Auto-generated constructor stub
 	}
 
-	@XmppMethod(XmppMethod.PUT)
+	@XmppMethod(value = XmppMethod.PUT, documentation = "This method adds a set of guarantee terms as link resources.")
     @Consumes(value = OcciXml.MEDIA_TYPE, serializer = OcciXml.class)
     @Produces(value = UriListText.MEDIA_TYPE, serializer = UriListText.class)
 	public UriListText createTerm(OcciXml agreementXml) {
