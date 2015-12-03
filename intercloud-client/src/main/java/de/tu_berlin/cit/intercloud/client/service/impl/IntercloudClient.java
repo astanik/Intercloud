@@ -163,7 +163,7 @@ public class IntercloudClient implements IIntercloudClient {
         return representation;
     }
 
-    private OcciRepresentationModel buildOcciRepresentationModel(KindModel kindModel,
+    OcciRepresentationModel buildOcciRepresentationModel(KindModel kindModel,
                                                                  Map<String, LinkModel> linkModelMap,
                                                                  Map<String, MixinModel> mixinModelMap) {
         OcciRepresentationModel representationModel = new OcciRepresentationModel();
@@ -172,7 +172,7 @@ public class IntercloudClient implements IIntercloudClient {
 
         // list of mixins that apply to other mixins
         List<MixinModel> mixinAppliesMixin = new ArrayList<>();
-        // key = mixin.id | value = list of all containers that contain the key mixin
+        // key = mixin.id | value = list of all containers that contain this mixin
         Map<String, List<IMixinModelContainer>> mixinContainersMap = new HashMap<>();
 
         // apply mixins to representation and links
@@ -182,7 +182,7 @@ public class IntercloudClient implements IIntercloudClient {
                 logger.error("Mixin missing applies. {}", mixin);
             } else if ((Category.CategorySchema + Category.CategoryTerm).equals(mixin.getApplies())) {
                 // default
-                List<IMixinModelContainer> mixinContainers = getMixinModelContainersNotNull(mixinContainersMap, mixin.getId());
+                List<IMixinModelContainer> mixinContainers = new ArrayList<>();
                 // apply mixin to representation
                 representationModel.addMixin(mixin);
                 mixinContainers.add(representationModel);
@@ -192,18 +192,19 @@ public class IntercloudClient implements IIntercloudClient {
                     link.addMixin(clone);
                     mixinContainers.add(link);
                 }
+                mixinContainersMap.put(mixin.getId(), mixinContainers);
             } else if (mixinModelMap.containsKey(mixin.getApplies())) {
                 // applies to Mixin?
                 mixinAppliesMixin.add(mixin);
             } else if (null != kindModel && kindModel.getId().equals(mixin.getApplies())) {
                 // applies to Kind?
                 representationModel.addMixin(mixin);
-                getMixinModelContainersNotNull(mixinContainersMap, mixin.getId()).add(representationModel);
+                mixinContainersMap.put(mixin.getId(), Arrays.asList(representationModel));
             } else if (linkModelMap.containsKey(mixin.getApplies())) {
                 // applies to Link?
                 LinkModel link = linkModelMap.get(mixin.getApplies());
                 link.addMixin(mixin);
-                getMixinModelContainersNotNull(mixinContainersMap, mixin.getId()).add(link);
+                mixinContainersMap.put(mixin.getId(), Arrays.asList(link));
             } else {
                 // applies to none
                 logger.error("Mixin does not apply to an Category. {}", mixin);
@@ -219,6 +220,8 @@ public class IntercloudClient implements IIntercloudClient {
                 List<IMixinModelContainer> mixinContainers = mixinContainersMap.get(mixin.getApplies());
                 if (null != mixinContainers && !mixinContainers.isEmpty()) {
                     mixinAppliesMixin.remove(i);
+                    // add container
+                    mixinContainersMap.put(mixin.getId(), mixinContainers);
                     // apply first
                     mixinContainers.get(0).addMixin(mixin);
                     // clone others
@@ -231,16 +234,11 @@ public class IntercloudClient implements IIntercloudClient {
                 }
             }
         }
-        return representationModel;
-    }
-
-    private List<IMixinModelContainer> getMixinModelContainersNotNull(Map<String, List<IMixinModelContainer>> mixinContainersMap, String key) {
-        List<IMixinModelContainer> mixinContainers = mixinContainersMap.get(key);
-        if (null == mixinContainers) {
-            mixinContainers = new ArrayList<>();
-            mixinContainersMap.put(key, mixinContainers);
+        if (!mixinAppliesMixin.isEmpty()) {
+            logger.error("Some mixins could not be applied.");
         }
-        return mixinContainers;
+
+        return representationModel;
     }
 
     private KindModel parseKindModel(CategoryClassification classification) {
