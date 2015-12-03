@@ -108,19 +108,6 @@ public class IntercloudClient implements IIntercloudClient {
                                                          Map<String, MixinModel> mixinModelMap) {
         OcciRepresentationModel representationModel = new OcciRepresentationModel();
 
-        Map<String, List<String>> mixinAppliesMap = new HashMap<>();
-        for (Map.Entry<String, MixinModel> entry : mixinModelMap.entrySet()) {
-            mixinAppliesMap.put(entry.getKey(), new ArrayList<>(entry.getValue().getApplies()));
-        }
-
-        for (String key : mixinAppliesMap.keySet()) {
-            List<String> applies = mixinAppliesMap.get(key);
-            if (applies.remove(kindModel.getSchema() + kindModel.getTerm())) {
-                representationModel.setKindModel(kindModel);
-            }
-        }
-
-
         for (MixinModel mixin : mixinModelMap.values()) {
             // default
             if (mixin.getApplies().contains("http://schema.ogf.org/occi/core#category")) {
@@ -214,7 +201,7 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     private MixinModel parseMixinModel(MixinClassification classification) {
-        MixinModel model = new MixinModel(classification.getTerm(), classification.getSchema(), classification.getAppliesArray());
+        MixinModel model = new MixinModel(classification.getTerm(), classification.getSchema(), classification.getApplies());
         addAttributeModels(model, classification.getAttributeClassificationArray());
         return model;
     }

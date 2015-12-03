@@ -1,17 +1,14 @@
 package de.tu_berlin.cit.intercloud.client.model.occi;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class MixinModel extends CategoryModel {
-    private final List<String> applies;
+    private final String applies;
 
-    public MixinModel(String term, String schema, String[] applies) {
+    public MixinModel(String term, String schema, String applies) {
         super(term, schema);
-        this.applies = Arrays.asList(applies);
+        this.applies = applies;
     }
 
-    public List<String> getApplies() {
+    public String getApplies() {
         return applies;
     }
 }
