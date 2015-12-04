@@ -136,6 +136,7 @@ public class IntercloudClient implements IIntercloudClient {
         Map<String, LinkModel> linkMap = new HashMap<>();
         Map<String, MixinModel> mixinMap = new HashMap<>();
 
+        // TODO default values
         // read kind from classification
         if (null != classification.getKindType()) {
             kindModel = parseKindModel(classification.getKindType());
@@ -415,6 +416,8 @@ public class IntercloudClient implements IIntercloudClient {
                             case SIGNATURE:
                             case KEY:
                             case DURATION:
+                            case LIST:
+                            case MAP:
                             default:
                                 logger.info("Cannot set attribute, type is not supported. model: {}, type: {}", model, type);
                                 break;
@@ -435,6 +438,10 @@ public class IntercloudClient implements IIntercloudClient {
         if (null == methodDocument) {
             throw new IllegalArgumentException("Cannot execute Request: method not supported by the resource. " + methodModel);
         }
+        /*
+            I.  RepresentationModel --> ResourceDocument (rest xml)
+            II. rest xml response --> RepresentationModel
+         */
         AbstractRepresentationModel representationModel = null;
         if (null == requestRepresentationModel && null == methodModel.getRequestMediaType()) {
             OcciMethodInvocation methodInvocation = occiClient.buildMethodInvocation(methodDocument);
@@ -454,7 +461,6 @@ public class IntercloudClient implements IIntercloudClient {
                 representationModel = new TextRepresentationModel(response.toString());
             }
         }
-
         return representationModel;
     }
 

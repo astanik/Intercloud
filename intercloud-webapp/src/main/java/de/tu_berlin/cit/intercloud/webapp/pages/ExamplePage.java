@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExamplePage extends Template {
@@ -81,6 +82,8 @@ public class ExamplePage extends Template {
             attributeList.add(new AttributeModel("String", AttributeModel.Type.STRING.toString(), true, true, "This is an Example for a String AttributeModel."));
             attributeList.add(new AttributeModel("Enum", AttributeModel.Type.ENUM.toString(), false, true, "This is an Example for an Enum AttributeModel."));
             attributeList.add(new AttributeModel("Uri", AttributeModel.Type.URI.toString(), false, true, "This is an Example for an URI AttributeModel."));
+            attributeList.add(new AttributeModel("List", AttributeModel.Type.LIST.toString(), false, true, null));
+            attributeList.add(new AttributeModel("Map", AttributeModel.Type.MAP.toString(), false, true, null));
 
             AttributeModel attributeModel = new AttributeModel("Show Immutable with value", AttributeModel.Type.STRING.toString(), false, false, "This is an immutable attribute with some value.");
             attributeModel.setString("should be visible and disabled");
@@ -105,8 +108,7 @@ public class ExamplePage extends Template {
 
     public UriListRepresentationModel createEmapmleUriRepresentationModel() {
         UriListRepresentationModel representationModel = new UriListRepresentationModel();
-        representationModel.getUriList().add("xmpp://john@doe.de/asdf#/path");
-        representationModel.getUriList().add("xmpp://example.component.de/asdf#/path0/path1");
+        representationModel.setUriList(Arrays.asList("xmpp://john@doe.de/asdf#/path", "xmpp://example.component.de/asdf#/path0/path1"));
         return representationModel;
     }
 }

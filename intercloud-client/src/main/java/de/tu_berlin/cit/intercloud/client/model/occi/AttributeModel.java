@@ -14,10 +14,12 @@ public class AttributeModel implements Serializable {
         FLOAT,
         BOOLEAN,
         URI,
-        SIGNATURE,
-        KEY,
+        SIGNATURE,  // byte[]
+        KEY,        // byte[]
         DATETIME,
-        DURATION
+        DURATION,   // GDuration
+        LIST,       // ListType --> List<String> --> String representation: item0;item1;item2;item3
+        MAP         // MapType --> Map<String, String> --> String representation: key0=value0;key1=value1;key2=value2
     }
 
     private final String name;
@@ -232,5 +234,46 @@ public class AttributeModel implements Serializable {
 
     public String getUri() {
         return isUri() ? (String) value : null;
+    }
+
+    /*
+        List
+     */
+
+    public boolean isList() {
+        return Type.LIST.equals(this.type);
+    }
+
+    public void setList(String list) {
+        if (isList()) {
+            this.value = list;
+        } else  {
+            throw new IllegalArgumentException("Cannot set List argument for type " + this.type);
+        }
+    }
+
+    public String getList() {
+        return isList() ? (String) this.value : null;
+    }
+
+
+    /*
+        MAP
+     */
+
+    public boolean isMap() {
+        return Type.MAP.equals(this.type);
+    }
+
+    public void setMap(String map) {
+        if (isMap()) {
+            this.value = map;
+        } else {
+            throw new IllegalArgumentException("Cannot set Map argument for type " + this.type);
+        }
+    }
+
+    public String getMap() {
+        return isMap() ? (String) this.value : null;
     }
 }

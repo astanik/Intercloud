@@ -6,6 +6,11 @@
     margin-bottom: 5px;
 }
 
+textarea.form-control {
+    min-width: 100%;
+    max-width: 100%;
+}
+
 .table-noborder td, .table-noborder th, .table-noborder {
     border: none !important;
     margin-bottom: 0px;

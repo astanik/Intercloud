@@ -53,6 +53,12 @@ public abstract class AbstractAttributeInput extends Panel {
             case URI:
                 newInstance = new UriInput(markupId, attribute);
                 break;
+            case LIST:
+                newInstance = new ListInput(markupId, attribute);
+                break;
+            case MAP:
+                newInstance = new MapInput(markupId, attribute);
+                break;
             case SIGNATURE:
             case KEY:
             case DURATION:
