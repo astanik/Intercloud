@@ -4,15 +4,18 @@ import de.tu_berlin.cit.intercloud.client.model.IMixinModelContainer;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+import org.apache.commons.lang3.SerializationUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OcciRepresentationModel extends AbstractRepresentationModel implements IMixinModelContainer {
     private KindModel kind;
-    private final Map<String, MixinModel> mixinMap = new HashMap<>();
-    private Collection<LinkModel> links;
+    private final List<MixinModel> mixinList = new ArrayList<>();
+    // list of actual used links
+    private final List<LinkModel> linkList = new ArrayList<>();
+    // map of link definitions
+    private final List<LinkModel> linkDefinitionList = new ArrayList<>();
 
     public KindModel getKind() {
         return kind;
@@ -22,23 +25,28 @@ public class OcciRepresentationModel extends AbstractRepresentationModel impleme
         this.kind = kind;
     }
 
+    @Override
     public void addMixin(MixinModel mixin) {
-        this.mixinMap.put(mixin.getId(), mixin);
+        this.mixinList.add(mixin);
     }
 
-    public MixinModel getMixin(String mixinId) {
-        return this.mixinMap.get(mixinId);
+    @Override
+    public List<MixinModel> getMixins() {
+        return this.mixinList;
     }
 
-    public Collection<MixinModel> getMixins() {
-        return mixinMap.values();
+    public List<LinkModel> getLinkDefinitions() {
+        return this.linkDefinitionList;
     }
 
-    public Collection<LinkModel> getLinks() {
-        return links;
+    public List<LinkModel> getLinks() {
+        return linkList;
     }
 
-    public void setLinks(Collection<LinkModel> links) {
-        this.links = links;
+    public void addToLinkList(LinkModel link) {
+        if (null != link) {
+            LinkModel clone = SerializationUtils.clone(link);
+            linkList.add(clone);
+        }
     }
 }

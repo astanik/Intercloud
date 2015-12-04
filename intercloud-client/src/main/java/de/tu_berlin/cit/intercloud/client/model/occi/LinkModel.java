@@ -2,12 +2,11 @@ package de.tu_berlin.cit.intercloud.client.model.occi;
 
 import de.tu_berlin.cit.intercloud.client.model.IMixinModelContainer;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LinkModel extends CategoryModel implements IMixinModelContainer {
-    private final Map<String, MixinModel> mixinMap = new HashMap<>();
+    private final List<MixinModel> mixinList = new ArrayList<>();
     private final String relates;
     private String target;
 
@@ -28,15 +27,13 @@ public class LinkModel extends CategoryModel implements IMixinModelContainer {
         this.target = target;
     }
 
+    @Override
     public void addMixin(MixinModel mixin) {
-        this.mixinMap.put(mixin.getId(), mixin);
+        this.mixinList.add(mixin);
     }
 
-    public MixinModel getMixin(String mixinId) {
-        return this.mixinMap.get(mixinId);
-    }
-
-    public Collection<MixinModel> getMixins() {
-        return mixinMap.values();
+    @Override
+    public List<MixinModel> getMixins() {
+        return mixinList;
     }
 }

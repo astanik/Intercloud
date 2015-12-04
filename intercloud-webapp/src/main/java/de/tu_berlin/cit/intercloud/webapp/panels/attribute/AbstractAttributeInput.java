@@ -50,6 +50,9 @@ public abstract class AbstractAttributeInput extends Panel {
             case DATETIME:
                 newInstance = new DatetimeInput(markupId, attribute);
                 break;
+            case DURATION:
+                newInstance = new DurationInput(markupId, attribute);
+                break;
             case URI:
                 newInstance = new UriInput(markupId, attribute);
                 break;
@@ -61,7 +64,6 @@ public abstract class AbstractAttributeInput extends Panel {
                 break;
             case SIGNATURE:
             case KEY:
-            case DURATION:
             default:
                 throw new UnsupportedOperationException("AttributeModel Typ " + attribute.getType() + " is not supported.");
         }

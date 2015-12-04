@@ -169,7 +169,7 @@ public class IntercloudClient implements IIntercloudClient {
                                                                  Map<String, MixinModel> mixinModelMap) {
         OcciRepresentationModel representationModel = new OcciRepresentationModel();
         representationModel.setKind(kindModel);
-        representationModel.setLinks(linkModelMap.values());
+        representationModel.getLinkDefinitions().addAll(linkModelMap.values());
 
         // list of mixins that apply to other mixins
         List<MixinModel> mixinAppliesMixin = new ArrayList<>();

@@ -84,6 +84,7 @@ public class ExamplePage extends Template {
             attributeList.add(new AttributeModel("Uri", AttributeModel.Type.URI.toString(), false, true, "This is an Example for an URI AttributeModel."));
             attributeList.add(new AttributeModel("List", AttributeModel.Type.LIST.toString(), false, true, null));
             attributeList.add(new AttributeModel("Map", AttributeModel.Type.MAP.toString(), false, true, null));
+            attributeList.add(new AttributeModel("Duration", AttributeModel.Type.DURATION.toString(), false, true, null));
 
             AttributeModel attributeModel = new AttributeModel("Show Immutable with value", AttributeModel.Type.STRING.toString(), false, false, "This is an immutable attribute with some value.");
             attributeModel.setString("should be visible and disabled");

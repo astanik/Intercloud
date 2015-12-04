@@ -49,13 +49,12 @@ public class CategoryRequestPanel extends Panel {
         this.container.add(new Label("title", new PropertyModel<>(category, "title")));
         this.container.add(new AttributeInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
 
-        IModel<String> template = new Model<>();
-        DropDownChoice<String> templateChoice = new DropDownChoice<String>("templates", template, new ArrayList<>(category.getTemplates()));
+        DropDownChoice<String> templateChoice = new DropDownChoice<>("templates", new Model<>(), new ArrayList<>(category.getTemplates()));
         templateChoice.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 MethodModel method = methodModel.getObject();
-                String templateTitle = template.getObject();
+                String templateTitle = templateChoice.getModelObject();
                 try {
                     IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(method.getUri());
                     intercloudClient.applyTemplate(categoryModel.getObject(), method, templateTitle);

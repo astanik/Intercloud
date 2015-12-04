@@ -8,16 +8,16 @@ public class AttributeModel implements Serializable {
 
     public enum Type {
         STRING,
-        ENUM,
+        ENUM,       // String
         INTEGER,
         DOUBLE,
         FLOAT,
         BOOLEAN,
-        URI,
-        SIGNATURE,  // byte[]
-        KEY,        // byte[]
-        DATETIME,
-        DURATION,   // GDuration
+        URI,        // string
+        SIGNATURE,  // byte[] TODO
+        KEY,        // byte[] TODO
+        DATETIME,   // Date
+        DURATION,   // GDuration --> String ISO-8601 duration format PnDTnHnMn
         LIST,       // ListType --> List<String> --> String representation: item0;item1;item2;item3
         MAP         // MapType --> Map<String, String> --> String representation: key0=value0;key1=value1;key2=value2
     }
@@ -275,5 +275,25 @@ public class AttributeModel implements Serializable {
 
     public String getMap() {
         return isMap() ? (String) this.value : null;
+    }
+
+    /*
+        Duration
+     */
+
+    public boolean isDuration() {
+        return Type.DURATION.equals(this.type);
+    }
+
+    public void setDuration(String duration) {
+        if (isDuration()) {
+            this.value = duration;
+        } else {
+            throw new IllegalArgumentException("Cannot set Duration argument for typ " + this.type);
+        }
+    }
+
+    public String getDuration() {
+        return isDuration() ? (String) value : null;
     }
 }

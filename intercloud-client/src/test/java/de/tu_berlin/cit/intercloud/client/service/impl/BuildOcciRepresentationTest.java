@@ -48,7 +48,7 @@ public class BuildOcciRepresentationTest {
     public void emptyClassification() {
         OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(null, new HashMap<>(), new HashMap<>());
         Assert.assertNull(representationModel.getKind());
-        Assert.assertTrue(representationModel.getLinks().isEmpty());
+        Assert.assertTrue(representationModel.getLinkDefinitions().isEmpty());
         Assert.assertTrue(representationModel.getMixins().isEmpty());
     }
 
@@ -60,9 +60,9 @@ public class BuildOcciRepresentationTest {
 
         OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(kind, newCategoryModelMap(link1, link2), new HashMap<>());
         Assert.assertEquals(kind, representationModel.getKind());
-        Assert.assertEquals(2, representationModel.getLinks().size());
-        Assert.assertTrue(representationModel.getLinks().contains(link1));
-        Assert.assertTrue(representationModel.getLinks().contains(link2));
+        Assert.assertEquals(2, representationModel.getLinkDefinitions().size());
+        Assert.assertTrue(representationModel.getLinkDefinitions().contains(link1));
+        Assert.assertTrue(representationModel.getLinkDefinitions().contains(link2));
     }
 
 
@@ -74,7 +74,7 @@ public class BuildOcciRepresentationTest {
 
         OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(kind, new HashMap<>(), newCategoryModelMap(mixin1, mixin2));
         Assert.assertEquals(kind, representationModel.getKind());
-        Assert.assertTrue(representationModel.getLinks().isEmpty());
+        Assert.assertTrue(representationModel.getLinkDefinitions().isEmpty());
         Assert.assertEquals(2, representationModel.getMixins().size());
         Assert.assertTrue(representationModel.getMixins().contains(mixin1));
         Assert.assertTrue(representationModel.getMixins().contains(mixin2));
@@ -97,7 +97,7 @@ public class BuildOcciRepresentationTest {
 
         OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(kind, new HashMap<>(), newCategoryModelMap(mixinList));
         Assert.assertEquals(kind, representationModel.getKind());
-        Assert.assertTrue(representationModel.getLinks().isEmpty());
+        Assert.assertTrue(representationModel.getLinkDefinitions().isEmpty());
         Assert.assertEquals(7, representationModel.getMixins().size());
         Assert.assertTrue(representationModel.getMixins().containsAll(mixinList));
     }
@@ -113,7 +113,7 @@ public class BuildOcciRepresentationTest {
         List<MixinModel> mixinList = Arrays.asList(mixin1, mixin11, mixin111, mixin1111, mixin12);
         OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(null, new HashMap<>(), newCategoryModelMap(mixinList));
         Assert.assertNull(representationModel.getKind());
-        Assert.assertTrue(representationModel.getLinks().isEmpty());
+        Assert.assertTrue(representationModel.getLinkDefinitions().isEmpty());
         Assert.assertEquals(5, representationModel.getMixins().size());
         Assert.assertTrue(representationModel.getMixins().containsAll(mixinList));
     }
@@ -133,9 +133,9 @@ public class BuildOcciRepresentationTest {
                 newCategoryModelMap(mixin11, mixin111, mixin112, mixin12, mixin21));
         Assert.assertNull(representationModel.getKind());
         Assert.assertTrue(representationModel.getMixins().isEmpty());
-        Assert.assertEquals(2, representationModel.getLinks().size());
-        Assert.assertTrue(representationModel.getLinks().contains(link1));
-        Assert.assertTrue(representationModel.getLinks().contains(link2));
+        Assert.assertEquals(2, representationModel.getLinkDefinitions().size());
+        Assert.assertTrue(representationModel.getLinkDefinitions().contains(link1));
+        Assert.assertTrue(representationModel.getLinkDefinitions().contains(link2));
         Assert.assertEquals(4, link1.getMixins().size());
         Assert.assertTrue(link1.getMixins().containsAll(Arrays.asList(mixin11, mixin111, mixin112, mixin12)));
         Assert.assertEquals(1, link2.getMixins().size());
@@ -154,8 +154,8 @@ public class BuildOcciRepresentationTest {
         OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(null, newCategoryModelMap(link1, link2),
                 newCategoryModelMap(mixin1, mixin11, mixin12));
         Assert.assertNull(representationModel.getKind());
-        Assert.assertEquals(2, representationModel.getLinks().size());
-        Assert.assertTrue(representationModel.getLinks().containsAll(Arrays.asList(link1, link2)));
+        Assert.assertEquals(2, representationModel.getLinkDefinitions().size());
+        Assert.assertTrue(representationModel.getLinkDefinitions().containsAll(Arrays.asList(link1, link2)));
         Assert.assertEquals(3, representationModel.getMixins().size());
         Assert.assertTrue(representationModel.getMixins().containsAll(Arrays.asList(mixin1, mixin11, mixin12)));
         Assert.assertEquals(3, link1.getMixins().size());
@@ -175,7 +175,7 @@ public class BuildOcciRepresentationTest {
         OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(null, new HashMap<>(),
                 newCategoryModelMap(mixin1, mixin2, mixin3, mixin4, mixin5));
         Assert.assertNull(representationModel.getKind());
-        Assert.assertTrue(representationModel.getLinks().isEmpty());
+        Assert.assertTrue(representationModel.getLinkDefinitions().isEmpty());
         Assert.assertTrue(representationModel.getMixins().isEmpty());
     }
 
@@ -216,8 +216,8 @@ public class BuildOcciRepresentationTest {
         Assert.assertTrue(representationModel.getMixins().containsAll(
                 Arrays.asList(mixinC1, mixinC11, mixinC111, mixinC12, mixinC2, mixinK1, mixinK11, mixinK2)));
         // links
-        Assert.assertEquals(2, representationModel.getLinks().size());
-        Assert.assertTrue(representationModel.getLinks().containsAll(Arrays.asList(link1, link2)));
+        Assert.assertEquals(2, representationModel.getLinkDefinitions().size());
+        Assert.assertTrue(representationModel.getLinkDefinitions().containsAll(Arrays.asList(link1, link2)));
         Assert.assertEquals(9, link1.getMixins().size());
         Assert.assertTrue(link1.getMixins().containsAll(
                 Arrays.asList(mixinC1, mixinC11, mixinC111, mixinC12, mixinC2, mixinL11, mixinL111, mixinL1111, mixinL12)));

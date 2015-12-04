@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp;
+package de.tu_berlin.cit.intercloud.webapp.components;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;

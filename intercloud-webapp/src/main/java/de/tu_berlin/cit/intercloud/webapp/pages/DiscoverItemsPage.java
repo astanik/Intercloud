@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
-import de.tu_berlin.cit.intercloud.webapp.ComponentUtils;
+import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
