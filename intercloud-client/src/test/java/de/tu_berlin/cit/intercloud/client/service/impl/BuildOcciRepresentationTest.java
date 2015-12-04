@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BuildOcciRepresentationTest {
-    private static final String SCHEMA = "example.schema.de";
+    private static final String SCHEMA = "example.schema.de/cit#";
 
     IntercloudClient intercloudClient;
 
@@ -32,7 +32,7 @@ public class BuildOcciRepresentationTest {
         intercloudClient = null;
     }
 
-    private <T extends CategoryModel> Map<String, T> newCategoryModelMap(T... categoryModels) {
+    private <T extends CategoryModel> Map<String, T > newCategoryModelMap(T... categoryModels) {
         return newCategoryModelMap(Arrays.asList(categoryModels));
     }
 
@@ -41,7 +41,6 @@ public class BuildOcciRepresentationTest {
         for (T c : categoryModels) {
             categoryModelMap.put(c.getId(), c);
         }
-
         return categoryModelMap;
     }
 
@@ -143,4 +142,87 @@ public class BuildOcciRepresentationTest {
         Assert.assertTrue(link2.getMixins().contains(mixin21));
     }
 
+    @Test
+    public void defaultMixin() {
+        LinkModel link1 = new LinkModel("l1", SCHEMA, null);
+        LinkModel link2 = new LinkModel("l2", SCHEMA, null);
+
+        MixinModel mixin1 = new MixinModel("m1", SCHEMA, Category.CategorySchema + Category.CategoryTerm);
+        MixinModel mixin11 = new MixinModel("m11", SCHEMA, mixin1.getId());
+        MixinModel mixin12 = new MixinModel("m12",SCHEMA, mixin1.getId());
+
+        OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(null, newCategoryModelMap(link1, link2),
+                newCategoryModelMap(mixin1, mixin11, mixin12));
+        Assert.assertNull(representationModel.getKind());
+        Assert.assertEquals(2, representationModel.getLinks().size());
+        Assert.assertTrue(representationModel.getLinks().containsAll(Arrays.asList(link1, link2)));
+        Assert.assertEquals(3, representationModel.getMixins().size());
+        Assert.assertTrue(representationModel.getMixins().containsAll(Arrays.asList(mixin1, mixin11, mixin12)));
+        Assert.assertEquals(3, link1.getMixins().size());
+        Assert.assertTrue(link1.getMixins().containsAll(Arrays.asList(mixin1, mixin11, mixin12)));
+        Assert.assertEquals(3, link2.getMixins().size());
+        Assert.assertTrue(link2.getMixins().containsAll(Arrays.asList(mixin1, mixin11, mixin12)));
+    }
+
+    @Test
+    public void mixinAppliesToNone() {
+        MixinModel mixin1 = new MixinModel("m1", SCHEMA, SCHEMA + "m2");
+        MixinModel mixin2 = new MixinModel("m2",SCHEMA, SCHEMA + "m1");
+        MixinModel mixin3 = new MixinModel("m3", SCHEMA, SCHEMA + "m3");
+        MixinModel mixin4 = new MixinModel("m4", SCHEMA, null);
+        MixinModel mixin5 = new MixinModel("m5", SCHEMA, SCHEMA + "m9");
+
+        OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(null, new HashMap<>(),
+                newCategoryModelMap(mixin1, mixin2, mixin3, mixin4, mixin5));
+        Assert.assertNull(representationModel.getKind());
+        Assert.assertTrue(representationModel.getLinks().isEmpty());
+        Assert.assertTrue(representationModel.getMixins().isEmpty());
+    }
+
+    @Test
+    public void complexRepresentation() {
+        KindModel kind = new KindModel("k", SCHEMA);
+        LinkModel link1 = new LinkModel("l1", SCHEMA, null);
+        LinkModel link2 = new LinkModel("l2", SCHEMA, null);
+        // category mixins
+        MixinModel mixinC1 = new MixinModel("c1", SCHEMA, Category.CategorySchema + Category.CategoryTerm);
+        MixinModel mixinC11 = new MixinModel("c11", SCHEMA, mixinC1.getId());
+        MixinModel mixinC111 = new MixinModel("c111", SCHEMA, mixinC11.getId());
+        MixinModel mixinC12 = new MixinModel("c12", SCHEMA, mixinC1.getId());
+        MixinModel mixinC2 = new MixinModel("c2", SCHEMA, Category.CategorySchema + Category.CategoryTerm);
+        // kind mixins
+        MixinModel mixinK1 = new MixinModel("mk1", SCHEMA, kind.getId());
+        MixinModel mixinK11 = new MixinModel("mk11", SCHEMA, mixinK1.getId());
+        MixinModel mixinK2 = new MixinModel("mk2", SCHEMA, kind.getId());
+        // link mixins
+        MixinModel mixinL11 = new MixinModel("ml11", SCHEMA, link1.getId());
+        MixinModel mixinL111 = new MixinModel("ml111",SCHEMA, mixinL11.getId());
+        MixinModel mixinL1111 = new MixinModel("ml1111",SCHEMA, mixinL111.getId());
+        MixinModel mixinL12 = new MixinModel("ml12", SCHEMA, link1.getId());
+        // not apply-able mixins
+        MixinModel mixinNull = new MixinModel("mNull", SCHEMA, null);
+        MixinModel mixinL3 = new MixinModel("ml3", SCHEMA, SCHEMA + "l3");
+        MixinModel mixinFoo = new MixinModel("mFoo", SCHEMA, SCHEMA + "mFoo");
+
+        OcciRepresentationModel representationModel = intercloudClient.buildOcciRepresentationModel(kind, newCategoryModelMap(link1, link2),
+                newCategoryModelMap(mixinC1, mixinC11, mixinC111, mixinC12, mixinC2,
+                        mixinK1, mixinK11, mixinK2,
+                        mixinL11, mixinL111, mixinL1111, mixinL12,
+                        mixinNull, mixinL3, mixinFoo));
+        // kind
+        Assert.assertEquals(kind, representationModel.getKind());
+        // mixins
+        Assert.assertEquals(8, representationModel.getMixins().size());
+        Assert.assertTrue(representationModel.getMixins().containsAll(
+                Arrays.asList(mixinC1, mixinC11, mixinC111, mixinC12, mixinC2, mixinK1, mixinK11, mixinK2)));
+        // links
+        Assert.assertEquals(2, representationModel.getLinks().size());
+        Assert.assertTrue(representationModel.getLinks().containsAll(Arrays.asList(link1, link2)));
+        Assert.assertEquals(9, link1.getMixins().size());
+        Assert.assertTrue(link1.getMixins().containsAll(
+                Arrays.asList(mixinC1, mixinC11, mixinC111, mixinC12, mixinC2, mixinL11, mixinL111, mixinL1111, mixinL12)));
+        Assert.assertEquals(5, link2.getMixins().size());
+        Assert.assertTrue(link2.getMixins().containsAll(
+                Arrays.asList(mixinC1, mixinC11,mixinC111, mixinC12, mixinC2)));
+    }
 }

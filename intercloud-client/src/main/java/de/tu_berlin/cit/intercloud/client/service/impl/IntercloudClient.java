@@ -207,7 +207,7 @@ public class IntercloudClient implements IIntercloudClient {
                 mixinContainersMap.put(mixin.getId(), Arrays.asList(link));
             } else {
                 // applies to none
-                logger.error("Mixin does not apply to an Category. {}", mixin);
+                logger.error("Mixin does not apply to a Category. {}", mixin);
             }
         }
 
@@ -235,7 +235,7 @@ public class IntercloudClient implements IIntercloudClient {
             }
         }
         if (!mixinAppliesMixin.isEmpty()) {
-            logger.error("Some mixins could not be applied.");
+            logger.error("Some mixins could not be applied. {}", mixinAppliesMixin);
         }
 
         return representationModel;
