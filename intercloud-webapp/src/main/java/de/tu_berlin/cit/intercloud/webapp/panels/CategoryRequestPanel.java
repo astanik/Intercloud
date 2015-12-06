@@ -33,8 +33,8 @@ public abstract class CategoryRequestPanel extends Panel {
 
         CategoryModel category = categoryModel.getObject();
         this.container.add(new Label("type", getType()));
-        this.container.add(new Label("term", new PropertyModel<>(category, "term")));
-        this.container.add(new Label("schema", new PropertyModel<>(category, "schema")));
+        this.container.add(new Label("term", category.getTerm()));
+        this.container.add(new Label("schema", category.getSchema()));
         PropertyModel<String> title = new PropertyModel<>(category, "title");
         this.container.add(new WebMarkupContainer("titleRow") {
             @Override
@@ -67,6 +67,10 @@ public abstract class CategoryRequestPanel extends Panel {
                 return !category.getTemplates().isEmpty();
             }
         }.add(templateChoice));
+    }
+
+    public WebMarkupContainer getContainer() {
+        return container;
     }
 
     public abstract String getType();
