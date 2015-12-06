@@ -5,10 +5,6 @@
 
 <wicket:extend>
     <div class="row">
-        <h1 class="page-header">Discover the Intercloud</h1>
-    </div>
-
-    <div class="row">
         <form wicket:id="xwadlForm">
             <div class="form-group col-md-12">
                 <div class="input-group">
@@ -22,6 +18,12 @@
                 </div>
             </div>
         </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div wicket:id="alert"/>
+        </div>
     </div>
 
     <div class="row">
@@ -61,21 +63,27 @@
     </div>
 
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        Launch demo modal
+    <button type="button" class="btn btn-primary btn-debug" data-toggle="modal" data-target="#debugModal">
+        <span class="glyphicon glyphicon-fire"/>
     </button>
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="debugModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
+                    <h5 class="modal-title">Debug</h5>
                 </div>
                 <div class="modal-body">
+                    <h5>XWADL</h5>
                     <pre>
-                        <code wicket:id="code">[xwadl]</code>
+                        <code wicket:id="xwadlCode"/>
+                    </pre>
+
+                    <h5>REST XML</h5>
+                    <pre>
+                        <code wicket:id="restCode"/>
                     </pre>
                 </div>
             </div>
