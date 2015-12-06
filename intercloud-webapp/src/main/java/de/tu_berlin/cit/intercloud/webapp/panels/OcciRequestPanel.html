@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns:wicket="http://wicket.apache.org">
-<head/>
-<body>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <div class="well">
+        <wicket:panel wicket:id="kindPanel"/>
+        <wicket:panel wicket:id="mixinListPanel"/>
+    </div>
 
-<wicket:panel>
-    <wicket:panel wicket:id="kindPanel"/>
-
-    <wicket:container wicket:id="mixinContainer">
-        <wicket:panel wicket:id="mixinPanel"/>
-    </wicket:container>
+    <div wicket:id="linkListPanel"/>
 
     <div style="margin-bottom: 20px">
         <form wicket:id="linkForm">
@@ -17,6 +14,3 @@
         </form>
     </div>
 </wicket:panel>
-
-</body>
-</html>

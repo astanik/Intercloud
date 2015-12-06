@@ -1,11 +1,10 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
-import de.tu_berlin.cit.intercloud.webapp.panels.CategoryRequestPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.KindRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.UriResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.attribute.AttributeInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
@@ -28,11 +27,11 @@ public class ExamplePage extends Template {
         super();
 
         this.add(new AttributeForm("attributeForm"));
-        this.add(new CategoryRequestPanel("kindPanel",
+        this.add(new KindRequestPanel("kindPanel",
                 new Model<>(new MethodModel(null, null, null, null, null)),
-                new LoadableDetachableModel<CategoryModel>() {
+                new LoadableDetachableModel<KindModel>() {
                     @Override
-                    protected CategoryModel load() {
+                    protected KindModel load() {
                         return createExampleKindModel();
                     }
                 }));

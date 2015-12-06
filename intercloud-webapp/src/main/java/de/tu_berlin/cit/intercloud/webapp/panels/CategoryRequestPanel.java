@@ -1,9 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
@@ -23,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-public class CategoryRequestPanel extends Panel {
+public abstract class CategoryRequestPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(CategoryRequestPanel.class);
     private final WebMarkupContainer container;
 
@@ -35,18 +32,16 @@ public class CategoryRequestPanel extends Panel {
         this.add(this.container);
 
         CategoryModel category = categoryModel.getObject();
-        Label typeLabel = new Label("type");
-        if (category instanceof KindModel) {
-            typeLabel.setDefaultModel(Model.of("Kind"));
-        } else if (category instanceof MixinModel) {
-            typeLabel.setDefaultModel(Model.of("Mixin"));
-        } else if (category instanceof LinkModel) {
-            typeLabel.setDefaultModel(Model.of("Link"));
-        }
-        this.container.add(typeLabel);
+        this.container.add(new Label("type", getType()));
         this.container.add(new Label("term", new PropertyModel<>(category, "term")));
         this.container.add(new Label("schema", new PropertyModel<>(category, "schema")));
-        this.container.add(new Label("title", new PropertyModel<>(category, "title")));
+        PropertyModel<String> title = new PropertyModel<>(category, "title");
+        this.container.add(new WebMarkupContainer("titleRow") {
+            @Override
+            public boolean isVisible() {
+                return null != title.getObject();
+            }
+        }.add(new Label("title", title)));
         this.container.add(new AttributeInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
 
         DropDownChoice<String> templateChoice = new DropDownChoice<>("templates", new Model<>(), new ArrayList<>(category.getTemplates()));
@@ -66,7 +61,13 @@ public class CategoryRequestPanel extends Panel {
             }
         });
         templateChoice.setNullValid(true); // keep null to be selectable
-        this.container.add(templateChoice);
+        this.container.add(new WebMarkupContainer("templatesRow") {
+            @Override
+            public boolean isVisible() {
+                return !category.getTemplates().isEmpty();
+            }
+        }.add(templateChoice));
     }
 
+    public abstract String getType();
 }

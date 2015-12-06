@@ -2,7 +2,6 @@ package de.tu_berlin.cit.intercloud.webapp.panels;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -10,34 +9,35 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
-import java.util.ArrayList;
-
 public class OcciRequestPanel extends Panel {
+    private final LinkListRequestPanel linkListPanel;
+
     public OcciRequestPanel(String id, IModel<MethodModel> methodModel, IModel<OcciRepresentationModel> representationModel) {
         super(id);
 
         OcciRepresentationModel representation = representationModel.getObject();
+        // KIND
         KindModel kindModel = representation.getKind();
         if (null != kindModel) {
-            this.add(new CategoryRequestPanel("kindPanel", methodModel, new Model<>(kindModel)));
+            this.add(new KindRequestPanel("kindPanel", methodModel, new Model<>(kindModel)));
         } else {
             this.add(new EmptyPanel("kindPanel"));
         }
 
-        this.add(new ListView<MixinModel>("mixinContainer", new ListModel<>(new ArrayList<>(representation.getMixins()))) {
-            @Override
-            protected void populateItem(ListItem<MixinModel> listItem) {
-                listItem.add(new CategoryRequestPanel("mixinPanel", methodModel, listItem.getModel()));
-            }
-        });
+        // MIXINs
+        this.add(new MixinListRequestPanel("mixinListPanel", methodModel, new ListModel<>(representation.getMixins())));
+
+        // LINKs
+        this.linkListPanel = new LinkListRequestPanel("linkListPanel", methodModel, new ListModel<>(representation.getLinks()));
+        this.linkListPanel.setOutputMarkupId(true);
+        this.add(this.linkListPanel);
+
 
         Form linkForm = new Form("linkForm");
         this.add(linkForm);
@@ -48,7 +48,9 @@ public class OcciRequestPanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 representation.addToLinkList(linkChoice.getModelObject());
+                target.add(OcciRequestPanel.this.linkListPanel);
             }
         });
+        linkForm.setVisible(!representation.getLinkDefinitions().isEmpty());
     }
 }
