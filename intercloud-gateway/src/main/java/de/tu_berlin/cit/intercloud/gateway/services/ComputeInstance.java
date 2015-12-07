@@ -57,7 +57,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
 @PathID
-@Summary("This resource allows for manage a particular virtual machine.")
+@Summary("This resource allows for managing a particular virtual machine.")
 @Classification(kind = ComputeKind.class, mixins = { OpenStackComputeMixin.class, OpenStackImageMixin.class,
 		IpNetworkInterfaceMixin.class }, links = { StorageLink.class, NetworkInterfaceLink.class })
 public class ComputeInstance extends Resource {
