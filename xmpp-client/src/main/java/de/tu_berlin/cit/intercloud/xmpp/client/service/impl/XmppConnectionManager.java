@@ -44,8 +44,10 @@ public class XmppConnectionManager implements IXmppConnectionManager {
         AbstractXMPPConnection connection = new XMPPTCPConnection(configuration);
         connection.connect();
         connection.login();
+        // keep connection alive
+        // when connection is idle it will run into timeout
         PingManager pingManager = PingManager.getInstanceFor(connection);
-        pingManager.setPingInterval(30);
+        pingManager.setPingInterval(60);
         pingManager.pingMyServer();
 
         this.connection = connection;
