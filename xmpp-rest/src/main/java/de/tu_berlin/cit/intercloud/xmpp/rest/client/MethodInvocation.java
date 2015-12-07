@@ -52,13 +52,17 @@ public class MethodInvocation {
 		return this.doc;
 	}
 
-	public void setRequestRepresentation(Representation rep) {
-		if(this.doc.getResource().getMethod().isSetRequest()) {
+	public void setRequestRepresentation(String representation) {
+		if (this.doc.getResource().getMethod().isSetRequest()) {
 			Request request = this.doc.getResource().getMethod().getRequest();
-			StringBuilder builder = new StringBuilder();
-			builder = rep.writeRepresentation(builder);
-			request.setRepresentation(builder.toString());
+			request.setRepresentation(representation);
 		}
+	}
+
+	public void setRequestRepresentation(Representation rep) {
+		StringBuilder builder = new StringBuilder();
+		builder = rep.writeRepresentation(builder);
+		setRequestRepresentation(builder.toString());
 	}
 	
 	public Class<? extends Representation> getResponseRepresentationClass(Method method) {

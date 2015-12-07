@@ -8,6 +8,7 @@ import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.TextRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
@@ -181,9 +182,14 @@ public class BrowserPage extends UserTemplate {
                             AbstractRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
                                     .getIntercloudClient(methodModel.getUri())
                                     .executeMethod(null, methodModel);
-                            if (representation instanceof UriListRepresentationModel) {
+                            if (representation instanceof UriRepresentationModel) {
                                 restCode.setDefaultModel(new Model<>());
-                                BrowserPage.this.replace(new UriResponsePanel(ID_RESPONSE_PANEL, new Model<>((UriListRepresentationModel) representation)));
+                                BrowserPage.this.replace(new UriResponsePanel(ID_RESPONSE_PANEL,
+                                        new Model<>(new UriListRepresentationModel(((UriRepresentationModel) representation).getUri()))));
+                            } else if (representation instanceof UriListRepresentationModel) {
+                                restCode.setDefaultModel(new Model<>());
+                                BrowserPage.this.replace(new UriResponsePanel(ID_RESPONSE_PANEL,
+                                        new Model<>((UriListRepresentationModel) representation)));
                             } else if (representation instanceof TextRepresentationModel) {
                                 restCode.setDefaultModel(new Model<>(((TextRepresentationModel) representation).getText()));
                             }

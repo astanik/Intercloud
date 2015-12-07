@@ -1,5 +1,6 @@
 package de.tu_berlin.cit.intercloud.client.service;
 
+import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
@@ -16,9 +17,9 @@ public interface IIntercloudClient {
 
     AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException;
 
-    CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle);
+    CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) throws UnsupportedMethodException;
 
-    AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel) throws XMPPException, IOException, SmackException;
+    AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel) throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException;
 
     // TODO executeAction
 }

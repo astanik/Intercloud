@@ -1,5 +1,6 @@
 package de.tu_berlin.cit.intercloud.client.service.impl;
 
+import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.IMixinModelContainer;
@@ -29,6 +30,10 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassificat
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.ListType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.MapItem;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.MapType;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
@@ -39,6 +44,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.xmlbeans.GDuration;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -48,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -322,7 +329,7 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) {
+    public CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) throws UnsupportedMethodException {
         if (null == categoryModel || null == methodModel) {
             return null;
         }
@@ -337,7 +344,7 @@ public class IntercloudClient implements IIntercloudClient {
         // apply template
         MethodDocument.Method methodDocument = getMethodDocument(methodModel);
         if (null == methodDocument) {
-            throw new IllegalArgumentException("Failed to apply template: method does not exist. " + methodModel);
+            throw new UnsupportedMethodException("Failed to apply template: method does not exist. " + methodModel);
         }
         List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
         if (categoryModel instanceof KindModel) {
@@ -413,13 +420,27 @@ public class IntercloudClient implements IIntercloudClient {
                             case DATETIME:
                                 model.setDatetime(new Date(type.getDATETIME().getTimeInMillis()));
                                 break;
+                            case DURATION:
+                                model.setDuration(type.getDURATION().toString());
+                                break;
+                            case LIST:
+                                model.setList(String.join(";", type.getLIST().getItemArray()));
+                                break;
+                            case MAP:
+                                StringBuilder s = new StringBuilder();
+                                MapItem[] itemArray = type.getMAP().getItemArray();
+                                if (null != itemArray && 0 < itemArray.length) {
+                                    for (MapItem item : type.getMAP().getItemArray()) {
+                                        s.append(item.getKey()).append("=").append(item.getStringValue()).append(";");
+                                    }
+                                    // remove last ";" separator
+                                    model.setMap(s.substring(0, s.length() - 1));
+                                }
+                                break;
                             case SIGNATURE:
                             case KEY:
-                            case DURATION:
-                            case LIST:
-                            case MAP:
                             default:
-                                logger.info("Cannot set attribute, type is not supported. model: {}, type: {}", model, type);
+                                logger.warn("Cannot set attribute, type is not supported. model: {}, type: {}", model, type);
                                 break;
                         }
                     } catch (Exception e) {
@@ -433,39 +454,188 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel) throws XMPPException, IOException, SmackException {
+    public AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel) throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException {
         MethodDocument.Method methodDocument = getMethodDocument(methodModel);
         if (null == methodDocument) {
-            throw new IllegalArgumentException("Cannot execute Request: method not supported by the resource. " + methodModel);
+            throw new UnsupportedMethodException("Cannot execute method: method not found. " + methodModel);
         }
-        /*
-            I.  RepresentationModel --> ResourceDocument (rest xml)
-            II. rest xml response --> RepresentationModel
-         */
-        AbstractRepresentationModel representationModel = null;
+
+        // Request: RepresentationModel --> ResourceDocument (rest xml)
+        OcciMethodInvocation methodInvocation = occiClient.buildMethodInvocation(methodDocument);
         if (null == requestRepresentationModel && null == methodModel.getRequestMediaType()) {
-            OcciMethodInvocation methodInvocation = occiClient.buildMethodInvocation(methodDocument);
-            ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
-            if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType()) || UriListText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())) {
-                // URI
-                UriListRepresentationModel uriRepresentationModel = new UriListRepresentationModel();
-                representationModel = uriRepresentationModel;
-                String s = response.getResource().getMethod().getResponse().getRepresentation();
-                if (null != s) {
-                    String[] links = s.split(";");
-                    if (null != links) {
-                        uriRepresentationModel.setUriList(Arrays.asList(links));
-                    }
-                }
+            // do nothing
+        } else if (requestRepresentationModel instanceof TextRepresentationModel && PlainText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            methodInvocation.setRequestRepresentation(((TextRepresentationModel) requestRepresentationModel).getText());
+        } else if (requestRepresentationModel instanceof UriRepresentationModel && UriText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            methodInvocation.setRequestRepresentation(((UriRepresentationModel) requestRepresentationModel).getUri());
+        } else if (requestRepresentationModel instanceof UriListRepresentationModel && UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            methodInvocation = invokeMethod(methodInvocation, (UriListRepresentationModel) requestRepresentationModel);
+        } else if (requestRepresentationModel instanceof OcciRepresentationModel && OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            methodInvocation = invokeMethod(methodInvocation, (OcciRepresentationModel) requestRepresentationModel);
+        } else {
+            throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
+        }
+
+        ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
+        // Response: ResourceDocument (rest xml) --> RepresentationModel
+        AbstractRepresentationModel representationModel = null;
+        if (response.getResource().getMethod().isSetResponse()) {
+            String responseMediaType = response.getResource().getMethod().getResponse().getMediaType();
+            String responseRepresentation = response.getResource().getMethod().getResponse().getRepresentation();
+            if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
+                    && UriText.MEDIA_TYPE.equals(responseMediaType)) {
+                representationModel = new UriRepresentationModel(responseRepresentation);
+            } else if (UriListText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
+                    && UriListText.MEDIA_TYPE.equals(responseMediaType)) {
+                representationModel = parseUriListMethodRepsonse(responseRepresentation);
             } else {
-                representationModel = new TextRepresentationModel(response.toString());
+                representationModel = new TextRepresentationModel(responseRepresentation);
             }
         }
+
         return representationModel;
+    }
+
+    private OcciMethodInvocation invokeMethod(OcciMethodInvocation methodInvocation, UriListRepresentationModel representationModel) {
+        List<String> uriList = representationModel.getUriList();
+        if (null != uriList) {
+            methodInvocation.setRequestRepresentation(String.join(";", uriList));
+        }
+        return methodInvocation;
+    }
+
+    private OcciMethodInvocation invokeMethod(OcciMethodInvocation methodInvocation, OcciRepresentationModel representationModel) throws AttributeFormatException {
+        CategoryDocument categoryDocument = CategoryDocument.Factory.newInstance();
+        CategoryDocument.Category category = categoryDocument.addNewCategory();
+
+        // KIND
+        KindModel kindModel = representationModel.getKind();
+        if (null != kindModel) {
+            addCategoryRepresentation(category.addNewKind(), kindModel);
+        }
+        // MIXINs
+        for (MixinModel mixinModel : representationModel.getMixins()) {
+            if (hasAttributes(mixinModel)) {
+                addCategoryRepresentation(category.addNewMixin(), mixinModel);
+            }
+        }
+
+        // LINKs
+        for (LinkModel linkModel : representationModel.getLinks()) {
+            addLinkRepresentation(category.addNewLink(), linkModel);
+        }
+
+        methodInvocation.setRequestRepresentation(categoryDocument.toString());
+        return methodInvocation;
+    }
+
+    private void addLinkRepresentation(LinkType type, LinkModel model) throws AttributeFormatException {
+        addCategoryRepresentation(type, model);
+        type.setTarget(model.getTarget());
+
+        for (MixinModel mixinModel : model.getMixins()) {
+            if (hasAttributes(mixinModel)) {
+                addCategoryRepresentation(type.addNewMixin(), mixinModel);
+            }
+        }
+    }
+
+    private void addCategoryRepresentation(CategoryType type, CategoryModel model) throws AttributeFormatException {
+        type.setSchema(model.getSchema());
+        type.setTerm(model.getTerm());
+        type.setTitle(model.getTitle());
+        addAttributeRepresentation(type, model);
+    }
+
+    private void addAttributeRepresentation(CategoryType type, CategoryModel model) throws AttributeFormatException {
+        for (AttributeModel a : model.getAttributes()) {
+            if (a.isMutable() && a.isRequired() && !a.hasValue()) {
+                throw new IllegalArgumentException("Attribute is required but not set. " + a);
+            } else if (a.isMutable() && a.hasValue()) {
+                try {
+                    switch (a.getType()) {
+                        case STRING:
+                            type.addNewAttribute().setSTRING(a.getString());
+                            break;
+                        case ENUM:
+                            type.addNewAttribute().setENUM(a.getEnum());
+                            break;
+                        case INTEGER:
+                            type.addNewAttribute().setINTEGER(a.getInteger());
+                            break;
+                        case DOUBLE:
+                            type.addNewAttribute().setDOUBLE(a.getDouble());
+                            break;
+                        case FLOAT:
+                            type.addNewAttribute().setFLOAT(a.getFloat());
+                            break;
+                        case BOOLEAN:
+                            type.addNewAttribute().setBOOLEAN(a.getBoolean());
+                            break;
+                        case URI:
+                            type.addNewAttribute().setURI(a.getUri());
+                            break;
+                        case DATETIME:
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(a.getDatetime());
+                            type.addNewAttribute().setDATETIME(calendar);
+                            break;
+                        case DURATION:
+                            type.addNewAttribute().setDURATION(new GDuration(a.getDuration()));
+                            break;
+                        case LIST:
+                            String[] s = a.getList().split(";");
+                            ListType listType = ListType.Factory.newInstance();
+                            listType.setItemArray(s);
+                            type.addNewAttribute().setLIST(listType);
+                            break;
+                        case MAP:
+                            String[] keyValuePairs = a.getMap().split(";");
+                            MapType mapType = MapType.Factory.newInstance();
+                            for (String keyValue : keyValuePairs) {
+                                MapItem item = mapType.addNewItem();
+                                String[] kv = keyValue.split("=");
+                                item.setKey(kv[0].trim());
+                                item.setStringValue(kv[1].trim());
+                            }
+                            break;
+                        case SIGNATURE:
+                        case KEY:
+                        default:
+                            logger.warn("Could not set attribute representation: type is not supported {}", a);
+                            break;
+                    }
+                } catch (Exception e) {
+                    throw new AttributeFormatException(a.toString(), e);
+                }
+            }
+        }
+
+    }
+
+    private boolean hasAttributes(CategoryModel category) {
+        for (AttributeModel a : category.getAttributes()) {
+            if (a.isMutable() && (a.isRequired() || a.hasValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private UriListRepresentationModel parseUriListMethodRepsonse(String response) {
+        UriListRepresentationModel uriRepresentationModel = new UriListRepresentationModel();
+        if (null != response) {
+            String[] links = response.split(";");
+            if (null != links) {
+                uriRepresentationModel.setUriList(Arrays.asList(links));
+            }
+        }
+        return uriRepresentationModel;
     }
 
     @Override
     public String toString() {
+        // TODO: rest xml and xwadl as getter somewhere
         return occiClient.getResourceTypeDocument().toString();
     }
 }
