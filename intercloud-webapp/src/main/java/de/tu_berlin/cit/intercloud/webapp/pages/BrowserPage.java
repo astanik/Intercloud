@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -39,8 +40,8 @@ import java.util.List;
 
 public class BrowserPage extends UserTemplate {
     private final Logger logger = LoggerFactory.getLogger(BrowserPage.class);
-    private final String ID_REQUEST_PANEL = "requestPanel";
     private final String ID_RESPONSE_PANEL = "responsePanel";
+    private final String ID_REQUEST_FORM = "requestForm";
 
     private final IModel<String> entity;
     // ajax components
@@ -53,7 +54,8 @@ public class BrowserPage extends UserTemplate {
     private IModel<String> resourcePath;
 
     // don't serialize (not relevant for browser history)
-    private transient List<MethodModel> methodModelList; //= new ArrayList<>();
+    private transient List<MethodModel> methodModelList;
+    private RequestForm requestForm;
 
     public BrowserPage(IModel<XmppURI> uri) {
         super();
@@ -82,7 +84,8 @@ public class BrowserPage extends UserTemplate {
         this.add(methodTable);
 
         // request / response
-        this.add(new EmptyPanel(ID_REQUEST_PANEL));
+        requestForm = new RequestForm(ID_REQUEST_FORM, null, null);
+        this.add(this.requestForm);
         this.add(new EmptyPanel(ID_RESPONSE_PANEL));
 
         // request xwadl
@@ -201,14 +204,12 @@ public class BrowserPage extends UserTemplate {
                     }
 
                     try {
-                        if ("xml/occi".equals(methodModel.getRequestMediaType())) {
-                            AbstractRepresentationModel representationModel = IntercloudWebSession.get().getIntercloudService()
-                                    .getIntercloudClient(methodModel.getUri())
-                                    .getRepresentationModel(methodModel);
-                            BrowserPage.this.replace(new OcciRequestPanel(ID_REQUEST_PANEL,
-                                    new Model<>(methodModel),
-                                    new Model<>((OcciRepresentationModel) representationModel)));
-                        }
+                        AbstractRepresentationModel representationModel = IntercloudWebSession.get().getIntercloudService()
+                                .getIntercloudClient(methodModel.getUri())
+                                .getRepresentationModel(methodModel);
+                        BrowserPage.this.replace(new RequestForm(ID_REQUEST_FORM,
+                                new Model<>(methodModel),
+                                new Model<>(representationModel)));
                         ComponentUtils.displayNone(alert);
                     } catch (Exception e) {
                         logAlert(e);
@@ -226,6 +227,35 @@ public class BrowserPage extends UserTemplate {
                 link.add(new AttributeAppender("class", " disables"));
             }
             return link;
+        }
+    }
+
+    private class RequestForm extends Form {
+
+        public RequestForm(String markupId, Model<MethodModel> methodModel, Model<? extends AbstractRepresentationModel> representationModel) {
+            super(markupId);
+
+            if (null != methodModel
+                    && null != representationModel
+                    && representationModel.getObject() instanceof OcciRepresentationModel) {
+                this.add(new OcciRequestPanel("requestPanel", methodModel, (IModel<OcciRepresentationModel>) representationModel));
+                this.add(new AjaxButton("requestSubmit", Model.of(methodModel.getObject().getMethodType())) {
+                    @Override
+                    protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                        logger.info(representationModel.getObject().toString());
+                    }
+
+                    @Override
+                    protected void onError(AjaxRequestTarget target, Form<?> form) {
+                        super.onError(target, form);
+                    }
+                });
+            } else {
+                this.add(new EmptyPanel("requestPanel"));
+                this.add(new Button("requestSubmit"));
+                this.setVisible(false);
+            }
+
         }
     }
 }
