@@ -1,7 +1,10 @@
 package de.tu_berlin.cit.intercloud.client.model.occi;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class AttributeModel implements Serializable {
     private static final long serialVersionUID = -4070567697021876585L;
@@ -13,13 +16,13 @@ public class AttributeModel implements Serializable {
         DOUBLE,
         FLOAT,
         BOOLEAN,
-        URI,        // string
+        URI,        // String
         SIGNATURE,  // byte[] TODO
         KEY,        // byte[] TODO
         DATETIME,   // Date
-        DURATION,   // GDuration --> String ISO-8601 duration format PnDTnHnMn
-        LIST,       // ListType --> List<String> --> String representation: item0;item1;item2;item3
-        MAP         // MapType --> Map<String, String> --> String representation: key0=value0;key1=value1;key2=value2
+        DURATION,   // GDuration --> Duration
+        LIST,       // ListType --> List<String>
+        MAP         // MapType --> Map<String, String>
     }
 
     private final String name;
@@ -244,7 +247,7 @@ public class AttributeModel implements Serializable {
         return Type.LIST.equals(this.type);
     }
 
-    public void setList(String list) {
+    public void setList(List<String> list) {
         if (isList()) {
             this.value = list;
         } else  {
@@ -252,8 +255,8 @@ public class AttributeModel implements Serializable {
         }
     }
 
-    public String getList() {
-        return isList() ? (String) this.value : null;
+    public List<String> getList() {
+        return isList() ? (List<String>) this.value : null;
     }
 
 
@@ -265,7 +268,7 @@ public class AttributeModel implements Serializable {
         return Type.MAP.equals(this.type);
     }
 
-    public void setMap(String map) {
+    public void setMap(Map<String, String> map) {
         if (isMap()) {
             this.value = map;
         } else {
@@ -273,8 +276,8 @@ public class AttributeModel implements Serializable {
         }
     }
 
-    public String getMap() {
-        return isMap() ? (String) this.value : null;
+    public Map<String, String> getMap() {
+        return isMap() ? (Map<String, String>) this.value : null;
     }
 
     /*
@@ -285,7 +288,7 @@ public class AttributeModel implements Serializable {
         return Type.DURATION.equals(this.type);
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(Duration duration) {
         if (isDuration()) {
             this.value = duration;
         } else {
@@ -293,7 +296,7 @@ public class AttributeModel implements Serializable {
         }
     }
 
-    public String getDuration() {
-        return isDuration() ? (String) value : null;
+    public Duration getDuration() {
+        return isDuration() ? (Duration) value : null;
     }
 }

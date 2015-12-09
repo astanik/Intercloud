@@ -52,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -59,6 +60,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class IntercloudClient implements IIntercloudClient {
     private static final Logger logger = LoggerFactory.getLogger(IntercloudClient.class);
@@ -421,21 +423,20 @@ public class IntercloudClient implements IIntercloudClient {
                                 model.setDatetime(new Date(type.getDATETIME().getTimeInMillis()));
                                 break;
                             case DURATION:
-                                model.setDuration(type.getDURATION().toString());
+                                model.setDuration(Duration.parse(type.getDURATION().toString()));
                                 break;
                             case LIST:
-                                model.setList(String.join(";", type.getLIST().getItemArray()));
+                                model.setList(Arrays.asList(type.getLIST().getItemArray()));
                                 break;
                             case MAP:
-                                StringBuilder s = new StringBuilder();
+                                Map<String, String> map = new HashMap<>();
                                 MapItem[] itemArray = type.getMAP().getItemArray();
                                 if (null != itemArray && 0 < itemArray.length) {
-                                    for (MapItem item : type.getMAP().getItemArray()) {
-                                        s.append(item.getKey()).append("=").append(item.getStringValue()).append(";");
+                                    for (MapItem item : itemArray) {
+                                        map.put(item.getKey(), item.getStringValue());
                                     }
-                                    // remove last ";" separator
-                                    model.setMap(s.substring(0, s.length() - 1));
                                 }
+                                model.setMap(map);
                                 break;
                             case SIGNATURE:
                             case KEY:
@@ -581,23 +582,22 @@ public class IntercloudClient implements IIntercloudClient {
                             type.addNewAttribute().setDATETIME(calendar);
                             break;
                         case DURATION:
-                            type.addNewAttribute().setDURATION(new GDuration(a.getDuration()));
+                            type.addNewAttribute().setDURATION(new GDuration(a.getDuration().toString()));
                             break;
                         case LIST:
-                            String[] s = a.getList().split(";");
                             ListType listType = ListType.Factory.newInstance();
-                            listType.setItemArray(s);
+                            listType.setItemArray((String[]) a.getList().toArray());
                             type.addNewAttribute().setLIST(listType);
                             break;
                         case MAP:
-                            String[] keyValuePairs = a.getMap().split(";");
+                            Set<Map.Entry<String, String>> entries = a.getMap().entrySet();
                             MapType mapType = MapType.Factory.newInstance();
-                            for (String keyValue : keyValuePairs) {
+                            for (Map.Entry<String, String> entry : entries) {
                                 MapItem item = mapType.addNewItem();
-                                String[] kv = keyValue.split("=");
-                                item.setKey(kv[0].trim());
-                                item.setStringValue(kv[1].trim());
+                                item.setKey(entry.getKey());
+                                item.setStringValue(entry.getValue());
                             }
+                            type.addNewAttribute().setMAP(mapType);
                             break;
                         case SIGNATURE:
                         case KEY:

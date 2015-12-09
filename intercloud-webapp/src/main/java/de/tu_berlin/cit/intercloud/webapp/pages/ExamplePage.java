@@ -11,6 +11,7 @@ import de.tu_berlin.cit.intercloud.webapp.template.Template;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class ExamplePage extends Template {
     private static final Logger logger = LoggerFactory.getLogger(ExamplePage.class);
+    private final FeedbackPanel feedback;
 
     public ExamplePage() {
         super();
@@ -41,6 +43,10 @@ public class ExamplePage extends Template {
                 return createEmapmleUriRepresentationModel();
             }
         }));
+
+        this.feedback = new FeedbackPanel("feedback");
+        this.feedback.setOutputMarkupId(true);
+        this.add(feedback);
     }
 
     private class AttributeForm extends Form {
@@ -59,7 +65,8 @@ public class ExamplePage extends Template {
             this.add(new AjaxButton("attributeSubmit") {
                 @Override
                 protected void onError(AjaxRequestTarget target, Form<?> form) {
-                    target.appendJavaScript("alert('Please fill out all REQUIRED fields!');");
+                    //target.appendJavaScript("alert('Please fill out all REQUIRED fields!');");
+                    target.add(ExamplePage.this.feedback);
                 }
 
                 @Override
@@ -67,6 +74,7 @@ public class ExamplePage extends Template {
                     for (AttributeModel a : attributeList) {
                         logger.info(a.toString());
                     }
+                    target.add(ExamplePage.this.feedback);
                 }
             });
         }
