@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,6 @@ import java.util.List;
 
 public class ExamplePage extends Template {
     private static final Logger logger = LoggerFactory.getLogger(ExamplePage.class);
-    private final FeedbackPanel feedback;
 
     public ExamplePage() {
         super();
@@ -44,9 +44,6 @@ public class ExamplePage extends Template {
             }
         }));
 
-        this.feedback = new FeedbackPanel("feedback");
-        this.feedback.setOutputMarkupId(true);
-        this.add(feedback);
     }
 
     private class AttributeForm extends Form {
@@ -56,25 +53,22 @@ public class ExamplePage extends Template {
             super(markupId);
             this.attributeList = createExampleAttributeList();
 
-            this.add(new AttributeInputPanel("attributePanel", new LoadableDetachableModel<List<AttributeModel>>() {
-                @Override
-                protected List<AttributeModel> load() {
-                    return attributeList;
-                }
-            }));
+            final FeedbackPanel feedback = new FeedbackPanel("feedback");
+            feedback.setOutputMarkupId(true);
+            this.add(feedback);
+            this.add(new AttributeInputPanel("attributePanel", new ListModel<>(this.attributeList)));
             this.add(new AjaxButton("attributeSubmit") {
-                @Override
-                protected void onError(AjaxRequestTarget target, Form<?> form) {
-                    //target.appendJavaScript("alert('Please fill out all REQUIRED fields!');");
-                    target.add(ExamplePage.this.feedback);
-                }
-
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     for (AttributeModel a : attributeList) {
                         logger.info(a.toString());
                     }
-                    target.add(ExamplePage.this.feedback);
+                    target.add(feedback);
+                }
+
+                @Override
+                protected void onError(AjaxRequestTarget target, Form<?> form) {
+                    target.add(feedback);
                 }
             });
         }

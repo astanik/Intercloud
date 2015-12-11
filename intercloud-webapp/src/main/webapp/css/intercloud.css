@@ -21,3 +21,7 @@ textarea.form-control {
     border: none !important;
     margin-bottom: 0px;
 }
+
+.form-control.invalid {
+    border: 1px solid #C00;
+}
