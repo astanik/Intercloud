@@ -17,8 +17,8 @@ public class AttributeModel implements Serializable {
         FLOAT,
         BOOLEAN,
         URI,        // String
-        SIGNATURE,  // byte[] TODO
-        KEY,        // byte[] TODO
+        SIGNATURE,  // byte[] TODO String
+        KEY,        // byte[] TODO String e.g. public ssh key
         DATETIME,   // Date
         DURATION,   // GDuration --> Duration
         LIST,       // ListType --> List<String>

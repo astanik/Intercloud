@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.IMixinModelContainer;
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
+import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
@@ -129,6 +130,33 @@ public class IntercloudClient implements IIntercloudClient {
         return result;
     }
 
+    private ClassificationModel parseClassificationModel() throws MissingClassificationException {
+        ClassificationDocument.Classification classificationDocument = occiClient.getClassification();
+        if (null == classificationDocument) {
+            throw new MissingClassificationException("Classification is not specified in xwadl. ");
+        }
+        ClassificationModel classificationModel = new ClassificationModel();
+        // TODO default values
+        // read kind from classification
+        if (null != classificationDocument.getKindType()) {
+            classificationModel.setKind(parseKindModel(classificationDocument.getKindType()));
+        }
+        // read links from classification
+        if (null != classificationDocument.getLinkTypeArray() && 0 < classificationDocument.getLinkTypeArray().length) {
+            for (LinkClassification c : classificationDocument.getLinkTypeArray()) {
+                classificationModel.addLink(parseLinkModel(c));
+            }
+        }
+        // read mixins from classification
+        if (null != classificationDocument.getMixinTypeArray() && 0 < classificationDocument.getMixinTypeArray().length) {
+            for (MixinClassification c : classificationDocument.getMixinTypeArray()) {
+                classificationModel.addMixin(parseMixinModel(c));
+            }
+        }
+
+        return classificationModel;
+    }
+
     private OcciRepresentationModel buildOcciRepresentationModel(MethodModel methodModel) throws MissingClassificationException, UnsupportedMethodException {
         long start = System.currentTimeMillis();
 
@@ -136,49 +164,28 @@ public class IntercloudClient implements IIntercloudClient {
         if (null == methodDocument) {
             throw new UnsupportedMethodException("Method is not specified in xwadl.");
         }
-        ClassificationDocument.Classification classification = occiClient.getClassification();
-        if (null == classification) {
-            throw new MissingClassificationException("Classification is not specified in xwadl. ");
-        }
-
-        KindModel kindModel = null;
-        Map<String, LinkModel> linkMap = new HashMap<>();
-        Map<String, MixinModel> mixinMap = new HashMap<>();
-
-        // TODO default values
-        // read kind from classification
-        if (null != classification.getKindType()) {
-            kindModel = parseKindModel(classification.getKindType());
-        }
-        // read links from classification
-        if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
-            for (LinkClassification c : classification.getLinkTypeArray()) {
-                LinkModel linkModel = parseLinkModel(c);
-                linkMap.put(linkModel.getId(), linkModel);
-            }
-        }
-        // read mixins from classification
-        if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
-            for (MixinClassification c : classification.getMixinTypeArray()) {
-                MixinModel mixinModel = parseMixinModel(c);
-                mixinMap.put(mixinModel.getId(), mixinModel);
-            }
-        }
+        ClassificationModel classificationModel = parseClassificationModel();
         // read templates from method document
-        addTemplates(methodDocument, kindModel, mixinMap, linkMap);
-        // result
-        OcciRepresentationModel representation = buildOcciRepresentationModel(kindModel, linkMap, mixinMap);
+        addTemplates(methodDocument, classificationModel);
+        OcciRepresentationModel representation = buildOcciRepresentationModel(classificationModel);
 
         logger.info("XmlBean --> RepresentationModel: {} ms", System.currentTimeMillis() - start);
         return representation;
     }
 
+    // TODO: fix tests an remove method
+    @Deprecated
     OcciRepresentationModel buildOcciRepresentationModel(KindModel kindModel,
-                                                                 Map<String, LinkModel> linkModelMap,
-                                                                 Map<String, MixinModel> mixinModelMap) {
+                                                         Map<String, LinkModel> linkModelMap,
+                                                         Map<String, MixinModel> mixinModelMap) {
+        return buildOcciRepresentationModel(new ClassificationModel(kindModel, mixinModelMap, linkModelMap));
+    }
+
+    OcciRepresentationModel buildOcciRepresentationModel(ClassificationModel classificationModel) {
+
         OcciRepresentationModel representationModel = new OcciRepresentationModel();
-        representationModel.setKind(kindModel);
-        representationModel.getLinkDefinitions().addAll(linkModelMap.values());
+        representationModel.setKind(classificationModel.getKind());
+        representationModel.getLinkDefinitions().addAll(classificationModel.getLinks());
 
         // list of mixins that apply to other mixins
         List<MixinModel> mixinAppliesMixin = new ArrayList<>();
@@ -187,7 +194,7 @@ public class IntercloudClient implements IIntercloudClient {
 
         // apply mixins to representation and links
         // collect mixins that apply to other mixins
-        for (MixinModel mixin : mixinModelMap.values()) {
+        for (MixinModel mixin : classificationModel.getMixins()) {
             if (null == mixin.getApplies()) {
                 logger.error("Mixin missing applies. {}", mixin);
             } else if ((Category.CategorySchema + Category.CategoryTerm).equals(mixin.getApplies())) {
@@ -197,22 +204,22 @@ public class IntercloudClient implements IIntercloudClient {
                 representationModel.addMixin(mixin);
                 mixinContainers.add(representationModel);
                 // clone mixin to all links
-                for (LinkModel link : linkModelMap.values()) {
+                for (LinkModel link : classificationModel.getLinks()) {
                     MixinModel clone = SerializationUtils.clone(mixin);
                     link.addMixin(clone);
                     mixinContainers.add(link);
                 }
                 mixinContainersMap.put(mixin.getId(), mixinContainers);
-            } else if (mixinModelMap.containsKey(mixin.getApplies())) {
+            } else if (null != classificationModel.getMixin(mixin.getApplies())) {
                 // applies to Mixin?
                 mixinAppliesMixin.add(mixin);
-            } else if (null != kindModel && kindModel.getId().equals(mixin.getApplies())) {
+            } else if (null != classificationModel.getKind() && classificationModel.getKind().getId().equals(mixin.getApplies())) {
                 // applies to Kind?
                 representationModel.addMixin(mixin);
                 mixinContainersMap.put(mixin.getId(), Arrays.asList(representationModel));
-            } else if (linkModelMap.containsKey(mixin.getApplies())) {
+            } else if (null != classificationModel.getLink(mixin.getApplies())) {
                 // applies to Link?
-                LinkModel link = linkModelMap.get(mixin.getApplies());
+                LinkModel link = classificationModel.getLink(mixin.getApplies());
                 link.addMixin(mixin);
                 mixinContainersMap.put(mixin.getId(), Arrays.asList(link));
             } else {
@@ -295,17 +302,18 @@ public class IntercloudClient implements IIntercloudClient {
         return result;
     }
 
-    private void addTemplates(MethodDocument.Method methodDocument, KindModel kindModel, Map<String, MixinModel> mixinMap, Map<String, LinkModel> linkMap) {
+    private void addTemplates(MethodDocument.Method methodDocument, ClassificationModel classificationModel) {
         List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
         for (CategoryDocument template : templateDocuments) {
-            addTemplates(template.getCategory(), kindModel, mixinMap, linkMap);
+            addTemplates(template.getCategory(), classificationModel);
         }
     }
 
-    private void addTemplates(CategoryDocument.Category categoryDocument, KindModel kindModel, Map<String, MixinModel> mixinMap, Map<String, LinkModel> linkMap) {
+    private void addTemplates(CategoryDocument.Category categoryDocument, ClassificationModel classificationModel) {
         if (null != categoryDocument.getKind()) {
             CategoryType kindType = categoryDocument.getKind();
-            if (kindModel.getSchema().equals(kindType.getSchema()) && kindModel.getTerm().equals(kindType.getTerm())) {
+            KindModel kindModel = classificationModel.getKind();
+            if (null != kindModel && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())) {
                 kindModel.addTemplate(kindType.getTitle());
             } else {
                 logger.warn("Could not find Kind Classification for Template: " + kindModel);
@@ -314,7 +322,7 @@ public class IntercloudClient implements IIntercloudClient {
 
         if (null != categoryDocument.getMixinArray() && 0 < categoryDocument.getMixinArray().length) {
             for (CategoryType mixinType : categoryDocument.getMixinArray()) {
-                MixinModel mixinModel = mixinMap.get(mixinType.getSchema() + mixinType.getTerm());
+                MixinModel mixinModel = classificationModel.getMixin(mixinType.getSchema() + mixinType.getTerm());
                 if (null != mixinModel) {
                     mixinModel.addTemplate(mixinType.getTitle());
                 } else {
@@ -335,12 +343,12 @@ public class IntercloudClient implements IIntercloudClient {
         if (null == categoryModel || null == methodModel) {
             return null;
         }
+        // clear all attributes
+        for (AttributeModel a : categoryModel.getAttributes()) {
+            a.clearValue();
+        }
         if (null == templateTitle) {
             categoryModel.setTitle(null);
-            // clear all attributes
-            for (AttributeModel a : categoryModel.getAttributes()) {
-                a.clearValue();
-            }
             return categoryModel;
         }
         // apply template
