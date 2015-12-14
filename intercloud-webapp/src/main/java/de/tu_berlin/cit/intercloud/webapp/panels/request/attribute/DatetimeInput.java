@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels.attribute;
+package de.tu_berlin.cit.intercloud.webapp.panels.request.attribute;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;

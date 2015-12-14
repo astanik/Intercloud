@@ -68,6 +68,10 @@ public class AttributeModel implements Serializable {
         return null != value;
     }
 
+    public Object getValue() {
+        return this.value;
+    }
+
     public void clearValue() {
         this.value = null;
     }

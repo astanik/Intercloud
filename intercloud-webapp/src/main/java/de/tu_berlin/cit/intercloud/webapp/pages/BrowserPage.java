@@ -12,8 +12,9 @@ import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
-import de.tu_berlin.cit.intercloud.webapp.panels.OcciRequestPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.UriResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.request.OcciRequestPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -321,6 +322,9 @@ public class BrowserPage extends UserTemplate {
             } else if (representation instanceof TextRepresentationModel) {
                 this.replace(new Label("responsePanel", Model.of(((TextRepresentationModel) representation).getText())));
                 restCode.setDefaultModel(Model.of(((TextRepresentationModel) representation).getText()));
+            } else if (representation instanceof OcciRepresentationModel) {
+                this.replace(new OcciResponsePanel("responsePanel",
+                        Model.of((OcciRepresentationModel) representation)));
             } else {
                 this.replace(new EmptyPanel("responsePanel"));
             }

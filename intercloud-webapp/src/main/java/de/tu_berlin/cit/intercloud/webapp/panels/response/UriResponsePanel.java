@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels;
+package de.tu_berlin.cit.intercloud.webapp.panels.response;
 
 import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.pages.BrowserPage;

@@ -28,7 +28,7 @@ public class RepresenationModelConverter {
     public static CategoryDocument convertToXml(OcciRepresentationModel representationModel) throws AttributeFormatException {
         CategoryDocument categoryDocument = CategoryDocument.Factory.newInstance();
         CategoryDocument.Category category = categoryDocument.addNewCategory();
-
+        // TODO when to add category type (Kind, Mixin, Link)???
         // KIND
         KindModel kindModel = representationModel.getKind();
         if (null != kindModel) {

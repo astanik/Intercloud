@@ -195,6 +195,7 @@ public class IntercloudClient implements IIntercloudClient {
         }
         // clear all attributes
         for (AttributeModel a : categoryModel.getAttributes()) {
+            // TODO default values
             a.clearValue();
         }
         if (null == templateTitle) {
