@@ -178,7 +178,7 @@ public class RepresentationModelBuilder {
         if (null == linkModel || !linkModel.getId().equals(linkId)) {
             result = new LinkModel(linkType.getSchema(), linkType.getTerm(), null);
             logger.warn("Rest document contains Link, but Link not defined in Classification, link: {}", linkId);
-        } else  {
+        } else {
             result = new LinkModel(linkModel.getSchema(), linkModel.getTerm(), linkModel.getRelates());
         }
         result.setTitle(linkType.getTitle());
@@ -197,29 +197,24 @@ public class RepresentationModelBuilder {
     private static CategoryModel buildAttributes(CategoryModel result, CategoryModel categoryModel, AttributeType[] attributeTypes) {
         if (null != attributeTypes) {
             for (AttributeType attributeType : attributeTypes) {
+                AttributeModel attributeModel;
                 if (null == attributeType.getName()) {
                     logger.warn("Rest document contains attribute with no name.");
+                    continue;
                 } else if (null == categoryModel) {
                     // attribute type to model
-                    AttributeModel attributeModel = buildAttributeModel(attributeType);
-                    if (null != attributeModel) {
-                        result.addAttribute(attributeModel);
-                    }
+                    attributeModel = buildAttributeModel(attributeType);
                 } else if (null == categoryModel.getAttribute(attributeType.getName())) {
                     // attribute type to model
                     logger.warn("Rest document contains Attribute, but Attribute not defined in Classification. category: {}, attribute: {}",
                             result.getId(), attributeType.getName());
-                    AttributeModel attributeModel = buildAttributeModel(attributeType);
-                    if (null != attributeModel) {
-                        result.addAttribute(attributeModel);
-                    }
+                    attributeModel = buildAttributeModel(attributeType);
                 } else {
-                    // compare type to model
-                    AttributeModel attributeModel = buildAttributeModel(attributeType,
-                            categoryModel.getAttribute(attributeType.getName()).getDescription());
-                    if (null != attributeModel) {
-                        result.addAttribute(attributeModel);
-                    }
+                    // compare attribute type to classification attributes
+                    attributeModel = buildAttributeModel(attributeType, categoryModel.getAttribute(attributeType.getName()));
+                }
+                if (null != attributeModel) {
+                    result.addAttribute(attributeModel);
                 }
             }
         }
@@ -230,65 +225,109 @@ public class RepresentationModelBuilder {
         return buildAttributeModel(attributeType, null);
     }
 
-    private static AttributeModel buildAttributeModel(AttributeType attributeType, String description) {
+    private static AttributeModel buildAttributeModel(AttributeType attributeType, AttributeModel attributeModel) {
         AttributeModel result = null;
-        try {
-            if (attributeType.isSetBOOLEAN()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.BOOLEAN, false, false, description);
-                result.setBoolean(attributeType.getBOOLEAN());
+        String description = null != attributeModel ? attributeModel.getDescription() : null;
+        AttributeModel.Type actualType = null; // just for logging, befor return
 
-            } else if (attributeType.isSetDATETIME()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DATETIME, false, false, description);
-                result.setDatetime(attributeType.getDATETIME().getTime());
-
-            } else if (attributeType.isSetDOUBLE()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DOUBLE, false, false, description);
-                result.setDouble(attributeType.getDOUBLE());
-
-            } else if (attributeType.isSetDURATION()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DURATION, false, false, description);
-                result.setDuration(Duration.parse(attributeType.getDURATION().toString()));
-
-            } else if (attributeType.isSetENUM()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.ENUM, false, false, description);
-                result.setEnum(attributeType.getENUM());
-
-            } else if (attributeType.isSetFLOAT()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.FLOAT, false, false, description);
-                result.setFloat(attributeType.getFLOAT());
-
-            } else if (attributeType.isSetINTEGER()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.INTEGER, false, false, description);
-                result.setInteger(attributeType.getINTEGER());
-
-            } else if (attributeType.isSetKEY()) {
-                // TODO
-                logger.warn("Unsupported attribute type: KEY");
-            } else if (attributeType.isSetLIST()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.LIST, false, false, description);
-                result.setList(Arrays.asList(attributeType.getLIST().getItemArray()));
-
-            } else if (attributeType.isSetMAP()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.MAP, false, false, description);
-                result.setMap(mapTypeToMap(attributeType.getMAP()));
-
-            } else if (attributeType.isSetSIGNATURE()) {
-                // TODO
-                logger.warn("Unsupported attribute type: KEY");
-
-            } else if (attributeType.isSetSTRING()) {
-                result = new AttributeModel(attributeType.getName(), AttributeModel.Type.STRING, false, false, description);
-                result.setString(attributeType.getSTRING());
-
-            } else if (attributeType.isSetURI()) {
-                result = new AttributeModel(attributeType.getURI(), AttributeModel.Type.URI, false, false, description);
-
-            } else {
-                logger.warn("Wrong attribute type, value is missing", attributeType.getName());
+        if (attributeType.isSetBOOLEAN()) {
+            if (null != attributeModel && !AttributeModel.Type.BOOLEAN.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.BOOLEAN;
             }
-        } catch (Exception e) {
-            logger.error("Wrong attribute type.", e);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.BOOLEAN, false, false, description);
+            result.setBoolean(attributeType.getBOOLEAN());
+
+        } else if (attributeType.isSetDATETIME()) {
+            if (null != attributeModel && !AttributeModel.Type.DATETIME.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.DATETIME;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DATETIME, false, false, description);
+            result.setDatetime(attributeType.getDATETIME().getTime());
+
+        } else if (attributeType.isSetDOUBLE()) {
+            if (null != attributeModel && !AttributeModel.Type.DOUBLE.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.DOUBLE;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DOUBLE, false, false, description);
+            result.setDouble(attributeType.getDOUBLE());
+
+        } else if (attributeType.isSetDURATION()) {
+            if (null != attributeModel && !AttributeModel.Type.DURATION.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.DURATION;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DURATION, false, false, description);
+            result.setDuration(Duration.parse(attributeType.getDURATION().toString()));
+
+        } else if (attributeType.isSetENUM()) {
+            if (null != attributeModel && !AttributeModel.Type.ENUM.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.ENUM;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.ENUM, false, false, description);
+            result.setEnum(attributeType.getENUM());
+
+        } else if (attributeType.isSetFLOAT()) {
+            if (null != attributeModel && !AttributeModel.Type.FLOAT.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.FLOAT;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.FLOAT, false, false, description);
+            result.setFloat(attributeType.getFLOAT());
+
+        } else if (attributeType.isSetINTEGER()) {
+            if (null != attributeModel && !AttributeModel.Type.INTEGER.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.INTEGER;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.INTEGER, false, false, description);
+            result.setInteger(attributeType.getINTEGER());
+
+        } else if (attributeType.isSetKEY()) {
+            if (null != attributeModel && !AttributeModel.Type.KEY.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.KEY;
+            }
+            // TODO
+            logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
+        } else if (attributeType.isSetLIST()) {
+            if (null != attributeModel && !AttributeModel.Type.LIST.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.LIST;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.LIST, false, false, description);
+            result.setList(Arrays.asList(attributeType.getLIST().getItemArray()));
+
+        } else if (attributeType.isSetMAP()) {
+            if (null != attributeModel && !AttributeModel.Type.MAP.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.MAP;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.MAP, false, false, description);
+            result.setMap(mapTypeToMap(attributeType.getMAP()));
+
+        } else if (attributeType.isSetSIGNATURE()) {
+            if (null != attributeModel && !AttributeModel.Type.SIGNATURE.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.SIGNATURE;
+            }
+            // TODO
+            logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
+
+        } else if (attributeType.isSetSTRING()) {
+            if (null != attributeModel && !AttributeModel.Type.STRING.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.STRING;
+            }
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.STRING, false, false, description);
+            result.setString(attributeType.getSTRING());
+
+        } else if (attributeType.isSetURI()) {
+            if (null != attributeModel && !AttributeModel.Type.URI.equals(attributeModel.getType())) {
+                actualType = AttributeModel.Type.URI;
+            }
+            result = new AttributeModel(attributeType.getURI(), AttributeModel.Type.URI, false, false, description);
+            result.setUri(attributeType.getURI());
+        } else {
+            logger.warn("Unsupported attribute type: attribute: {}", attributeType.getName());
         }
+
+        if (null != actualType && null != attributeModel) {
+            logger.warn("Differing attribute type. attribute: {}, classification: {}, actual: {}",
+                    attributeType.getName(), attributeModel.getType(), actualType);
+        }
+
         return result;
     }
 }
