@@ -18,7 +18,7 @@ public abstract class CategoryModel implements Serializable {
 
     private String title;
 
-    public CategoryModel(String term, String schema) {
+    public CategoryModel(String schema, String term) {
         this.id = schema + term;
         this.term = term;
         this.schema = schema;
@@ -69,8 +69,8 @@ public abstract class CategoryModel implements Serializable {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "term='" + term + '\'' +
-                ", schema='" + schema + '\'' +
+                "schema='" + schema + '\'' +
+                ", term='" + term + '\'' +
                 '}';
     }
 

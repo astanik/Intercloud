@@ -10,8 +10,8 @@ public class LinkModel extends CategoryModel implements IMixinModelContainer {
     private final String relates;
     private String target;
 
-    public LinkModel(String term, String schema, String relates) {
-        super(term, schema);
+    public LinkModel(String schema, String term, String relates) {
+        super(schema, term);
         this.relates = relates;
     }
 

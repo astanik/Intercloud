@@ -100,7 +100,7 @@ public class ExamplePage extends Template {
 
 
     public KindModel createExampleKindModel() {
-        KindModel kindModel = new KindModel("compute", "http://schema.ogf.org/occi/infrastructure#");
+        KindModel kindModel = new KindModel("http://schema.ogf.org/occi/infrastructure#", "compute");
         kindModel.addTemplate("t0");
         kindModel.addTemplate("t1");
         kindModel.addAttribute(new AttributeModel("Datetime", AttributeModel.Type.DATETIME.toString(), false, true, null));

@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
@@ -19,7 +20,8 @@ public interface IIntercloudClient {
 
     CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) throws UnsupportedMethodException;
 
-    AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel) throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException;
+    AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel)
+            throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException, XmlException;
 
     // TODO executeAction
 }

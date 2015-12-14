@@ -32,12 +32,16 @@ public class AttributeModel implements Serializable {
     private final String description;
     private Object value;
 
-    public AttributeModel(String name, String type, boolean required, boolean mutable, String description) {
+    public AttributeModel(String name, Type type, boolean required, boolean mutable, String description) {
         this.name = name;
-        this.type = Type.valueOf(type.toString());
+        this.type = type;
         this.required = required;
         this.mutable = mutable;
         this.description = description;
+    }
+
+    public AttributeModel(String name, String type, boolean required, boolean mutable, String description) {
+        this(name, Type.valueOf(type.toString()), required, mutable, description);
     }
 
     public String getName() {

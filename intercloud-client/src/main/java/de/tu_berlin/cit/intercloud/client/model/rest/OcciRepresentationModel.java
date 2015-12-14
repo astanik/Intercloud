@@ -11,11 +11,21 @@ import java.util.List;
 
 public class OcciRepresentationModel extends AbstractRepresentationModel implements IMixinModelContainer {
     private KindModel kind;
-    private final List<MixinModel> mixinList = new ArrayList<>();
+    private final List<MixinModel> mixinList;
     // list of actual used links
-    private final List<LinkModel> linkList = new ArrayList<>();
+    private final List<LinkModel> linkList;
     // map of link definitions
     private final List<LinkModel> linkDefinitionList = new ArrayList<>();
+
+    public OcciRepresentationModel() {
+        this(null, new ArrayList<>(), new ArrayList<>());
+    }
+
+    public OcciRepresentationModel(KindModel kind, List<MixinModel> mixinList, List<LinkModel> linkList) {
+        this.linkList = linkList;
+        this.mixinList = mixinList;
+        this.kind = kind;
+    }
 
     public KindModel getKind() {
         return kind;
