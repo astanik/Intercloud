@@ -227,105 +227,72 @@ public class RepresentationModelBuilder {
 
     private static AttributeModel buildAttributeModel(AttributeType attributeType, AttributeModel attributeModel) {
         AttributeModel result = null;
-        String description = null != attributeModel ? attributeModel.getDescription() : null;
-        AttributeModel.Type actualType = null; // just for logging, befor return
+        String description = null;
+        boolean required = false;
+        boolean mutable = false;
+        if (null != attributeModel) {
+            description = attributeModel.getDescription();
+            required = attributeModel.isRequired();
+            mutable = attributeModel.isMutable();
+        }
 
         if (attributeType.isSetBOOLEAN()) {
-            if (null != attributeModel && !AttributeModel.Type.BOOLEAN.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.BOOLEAN;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.BOOLEAN, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.BOOLEAN, required, mutable, description);
             result.setBoolean(attributeType.getBOOLEAN());
 
         } else if (attributeType.isSetDATETIME()) {
-            if (null != attributeModel && !AttributeModel.Type.DATETIME.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.DATETIME;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DATETIME, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DATETIME, required, mutable, description);
             result.setDatetime(attributeType.getDATETIME().getTime());
 
         } else if (attributeType.isSetDOUBLE()) {
-            if (null != attributeModel && !AttributeModel.Type.DOUBLE.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.DOUBLE;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DOUBLE, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DOUBLE, required, mutable, description);
             result.setDouble(attributeType.getDOUBLE());
 
         } else if (attributeType.isSetDURATION()) {
-            if (null != attributeModel && !AttributeModel.Type.DURATION.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.DURATION;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DURATION, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.DURATION, required, mutable, description);
             result.setDuration(Duration.parse(attributeType.getDURATION().toString()));
 
         } else if (attributeType.isSetENUM()) {
-            if (null != attributeModel && !AttributeModel.Type.ENUM.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.ENUM;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.ENUM, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.ENUM, required, mutable, description);
             result.setEnum(attributeType.getENUM());
 
         } else if (attributeType.isSetFLOAT()) {
-            if (null != attributeModel && !AttributeModel.Type.FLOAT.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.FLOAT;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.FLOAT, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.FLOAT, required, mutable, description);
             result.setFloat(attributeType.getFLOAT());
 
         } else if (attributeType.isSetINTEGER()) {
-            if (null != attributeModel && !AttributeModel.Type.INTEGER.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.INTEGER;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.INTEGER, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.INTEGER, required, mutable, description);
             result.setInteger(attributeType.getINTEGER());
 
         } else if (attributeType.isSetKEY()) {
-            if (null != attributeModel && !AttributeModel.Type.KEY.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.KEY;
-            }
             // TODO
             logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
         } else if (attributeType.isSetLIST()) {
-            if (null != attributeModel && !AttributeModel.Type.LIST.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.LIST;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.LIST, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.LIST, required, mutable, description);
             result.setList(Arrays.asList(attributeType.getLIST().getItemArray()));
 
         } else if (attributeType.isSetMAP()) {
-            if (null != attributeModel && !AttributeModel.Type.MAP.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.MAP;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.MAP, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.MAP, required, mutable, description);
             result.setMap(mapTypeToMap(attributeType.getMAP()));
 
         } else if (attributeType.isSetSIGNATURE()) {
-            if (null != attributeModel && !AttributeModel.Type.SIGNATURE.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.SIGNATURE;
-            }
             // TODO
             logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
 
         } else if (attributeType.isSetSTRING()) {
-            if (null != attributeModel && !AttributeModel.Type.STRING.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.STRING;
-            }
-            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.STRING, false, false, description);
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.STRING, required, mutable, description);
             result.setString(attributeType.getSTRING());
 
         } else if (attributeType.isSetURI()) {
-            if (null != attributeModel && !AttributeModel.Type.URI.equals(attributeModel.getType())) {
-                actualType = AttributeModel.Type.URI;
-            }
-            result = new AttributeModel(attributeType.getURI(), AttributeModel.Type.URI, false, false, description);
+            result = new AttributeModel(attributeType.getURI(), AttributeModel.Type.URI, required, mutable, description);
             result.setUri(attributeType.getURI());
         } else {
             logger.warn("Unsupported attribute type: attribute: {}", attributeType.getName());
         }
 
-        if (null != actualType && null != attributeModel) {
+        if (null != attributeModel && null != result && !result.getType().equals(attributeModel.getType())) {
             logger.warn("Differing attribute type. attribute: {}, classification: {}, actual: {}",
-                    attributeType.getName(), attributeModel.getType(), actualType);
+                    attributeType.getName(), attributeModel.getType(), result.getType());
         }
 
         return result;
