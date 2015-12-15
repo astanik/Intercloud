@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
-import de.tu_berlin.cit.intercloud.webapp.ComponentUtils;
+import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -14,11 +14,14 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +29,7 @@ public class DiscoverItemsPage extends UserTemplate {
     private static final Logger logger = LoggerFactory.getLogger(DiscoverItemsPage.class);
 
     private final WebMarkupContainer itemsContainer;
-    private final List<String> discoItems = new ArrayList<>();
+    private transient List<String> discoItems = new ArrayList<>();
 
     public DiscoverItemsPage() {
         super();
@@ -36,7 +39,12 @@ public class DiscoverItemsPage extends UserTemplate {
         itemsContainer = new WebMarkupContainer("itemsContainer");
         itemsContainer.setOutputMarkupId(true);
         ComponentUtils.displayNone(itemsContainer);
-        itemsContainer.add(new ItemsForm("itemsForm"));
+        itemsContainer.add(new ItemsForm("itemsForm", new LoadableDetachableModel<List<String>>() {
+            @Override
+            protected List<String> load() {
+                return discoItems;
+            }
+        }));
         this.add(itemsContainer);
     }
 
@@ -52,14 +60,13 @@ public class DiscoverItemsPage extends UserTemplate {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     try {
                         XmppURI uri = new XmppURI(domain, "");
-                        discoItems.clear();
-                        discoItems.addAll(IntercloudWebSession.get().getXmppService().discoverRestfulItems(uri));
+                        discoItems = IntercloudWebSession.get().getXmppService().discoverRestfulItems(uri);
                         if (!discoItems.isEmpty()) {
                             // display items form
                             target.add(ComponentUtils.displayBlock(itemsContainer));
                         } else {
                             // hide items form and display alert
-                            target.appendJavaScript("alert('Cannot find suitable entities for domain " + domain + "'.);");
+                            target.appendJavaScript("alert('Cannot find suitable entities for domain " + domain + ".');");
                             target.add(ComponentUtils.displayNone(itemsContainer));
                         }
                     } catch (Exception e) {
@@ -76,7 +83,7 @@ public class DiscoverItemsPage extends UserTemplate {
     private class ItemsForm extends Form {
         private final RadioGroup radioGroup;
 
-        public ItemsForm(String markupId) {
+        public ItemsForm(String markupId, IModel<List<String>> discoItems) {
             super(markupId);
 
             radioGroup = new RadioGroup<String>("radioGroup", new Model<>());
@@ -94,7 +101,17 @@ public class DiscoverItemsPage extends UserTemplate {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     String domain = radioGroup.getDefaultModelObjectAsString();
                     if (null != domain && !domain.trim().isEmpty()) {
-                        setResponsePage(new GetXwadlPage(Model.of(domain)));
+                        String path = "";
+                        if (domain.contains("root")) {
+                            path = "/iaas";
+                        } else if (domain.contains("gateway")) {
+                            path = "/compute";
+                        }
+                        try {
+                            setResponsePage(new BrowserPage(Model.of(new XmppURI(domain, path))));
+                        } catch (URISyntaxException e) {
+                            logger.error("Failed to parse xmpp uri. entity: " + domain + ", resource: " + path);
+                        }
                     } else {
                         target.appendJavaScript("alert('Please select a value from the radio group!');");
                     }

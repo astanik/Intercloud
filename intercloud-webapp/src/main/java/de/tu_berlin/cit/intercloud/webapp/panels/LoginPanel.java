@@ -1,7 +1,7 @@
 package de.tu_berlin.cit.intercloud.webapp.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
-import de.tu_berlin.cit.intercloud.webapp.ComponentUtils;
+import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.pages.DiscoverItemsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;

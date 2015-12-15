@@ -8,13 +8,12 @@ import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppConnectionManager;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.ping.PingManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +44,11 @@ public class XmppConnectionManager implements IXmppConnectionManager {
         AbstractXMPPConnection connection = new XMPPTCPConnection(configuration);
         connection.connect();
         connection.login();
+        // keep connection alive
+        // when connection is idle it will run into timeout
+        PingManager pingManager = PingManager.getInstanceFor(connection);
+        pingManager.setPingInterval(60);
+        pingManager.pingMyServer();
 
         this.connection = connection;
     }
@@ -71,7 +75,6 @@ public class XmppConnectionManager implements IXmppConnectionManager {
     public void disconnect() {
         if (null != this.connection) {
             this.connection.disconnect();
-            this.connection = null;
         }
     }
 }

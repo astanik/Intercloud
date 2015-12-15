@@ -6,6 +6,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import java.net.URISyntaxException;
 
 public class User implements IUser {
+    private static final long serialVersionUID = 2215265222348014208L;
+
     private final XmppURI uri;
     private final String username;
     private Roles roles;

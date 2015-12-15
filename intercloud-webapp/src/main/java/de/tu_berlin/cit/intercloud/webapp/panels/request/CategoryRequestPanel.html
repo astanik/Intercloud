@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <div class="panel panel-default">
+        <div class="panel-body" wicket:id="container">
+            <table class="table table-noborder">
+                <tr>
+                    <td>Type</td>
+                    <td wicket:id="type"></td>
+                </tr>
+                <tr>
+                    <td>Term</td>
+                    <td wicket:id="term"></td>
+                </tr>
+                <tr>
+                    <td>Schema</td>
+                    <td wicket:id="schema"></td>
+                </tr>
+                <tr wicket:id="titleRow">
+                    <td>Title</td>
+                    <td wicket:id="title"></td>
+                </tr>
+                <tr wicket:id="templatesRow">
+                    <td>template</td>
+                    <td><select wicket:id="templates"></select></td>
+                </tr>
+            </table>
+            <wicket:child/>
+
+            <wicket:panel wicket:id="attributePanel"/>
+        </div>
+    </div>
+</wicket:panel>

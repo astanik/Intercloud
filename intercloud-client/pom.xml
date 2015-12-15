@@ -23,6 +23,14 @@
             <artifactId>xmpp-client</artifactId>
             <version>0.0.1</version>
         </dependency>
+
+        <!-- apache -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+
     </dependencies>
 
 

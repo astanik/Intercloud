@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <table class="table table-striped">
+        <tr>
+            <td>Type</td>
+            <td colspan="2" wicket:id="type"></td>
+        </tr>
+        <tr>
+            <td>Term</td>
+            <td colspan="2" wicket:id="term"></td>
+        </tr>
+        <tr>
+            <td>Schema</td>
+            <td colspan="2" wicket:id="schema"></td>
+        </tr>
+        <tr wicket:id="titleRow">
+            <td>Title</td>
+            <td colspan="2" wicket:id="title"></td>
+        </tr>
+
+        <wicket:child/>
+
+        <tr wicket:id="attributeContainer">
+            <td wicket:id="name"></td>
+            <td wicket:id="value"></td>
+            <td wicket:id="description"></td>
+        </tr>
+    </table>
+</wicket:panel>

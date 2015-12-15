@@ -52,7 +52,7 @@ public abstract class Template extends WebPage {
                     }.setIconType(GlyphIconType.user))
             );
             navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                    new NavbarButton(DiscoverItemsPage.class, Model.of("Discover")).setIconType(GlyphIconType.zoomin)));
+                    new NavbarButton(DiscoverItemsPage.class, Model.of("Discover")).setIconType(GlyphIconType.search)));
         } else {
             navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT,
                     new NavbarButton(LoginPage.class, Model.of("Login")).setIconType(GlyphIconType.login)));

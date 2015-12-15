@@ -16,6 +16,7 @@
         </div>
         <div class="col-md-6">
             <form wicket:id="attributeForm">
+                <div wicket:id="feedback"/>
                 <wicket:panel wicket:id="attributePanel"/>
                 <button wicket:id="attributeSubmit" type="submit" class="btn btn-default">Test</button>
             </form>
@@ -100,6 +101,57 @@
             </table>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>OCCI Representation</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <wicket:panel wicket:id="kindPanel"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <wicket:panel wicket:id="uriResponsePanel"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <tr>
+                    <td>Type</td>
+                    <td colspan="2">Kind</td>
+                </tr>
+                <tr>
+                    <td>Term</td>
+                    <td colspan="2">compute</td>
+                </tr>
+                <tr>
+                    <td>Schma</td>
+                    <td colspan="2">http://schema.ogf.org/occi/infrastructure#</td>
+                </tr>
+                <tr>
+                    <td>Title</td>
+                    <td colspan="2">2c6f7dfe-c997-467a-8da9-2805d531d5b2</td>
+                </tr>
+                <tr>
+                    <td>occi.compute.architecture</td>
+                    <td>x64</td>
+                    <td>CPU Architecture of the instance: Enum{x86,x64}</td>
+                </tr>
+                <tr>
+                    <td>occi.compute.state.message</td>
+                    <td>Flavour name m1.DNS</td>
+                    <td>Human-readable explanation of the current instance state</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
 </wicket:extend>
 
 </body>

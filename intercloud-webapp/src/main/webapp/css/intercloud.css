@@ -2,11 +2,26 @@
     height: 25px;
 }
 
+.btn-debug {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+}
+
 .form-label {
     margin-bottom: 5px;
+}
+
+textarea.form-control {
+    min-width: 100%;
+    max-width: 100%;
 }
 
 .table-noborder td, .table-noborder th, .table-noborder {
     border: none !important;
     margin-bottom: 0px;
+}
+
+.form-control.invalid {
+    border: 1px solid #C00;
 }

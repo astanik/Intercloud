@@ -1,23 +1,28 @@
 package de.tu_berlin.cit.intercloud.client.model.occi;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class AttributeModel implements Serializable {
     private static final long serialVersionUID = -4070567697021876585L;
 
     public enum Type {
         STRING,
-        ENUM,
+        ENUM,       // String
         INTEGER,
         DOUBLE,
         FLOAT,
         BOOLEAN,
-        URI,
-        SIGNATURE,
-        KEY,
-        DATETIME,
-        DURATION
+        URI,        // String
+        SIGNATURE,  // byte[] TODO String
+        KEY,        // byte[] TODO String e.g. public ssh key
+        DATETIME,   // Date
+        DURATION,   // GDuration --> Duration
+        LIST,       // ListType --> List<String>
+        MAP         // MapType --> Map<String, String>
     }
 
     private final String name;
@@ -27,12 +32,16 @@ public class AttributeModel implements Serializable {
     private final String description;
     private Object value;
 
-    public AttributeModel(String name, String type, boolean required, boolean mutable, String description) {
+    public AttributeModel(String name, Type type, boolean required, boolean mutable, String description) {
         this.name = name;
-        this.type = Type.valueOf(type.toString());
+        this.type = type;
         this.required = required;
         this.mutable = mutable;
         this.description = description;
+    }
+
+    public AttributeModel(String name, String type, boolean required, boolean mutable, String description) {
+        this(name, Type.valueOf(type.toString()), required, mutable, description);
     }
 
     public String getName() {
@@ -57,6 +66,14 @@ public class AttributeModel implements Serializable {
 
     public boolean hasValue() {
         return null != value;
+    }
+
+    public Object getValue() {
+        return this.value;
+    }
+
+    public void clearValue() {
+        this.value = null;
     }
 
     @Override
@@ -228,5 +245,66 @@ public class AttributeModel implements Serializable {
 
     public String getUri() {
         return isUri() ? (String) value : null;
+    }
+
+    /*
+        List
+     */
+
+    public boolean isList() {
+        return Type.LIST.equals(this.type);
+    }
+
+    public void setList(List<String> list) {
+        if (isList()) {
+            this.value = list;
+        } else  {
+            throw new IllegalArgumentException("Cannot set List argument for type " + this.type);
+        }
+    }
+
+    public List<String> getList() {
+        return isList() ? (List<String>) this.value : null;
+    }
+
+
+    /*
+        MAP
+     */
+
+    public boolean isMap() {
+        return Type.MAP.equals(this.type);
+    }
+
+    public void setMap(Map<String, String> map) {
+        if (isMap()) {
+            this.value = map;
+        } else {
+            throw new IllegalArgumentException("Cannot set Map argument for type " + this.type);
+        }
+    }
+
+    public Map<String, String> getMap() {
+        return isMap() ? (Map<String, String>) this.value : null;
+    }
+
+    /*
+        Duration
+     */
+
+    public boolean isDuration() {
+        return Type.DURATION.equals(this.type);
+    }
+
+    public void setDuration(Duration duration) {
+        if (isDuration()) {
+            this.value = duration;
+        } else {
+            throw new IllegalArgumentException("Cannot set Duration argument for typ " + this.type);
+        }
+    }
+
+    public Duration getDuration() {
+        return isDuration() ? (Duration) value : null;
     }
 }

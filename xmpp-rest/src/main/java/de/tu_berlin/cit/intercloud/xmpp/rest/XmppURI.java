@@ -16,6 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.xmpp.rest;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -24,7 +25,8 @@ import java.net.URISyntaxException;
  * 
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
-public final class XmppURI {
+public final class XmppURI implements Serializable {
+	private static final long serialVersionUID = 8912597901674540333L;
 
 	private final URI uri;
 
@@ -87,5 +89,21 @@ public final class XmppURI {
 	@Override
 	public String toString() {
 		return this.uri.toASCIIString();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		XmppURI xmppURI = (XmppURI) o;
+
+		return uri.equals(xmppURI.uri);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return uri.hashCode();
 	}
 }
