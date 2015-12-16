@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.client.convert.RepresentationModelBuilder;
 import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
+import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
@@ -54,11 +55,19 @@ public class IntercloudClient implements IIntercloudClient {
     private final IXmppService xmppService;
     private final OcciClient occiClient;
     private final XmppURI uri;
+    private final LoggingModel loggingModel;
 
     public IntercloudClient(IXmppService xmppService, ResourceTypeDocument xwadl, XmppURI uri) {
         this.xmppService = xmppService;
         this.occiClient = new OcciClient(xwadl);
         this.uri = uri;
+        this.loggingModel = new LoggingModel();
+        this.loggingModel.setXwadlDocument(xwadl);
+    }
+
+    @Override
+    public LoggingModel getLoggingModel() {
+        return this.loggingModel;
     }
 
     @Override
@@ -331,6 +340,7 @@ public class IntercloudClient implements IIntercloudClient {
         }
 
         ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
+        loggingModel.setRestDocument(response);
         // Response: ResourceDocument (rest xml) --> RepresentationModel
         AbstractRepresentationModel representationModel = null;
         if (response.getResource().getMethod().isSetResponse()) {
@@ -382,11 +392,5 @@ public class IntercloudClient implements IIntercloudClient {
             }
         }
         return uriRepresentationModel;
-    }
-
-    @Override
-    public String toString() {
-        // TODO: rest xml and xwadl as getter somewhere
-        return occiClient.getResourceTypeDocument().toString();
     }
 }

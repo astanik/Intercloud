@@ -3,6 +3,7 @@ package de.tu_berlin.cit.intercloud.client.service;
 import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
+import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
@@ -14,6 +15,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IIntercloudClient {
+
+    LoggingModel getLoggingModel();
+
     List<MethodModel> getMethods();
 
     AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException;

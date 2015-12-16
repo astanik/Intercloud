@@ -3,6 +3,7 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
+import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
@@ -55,6 +56,7 @@ public class BrowserPage extends UserTemplate {
 
     // don't serialize (not relevant for browser history)
     private transient List<MethodModel> methodModelList;
+    private transient LoggingModel loggingModel;
 
     public BrowserPage(IModel<XmppURI> uri) {
         super();
@@ -67,9 +69,19 @@ public class BrowserPage extends UserTemplate {
         this.add(new XwadlForm("xwadlForm"));
 
         // Code section, kind of debugging
-        this.xwadlCode = newCodePanel("xwadlCode");
+        this.xwadlCode = newCodePanel("xwadlCode", new LoadableDetachableModel<String>() {
+            @Override
+            protected String load() {
+                return null != loggingModel ? loggingModel.getXwadlDocument() : null;
+            }
+        });
         this.add(this.xwadlCode);
-        this.restCode = newCodePanel("restCode");
+        this.restCode = newCodePanel("restCode", new LoadableDetachableModel<String>() {
+            @Override
+            protected String load() {
+                return null != loggingModel ? loggingModel.getRestDocument() : null;
+            }
+        });
         this.add(this.restCode);
 
         // method table
@@ -110,8 +122,8 @@ public class BrowserPage extends UserTemplate {
         return ComponentUtils.displayBlock(alert);
     }
 
-    private Code newCodePanel(String markupId) {
-        Code code = new Code(markupId);
+    private Code newCodePanel(String markupId, IModel<String> model) {
+        Code code = new Code(markupId, model);
         code.setLanguage(CodeBehavior.Language.XML);
         code.setOutputMarkupId(true);
         return code;
@@ -121,7 +133,7 @@ public class BrowserPage extends UserTemplate {
         try {
             XmppURI uri = new XmppURI(entity, path);
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(uri);
-            this.xwadlCode.setDefaultModel(Model.of(intercloudClient.toString()));
+            this.loggingModel = intercloudClient.getLoggingModel();
             this.methodModelList = intercloudClient.getMethods();
             this.requestForm.setMethodModel(null);
             this.requestForm.setRepresentationModel(null);
@@ -129,7 +141,6 @@ public class BrowserPage extends UserTemplate {
             ComponentUtils.displayNone(this.alert);
         } catch (Exception e) {
             logger.error("Failed to request xwadl from entity: {}, path: {}", entity, path);
-            this.xwadlCode.setDefaultModel(Model.of());
             this.methodModelList = null;
             logError(e);
         }
@@ -138,6 +149,29 @@ public class BrowserPage extends UserTemplate {
     private void requestXwadl(String entity, String path, AjaxRequestTarget target) {
         requestXwadl(entity, path);
         target.add(this.xwadlCode, this.methodTable, this.alert, this.requestForm, this.responseContainer);
+    }
+
+    private void executeMethod(AbstractRepresentationModel representationModel, MethodModel methodModel) {
+        try {
+            IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
+                    .getIntercloudClient(methodModel.getUri());
+            this.loggingModel = intercloudClient.getLoggingModel();
+            AbstractRepresentationModel representation = intercloudClient.executeMethod(representationModel, methodModel);
+            // display response
+            this.responseContainer.setRepresentationModel(representation);
+            // hide request
+            this.requestForm.setMethodModel(null);
+            this.requestForm.setRepresentationModel(null);
+            ComponentUtils.displayNone(this.alert);
+        } catch (Exception e) {
+            logError(e);
+            logger.error("Failed to execute request. {}", methodModel, e);
+        }
+    }
+
+    private void executeMethod(AbstractRepresentationModel representationModel, MethodModel methodModel, AjaxRequestTarget target) {
+        executeMethod(representationModel, methodModel);
+        target.add(this.responseContainer, this.requestForm, this.alert);
     }
 
     private class XwadlForm extends Form {
@@ -188,21 +222,8 @@ public class BrowserPage extends UserTemplate {
                 @Override
                 public void onClick() {
                     if (null == methodModel.getRequestMediaType()) {
-                        try {
-                            // execute method directly if no request media type is given
-                            AbstractRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
-                                    .getIntercloudClient(methodModel.getUri())
-                                    .executeMethod(null, methodModel);
-                            // display response
-                            BrowserPage.this.responseContainer.setRepresentationModel(representation);
-                            // hide request
-                            BrowserPage.this.requestForm.setMethodModel(null);
-                            BrowserPage.this.requestForm.setRepresentationModel(null);
-                            ComponentUtils.displayNone(alert);
-                        } catch (Exception e) {
-                            logError(e);
-                            logger.error("Failed to execute request. {}", methodModel, e);
-                        }
+                        // execute method directly if no request media type is given
+                        BrowserPage.this.executeMethod(null, methodModel);
                     } else {
                         // get request representation model
                         try {
@@ -245,22 +266,7 @@ public class BrowserPage extends UserTemplate {
             this.add(new AjaxButton("requestSubmit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    logger.info(representationModel.getObject().toString());
-                    try {
-                        AbstractRepresentationModel representationModel = IntercloudWebSession.get().getIntercloudService()
-                                .getIntercloudClient(methodModel.getObject().getUri())
-                                .executeMethod(RequestForm.this.representationModel.getObject(), methodModel.getObject());
-                        logger.info(representationModel.toString());
-
-                        BrowserPage.this.responseContainer.setRepresentationModel(representationModel);
-                        target.add(BrowserPage.this.responseContainer);
-                        BrowserPage.this.requestForm.setMethodModel(null);
-                        BrowserPage.this.requestForm.setRepresentationModel(null);
-                        target.add(BrowserPage.this.requestForm);
-                        target.add(ComponentUtils.displayNone(BrowserPage.this.alert));
-                    } catch (Exception e) {
-                        target.add(BrowserPage.this.logError(e));
-                    }
+                    BrowserPage.this.executeMethod(representationModel.getObject(), methodModel.getObject(), target);
                 }
 
                 @Override
@@ -312,16 +318,14 @@ public class BrowserPage extends UserTemplate {
         protected void onBeforeRender() {
             AbstractRepresentationModel representation = this.representationModel.getObject();
             if (representation instanceof UriRepresentationModel) {
-                restCode.setDefaultModel(new Model<>());
                 this.replace(new UriResponsePanel("responsePanel",
                         Model.of(new UriListRepresentationModel(((UriRepresentationModel) representation).getUri()))));
             } else if (representation instanceof UriListRepresentationModel) {
-                restCode.setDefaultModel(new Model<>());
                 this.replace(new UriResponsePanel("responsePanel",
                         Model.of((UriListRepresentationModel) representation)));
             } else if (representation instanceof TextRepresentationModel) {
-                this.replace(new Label("responsePanel", Model.of(((TextRepresentationModel) representation).getText())));
-                restCode.setDefaultModel(Model.of(((TextRepresentationModel) representation).getText()));
+                this.replace(new Label("responsePanel",
+                        Model.of(((TextRepresentationModel) representation).getText())));
             } else if (representation instanceof OcciRepresentationModel) {
                 this.replace(new OcciResponsePanel("responsePanel",
                         Model.of((OcciRepresentationModel) representation)));
