@@ -77,7 +77,8 @@ public class RepresentationBuilder {
 			IllegalAccessException {
 		CategoryType categoryXml = null;
 		if (categoryInstance.getClass().isAnnotationPresent(Mixin.class)) {
-			categoryXml = doc.addNewCategory().addNewMixin();
+//			categoryXml = doc.addNewCategory().addNewMixin();
+			categoryXml = doc.getCategory().addNewMixin();
 		} else {
 			throw new RuntimeException("the class instance is not a mixin");
 		}
