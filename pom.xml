@@ -12,10 +12,19 @@
 	<description>The Intercloud project aims to provide an Extensible
 		Messaging and Presence Protocol (XMPP) and Open Cloud Computing
 		Interface (OCCI) based network overlay for cloud to cloud
-		interoperability.</description>
+		interoperability.
+	</description>
 
 	<inceptionYear>2014</inceptionYear>
-
+	
+	<!-- Inherit artifact from SonaType OSS pom.xml Following this article: 
+		http://java.dzone.com/articles/deploy-maven-central -->
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>9</version>
+	</parent>
+	
 	<developers>
 		<developer>
 			<id>stanik</id>
