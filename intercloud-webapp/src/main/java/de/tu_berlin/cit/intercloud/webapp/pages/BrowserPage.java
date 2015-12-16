@@ -6,6 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.TextRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
@@ -14,6 +15,7 @@ import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.request.OcciRequestPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciListResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
@@ -329,6 +331,9 @@ public class BrowserPage extends UserTemplate {
             } else if (representation instanceof OcciRepresentationModel) {
                 this.replace(new OcciResponsePanel("responsePanel",
                         Model.of((OcciRepresentationModel) representation)));
+            } else if (representation instanceof OcciListRepresentationModel) {
+                this.replace(new OcciListResponsePanel("responsePanel",
+                        Model.of((OcciListRepresentationModel) representation)));
             } else {
                 this.replace(new EmptyPanel("responsePanel"));
             }

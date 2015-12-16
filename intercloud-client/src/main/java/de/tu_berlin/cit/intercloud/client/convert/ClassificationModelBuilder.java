@@ -14,7 +14,9 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassificat
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.bind.DatatypeConverter;
 import java.time.Duration;
+import java.util.Calendar;
 
 public class ClassificationModelBuilder {
     private final static Logger logger = LoggerFactory.getLogger(ClassificationModelBuilder.class);
@@ -105,6 +107,9 @@ public class ClassificationModelBuilder {
                         attributeModel.setDuration(Duration.parse(defaultValue));
                         break;
                     case DATETIME:
+                        Calendar calendar = DatatypeConverter.parseDateTime(defaultValue);
+                        attributeModel.setDatetime(calendar.getTime());
+                        break;
                     case SIGNATURE:
                     case KEY:
                     case LIST:

@@ -7,10 +7,12 @@ import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.MapItem;
@@ -117,8 +119,22 @@ public class RepresentationModelBuilder {
         return representationModel;
     }
 
+    public static OcciListRepresentationModel build(ClassificationModel classificationModel, CategoryListDocument categoryListDocument) {
+        CategoryListDocument.CategoryList categoryList = categoryListDocument.getCategoryList();
+        List<OcciRepresentationModel> representationList = new ArrayList<>();
+
+        for (CategoryDocument.Category category : categoryList.getCategoryArray()) {
+            representationList.add(build(classificationModel, category));
+        }
+        return new OcciListRepresentationModel(representationList);
+    }
+
     public static OcciRepresentationModel build(ClassificationModel classificationModel, CategoryDocument categoryDocument) {
         CategoryDocument.Category category = categoryDocument.getCategory();
+        return build(classificationModel, category);
+    }
+
+    private static OcciRepresentationModel build(ClassificationModel classificationModel, CategoryDocument.Category category) {
         KindModel kind = null;
         List<MixinModel> mixinList = new ArrayList<>();
         List<LinkModel> linkList = new ArrayList<>();

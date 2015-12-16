@@ -27,6 +27,7 @@ import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -114,8 +115,7 @@ public class IntercloudClient implements IIntercloudClient {
         } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
             // xml/occi-list - occi list representation model
             OcciRepresentationModel representationModel = buildOcciRepresentationModel(methodModel);
-            OcciListRepresentationModel listRepresentationModel = new OcciListRepresentationModel();
-            listRepresentationModel.setOcciRepresentationModels(Arrays.asList(representationModel));
+            OcciListRepresentationModel listRepresentationModel = new OcciListRepresentationModel(Arrays.asList(representationModel));
             result = listRepresentationModel;
         } else {
             throw new UnsupportedMethodException("The request media type is not supported.");
@@ -355,6 +355,9 @@ public class IntercloudClient implements IIntercloudClient {
             } else if (OcciXml.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
                     && OcciXml.MEDIA_TYPE.equals(responseMediaType)) {
                 representationModel = parseOcciMethodResponse(responseRepresentation);
+            } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
+                    && OcciListXml.MEDIA_TYPE.equals(responseMediaType)) {
+                representationModel = parseOcciListMethodResponse(responseRepresentation);
             } else {
                 representationModel = new TextRepresentationModel(responseRepresentation);
             }
@@ -381,6 +384,12 @@ public class IntercloudClient implements IIntercloudClient {
         CategoryDocument categoryDocument = CategoryDocument.Factory.parse(response);
         ClassificationModel classificationModel = ClassificationModelBuilder.build(occiClient.getClassification());
         return RepresentationModelBuilder.build(classificationModel, categoryDocument);
+    }
+
+    private OcciListRepresentationModel parseOcciListMethodResponse(String response) throws XmlException {
+        CategoryListDocument categoryListDocument = CategoryListDocument.Factory.parse(response);
+        ClassificationModel classificationModel = ClassificationModelBuilder.build(occiClient.getClassification());
+        return RepresentationModelBuilder.build(classificationModel, categoryListDocument);
     }
 
     private UriListRepresentationModel parseUriListMethodResponse(String response) {
