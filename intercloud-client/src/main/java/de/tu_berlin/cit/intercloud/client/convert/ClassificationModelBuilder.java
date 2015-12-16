@@ -11,12 +11,16 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassifi
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
 
 public class ClassificationModelBuilder {
+    private final static Logger logger = LoggerFactory.getLogger(ClassificationModelBuilder.class);
 
     public static ClassificationModel build(ClassificationDocument.Classification classificationDocument) {
         ClassificationModel classificationModel = new ClassificationModel();
-        // TODO default values
         // read kind from classification
         if (null != classificationDocument.getKindType()) {
             classificationModel.setKind(buildKindModel(classificationDocument.getKindType()));
@@ -39,28 +43,80 @@ public class ClassificationModelBuilder {
 
     private static KindModel buildKindModel(CategoryClassification classification) {
         KindModel model = new KindModel(classification.getSchema(), classification.getTerm());
+        model.setTitle(classification.getTitle());
         buildAttributeModels(model, classification.getAttributeClassificationArray());
         return model;
     }
 
     private static MixinModel buildMixinModel(MixinClassification classification) {
         MixinModel model = new MixinModel(classification.getSchema(), classification.getTerm(), classification.getApplies());
+        model.setTitle(classification.getTitle());
         buildAttributeModels(model, classification.getAttributeClassificationArray());
         return model;
     }
 
     private static LinkModel buildLinkModel(LinkClassification classification) {
         LinkModel model = new LinkModel(classification.getSchema(), classification.getTerm(), classification.getRelation());
+        model.setTitle(classification.getTitle());
         buildAttributeModels(model, classification.getAttributeClassificationArray());
         return model;
     }
 
-    private static CategoryModel buildAttributeModels(CategoryModel categoryModel, AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
+    private static CategoryModel buildAttributeModels(CategoryModel categoryModel,
+                                                      AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
         if (null != attributeClassifications && 0 < attributeClassifications.length) {
             for (AttributeClassificationDocument.AttributeClassification a : attributeClassifications) {
-                categoryModel.addAttribute(new AttributeModel(a.getName(), a.getType().toString(), a.getRequired(), a.getMutable(), a.getDescription()));
+                AttributeModel attributeModel = new AttributeModel(a.getName(), a.getType().toString(), a.getRequired(), a.getMutable(), a.getDescription());
+                addAttributeDefaultValue(attributeModel, a);
+                categoryModel.addAttribute(attributeModel);
             }
         }
         return categoryModel;
+    }
+
+    private static AttributeModel addAttributeDefaultValue(AttributeModel attributeModel,
+                                                           AttributeClassificationDocument.AttributeClassification attributeClassification) {
+        String defaultValue = attributeClassification.getDefault();
+        if (null != defaultValue && !defaultValue.trim().isEmpty()) {
+            try {
+                switch (attributeModel.getType()) {
+                    case STRING:
+                        attributeModel.setString(defaultValue);
+                        break;
+                    case ENUM:
+                        attributeModel.setEnum(defaultValue);
+                        break;
+                    case URI:
+                        attributeModel.setUri(defaultValue);
+                        break;
+                    case INTEGER:
+                        attributeModel.setInteger(Integer.parseInt(defaultValue));
+                        break;
+                    case DOUBLE:
+                        attributeModel.setDouble(Double.parseDouble(defaultValue));
+                        break;
+                    case FLOAT:
+                        attributeModel.setFloat(Float.parseFloat(defaultValue));
+                        break;
+                    case BOOLEAN:
+                        attributeModel.setBoolean(Boolean.parseBoolean(defaultValue));
+                        break;
+                    case DURATION:
+                        attributeModel.setDuration(Duration.parse(defaultValue));
+                        break;
+                    case DATETIME:
+                    case SIGNATURE:
+                    case KEY:
+                    case LIST:
+                    case MAP:
+                    default:
+                        // TODO string representation
+                        logger.warn("Could not set default value of classification attribute. {}, value: {}", attributeModel, defaultValue);
+                }
+            } catch (Exception e) {
+                logger.error("Failed to parse default value of classification attribute. {}, value: {}", attributeModel, defaultValue);
+            }
+        }
+        return attributeModel;
     }
 }
