@@ -69,7 +69,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
 @Path("/compute")
-@Summary("This resource allows for manage compute instances, e.g. creating virtual machines.")
+@Summary("This resource allows for managing compute instances, e.g. creating virtual machines.")
 @Classification(kind = ComputeKind.class,
 				mixins = {OpenStackComputeMixin.class, OpenStackImageMixin.class, IpNetworkInterfaceMixin.class},
 				links = {StorageLink.class, NetworkInterfaceLink.class})

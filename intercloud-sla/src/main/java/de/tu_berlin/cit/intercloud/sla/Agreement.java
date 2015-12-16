@@ -35,7 +35,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
  * @author Alexander Stanik <alexander.stanik@tu-berlin.de>
  */
 @Path("/agreement")
-@Summary("This resource allows for manage service level agreements.")
+@Summary("This resource allows for managing service level agreements.")
 @Classification(kind = AgreementKind.class)
 public class Agreement extends Collection {
 

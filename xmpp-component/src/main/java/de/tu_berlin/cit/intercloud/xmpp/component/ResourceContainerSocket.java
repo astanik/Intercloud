@@ -114,4 +114,39 @@ public class ResourceContainerSocket {
 		return response;
 		
 	}
+
+	public void invokeAsyncRestXML(ResourceDocument request, AsynchronousResultListener listener) {
+		IQ iq = new IQ(Type.set);
+		iq.setTo(jid);
+
+		// create request
+		try {
+			Document doc;
+			doc = DocumentHelper.parseText(request.toString());
+			// set request
+			iq.setChildElement(doc.getRootElement());
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.socketManager.sendIQ(iq, this);
+		
+		// process the result in a separate thread
+		new Thread( new Runnable() {
+		    @Override
+		    public void run() {
+				// wait for response
+				ResourceDocument response;
+				try {
+					response = restXmlExchanger.exchange(request);
+					listener.processResult(response);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		}).start();
+	}
+
 }
