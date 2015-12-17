@@ -1,15 +1,28 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request.attribute;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 public abstract class AbstractAttributeInput extends Panel {
+    private final Label nameLabel;
+    private final AttributeModel attribute;
+
     public AbstractAttributeInput(String markupId, AttributeModel attribute) {
         super(markupId);
-        this.add(new Label("attributeName", Model.of(attribute.getName() + (attribute.isRequired() ? "*" : ""))));
+        this.attribute = attribute;
 
+        // attribute name
+        this.nameLabel = new Label("attributeName", Model.of(attribute.getName() + (attribute.isRequired() ? "*" : "")));
+        this.nameLabel.setOutputMarkupId(true);
+        this.add(this.nameLabel);
+
+        // attribute description
         Label descriptionLabel = new Label("attributeDescription");
         if (null == attribute.getDescription() || attribute.getDescription().trim().isEmpty()) {
             descriptionLabel.setVisible(false);
@@ -17,7 +30,32 @@ public abstract class AbstractAttributeInput extends Panel {
             descriptionLabel.setDefaultModel(Model.of(attribute.getDescription()));
         }
         this.add(descriptionLabel);
+
+        // attribute input
+        FormComponent inputFormComponent = getInputFormComponent();
+        inputFormComponent.setRequired(attribute.isRequired());
+        inputFormComponent.add(new AjaxFormComponentUpdatingBehavior("blur") {
+            @Override
+            protected void onError(AjaxRequestTarget target, RuntimeException e) {
+                target.add(AbstractAttributeInput.this.nameLabel.add(new AttributeModifier("class", "invalid")));
+            }
+
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(AbstractAttributeInput.this.nameLabel.add(new AttributeModifier("class", "")));
+            }
+        });
+        if (attribute.isRequired() && !attribute.hasValue()) {
+            this.nameLabel.add(new AttributeModifier("class", "invalid"));
+        }
+        this.add(inputFormComponent);
     }
+
+    public AttributeModel getAttribute() {
+        return this.attribute;
+    }
+
+    public abstract FormComponent getInputFormComponent();
 
     public static AbstractAttributeInput newInstance(String markupId, AttributeModel attribute) {
         boolean enabled = attribute.isMutable();

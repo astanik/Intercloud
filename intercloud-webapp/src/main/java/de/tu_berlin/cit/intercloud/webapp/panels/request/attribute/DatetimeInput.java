@@ -4,6 +4,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.Date
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.webapp.components.PlaceholderBehavior;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.PropertyModel;
 
 class DatetimeInput extends TextInput {
@@ -11,8 +12,16 @@ class DatetimeInput extends TextInput {
 
     public DatetimeInput(String markupId, AttributeModel attribute) {
         super(markupId, attribute);
-        this.add(new DatetimePicker("attributeValue", new PropertyModel<>(attribute, "datetime"),
-                new DatetimePickerConfig().setCollapse(true).setShowClose(true).withFormat(FORMAT)
-        ).setRequired(attribute.isRequired()).add(new PlaceholderBehavior(FORMAT)));
+    }
+
+    @Override
+    public FormComponent getInputFormComponent() {
+        DatetimePickerConfig config = new DatetimePickerConfig();
+        config.setCollapse(true)
+                .setShowClose(true)
+                .withFormat(FORMAT);
+        DatetimePicker datetimePicker = new DatetimePicker("attributeValue", new PropertyModel<>(getAttribute(), "datetime"), config);
+        datetimePicker.add(new PlaceholderBehavior(FORMAT));
+        return datetimePicker;
     }
 }
