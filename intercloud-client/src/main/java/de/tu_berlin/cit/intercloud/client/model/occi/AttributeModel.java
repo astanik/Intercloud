@@ -17,8 +17,8 @@ public class AttributeModel implements Serializable {
         FLOAT,
         BOOLEAN,
         URI,        // String
-        SIGNATURE,  // byte[] TODO String
-        KEY,        // byte[] TODO String e.g. public ssh key
+        SIGNATURE,  // byte[] Base64Binary --> String
+        KEY,        // byte[] Base64Binary --> String
         DATETIME,   // Date
         DURATION,   // GDuration --> Duration
         LIST,       // ListType --> List<String>
@@ -248,7 +248,7 @@ public class AttributeModel implements Serializable {
     }
 
     /*
-        List
+        LIST
      */
 
     public boolean isList() {
@@ -258,7 +258,7 @@ public class AttributeModel implements Serializable {
     public void setList(List<String> list) {
         if (isList()) {
             this.value = list;
-        } else  {
+        } else {
             throw new IllegalArgumentException("Cannot set List argument for type " + this.type);
         }
     }
@@ -289,7 +289,7 @@ public class AttributeModel implements Serializable {
     }
 
     /*
-        Duration
+        DURATION
      */
 
     public boolean isDuration() {
@@ -300,11 +300,51 @@ public class AttributeModel implements Serializable {
         if (isDuration()) {
             this.value = duration;
         } else {
-            throw new IllegalArgumentException("Cannot set Duration argument for typ " + this.type);
+            throw new IllegalArgumentException("Cannot set Duration argument for type " + this.type);
         }
     }
 
     public Duration getDuration() {
         return isDuration() ? (Duration) value : null;
+    }
+
+    /*
+        KEY
+     */
+
+    public boolean isKey() {
+        return Type.KEY.equals(this.type);
+    }
+
+    public void setKey(String key) {
+        if (isKey()) {
+            this.value = key;
+        } else {
+            throw new IllegalArgumentException("Cannot set Key argument for type " + this.type);
+        }
+    }
+
+    public String getKey() {
+        return isKey() ? (String) this.value : null;
+    }
+
+    /*
+        SIGNATURE
+     */
+
+    public boolean isSignature() {
+        return Type.SIGNATURE.equals(this.type);
+    }
+
+    public void setSignature(String signature) {
+        if (isSignature()) {
+            this.value = signature;
+        } else {
+            throw new IllegalArgumentException("Cannot set Key argument for type " + this.type);
+        }
+    }
+
+    public String getSignature() {
+        return isSignature() ? (String) value : null;
     }
 }

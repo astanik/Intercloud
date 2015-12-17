@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.DatatypeConverter;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Calendar;
 
 public class ClassificationModelBuilder {
@@ -111,7 +112,11 @@ public class ClassificationModelBuilder {
                         attributeModel.setDatetime(calendar.getTime());
                         break;
                     case SIGNATURE:
+                        byte[] signature = Base64.getDecoder().decode(defaultValue);
+                        attributeModel.setSignature(new String(signature));
                     case KEY:
+                        byte[] key = Base64.getDecoder().decode(defaultValue);
+                        attributeModel.setKey(new String(key));
                     case LIST:
                     case MAP:
                     default:

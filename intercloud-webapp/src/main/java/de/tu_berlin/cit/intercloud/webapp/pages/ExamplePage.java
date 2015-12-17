@@ -75,23 +75,25 @@ public class ExamplePage extends Template {
 
         private List<AttributeModel> createExampleAttributeList() {
             List<AttributeModel> attributeList = new ArrayList<>();
-            attributeList.add(new AttributeModel("Datetime", AttributeModel.Type.DATETIME.toString(), true, true, "This is an Example for a Datetime AttributeModel."));
-            attributeList.add(new AttributeModel("Integer", AttributeModel.Type.INTEGER.toString(), false, true, null));
-            attributeList.add(new AttributeModel("Double", AttributeModel.Type.DOUBLE.toString(), false, true, "This is an Example for a Double AttributeModel."));
-            attributeList.add(new AttributeModel("Float", AttributeModel.Type.FLOAT.toString(), false, true, "This is an Example for a Float AttributeModel."));
-            attributeList.add(new AttributeModel("Boolean", AttributeModel.Type.BOOLEAN.toString(), false, true, "This is an Example for a Boolean AttributeModel."));
-            attributeList.add(new AttributeModel("String", AttributeModel.Type.STRING.toString(), true, true, "This is an Example for a String AttributeModel."));
-            attributeList.add(new AttributeModel("Enum", AttributeModel.Type.ENUM.toString(), false, true, "This is an Example for an Enum AttributeModel."));
-            attributeList.add(new AttributeModel("Uri", AttributeModel.Type.URI.toString(), false, true, "This is an Example for an URI AttributeModel."));
-            attributeList.add(new AttributeModel("List", AttributeModel.Type.LIST.toString(), false, true, null));
-            attributeList.add(new AttributeModel("Map", AttributeModel.Type.MAP.toString(), false, true, null));
-            attributeList.add(new AttributeModel("Duration", AttributeModel.Type.DURATION.toString(), false, true, null));
+            attributeList.add(new AttributeModel("Datetime", AttributeModel.Type.DATETIME, true, true, "This is an Example for a Datetime AttributeModel."));
+            attributeList.add(new AttributeModel("Integer", AttributeModel.Type.INTEGER, false, true, null));
+            attributeList.add(new AttributeModel("Double", AttributeModel.Type.DOUBLE, false, true, "This is an Example for a Double AttributeModel."));
+            attributeList.add(new AttributeModel("Float", AttributeModel.Type.FLOAT, false, true, "This is an Example for a Float AttributeModel."));
+            attributeList.add(new AttributeModel("Boolean", AttributeModel.Type.BOOLEAN, false, true, "This is an Example for a Boolean AttributeModel."));
+            attributeList.add(new AttributeModel("String", AttributeModel.Type.STRING, true, true, "This is an Example for a String AttributeModel."));
+            attributeList.add(new AttributeModel("Enum", AttributeModel.Type.ENUM, false, true, "This is an Example for an Enum AttributeModel."));
+            attributeList.add(new AttributeModel("Uri", AttributeModel.Type.URI, false, true, "This is an Example for an URI AttributeModel."));
+            attributeList.add(new AttributeModel("List", AttributeModel.Type.LIST, false, true, null));
+            attributeList.add(new AttributeModel("Map", AttributeModel.Type.MAP, false, true, null));
+            attributeList.add(new AttributeModel("Duration", AttributeModel.Type.DURATION, false, true, null));
+            attributeList.add(new AttributeModel("Key", AttributeModel.Type.KEY, false, true, null));
+            attributeList.add(new AttributeModel("Signature", AttributeModel.Type.SIGNATURE, false, true, null));
 
-            AttributeModel attributeModel = new AttributeModel("Show Immutable with value", AttributeModel.Type.STRING.toString(), false, false, "This is an immutable attribute with some value.");
+            AttributeModel attributeModel = new AttributeModel("Show Immutable with value", AttributeModel.Type.STRING, false, false, "This is an immutable attribute with some value.");
             attributeModel.setString("should be visible and disabled");
             attributeList.add(attributeModel);
 
-            attributeList.add(new AttributeModel("Hide Immutable with no value", AttributeModel.Type.STRING.toString(), true, false, "This Example should not be displayed."));
+            attributeList.add(new AttributeModel("Hide Immutable with no value", AttributeModel.Type.STRING, true, false, "This Example should not be displayed."));
 
 
             return attributeList;
@@ -103,8 +105,8 @@ public class ExamplePage extends Template {
         KindModel kindModel = new KindModel("http://schema.ogf.org/occi/infrastructure#", "compute");
         kindModel.addTemplate("t0");
         kindModel.addTemplate("t1");
-        kindModel.addAttribute(new AttributeModel("Datetime", AttributeModel.Type.DATETIME.toString(), false, true, null));
-        kindModel.addAttribute(new AttributeModel("String", AttributeModel.Type.STRING.toString(), true, true, null));
+        kindModel.addAttribute(new AttributeModel("Datetime", AttributeModel.Type.DATETIME, false, true, null));
+        kindModel.addAttribute(new AttributeModel("String", AttributeModel.Type.STRING, true, true, null));
         return kindModel;
     }
 

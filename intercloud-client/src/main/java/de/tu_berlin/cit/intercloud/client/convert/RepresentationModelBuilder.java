@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class RepresentationModelBuilder {
         // collect mixins that apply to other mixins
         for (MixinModel mixin : classificationModel.getMixins()) {
             if (null == mixin.getApplies()) {
-                logger.error("Mixin missing applies. {}", mixin);
+                logger.warn("Mixin missing applies. {}", mixin);
             } else if ((Category.CategorySchema + Category.CategoryTerm).equals(mixin.getApplies())) {
                 // default
                 List<IMixinModelContainer> mixinContainers = new ArrayList<>();
@@ -85,7 +86,7 @@ public class RepresentationModelBuilder {
                 mixinContainersMap.put(mixin.getId(), Arrays.asList(link));
             } else {
                 // applies to none
-                logger.error("Mixin does not apply to a Category. {}", mixin);
+                logger.warn("Mixin does not apply to a Category. {}", mixin);
             }
         }
 
@@ -113,7 +114,7 @@ public class RepresentationModelBuilder {
             }
         }
         if (!mixinAppliesMixin.isEmpty()) {
-            logger.error("Some mixins could not be applied. {}", mixinAppliesMixin);
+            logger.warn("Some mixins could not be applied. {}", mixinAppliesMixin);
         }
 
         return representationModel;
@@ -280,9 +281,6 @@ public class RepresentationModelBuilder {
             result = new AttributeModel(attributeType.getName(), AttributeModel.Type.INTEGER, required, mutable, description);
             result.setInteger(attributeType.getINTEGER());
 
-        } else if (attributeType.isSetKEY()) {
-            // TODO
-            logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
         } else if (attributeType.isSetLIST()) {
             result = new AttributeModel(attributeType.getName(), AttributeModel.Type.LIST, required, mutable, description);
             result.setList(Arrays.asList(attributeType.getLIST().getItemArray()));
@@ -291,8 +289,16 @@ public class RepresentationModelBuilder {
             result = new AttributeModel(attributeType.getName(), AttributeModel.Type.MAP, required, mutable, description);
             result.setMap(mapTypeToMap(attributeType.getMAP()));
 
+        } else if (attributeType.isSetKEY()) {
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.KEY, required, mutable, description);
+            byte[] key = Base64.getDecoder().decode(attributeType.getKEY());
+            result.setKey(new String(key));
+            logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
+
         } else if (attributeType.isSetSIGNATURE()) {
-            // TODO
+            result = new AttributeModel(attributeType.getName(), AttributeModel.Type.SIGNATURE, required, mutable, description);
+            byte[] signature = Base64.getDecoder().decode(attributeType.getKEY());
+            result.setSignature(new String(signature));
             logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
 
         } else if (attributeType.isSetSTRING()) {

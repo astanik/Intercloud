@@ -18,6 +18,7 @@ import org.apache.xmlbeans.GDuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
@@ -120,7 +121,11 @@ public class RepresenationModelConverter {
                             attributeType.setMAP(mapType);
                             break;
                         case SIGNATURE:
+                            byte[] signature = Base64.getEncoder().encode(attributeModel.getSignature().getBytes());
+                            attributeType.setSIGNATURE(signature);
                         case KEY:
+                            byte[] key = Base64.getEncoder().encode(attributeModel.getKey().getBytes());
+                            attributeType.setKEY(key);
                         default:
                             throw new AttributeFormatException("Could not set attribute representation: type is not supported " + attributeModel);
                     }

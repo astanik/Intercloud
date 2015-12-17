@@ -63,7 +63,11 @@ public abstract class AbstractAttributeInput extends Panel {
                 newInstance = new MapInput(markupId, attribute);
                 break;
             case SIGNATURE:
+                newInstance = new SignatureInput(markupId, attribute);
+                break;
             case KEY:
+                newInstance = new KeyInput(markupId, attribute);
+                break;
             default:
                 throw new UnsupportedOperationException("AttributeModel Typ " + attribute.getType() + " is not supported.");
         }

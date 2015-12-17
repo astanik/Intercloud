@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 public class IntercloudClient implements IIntercloudClient {
@@ -300,7 +301,13 @@ public class IntercloudClient implements IIntercloudClient {
                                 model.setMap(RepresentationModelBuilder.mapTypeToMap(type.getMAP()));
                                 break;
                             case SIGNATURE:
+                                byte[] signature = Base64.getDecoder().decode(type.getSIGNATURE());
+                                model.setSignature(new String(signature));
+                                break;
                             case KEY:
+                                byte[] key = Base64.getDecoder().decode(type.getKEY());
+                                model.setKey(new String(key));
+                                break;
                             default:
                                 logger.warn("Cannot set attribute, type is not supported. model: {}, type: {}", model, type);
                                 break;
