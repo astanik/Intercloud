@@ -14,6 +14,7 @@ import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
+import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.request.OcciRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciListResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciResponsePanel;
@@ -65,6 +66,8 @@ public class BrowserPage extends UserTemplate {
         super();
         this.entity = new Model<>(uri.getObject().getJID());
         this.resourcePath = new Model<>(uri.getObject().getPath());
+
+        this.add(new BreadcrumbPanel("breadcrumb", uri, Model.of((XmppURI redirectUri) -> new BrowserPage(Model.of(redirectUri)))));
 
         // alert
         this.alert = newAlert("alert");
