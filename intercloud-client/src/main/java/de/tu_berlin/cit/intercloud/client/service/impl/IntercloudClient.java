@@ -64,7 +64,7 @@ public class IntercloudClient implements IIntercloudClient {
         this.occiClient = new OcciClient(xwadl);
         this.uri = uri;
         this.loggingModel = new LoggingModel();
-        this.loggingModel.setXwadlDocument(xwadl);
+        this.loggingModel.setXwad(xwadl);
     }
 
     @Override
@@ -341,13 +341,18 @@ public class IntercloudClient implements IIntercloudClient {
         } else if (requestRepresentationModel instanceof UriListRepresentationModel && UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
             methodInvocation = invokeMethod(methodInvocation, (UriListRepresentationModel) requestRepresentationModel);
         } else if (requestRepresentationModel instanceof OcciRepresentationModel && OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            methodInvocation = invokeMethod(methodInvocation, (OcciRepresentationModel) requestRepresentationModel);
+            CategoryDocument categoryDocument = RepresenationModelConverter.convertToXml((OcciRepresentationModel) requestRepresentationModel);
+            methodInvocation.setRequestRepresentation(categoryDocument.toString());
+        } else if (requestRepresentationModel instanceof OcciListRepresentationModel && OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            CategoryListDocument categoryListDocument = RepresenationModelConverter.convertToXml((OcciListRepresentationModel) requestRepresentationModel);
+            methodInvocation.setRequestRepresentation(categoryListDocument.toString());
         } else {
             throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
         }
 
+        loggingModel.setRestRequest(methodInvocation.getXmlDocument().toString());
         ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
-        loggingModel.setRestDocument(response);
+        loggingModel.setRestResponse(response);
         // Response: ResourceDocument (rest xml) --> RepresentationModel
         AbstractRepresentationModel representationModel = null;
         if (response.getResource().getMethod().isSetResponse()) {
@@ -378,12 +383,6 @@ public class IntercloudClient implements IIntercloudClient {
         if (null != uriList) {
             methodInvocation.setRequestRepresentation(String.join(";", uriList));
         }
-        return methodInvocation;
-    }
-
-    private OcciMethodInvocation invokeMethod(OcciMethodInvocation methodInvocation, OcciRepresentationModel representationModel) throws AttributeFormatException {
-        CategoryDocument categoryDocument = RepresenationModelConverter.convertToXml(representationModel);
-        methodInvocation.setRequestRepresentation(categoryDocument.toString());
         return methodInvocation;
     }
 

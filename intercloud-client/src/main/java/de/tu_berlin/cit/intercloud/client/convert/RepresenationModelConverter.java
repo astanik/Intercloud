@@ -6,9 +6,11 @@ import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.ListType;
@@ -26,9 +28,23 @@ import java.util.Set;
 public class RepresenationModelConverter {
     private static final Logger logger = LoggerFactory.getLogger(RepresenationModelConverter.class);
 
+    public static CategoryListDocument convertToXml(OcciListRepresentationModel representationListModel) throws AttributeFormatException {
+        CategoryListDocument categoryListDocument = CategoryListDocument.Factory.newInstance();
+        CategoryListDocument.CategoryList categoryList = categoryListDocument.addNewCategoryList();
+        for (OcciRepresentationModel representationModel : representationListModel.getOcciRepresentationModels()) {
+            convertToXml(representationModel, categoryList.addNewCategory());
+        }
+        return categoryListDocument;
+    }
+
     public static CategoryDocument convertToXml(OcciRepresentationModel representationModel) throws AttributeFormatException {
         CategoryDocument categoryDocument = CategoryDocument.Factory.newInstance();
         CategoryDocument.Category category = categoryDocument.addNewCategory();
+        convertToXml(representationModel, category);
+        return categoryDocument;
+    }
+
+    private static CategoryDocument.Category convertToXml(OcciRepresentationModel representationModel, CategoryDocument.Category category) throws AttributeFormatException {
         // TODO when to add category type (Kind, Mixin, Link)???
         // KIND
         KindModel kindModel = representationModel.getKind();
@@ -46,7 +62,7 @@ public class RepresenationModelConverter {
         for (LinkModel linkModel : representationModel.getLinks()) {
             addLinkRepresentation(category.addNewLink(), linkModel);
         }
-        return categoryDocument;
+        return category;
     }
 
     private static void addLinkRepresentation(LinkType type, LinkModel model) throws AttributeFormatException {

@@ -8,30 +8,39 @@ import java.io.Serializable;
 public class LoggingModel implements Serializable {
     private static final long serialVersionUID = -3148741249548656428L;
 
-    private String xwadlDocument;
-    private String restDocument;
+    private String xwadl;
+    private String restRequest;
+    private String restResponse;
 
-    public String getXwadlDocument() {
-        return xwadlDocument;
+    public String getXwadl() {
+        return xwadl;
     }
 
-    public void setXwadlDocument(String xwadlDocument) {
-        this.xwadlDocument = xwadlDocument;
+    public void setXwadl(String xwadl) {
+        this.xwadl = xwadl;
     }
 
-    public void setXwadlDocument(ResourceTypeDocument xwadlDocument) {
-        this.setXwadlDocument(xwadlDocument.toString());
+    public void setXwad(ResourceTypeDocument xwadlDocument) {
+        this.setXwadl(xwadlDocument.toString());
     }
 
-    public String getRestDocument() {
-        return restDocument;
+    public String getRestRequest() {
+        return restRequest;
     }
 
-    public void setRestDocument(String restDocument) {
-        this.restDocument = restDocument;
+    public void setRestRequest(String restRequest) {
+        this.restRequest = restRequest;
     }
 
-    public void setRestDocument(ResourceDocument restDocument) {
-        this.setRestDocument(restDocument.toString());
+    public String getRestResponse() {
+        return restResponse;
+    }
+
+    public void setRestResponse(String restResponse) {
+        this.restResponse = restResponse;
+    }
+
+    public void setRestResponse(ResourceDocument restDocument) {
+        this.setRestResponse(restDocument.toString());
     }
 }

@@ -51,7 +51,8 @@ public class BrowserPage extends UserTemplate {
     private final ResponseContainer responseContainer;
     private final Alert alert;
     private final Code xwadlCode;
-    private final Code restCode;
+    private final Code restResponseCode;
+    private final Code restRequestCode;
 
     // serialize (relevant for browser history)
     private IModel<String> resourcePath;
@@ -74,17 +75,24 @@ public class BrowserPage extends UserTemplate {
         this.xwadlCode = newCodePanel("xwadlCode", new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
-                return null != loggingModel ? loggingModel.getXwadlDocument() : null;
+                return null != loggingModel ? loggingModel.getXwadl() : null;
             }
         });
         this.add(this.xwadlCode);
-        this.restCode = newCodePanel("restCode", new LoadableDetachableModel<String>() {
+        this.restRequestCode = newCodePanel("restRequestCode", new LoadableDetachableModel<String>() {
             @Override
             protected String load() {
-                return null != loggingModel ? loggingModel.getRestDocument() : null;
+                return null != loggingModel ? loggingModel.getRestRequest() : null;
             }
         });
-        this.add(this.restCode);
+        this.add(this.restRequestCode);
+        this.restResponseCode = newCodePanel("restResponseCode", new LoadableDetachableModel<String>() {
+            @Override
+            protected String load() {
+                return null != loggingModel ? loggingModel.getRestResponse() : null;
+            }
+        });
+        this.add(this.restResponseCode);
 
         // method table
         this.methodTable = new MethodTable("methodTable", new LoadableDetachableModel<List<MethodModel>>() {
@@ -171,7 +179,7 @@ public class BrowserPage extends UserTemplate {
 
     private void executeMethod(AbstractRepresentationModel representationModel, MethodModel methodModel, AjaxRequestTarget target) {
         executeMethod(representationModel, methodModel);
-        target.add(this.responseContainer, this.requestForm, this.alert);
+        target.add(this.responseContainer, this.requestForm, this.alert, this.restRequestCode, this.restResponseCode);
     }
 
     private class XwadlForm extends Form {
