@@ -2,8 +2,8 @@ package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;

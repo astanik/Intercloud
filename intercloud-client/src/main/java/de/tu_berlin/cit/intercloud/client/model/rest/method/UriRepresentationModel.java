@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.client.model.rest;
+package de.tu_berlin.cit.intercloud.client.model.rest.method;
 
 public class UriRepresentationModel extends AbstractRepresentationModel {
     String uri;

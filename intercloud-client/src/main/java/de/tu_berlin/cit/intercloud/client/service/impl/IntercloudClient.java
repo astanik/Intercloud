@@ -1,34 +1,30 @@
 package de.tu_berlin.cit.intercloud.client.service.impl;
 
 import de.tu_berlin.cit.intercloud.client.convert.ClassificationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.convert.RepresenationModelConverter;
+import de.tu_berlin.cit.intercloud.client.convert.RepresentationModelConverter;
 import de.tu_berlin.cit.intercloud.client.convert.RepresentationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.TextRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TextRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
@@ -45,10 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 public class IntercloudClient implements IIntercloudClient {
@@ -137,61 +131,11 @@ public class IntercloudClient implements IIntercloudClient {
             throw new MissingClassificationException("Classification is not specified in xwadl.");
         }
         ClassificationModel classificationModel = ClassificationModelBuilder.build(classificationDocument);
-        // read templates from method document
-        addTemplates(methodDocument, classificationModel);
+        TemplateHelper.addTemplatesToClassificationModel(classificationModel, methodDocument);
         OcciRepresentationModel representation = RepresentationModelBuilder.build(classificationModel);
 
         logger.info("XmlBean --> RepresentationModel: {} ms", System.currentTimeMillis() - start);
         return representation;
-    }
-
-    private List<CategoryDocument> getTemplateDocuments(MethodDocument.Method methodDocument) {
-        List<CategoryDocument> result = new ArrayList<>();
-        if (methodDocument.isSetRequest()
-                && null != methodDocument.getRequest().getTemplateArray()
-                && 0 < methodDocument.getRequest().getTemplateArray().length) {
-            for (String template : methodDocument.getRequest().getTemplateArray()) {
-                try {
-                    CategoryDocument templateDocument = CategoryDocument.Factory.parse(template);
-                    result.add(templateDocument);
-                } catch (XmlException e) {
-                    logger.warn("Failed to parse Template. {}", template, e);
-                }
-            }
-        }
-        return result;
-    }
-
-    private void addTemplates(MethodDocument.Method methodDocument, ClassificationModel classificationModel) {
-        List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
-        for (CategoryDocument template : templateDocuments) {
-            addTemplates(template.getCategory(), classificationModel);
-        }
-    }
-
-    private void addTemplates(CategoryDocument.Category categoryDocument, ClassificationModel classificationModel) {
-        if (null != categoryDocument.getKind()) {
-            CategoryType kindType = categoryDocument.getKind();
-            KindModel kindModel = classificationModel.getKind();
-            if (null != kindModel && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())) {
-                kindModel.addTemplate(kindType.getTitle());
-            } else {
-                logger.warn("Could not find Kind Classification for Template: " + kindModel);
-            }
-        }
-
-        if (null != categoryDocument.getMixinArray() && 0 < categoryDocument.getMixinArray().length) {
-            for (CategoryType mixinType : categoryDocument.getMixinArray()) {
-                MixinModel mixinModel = classificationModel.getMixin(mixinType.getSchema() + mixinType.getTerm());
-                if (null != mixinModel) {
-                    mixinModel.addTemplate(mixinType.getTitle());
-                } else {
-                    logger.warn("Could not find Mixin Classification for Template: " + mixinType);
-                }
-            }
-        }
-
-        // TODO Link
     }
 
     private MethodDocument.Method getMethodDocument(MethodModel methodModel) {
@@ -203,123 +147,13 @@ public class IntercloudClient implements IIntercloudClient {
         if (null == categoryModel || null == methodModel) {
             return null;
         }
-        // clear all attributes
-        for (AttributeModel a : categoryModel.getAttributes()) {
-            // TODO default values
-            a.clearValue();
-        }
-        if (null == templateTitle) {
-            categoryModel.setTitle(null);
-            return categoryModel;
-        }
         // apply template
         MethodDocument.Method methodDocument = getMethodDocument(methodModel);
         if (null == methodDocument) {
             throw new UnsupportedMethodException("Failed to apply template: method does not exist. " + methodModel);
         }
-        List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
-        if (categoryModel instanceof KindModel) {
-            applyKindTemplate((KindModel) categoryModel, templateDocuments, templateTitle);
-        } else if (categoryModel instanceof MixinModel) {
-            applyMixinTemplate((MixinModel) categoryModel, templateDocuments, templateTitle);
-            // TODO mixins in link?
-        } // TODO Link
+        TemplateHelper.applyTemplate(categoryModel, methodDocument, templateTitle);
         return categoryModel;
-    }
-
-    private void applyKindTemplate(KindModel model, List<CategoryDocument> templateDocuments, String templateTitle) {
-        for (CategoryDocument templateDocument : templateDocuments) {
-            CategoryType type = templateDocument.getCategory().getKind();
-            if (null != type
-                    && model.getSchema().equals(type.getSchema())
-                    && model.getTerm().equals(type.getTerm())
-                    && templateTitle.equals(type.getTitle())) {
-                model.setTitle(templateTitle);
-                applyAttributes(model, type.getAttributeArray());
-                return;
-            }
-        }
-        logger.warn("Kind Template not found. title: {}, {}", templateTitle, model);
-    }
-
-    private void applyMixinTemplate(MixinModel model, List<CategoryDocument> templateDocuments, String templateTitle) {
-        for (CategoryDocument templateDocument : templateDocuments) {
-            CategoryType[] mixinArray = templateDocument.getCategory().getMixinArray();
-            if (null != mixinArray) {
-                for (CategoryType type : mixinArray) {
-                    if (model.getSchema().equals(type.getSchema())
-                            && model.getTerm().equals(type.getTerm())
-                            && templateTitle.equals(type.getTitle())) {
-                        model.setTitle(templateTitle);
-                        applyAttributes(model, type.getAttributeArray());
-                        return;
-                    }
-                }
-            }
-        }
-        logger.warn("Mixin Template not found. title: {}, {}", templateDocuments, model);
-    }
-
-    private void applyAttributes(CategoryModel categoryModel, AttributeType[] attributeTypes) {
-        if (attributeTypes != null) {
-            for (AttributeType type : attributeTypes) {
-                AttributeModel model = categoryModel.getAttribute(type.getName());
-                if (null != model) {
-                    try {
-                        switch (model.getType()) {
-                            case STRING:
-                                model.setString(type.getSTRING());
-                                break;
-                            case ENUM:
-                                model.setEnum(type.getENUM());
-                                break;
-                            case INTEGER:
-                                model.setInteger(type.getINTEGER());
-                                break;
-                            case DOUBLE:
-                                model.setDouble(type.getDOUBLE());
-                                break;
-                            case FLOAT:
-                                model.setFloat(type.getFLOAT());
-                                break;
-                            case BOOLEAN:
-                                model.setBoolean(type.getBOOLEAN());
-                                break;
-                            case URI:
-                                model.setUri(type.getURI());
-                                break;
-                            case DATETIME:
-                                model.setDatetime(type.getDATETIME().getTime());
-                                break;
-                            case DURATION:
-                                model.setDuration(Duration.parse(type.getDURATION().toString()));
-                                break;
-                            case LIST:
-                                model.setList(Arrays.asList(type.getLIST().getItemArray()));
-                                break;
-                            case MAP:
-                                model.setMap(RepresentationModelBuilder.mapTypeToMap(type.getMAP()));
-                                break;
-                            case SIGNATURE:
-                                byte[] signature = Base64.getDecoder().decode(type.getSIGNATURE());
-                                model.setSignature(new String(signature));
-                                break;
-                            case KEY:
-                                byte[] key = Base64.getDecoder().decode(type.getKEY());
-                                model.setKey(new String(key));
-                                break;
-                            default:
-                                logger.warn("Cannot set attribute, type is not supported. model: {}, type: {}", model, type);
-                                break;
-                        }
-                    } catch (Exception e) {
-                        logger.error("Could not set attribute. model: {}, type: {}", model, type, e);
-                    }
-                } else {
-                    logger.warn("Could not find template attribute in classification. type: {}", type);
-                }
-            }
-        }
     }
 
     @Override
@@ -341,10 +175,10 @@ public class IntercloudClient implements IIntercloudClient {
         } else if (requestRepresentationModel instanceof UriListRepresentationModel && UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
             methodInvocation = invokeMethod(methodInvocation, (UriListRepresentationModel) requestRepresentationModel);
         } else if (requestRepresentationModel instanceof OcciRepresentationModel && OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            CategoryDocument categoryDocument = RepresenationModelConverter.convertToXml((OcciRepresentationModel) requestRepresentationModel);
+            CategoryDocument categoryDocument = RepresentationModelConverter.convertToXml((OcciRepresentationModel) requestRepresentationModel);
             methodInvocation.setRequestRepresentation(categoryDocument.toString());
         } else if (requestRepresentationModel instanceof OcciListRepresentationModel && OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            CategoryListDocument categoryListDocument = RepresenationModelConverter.convertToXml((OcciListRepresentationModel) requestRepresentationModel);
+            CategoryListDocument categoryListDocument = RepresentationModelConverter.convertToXml((OcciListRepresentationModel) requestRepresentationModel);
             methodInvocation.setRequestRepresentation(categoryListDocument.toString());
         } else {
             throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);

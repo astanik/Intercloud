@@ -6,8 +6,8 @@ import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
@@ -25,8 +25,8 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
 
-public class RepresenationModelConverter {
-    private static final Logger logger = LoggerFactory.getLogger(RepresenationModelConverter.class);
+public class RepresentationModelConverter {
+    private static final Logger logger = LoggerFactory.getLogger(RepresentationModelConverter.class);
 
     public static CategoryListDocument convertToXml(OcciListRepresentationModel representationListModel) throws AttributeFormatException {
         CategoryListDocument categoryListDocument = CategoryListDocument.Factory.newInstance();

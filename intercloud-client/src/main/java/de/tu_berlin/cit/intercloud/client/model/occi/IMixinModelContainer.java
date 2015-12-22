@@ -1,6 +1,4 @@
-package de.tu_berlin.cit.intercloud.client.model;
-
-import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+package de.tu_berlin.cit.intercloud.client.model.occi;
 
 import java.util.Collection;
 

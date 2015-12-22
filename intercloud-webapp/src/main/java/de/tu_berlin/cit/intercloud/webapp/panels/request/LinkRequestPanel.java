@@ -1,7 +1,7 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;

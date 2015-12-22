@@ -5,7 +5,7 @@ import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import org.junit.After;
 import org.junit.Assert;

@@ -19,8 +19,8 @@ public class AttributeModel implements Serializable {
         URI,        // String
         SIGNATURE,  // byte[] Base64Binary --> String
         KEY,        // byte[] Base64Binary --> String
-        DATETIME,   // Date
-        DURATION,   // GDuration --> Duration
+        DATETIME,   // Date (ISO8601)
+        DURATION,   // GDuration --> Duration (ISO8601)
         LIST,       // ListType --> List<String>
         MAP         // MapType --> Map<String, String>
     }

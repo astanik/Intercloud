@@ -1,7 +1,5 @@
 package de.tu_berlin.cit.intercloud.client.model.occi;
 
-import de.tu_berlin.cit.intercloud.client.model.IMixinModelContainer;
-
 import java.util.ArrayList;
 import java.util.List;
 

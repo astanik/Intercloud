@@ -22,21 +22,21 @@ import java.util.Calendar;
 public class ClassificationModelBuilder {
     private final static Logger logger = LoggerFactory.getLogger(ClassificationModelBuilder.class);
 
-    public static ClassificationModel build(ClassificationDocument.Classification classificationDocument) {
+    public static ClassificationModel build(ClassificationDocument.Classification classification) {
         ClassificationModel classificationModel = new ClassificationModel();
         // read kind from classification
-        if (null != classificationDocument.getKindType()) {
-            classificationModel.setKind(buildKindModel(classificationDocument.getKindType()));
+        if (null != classification.getKindType()) {
+            classificationModel.setKind(buildKindModel(classification.getKindType()));
         }
         // read links from classification
-        if (null != classificationDocument.getLinkTypeArray() && 0 < classificationDocument.getLinkTypeArray().length) {
-            for (LinkClassification c : classificationDocument.getLinkTypeArray()) {
+        if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
+            for (LinkClassification c : classification.getLinkTypeArray()) {
                 classificationModel.addLink(buildLinkModel(c));
             }
         }
         // read mixins from classification
-        if (null != classificationDocument.getMixinTypeArray() && 0 < classificationDocument.getMixinTypeArray().length) {
-            for (MixinClassification c : classificationDocument.getMixinTypeArray()) {
+        if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
+            for (MixinClassification c : classification.getMixinTypeArray()) {
                 classificationModel.addMixin(buildMixinModel(c));
             }
         }

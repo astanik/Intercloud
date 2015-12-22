@@ -1,14 +1,14 @@
 package de.tu_berlin.cit.intercloud.client.convert;
 
-import de.tu_berlin.cit.intercloud.client.model.IMixinModelContainer;
+import de.tu_berlin.cit.intercloud.client.model.occi.IMixinModelContainer;
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
