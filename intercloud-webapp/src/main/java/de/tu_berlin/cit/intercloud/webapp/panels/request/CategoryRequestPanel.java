@@ -4,7 +4,6 @@ import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
-import de.tu_berlin.cit.intercloud.webapp.panels.request.attribute.AttributeInputPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -42,7 +41,7 @@ public abstract class CategoryRequestPanel extends Panel {
                 return null != title.getObject();
             }
         }.add(new Label("title", title)));
-        this.container.add(new AttributeInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
+        this.container.add(new AttributeListInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
 
         DropDownChoice<String> templateChoice = new DropDownChoice<>("templates", new Model<>(), new ArrayList<>(category.getTemplates()));
         templateChoice.add(new AjaxFormComponentUpdatingBehavior("change") {

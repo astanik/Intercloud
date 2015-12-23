@@ -6,7 +6,7 @@ import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.panels.request.KindRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.request.attribute.AttributeInputPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.request.AttributeListInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -56,7 +56,7 @@ public class ExamplePage extends Template {
             final FeedbackPanel feedback = new FeedbackPanel("feedback");
             feedback.setOutputMarkupId(true);
             this.add(feedback);
-            this.add(new AttributeInputPanel("attributePanel", new ListModel<>(this.attributeList)));
+            this.add(new AttributeListInputPanel("attributePanel", new ListModel<>(this.attributeList)));
             this.add(new AjaxButton("attributeSubmit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
