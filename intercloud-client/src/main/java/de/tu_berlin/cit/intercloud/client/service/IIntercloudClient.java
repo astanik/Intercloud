@@ -38,7 +38,6 @@ public interface IIntercloudClient {
     /*
     // TODO executeAction
     List<ActionModel> getActions();
-    List<ParameterModel> getParameterModels(ActionModel actionModel);
-    ParameterModel executeAction(List<ParameterModel> paramList, ActionModel actionModel>
+    ParameterModel executeAction(ActionModel actionModel)
     */
 }
