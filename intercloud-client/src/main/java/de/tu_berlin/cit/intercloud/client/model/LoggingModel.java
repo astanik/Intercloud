@@ -32,6 +32,10 @@ public class LoggingModel implements Serializable {
         this.restRequest = restRequest;
     }
 
+    public void setRestRequest(ResourceDocument restDocument) {
+        this.setRestRequest(restDocument.toString());
+    }
+
     public String getRestResponse() {
         return restResponse;
     }

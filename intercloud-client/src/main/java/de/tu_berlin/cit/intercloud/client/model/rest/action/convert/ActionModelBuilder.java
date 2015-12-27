@@ -16,24 +16,27 @@ import java.util.List;
 public class ActionModelBuilder {
     private final static Logger logger = LoggerFactory.getLogger(ActionModelBuilder.class);
 
-    public static List<ActionModel> build(ResourceTypeDocument resourceTypeDocument) {
+    public static List<ActionModel> buildActionModels(ResourceTypeDocument resourceTypeDocument) {
         List<ActionModel> actionModels = new ArrayList<>();
         ResourceTypeDocument.ResourceType resourceType = resourceTypeDocument.getResourceType();
         if (null != resourceType) {
             ActionDocument.Action[] actionArray = resourceType.getActionArray();
             if (null != actionArray && 0 < actionArray.length) {
                 for (ActionDocument.Action action : actionArray) {
-                    actionModels.add(build(action));
+                    actionModels.add(buildActionModel(action));
                 }
             }
         }
         return actionModels;
     }
 
-    public static ActionModel build(ActionDocument.Action action) {
+    public static ActionModel buildActionModel(ActionDocument.Action action) {
         List<ParameterModel> parameterModels = buildParameterModels(action.getParameterArray());
         ResultDocument.Result result = action.getResult();
-        ParameterModel resultModel = new ParameterModel("result", result.getType().toString(), getDocumentation(result.getDocumentation()));
+        ParameterModel resultModel = null;
+        if (null != result) {
+            resultModel = new ParameterModel("result", result.getType().toString(), getDocumentation(result.getDocumentation()));
+        }
         return new ActionModel(action.getName(), getDocumentation(action.getDocumentation()), parameterModels, resultModel);
     }
 

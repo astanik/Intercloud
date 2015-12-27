@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class ParameterModel implements Serializable {
     private static final long serialVersionUID = -6182746543572339674L;
-    private static final String WRONG_TYPE_MSG = "Cannot set %s Parameter for type %s";
+    private static final String WRONG_TYPE_MSG = "Cannot set %s Parameter for type %s.";
 
     public enum Type {
         STRING,
@@ -39,6 +39,15 @@ public class ParameterModel implements Serializable {
 
     public String getDocumentation() {
         return documentation;
+    }
+
+    @Override
+    public String toString() {
+        return "ParameterModel{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                ", value=" + value +
+                '}';
     }
 
     /*
@@ -95,6 +104,10 @@ public class ParameterModel implements Serializable {
         } else {
             throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Double", this.type));
         }
+    }
+
+    public Double getDouble() {
+        return isDouble() ? (Double) value : null;
     }
 
     /*

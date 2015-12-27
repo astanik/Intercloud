@@ -2,9 +2,12 @@ package de.tu_berlin.cit.intercloud.client.service;
 
 import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
+import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.ActionModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.ParameterModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
 import org.apache.xmlbeans.XmlException;
@@ -35,9 +38,8 @@ public interface IIntercloudClient {
         ACTIONs
      */
 
-    /*
-    // TODO executeAction
     List<ActionModel> getActions();
+
     ParameterModel executeAction(ActionModel actionModel)
-    */
+            throws ParameterFormatException, XMPPException, IOException, SmackException;
 }

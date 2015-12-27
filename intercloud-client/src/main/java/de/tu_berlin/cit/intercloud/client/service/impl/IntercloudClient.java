@@ -1,15 +1,20 @@
 package de.tu_berlin.cit.intercloud.client.service.impl;
 
-import de.tu_berlin.cit.intercloud.client.convert.ClassificationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.convert.RepresentationModelConverter;
-import de.tu_berlin.cit.intercloud.client.convert.RepresentationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.convert.TemplateHelper;
+import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.ClassificationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelConverter;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.ActionModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.ParameterModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelConverter;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
@@ -30,6 +35,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ActionDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
@@ -184,12 +190,13 @@ public class IntercloudClient implements IIntercloudClient {
             throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
         }
 
-        loggingModel.setRestRequest(methodInvocation.getXmlDocument().toString());
+        loggingModel.setRestRequest(methodInvocation.getXmlDocument());
         ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
         loggingModel.setRestResponse(response);
         // Response: ResourceDocument (rest xml) --> RepresentationModel
         AbstractRepresentationModel representationModel = null;
-        if (response.getResource().getMethod().isSetResponse()) {
+        if (response.getResource().isSetMethod()
+                && response.getResource().getMethod().isSetResponse()) {
             String responseMediaType = response.getResource().getMethod().getResponse().getMediaType();
             String responseRepresentation = response.getResource().getMethod().getResponse().getRepresentation();
             if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
@@ -241,5 +248,36 @@ public class IntercloudClient implements IIntercloudClient {
             }
         }
         return uriRepresentationModel;
+    }
+
+    @Override
+    public List<ActionModel> getActions() {
+        return ActionModelBuilder.buildActionModels(occiClient.getResourceTypeDocument());
+    }
+
+    @Override
+    public ParameterModel executeAction(ActionModel actionModel) throws ParameterFormatException, XMPPException, IOException, SmackException {
+        ResourceDocument resourceDocument = ResourceDocument.Factory.newInstance();
+        ResourceDocument.Resource resource = resourceDocument.addNewResource();
+        resource.setPath(this.occiClient.getResourceTypeDocument().getResourceType().getPath());
+
+        ActionDocument.Action action = ActionModelConverter.convertToXml(actionModel);
+        resource.setAction(action);
+
+        this.loggingModel.setRestRequest(resourceDocument);
+        ResourceDocument response = xmppService.sendRestDocument(this.uri, resourceDocument);
+        this.loggingModel.setRestResponse(resourceDocument);
+        ParameterModel result = null;
+
+        if (response.getResource().isSetAction()
+                && response.getResource().getAction().isSetResult()) {
+            if (null != actionModel.getResult()) {
+                result = ActionModelConverter.convertToModel(response.getResource().getAction().getResult(), actionModel.getResult().getDocumentation());
+            } else {
+                result = ActionModelConverter.convertToModel(response.getResource().getAction().getResult(), null);
+            }
+        }
+
+        return result;
     }
 }

@@ -1,8 +1,11 @@
 package de.tu_berlin.cit.intercloud.client.model.rest.action;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ActionModel {
+public class ActionModel implements Serializable {
+    private static final long serialVersionUID = 5148561604973349432L;
+
     private final String name;
     private final String documentation;
     private final List<ParameterModel> parameterList;
@@ -29,5 +32,14 @@ public class ActionModel {
 
     public ParameterModel getResult() {
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ActionModel{" +
+                "name='" + name + '\'' +
+                ", parameterList=" + parameterList +
+                ", result=" + result +
+                '}';
     }
 }

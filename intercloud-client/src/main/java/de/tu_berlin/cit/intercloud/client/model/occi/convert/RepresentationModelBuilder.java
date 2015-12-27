@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.client.convert;
+package de.tu_berlin.cit.intercloud.client.model.occi.convert;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.IMixinModelContainer;
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
