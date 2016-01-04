@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<resource xmlns="urn:xmpp:xml-rest" path="/rest/compute/vm1">
-	<method type="GET">
-		<response mediaType="text/plain" />
-	</method>
-</resource>
