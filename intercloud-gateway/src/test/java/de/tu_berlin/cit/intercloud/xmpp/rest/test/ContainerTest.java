@@ -42,7 +42,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
  */
 public class ContainerTest {
 
-
+/*
 	@Test
 	public void computeTest() {
 	    try {
@@ -88,5 +88,5 @@ public class ContainerTest {
 	        Assert.fail(e.getMessage());
 		}
 	}
-
+*/
 }
