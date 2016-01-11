@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class AttributeModel implements Serializable {
     private static final long serialVersionUID = -4070567697021876585L;
+    private static final String WRONG_TYPE_MSG = "Cannot set %s Attribute for type %s.";
 
     public enum Type {
         STRING,
@@ -17,10 +18,10 @@ public class AttributeModel implements Serializable {
         FLOAT,
         BOOLEAN,
         URI,        // String
-        SIGNATURE,  // byte[] TODO String
-        KEY,        // byte[] TODO String e.g. public ssh key
-        DATETIME,   // Date
-        DURATION,   // GDuration --> Duration
+        SIGNATURE,  // byte[] Base64Binary --> String
+        KEY,        // byte[] Base64Binary --> String
+        DATETIME,   // Date (ISO8601)
+        DURATION,   // GDuration --> Duration (ISO8601)
         LIST,       // ListType --> List<String>
         MAP         // MapType --> Map<String, String>
     }
@@ -99,7 +100,7 @@ public class AttributeModel implements Serializable {
         if (isString()) {
             this.value = string;
         } else {
-            throw new IllegalArgumentException("Cannot set String argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "String", this.type));
         }
     }
 
@@ -119,7 +120,7 @@ public class AttributeModel implements Serializable {
         if (isEnum()) {
             this.value = enumeration;
         } else {
-            throw new IllegalArgumentException("Cannot set Enum argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Enum", this.type));
         }
     }
 
@@ -139,7 +140,7 @@ public class AttributeModel implements Serializable {
         if (isInteger()) {
             this.value = integer;
         } else {
-            throw new IllegalArgumentException("Cannot set Integer argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Integer", this.type));
         }
     }
 
@@ -159,7 +160,7 @@ public class AttributeModel implements Serializable {
         if (isDouble()) {
             this.value = d;
         } else {
-            throw new IllegalArgumentException("Cannot set Double argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Double", this.type));
         }
     }
 
@@ -179,7 +180,7 @@ public class AttributeModel implements Serializable {
         if (isFloat()) {
             this.value = f;
         } else {
-            throw new IllegalArgumentException("Cannot set Float argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Float", this.type));
         }
     }
 
@@ -199,7 +200,7 @@ public class AttributeModel implements Serializable {
         if (isBoolean()) {
             this.value = b;
         } else {
-            throw new IllegalArgumentException("Cannot set Boolean argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Boolean", this.type));
         }
     }
 
@@ -219,7 +220,7 @@ public class AttributeModel implements Serializable {
         if (isDatetime()) {
             this.value = datetime;
         } else {
-            throw new IllegalArgumentException("Cannot set Datetime argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Datetime", this.type));
         }
     }
 
@@ -239,7 +240,7 @@ public class AttributeModel implements Serializable {
         if (isUri()) {
             this.value = uri;
         } else {
-            throw new IllegalArgumentException("Cannot set Uri argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Uri", this.type));
         }
     }
 
@@ -248,7 +249,7 @@ public class AttributeModel implements Serializable {
     }
 
     /*
-        List
+        LIST
      */
 
     public boolean isList() {
@@ -258,8 +259,8 @@ public class AttributeModel implements Serializable {
     public void setList(List<String> list) {
         if (isList()) {
             this.value = list;
-        } else  {
-            throw new IllegalArgumentException("Cannot set List argument for type " + this.type);
+        } else {
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "List", this.type));
         }
     }
 
@@ -280,7 +281,7 @@ public class AttributeModel implements Serializable {
         if (isMap()) {
             this.value = map;
         } else {
-            throw new IllegalArgumentException("Cannot set Map argument for type " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Map", this.type));
         }
     }
 
@@ -289,7 +290,7 @@ public class AttributeModel implements Serializable {
     }
 
     /*
-        Duration
+        DURATION
      */
 
     public boolean isDuration() {
@@ -300,11 +301,51 @@ public class AttributeModel implements Serializable {
         if (isDuration()) {
             this.value = duration;
         } else {
-            throw new IllegalArgumentException("Cannot set Duration argument for typ " + this.type);
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Duration", this.type));
         }
     }
 
     public Duration getDuration() {
         return isDuration() ? (Duration) value : null;
+    }
+
+    /*
+        KEY
+     */
+
+    public boolean isKey() {
+        return Type.KEY.equals(this.type);
+    }
+
+    public void setKey(String key) {
+        if (isKey()) {
+            this.value = key;
+        } else {
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Key", this.type));
+        }
+    }
+
+    public String getKey() {
+        return isKey() ? (String) this.value : null;
+    }
+
+    /*
+        SIGNATURE
+     */
+
+    public boolean isSignature() {
+        return Type.SIGNATURE.equals(this.type);
+    }
+
+    public void setSignature(String signature) {
+        if (isSignature()) {
+            this.value = signature;
+        } else {
+            throw new IllegalArgumentException(String.format(WRONG_TYPE_MSG, "Signature", this.type));
+        }
+    }
+
+    public String getSignature() {
+        return isSignature() ? (String) value : null;
     }
 }

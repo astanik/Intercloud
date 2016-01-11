@@ -142,19 +142,8 @@ public class XwadlBuilder {
 		Parameter parAnno = parameter.getAnnotation(Parameter.class);
 		xmlParameter.setName(parAnno.value());
 		// set parameter type
-		Class<?> parameterType = parameter.getType();
-		if(parameterType.isAssignableFrom(String.class)) {
-			xmlParameter.setType(ParameterType.STRING);
-		} else if(parameterType.isAssignableFrom(Integer.class)) {
-			xmlParameter.setType(ParameterType.INTEGER);
-		} else if(parameterType.isAssignableFrom(Double.class)) {
-			xmlParameter.setType(ParameterType.DOUBLE);
-		} else if(parameterType.isAssignableFrom(Boolean.class)) {
-			xmlParameter.setType(ParameterType.BOOLEAN);
-		} else if(parameterType.isAssignableFrom(XmppURI.class)) {
-			xmlParameter.setType(ParameterType.LINK);
-		}
-		
+		xmlParameter.setType(getParameterType(parameter.getType()));
+
 		// set parameter documentation
 		String documentation = parAnno.documentation();
 		if (!documentation.isEmpty()) {
@@ -167,18 +156,7 @@ public class XwadlBuilder {
 	private static void createParameterXWADL(java.lang.reflect.Method method,
 			de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResultDocument.Result xmlResult) {
 		// set type
-		Class<?> returnType = method.getReturnType();
-		if(returnType.isAssignableFrom(String.class)) {
-			xmlResult.setType(ParameterType.STRING);
-		} else if(returnType.isAssignableFrom(Integer.class)) {
-			xmlResult.setType(ParameterType.INTEGER);
-		} else if(returnType.isAssignableFrom(Double.class)) {
-			xmlResult.setType(ParameterType.DOUBLE);
-		} else if(returnType.isAssignableFrom(Boolean.class)) {
-			xmlResult.setType(ParameterType.BOOLEAN);
-		} else if(returnType.isAssignableFrom(XmppURI.class)) {
-			xmlResult.setType(ParameterType.LINK);
-		}
+		xmlResult.setType(getParameterType(method.getReturnType()));
 		
 		// set parameter documentation
 		String documentation = method.getAnnotation(Result.class).documentation();
@@ -187,7 +165,22 @@ public class XwadlBuilder {
 			doc.setTitle("Return type");
 			doc.setStringValue(documentation);
 		}
-		
+	}
+
+	private static ParameterType.Enum getParameterType(Class<?> clazz) {
+		if(clazz.isAssignableFrom(String.class)) {
+			return ParameterType.STRING;
+		} else if(clazz.isAssignableFrom(Integer.class)) {
+			return ParameterType.INTEGER;
+		} else if(clazz.isAssignableFrom(Double.class)) {
+			return ParameterType.DOUBLE;
+		} else if(clazz.isAssignableFrom(Boolean.class)) {
+			return ParameterType.BOOLEAN;
+		} else if(clazz.isAssignableFrom(XmppURI.class)) {
+			return ParameterType.LINK;
+		} else {
+			throw new IllegalArgumentException("Parameter type must be set.");
+		}
 	}
 
 }

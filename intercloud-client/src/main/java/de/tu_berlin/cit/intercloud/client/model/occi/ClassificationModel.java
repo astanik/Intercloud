@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClassificationModel {
+public class ClassificationModel implements IMixinModelContainer {
     private KindModel kind;
     private Map<String, MixinModel> mixinMap = new HashMap<>();
     private Map<String, LinkModel> linkMap = new HashMap<>();
@@ -30,6 +30,10 @@ public class ClassificationModel {
         return this.mixinMap.get(id);
     }
 
+    public MixinModel getMixin(String schema, String term) {
+        return getMixin(schema + term);
+    }
+
     public Collection<MixinModel> getMixins() {
         return this.mixinMap.values();
     }
@@ -40,6 +44,10 @@ public class ClassificationModel {
 
     public LinkModel getLink(String id) {
         return this.linkMap.get(id);
+    }
+
+    public LinkModel getLink(String schema, String term) {
+        return getLink(schema + term);
     }
 
     public Collection<LinkModel> getLinks() {

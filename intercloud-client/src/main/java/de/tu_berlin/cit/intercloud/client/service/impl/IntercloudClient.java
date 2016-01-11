@@ -1,37 +1,41 @@
 package de.tu_berlin.cit.intercloud.client.service.impl;
 
-import de.tu_berlin.cit.intercloud.client.convert.ClassificationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.convert.RepresenationModelConverter;
-import de.tu_berlin.cit.intercloud.client.convert.RepresentationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.ClassificationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelConverter;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
-import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
+import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.AbstractRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.OcciRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.TextRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.UriRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.ActionModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.ParameterModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelConverter;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TextRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ActionDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
@@ -43,7 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,11 +57,19 @@ public class IntercloudClient implements IIntercloudClient {
     private final IXmppService xmppService;
     private final OcciClient occiClient;
     private final XmppURI uri;
+    private final LoggingModel loggingModel;
 
     public IntercloudClient(IXmppService xmppService, ResourceTypeDocument xwadl, XmppURI uri) {
         this.xmppService = xmppService;
         this.occiClient = new OcciClient(xwadl);
         this.uri = uri;
+        this.loggingModel = new LoggingModel();
+        this.loggingModel.setXwad(xwadl);
+    }
+
+    @Override
+    public LoggingModel getLoggingModel() {
+        return this.loggingModel;
     }
 
     @Override
@@ -105,8 +116,7 @@ public class IntercloudClient implements IIntercloudClient {
         } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
             // xml/occi-list - occi list representation model
             OcciRepresentationModel representationModel = buildOcciRepresentationModel(methodModel);
-            OcciListRepresentationModel listRepresentationModel = new OcciListRepresentationModel();
-            listRepresentationModel.setOcciRepresentationModels(Arrays.asList(representationModel));
+            OcciListRepresentationModel listRepresentationModel = new OcciListRepresentationModel(Arrays.asList(representationModel));
             result = listRepresentationModel;
         } else {
             throw new UnsupportedMethodException("The request media type is not supported.");
@@ -127,61 +137,11 @@ public class IntercloudClient implements IIntercloudClient {
             throw new MissingClassificationException("Classification is not specified in xwadl.");
         }
         ClassificationModel classificationModel = ClassificationModelBuilder.build(classificationDocument);
-        // read templates from method document
-        addTemplates(methodDocument, classificationModel);
+        TemplateHelper.addTemplatesToClassificationModel(classificationModel, methodDocument);
         OcciRepresentationModel representation = RepresentationModelBuilder.build(classificationModel);
 
         logger.info("XmlBean --> RepresentationModel: {} ms", System.currentTimeMillis() - start);
         return representation;
-    }
-
-    private List<CategoryDocument> getTemplateDocuments(MethodDocument.Method methodDocument) {
-        List<CategoryDocument> result = new ArrayList<>();
-        if (methodDocument.isSetRequest()
-                && null != methodDocument.getRequest().getTemplateArray()
-                && 0 < methodDocument.getRequest().getTemplateArray().length) {
-            for (String template : methodDocument.getRequest().getTemplateArray()) {
-                try {
-                    CategoryDocument templateDocument = CategoryDocument.Factory.parse(template);
-                    result.add(templateDocument);
-                } catch (XmlException e) {
-                    logger.warn("Failed to parse Template. {}", template, e);
-                }
-            }
-        }
-        return result;
-    }
-
-    private void addTemplates(MethodDocument.Method methodDocument, ClassificationModel classificationModel) {
-        List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
-        for (CategoryDocument template : templateDocuments) {
-            addTemplates(template.getCategory(), classificationModel);
-        }
-    }
-
-    private void addTemplates(CategoryDocument.Category categoryDocument, ClassificationModel classificationModel) {
-        if (null != categoryDocument.getKind()) {
-            CategoryType kindType = categoryDocument.getKind();
-            KindModel kindModel = classificationModel.getKind();
-            if (null != kindModel && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())) {
-                kindModel.addTemplate(kindType.getTitle());
-            } else {
-                logger.warn("Could not find Kind Classification for Template: " + kindModel);
-            }
-        }
-
-        if (null != categoryDocument.getMixinArray() && 0 < categoryDocument.getMixinArray().length) {
-            for (CategoryType mixinType : categoryDocument.getMixinArray()) {
-                MixinModel mixinModel = classificationModel.getMixin(mixinType.getSchema() + mixinType.getTerm());
-                if (null != mixinModel) {
-                    mixinModel.addTemplate(mixinType.getTitle());
-                } else {
-                    logger.warn("Could not find Mixin Classification for Template: " + mixinType);
-                }
-            }
-        }
-
-        // TODO Link
     }
 
     private MethodDocument.Method getMethodDocument(MethodModel methodModel) {
@@ -193,117 +153,13 @@ public class IntercloudClient implements IIntercloudClient {
         if (null == categoryModel || null == methodModel) {
             return null;
         }
-        // clear all attributes
-        for (AttributeModel a : categoryModel.getAttributes()) {
-            // TODO default values
-            a.clearValue();
-        }
-        if (null == templateTitle) {
-            categoryModel.setTitle(null);
-            return categoryModel;
-        }
         // apply template
         MethodDocument.Method methodDocument = getMethodDocument(methodModel);
         if (null == methodDocument) {
             throw new UnsupportedMethodException("Failed to apply template: method does not exist. " + methodModel);
         }
-        List<CategoryDocument> templateDocuments = getTemplateDocuments(methodDocument);
-        if (categoryModel instanceof KindModel) {
-            applyKindTemplate((KindModel) categoryModel, templateDocuments, templateTitle);
-        } else if (categoryModel instanceof MixinModel) {
-            applyMixinTemplate((MixinModel) categoryModel, templateDocuments, templateTitle);
-            // TODO mixins in link?
-        } // TODO Link
+        TemplateHelper.applyTemplate(categoryModel, methodDocument, templateTitle);
         return categoryModel;
-    }
-
-    private void applyKindTemplate(KindModel model, List<CategoryDocument> templateDocuments, String templateTitle) {
-        for (CategoryDocument templateDocument : templateDocuments) {
-            CategoryType type = templateDocument.getCategory().getKind();
-            if (null != type
-                    && model.getSchema().equals(type.getSchema())
-                    && model.getTerm().equals(type.getTerm())
-                    && templateTitle.equals(type.getTitle())) {
-                model.setTitle(templateTitle);
-                applyAttributes(model, type.getAttributeArray());
-                return;
-            }
-        }
-        logger.warn("Kind Template not found. title: {}, {}", templateTitle, model);
-    }
-
-    private void applyMixinTemplate(MixinModel model, List<CategoryDocument> templateDocuments, String templateTitle) {
-        for (CategoryDocument templateDocument : templateDocuments) {
-            CategoryType[] mixinArray = templateDocument.getCategory().getMixinArray();
-            if (null != mixinArray) {
-                for (CategoryType type : mixinArray) {
-                    if (model.getSchema().equals(type.getSchema())
-                            && model.getTerm().equals(type.getTerm())
-                            && templateTitle.equals(type.getTitle())) {
-                        model.setTitle(templateTitle);
-                        applyAttributes(model, type.getAttributeArray());
-                        return;
-                    }
-                }
-            }
-        }
-        logger.warn("Mixin Template not found. title: {}, {}", templateDocuments, model);
-    }
-
-    private void applyAttributes(CategoryModel categoryModel, AttributeType[] attributeTypes) {
-        if (attributeTypes != null) {
-            for (AttributeType type : attributeTypes) {
-                AttributeModel model = categoryModel.getAttribute(type.getName());
-                if (null != model) {
-                    try {
-                        switch (model.getType()) {
-                            case STRING:
-                                model.setString(type.getSTRING());
-                                break;
-                            case ENUM:
-                                model.setEnum(type.getENUM());
-                                break;
-                            case INTEGER:
-                                model.setInteger(type.getINTEGER());
-                                break;
-                            case DOUBLE:
-                                model.setDouble(type.getDOUBLE());
-                                break;
-                            case FLOAT:
-                                model.setFloat(type.getFLOAT());
-                                break;
-                            case BOOLEAN:
-                                model.setBoolean(type.getBOOLEAN());
-                                break;
-                            case URI:
-                                model.setUri(type.getURI());
-                                break;
-                            case DATETIME:
-                                model.setDatetime(type.getDATETIME().getTime());
-                                break;
-                            case DURATION:
-                                model.setDuration(Duration.parse(type.getDURATION().toString()));
-                                break;
-                            case LIST:
-                                model.setList(Arrays.asList(type.getLIST().getItemArray()));
-                                break;
-                            case MAP:
-                                model.setMap(RepresentationModelBuilder.mapTypeToMap(type.getMAP()));
-                                break;
-                            case SIGNATURE:
-                            case KEY:
-                            default:
-                                logger.warn("Cannot set attribute, type is not supported. model: {}, type: {}", model, type);
-                                break;
-                        }
-                    } catch (Exception e) {
-                        logger.error("Could not set attribute. model: {}, type: {}", model, type, e);
-                    }
-                } else {
-                    logger.warn("Could not find template attribute in classification. type: {}", type);
-                }
-            }
-        }
     }
 
     @Override
@@ -325,15 +181,22 @@ public class IntercloudClient implements IIntercloudClient {
         } else if (requestRepresentationModel instanceof UriListRepresentationModel && UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
             methodInvocation = invokeMethod(methodInvocation, (UriListRepresentationModel) requestRepresentationModel);
         } else if (requestRepresentationModel instanceof OcciRepresentationModel && OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            methodInvocation = invokeMethod(methodInvocation, (OcciRepresentationModel) requestRepresentationModel);
+            CategoryDocument categoryDocument = RepresentationModelConverter.convertToXml((OcciRepresentationModel) requestRepresentationModel);
+            methodInvocation.setRequestRepresentation(categoryDocument.toString());
+        } else if (requestRepresentationModel instanceof OcciListRepresentationModel && OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
+            CategoryListDocument categoryListDocument = RepresentationModelConverter.convertToXml((OcciListRepresentationModel) requestRepresentationModel);
+            methodInvocation.setRequestRepresentation(categoryListDocument.toString());
         } else {
             throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
         }
 
+        loggingModel.setRestRequest(methodInvocation.getXmlDocument());
         ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
+        loggingModel.setRestResponse(response);
         // Response: ResourceDocument (rest xml) --> RepresentationModel
         AbstractRepresentationModel representationModel = null;
-        if (response.getResource().getMethod().isSetResponse()) {
+        if (response.getResource().isSetMethod()
+                && response.getResource().getMethod().isSetResponse()) {
             String responseMediaType = response.getResource().getMethod().getResponse().getMediaType();
             String responseRepresentation = response.getResource().getMethod().getResponse().getRepresentation();
             if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
@@ -345,6 +208,9 @@ public class IntercloudClient implements IIntercloudClient {
             } else if (OcciXml.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
                     && OcciXml.MEDIA_TYPE.equals(responseMediaType)) {
                 representationModel = parseOcciMethodResponse(responseRepresentation);
+            } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
+                    && OcciListXml.MEDIA_TYPE.equals(responseMediaType)) {
+                representationModel = parseOcciListMethodResponse(responseRepresentation);
             } else {
                 representationModel = new TextRepresentationModel(responseRepresentation);
             }
@@ -361,16 +227,16 @@ public class IntercloudClient implements IIntercloudClient {
         return methodInvocation;
     }
 
-    private OcciMethodInvocation invokeMethod(OcciMethodInvocation methodInvocation, OcciRepresentationModel representationModel) throws AttributeFormatException {
-        CategoryDocument categoryDocument = RepresenationModelConverter.convertToXml(representationModel);
-        methodInvocation.setRequestRepresentation(categoryDocument.toString());
-        return methodInvocation;
-    }
-
     private OcciRepresentationModel parseOcciMethodResponse(String response) throws XmlException {
         CategoryDocument categoryDocument = CategoryDocument.Factory.parse(response);
         ClassificationModel classificationModel = ClassificationModelBuilder.build(occiClient.getClassification());
         return RepresentationModelBuilder.build(classificationModel, categoryDocument);
+    }
+
+    private OcciListRepresentationModel parseOcciListMethodResponse(String response) throws XmlException {
+        CategoryListDocument categoryListDocument = CategoryListDocument.Factory.parse(response);
+        ClassificationModel classificationModel = ClassificationModelBuilder.build(occiClient.getClassification());
+        return RepresentationModelBuilder.build(classificationModel, categoryListDocument);
     }
 
     private UriListRepresentationModel parseUriListMethodResponse(String response) {
@@ -385,8 +251,33 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public String toString() {
-        // TODO: rest xml and xwadl as getter somewhere
-        return occiClient.getResourceTypeDocument().toString();
+    public List<ActionModel> getActions() {
+        return ActionModelBuilder.buildActionModels(occiClient.getResourceTypeDocument());
+    }
+
+    @Override
+    public ParameterModel executeAction(ActionModel actionModel) throws ParameterFormatException, XMPPException, IOException, SmackException {
+        ResourceDocument resourceDocument = ResourceDocument.Factory.newInstance();
+        ResourceDocument.Resource resource = resourceDocument.addNewResource();
+        resource.setPath(this.occiClient.getResourceTypeDocument().getResourceType().getPath());
+
+        ActionDocument.Action action = ActionModelConverter.convertToXml(actionModel);
+        resource.setAction(action);
+
+        this.loggingModel.setRestRequest(resourceDocument);
+        ResourceDocument response = xmppService.sendRestDocument(this.uri, resourceDocument);
+        this.loggingModel.setRestResponse(resourceDocument);
+        ParameterModel result = null;
+
+        if (response.getResource().isSetAction()
+                && response.getResource().getAction().isSetResult()) {
+            if (null != actionModel.getResult()) {
+                result = ActionModelConverter.convertToModel(response.getResource().getAction().getResult(), actionModel.getResult().getDocumentation());
+            } else {
+                result = ActionModelConverter.convertToModel(response.getResource().getAction().getResult(), null);
+            }
+        }
+
+        return result;
     }
 }
