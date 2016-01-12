@@ -78,19 +78,7 @@ public class IntercloudClient implements IIntercloudClient {
         MethodDocument.Method[] methodArray = occiClient.getResourceTypeDocument().getResourceType().getMethodArray();
         if (null != methodArray) {
             for (MethodDocument.Method m : methodArray) {
-                String requestMediaType = null;
-                String responseMediaType = null;
-                String documentation = null;
-                if (m.isSetRequest()) {
-                    requestMediaType = m.getRequest().getMediaType();
-                }
-                if (m.isSetResponse()) {
-                    responseMediaType = m.getResponse().getMediaType();
-                }
-                if (null != m.getDocumentation()) {
-                    documentation = m.getDocumentation().getStringValue();
-                }
-                result.add(new MethodModel(this.uri, m.getType().toString(), requestMediaType, responseMediaType, documentation));
+                result.add(new MethodModel(this.uri, m));
             }
         }
         return result;
@@ -125,13 +113,10 @@ public class IntercloudClient implements IIntercloudClient {
         return result;
     }
 
-    private OcciRepresentationModel buildOcciRepresentationModel(MethodModel methodModel) throws MissingClassificationException, UnsupportedMethodException {
+    private OcciRepresentationModel buildOcciRepresentationModel(MethodModel methodModel) throws MissingClassificationException {
         long start = System.currentTimeMillis();
 
-        MethodDocument.Method methodDocument = getMethodDocument(methodModel);
-        if (null == methodDocument) {
-            throw new UnsupportedMethodException("Method is not specified in xwadl.");
-        }
+        MethodDocument.Method methodDocument = methodModel.getReference();
         ClassificationDocument.Classification classificationDocument = occiClient.getClassification();
         if (null == classificationDocument) {
             throw new MissingClassificationException("Classification is not specified in xwadl.");
@@ -144,31 +129,21 @@ public class IntercloudClient implements IIntercloudClient {
         return representation;
     }
 
-    private MethodDocument.Method getMethodDocument(MethodModel methodModel) {
-        return occiClient.getMethod(MethodType.Enum.forString(methodModel.getMethodType()), methodModel.getRequestMediaType(), methodModel.getResponseMediaType());
-    }
-
     @Override
-    public CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) throws UnsupportedMethodException {
+    public CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) {
         if (null == categoryModel || null == methodModel) {
             return null;
         }
         // apply template
-        MethodDocument.Method methodDocument = getMethodDocument(methodModel);
-        if (null == methodDocument) {
-            throw new UnsupportedMethodException("Failed to apply template: method does not exist. " + methodModel);
-        }
+        MethodDocument.Method methodDocument = methodModel.getReference();
         TemplateHelper.applyTemplate(categoryModel, methodDocument, templateTitle);
         return categoryModel;
     }
 
     @Override
     public AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel)
-            throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException, XmlException {
-        MethodDocument.Method methodDocument = getMethodDocument(methodModel);
-        if (null == methodDocument) {
-            throw new UnsupportedMethodException("Cannot execute method: method not found. " + methodModel);
-        }
+            throws XMPPException, IOException, SmackException, AttributeFormatException, XmlException, UnsupportedMethodException {
+        MethodDocument.Method methodDocument = methodModel.getReference();
 
         // Request: RepresentationModel --> ResourceDocument (rest xml)
         OcciMethodInvocation methodInvocation = occiClient.buildMethodInvocation(methodDocument);

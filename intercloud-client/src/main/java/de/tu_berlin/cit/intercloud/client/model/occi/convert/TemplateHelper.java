@@ -42,7 +42,7 @@ public class TemplateHelper {
 
     private static void addKindTemplates(ClassificationModel classificationModel, CategoryType kindType) {
         KindModel kindModel = classificationModel.getKind();
-        if (null != kindModel && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())) {
+        if (null != kindType && null != kindModel && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())) {
             if (null != kindType.getTitle()) {
                 kindModel.addTemplate(kindType.getTitle());
             } else {

@@ -30,7 +30,7 @@ public class ExamplePage extends Template {
 
         this.add(new AttributeForm("attributeForm"));
         this.add(new KindRequestPanel("kindPanel",
-                new Model<>(new MethodModel(null, null, null, null, null)),
+                Model.of(),
                 new LoadableDetachableModel<KindModel>() {
                     @Override
                     protected KindModel load() {

@@ -29,7 +29,7 @@ public interface IIntercloudClient {
 
     AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException;
 
-    CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) throws UnsupportedMethodException;
+    CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle);
 
     AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel)
             throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException, XmlException;

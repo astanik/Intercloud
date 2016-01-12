@@ -252,7 +252,7 @@ public class BrowserPage extends UserTemplate {
                         }
                     }
                 }
-            }.setBody(Model.of(methodModel.getMethodType()));
+            }.setBody(Model.of(methodModel.getType()));
 
             if (null == methodModel.getRequestMediaType()) {
                 link.add(new AttributeAppender("class", " btn-success"));
