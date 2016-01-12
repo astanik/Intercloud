@@ -2,11 +2,11 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
+import de.tu_berlin.cit.intercloud.webapp.panels.request.AttributeListInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.request.KindRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.request.AttributeListInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -103,8 +103,8 @@ public class ExamplePage extends Template {
 
     public KindModel createExampleKindModel() {
         KindModel kindModel = new KindModel("http://schema.ogf.org/occi/infrastructure#", "compute");
-        kindModel.addTemplate("t0");
-        kindModel.addTemplate("t1");
+        kindModel.addTemplate(new TemplateModel("t0", null));
+        kindModel.addTemplate(new TemplateModel("t1", null));
         kindModel.addAttribute(new AttributeModel("Datetime", AttributeModel.Type.DATETIME, false, true, null));
         kindModel.addAttribute(new AttributeModel("String", AttributeModel.Type.STRING, true, true, null));
         return kindModel;

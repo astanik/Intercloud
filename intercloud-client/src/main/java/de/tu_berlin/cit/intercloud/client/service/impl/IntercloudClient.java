@@ -1,16 +1,16 @@
 package de.tu_berlin.cit.intercloud.client.service.impl;
 
-import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.ClassificationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelConverter;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
+import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.ClassificationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelConverter;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.ActionModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.ParameterModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelBuilder;
@@ -19,6 +19,7 @@ import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentati
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.TextRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.UriRepresentationModel;
@@ -38,7 +39,6 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ActionDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
@@ -130,13 +130,9 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public CategoryModel applyTemplate(CategoryModel categoryModel, MethodModel methodModel, String templateTitle) {
-        if (null == categoryModel || null == methodModel) {
-            return null;
-        }
+    public CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel templateModel) {
         // apply template
-        MethodDocument.Method methodDocument = methodModel.getReference();
-        TemplateHelper.applyTemplate(categoryModel, methodDocument, templateTitle);
+        TemplateHelper.applyTemplate(categoryModel, templateModel);
         return categoryModel;
     }
 

@@ -2,12 +2,14 @@ package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -43,17 +45,18 @@ public abstract class CategoryRequestPanel extends Panel {
         }.add(new Label("title", title)));
         this.container.add(new AttributeListInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
 
-        DropDownChoice<String> templateChoice = new DropDownChoice<>("templates", new Model<>(), new ArrayList<>(category.getTemplates()));
+        DropDownChoice<TemplateModel> templateChoice = new DropDownChoice<>("templates", new Model<>(),
+                category.getTemplates(), new ChoiceRenderer<>("name"));
         templateChoice.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 MethodModel method = methodModel.getObject();
-                String templateTitle = templateChoice.getModelObject();
+                TemplateModel template = templateChoice.getModelObject();
                 try {
                     IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(method.getUri());
-                    intercloudClient.applyTemplate(categoryModel.getObject(), method, templateTitle);
+                    intercloudClient.applyTemplate(categoryModel.getObject(), template);
                 } catch (Exception e) {
-                    logger.error("Could apply template. title: {}, method: {}", templateTitle, method, e);
+                    logger.error("Could apply template. title: {}, method: {}", template.getName(), method, e);
                     target.appendJavaScript("alert('Failed to apply template.');");
                 }
                 target.add(container);

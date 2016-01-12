@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
@@ -41,15 +42,17 @@ public class TemplateHelper {
     }
 
     private static void addKindTemplates(ClassificationModel classificationModel, CategoryType kindType) {
-        KindModel kindModel = classificationModel.getKind();
-        if (null != kindType && null != kindModel && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())) {
-            if (null != kindType.getTitle()) {
-                kindModel.addTemplate(kindType.getTitle());
+        if (null != kindType) {
+            KindModel kindModel = classificationModel.getKind();
+            if (null != kindModel && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())) {
+                if (null != kindType.getTitle()) {
+                    kindModel.addTemplate(new TemplateModel(kindType.getTitle(), kindType));
+                } else {
+                    logger.warn("Could not add Kind Template without a Title. {}, {}", kindModel, kindType);
+                }
             } else {
-                logger.warn("Could not add Kind Template without a Title. {}, {}", kindModel, kindType);
+                logger.warn("Could not find Kind Classification for Template. {}, {}", kindModel, kindType);
             }
-        } else {
-            logger.warn("Could not find Kind Classification for Template. {}, {}", kindModel, kindType);
         }
     }
 
@@ -59,7 +62,7 @@ public class TemplateHelper {
                 MixinModel mixinModel = classificationModel.getMixin(mixinType.getSchema(), mixinType.getTerm());
                 if (null != mixinModel) {
                     if (null != mixinType.getTitle()) {
-                        mixinModel.addTemplate(mixinType.getTitle());
+                        mixinModel.addTemplate(new TemplateModel(mixinType.getTitle(), mixinType));
                     } else {
                         logger.warn("Could not add Mixin Template without a Title. {}, {}", mixinModel, mixinType);
                     }
@@ -76,7 +79,7 @@ public class TemplateHelper {
                 LinkModel linkModel = classificationModel.getLink(linkType.getSchema(), linkType.getTerm());
                 if (null != linkModel) {
                     if (null != linkType.getTitle()) {
-                        linkModel.addTemplate(linkType.getTitle());
+                        linkModel.addTemplate(new TemplateModel(linkType.getTitle(), linkType));
                     } else {
                         logger.warn("Could not add Link Template without a Title. {}, {}", linkModel, linkType);
                     }
@@ -108,100 +111,39 @@ public class TemplateHelper {
         return result;
     }
 
-    public static CategoryModel applyTemplate(CategoryModel categoryModel, MethodDocument.Method method, String templateTitle) {
+    public static CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel template) {
         // clear all attributes
         for (AttributeModel a : categoryModel.getAttributes()) {
             a.clearValue();
         }
-        if (null == templateTitle) {
+        if (null == template) {
             // TODO default values (taken from ClassificationModel)
             categoryModel.setTitle(null); // TODO Title from ClassificationModel
             return categoryModel;
         }
-        List<CategoryDocument.Category> templateDocuments = getTemplateDocuments(method);
-        if (categoryModel instanceof KindModel) {
-            applyKindTemplate((KindModel) categoryModel, templateDocuments, templateTitle);
-        } else if (categoryModel instanceof MixinModel) {
-            if (null == applyMixinTemplate((MixinModel) categoryModel, templateDocuments, templateTitle)) {
-                if (null == applyLinkMixinTemplate((MixinModel) categoryModel, templateDocuments, templateTitle)) {
-                    logger.warn("Mixin Template not found. title: {}, {}", templateTitle, categoryModel);
-                }
-            }
-        } else if (categoryModel instanceof LinkModel) {
+        if (categoryModel instanceof KindModel && template.getReference() instanceof CategoryType) {
+            applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
+        } else if (categoryModel instanceof MixinModel && template.getReference() instanceof CategoryType) {
+            applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
+        } else if (categoryModel instanceof LinkModel && template.getReference() instanceof LinkType) {
             // TODO link + mixin template?
-            applyLinkTemplate((LinkModel) categoryModel, templateDocuments, templateTitle);
+            applyLinkTemplate((LinkModel) categoryModel, (LinkType) template.getReference());
         }
         return categoryModel;
     }
 
-
-    private static KindModel applyKindTemplate(KindModel kindModel, List<CategoryDocument.Category> templateDocuments, String templateTitle) {
-        for (CategoryDocument.Category templateDocument : templateDocuments) {
-            CategoryType kindType = templateDocument.getKind();
-            if (null != kindType
-                    && kindModel.getId().equals(kindType.getSchema() + kindType.getTerm())
-                    && templateTitle.equals(kindType.getTitle())) {
-                kindModel.setTitle(templateTitle);
-                applyAttributes(kindModel, kindType.getAttributeArray());
-                return kindModel;
-            }
-        }
-        logger.warn("Kind Template not found. title: {}, {}", templateTitle, kindModel);
-        return null;
+    private static CategoryModel applyCategoryTemplate(CategoryModel categoryModel, CategoryType template) {
+        categoryModel.setTitle(template.getTitle());
+        applyAttributes(categoryModel, template.getAttributeArray());
+        return categoryModel;
     }
 
-    private static MixinModel applyMixinTemplate(MixinModel mixinModel, List<CategoryDocument.Category> templateDocuments, String templateTitle) {
-        for (CategoryDocument.Category templateDocument : templateDocuments) {
-            CategoryType[] mixinTypeArray = templateDocument.getMixinArray();
-            if (null != mixinTypeArray) {
-                for (CategoryType mixinType : mixinTypeArray) {
-                    if (mixinModel.getId().equals(mixinType.getSchema() + mixinType.getTerm())
-                            && templateTitle.equals(mixinType.getTitle())) {
-                        mixinModel.setTitle(templateTitle);
-                        applyAttributes(mixinModel, mixinType.getAttributeArray());
-                        return mixinModel;
-                    }
-                }
-            }
-        }
-        return null;
-    }
 
-    private static MixinModel applyLinkMixinTemplate(MixinModel mixinModel, List<CategoryDocument.Category> templateDocuments, String templateTitle) {
-        for (CategoryDocument.Category templateDocument : templateDocuments) {
-            if (null != templateDocument.getLinkArray() && 0 < templateDocument.getLinkArray().length) {
-                for (LinkType linkType : templateDocument.getLinkArray()) {
-                    if (null != linkType.getMixinArray() && 0 < linkType.getMixinArray().length) {
-                        for (CategoryType mixinType : linkType.getMixinArray()) {
-                            if (mixinModel.getId().equals(mixinType.getSchema() + mixinType.getTerm())
-                                    && templateTitle.equals(mixinType.getTitle())) {
-                                applyAttributes(mixinModel, mixinType.getAttributeArray());
-                                return mixinModel;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private static LinkModel applyLinkTemplate(LinkModel linkModel, List<CategoryDocument.Category> templateDocuments, String templateTitle) {
-        for (CategoryDocument.Category templateDocument : templateDocuments) {
-            LinkType[] linkTypeArray = templateDocument.getLinkArray();
-            if (null != linkTypeArray) {
-                for (LinkType linkType : linkTypeArray) {
-                    if (linkModel.getId().equals(linkType.getSchema() + linkType.getTerm())
-                            && templateTitle.equals(linkType.getTitle())) {
-                        linkModel.setTitle(templateTitle);
-                        applyAttributes(linkModel, linkType.getAttributeArray());
-                        return linkModel;
-                    }
-                }
-            }
-        }
-        logger.warn("Link Template not found. title: {}, {}", templateTitle, linkModel);
-        return null;
+    private static LinkModel applyLinkTemplate(LinkModel linkModel, LinkType template) {
+        // TODO apply mixins
+        linkModel.setTitle(template.getTitle());
+        applyAttributes(linkModel, template.getAttributeArray());
+        return linkModel;
     }
 
     private static void applyAttributes(CategoryModel categoryModel, AttributeType[] attributeTypes) {
