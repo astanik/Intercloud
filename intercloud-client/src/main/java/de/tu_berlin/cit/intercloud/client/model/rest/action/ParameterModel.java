@@ -16,16 +16,18 @@ public class ParameterModel implements Serializable {
 
     private final String name;
     private final Type type;
-    private final String documentation;
     private Object value;
+    private final boolean required;
+    private final String documentation;
 
-    public ParameterModel(String name, String type, String documentation) {
-        this(name, Type.valueOf(type), documentation);
+    public ParameterModel(String name, String type, boolean required, String documentation) {
+        this(name, Type.valueOf(type), required, documentation);
     }
 
-    public ParameterModel(String name, Type type, String documentation) {
+    public ParameterModel(String name, Type type, boolean required, String documentation) {
         this.name = name;
         this.type = type;
+        this.required = required;
         this.documentation = documentation;
     }
 
@@ -35,6 +37,10 @@ public class ParameterModel implements Serializable {
 
     public Type getType() {
         return type;
+    }
+
+    public boolean isRequired() {
+        return required;
     }
 
     public String getDocumentation() {
@@ -48,6 +54,10 @@ public class ParameterModel implements Serializable {
                 ", type=" + type +
                 ", value=" + value +
                 '}';
+    }
+
+    public boolean hasValue() {
+        return null != this.value;
     }
 
     /*

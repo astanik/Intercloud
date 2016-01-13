@@ -168,7 +168,7 @@ public class BrowserPage extends UserTemplate {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
                     .getIntercloudClient(methodModel.getUri());
             this.loggingModel = intercloudClient.getLoggingModel();
-            AbstractRepresentationModel representation = intercloudClient.executeMethod(representationModel, methodModel);
+            AbstractRepresentationModel representation = intercloudClient.executeMethod(methodModel, representationModel);
             // display response
             this.responseContainer.setModel(representation);
             // hide request

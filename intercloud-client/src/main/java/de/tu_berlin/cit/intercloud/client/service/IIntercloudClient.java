@@ -32,7 +32,7 @@ public interface IIntercloudClient {
 
     CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel templateModel);
 
-    AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel)
+    AbstractRepresentationModel executeMethod(MethodModel methodModel, AbstractRepresentationModel requestRepresentationModel)
             throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException, XmlException;
 
     /*
@@ -41,6 +41,8 @@ public interface IIntercloudClient {
 
     List<ActionModel> getActions();
 
-    ParameterModel executeAction(ActionModel actionModel)
+    List<ParameterModel> getParameters(ActionModel actionModel);
+
+    ParameterModel executeAction(ActionModel actionModel, List<ParameterModel> parameterModelList)
             throws ParameterFormatException, XMPPException, IOException, SmackException;
 }

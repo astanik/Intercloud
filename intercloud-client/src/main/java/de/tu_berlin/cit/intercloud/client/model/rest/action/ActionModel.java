@@ -1,21 +1,22 @@
 package de.tu_berlin.cit.intercloud.client.model.rest.action;
 
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ActionDocument;
+
 import java.io.Serializable;
-import java.util.List;
 
 public class ActionModel implements Serializable {
     private static final long serialVersionUID = 5148561604973349432L;
 
     private final String name;
     private final String documentation;
-    private final List<ParameterModel> parameterList;
-    private final ParameterModel result;
+    private final String resultDocumentation;
+    private final ActionDocument.Action reference;
 
-    public ActionModel(String name, String documentation, List<ParameterModel> parameterList, ParameterModel result) {
+    public ActionModel(String name, String documentation, String resultDocumentation, ActionDocument.Action reference) {
         this.name = name;
         this.documentation = documentation;
-        this.parameterList = parameterList;
-        this.result = result;
+        this.resultDocumentation = resultDocumentation;
+        this.reference = reference;
     }
 
     public String getName() {
@@ -26,20 +27,18 @@ public class ActionModel implements Serializable {
         return documentation;
     }
 
-    public List<ParameterModel> getParameterList() {
-        return parameterList;
+    public String getResultDocumentation() {
+        return resultDocumentation;
     }
 
-    public ParameterModel getResult() {
-        return result;
+    public ActionDocument.Action getReference() {
+        return reference;
     }
 
     @Override
     public String toString() {
         return "ActionModel{" +
                 "name='" + name + '\'' +
-                ", parameterList=" + parameterList +
-                ", result=" + result +
                 '}';
     }
 }

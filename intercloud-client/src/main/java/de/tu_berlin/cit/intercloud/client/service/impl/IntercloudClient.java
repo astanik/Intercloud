@@ -137,7 +137,7 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public AbstractRepresentationModel executeMethod(AbstractRepresentationModel requestRepresentationModel, MethodModel methodModel)
+    public AbstractRepresentationModel executeMethod(MethodModel methodModel, AbstractRepresentationModel requestRepresentationModel)
             throws XMPPException, IOException, SmackException, AttributeFormatException, XmlException, UnsupportedMethodException {
         MethodDocument.Method methodDocument = methodModel.getReference();
 
@@ -227,12 +227,17 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public ParameterModel executeAction(ActionModel actionModel) throws ParameterFormatException, XMPPException, IOException, SmackException {
+    public List<ParameterModel> getParameters(ActionModel actionModel) {
+        return ActionModelBuilder.buildParameterModelList(actionModel.getReference());
+    }
+
+    @Override
+    public ParameterModel executeAction(ActionModel actionModel, List<ParameterModel> parameterModelList) throws ParameterFormatException, XMPPException, IOException, SmackException {
         ResourceDocument resourceDocument = ResourceDocument.Factory.newInstance();
         ResourceDocument.Resource resource = resourceDocument.addNewResource();
-        resource.setPath(this.occiClient.getResourceTypeDocument().getResourceType().getPath());
+        resource.setPath(this.uri.getPath());
 
-        ActionDocument.Action action = ActionModelConverter.convertToXml(actionModel);
+        ActionDocument.Action action = ActionModelConverter.convertToXml(actionModel, parameterModelList);
         resource.setAction(action);
 
         this.loggingModel.setRestRequest(resourceDocument);
@@ -242,11 +247,7 @@ public class IntercloudClient implements IIntercloudClient {
 
         if (response.getResource().isSetAction()
                 && response.getResource().getAction().isSetResult()) {
-            if (null != actionModel.getResult()) {
-                result = ActionModelConverter.convertToModel(response.getResource().getAction().getResult(), actionModel.getResult().getDocumentation());
-            } else {
-                result = ActionModelConverter.convertToModel(response.getResource().getAction().getResult(), null);
-            }
+            result = ActionModelConverter.convertToModel(response.getResource().getAction().getResult(), actionModel.getResultDocumentation());
         }
 
         return result;
