@@ -62,11 +62,11 @@ public abstract class CategoryRequestPanel extends Panel {
                 target.add(container);
             }
         });
-        templateChoice.setNullValid(true); // keep null to be selectable
+        //templateChoice.setNullValid(true); // keep null to be selectable
         this.container.add(new WebMarkupContainer("templatesRow") {
             @Override
             public boolean isVisible() {
-                return !category.getTemplates().isEmpty();
+                return 1 < category.getTemplates().size();
             }
         }.add(templateChoice));
     }

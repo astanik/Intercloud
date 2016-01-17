@@ -45,7 +45,6 @@ public class RepresentationModelConverter {
     }
 
     private static CategoryDocument.Category convertToXml(OcciRepresentationModel representationModel, CategoryDocument.Category category) throws AttributeFormatException {
-        // TODO when to add category type (Kind, Mixin, Link)???
         // KIND
         KindModel kindModel = representationModel.getKind();
         if (null != kindModel) {
@@ -53,9 +52,7 @@ public class RepresentationModelConverter {
         }
         // MIXINs
         for (MixinModel mixinModel : representationModel.getMixins()) {
-            if (hasAttributes(mixinModel)) {
-                addCategoryRepresentation(category.addNewMixin(), mixinModel);
-            }
+            addCategoryRepresentation(category.addNewMixin(), mixinModel);
         }
 
         // LINKs
@@ -70,9 +67,7 @@ public class RepresentationModelConverter {
         type.setTarget(model.getTarget());
 
         for (MixinModel mixinModel : model.getMixins()) {
-            if (hasAttributes(mixinModel)) {
-                addCategoryRepresentation(type.addNewMixin(), mixinModel);
-            }
+            addCategoryRepresentation(type.addNewMixin(), mixinModel);
         }
     }
 

@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.AttributeClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
@@ -47,34 +48,50 @@ public class ClassificationModelBuilder {
     private static KindModel buildKindModel(CategoryClassification classification) {
         KindModel model = new KindModel(classification.getSchema(), classification.getTerm());
         model.setTitle(classification.getTitle());
-        buildAttributeModels(model, classification.getAttributeClassificationArray());
+        if (buildAttributeModels(model, classification.getAttributeClassificationArray())) {
+            // only add kind definition to template if default values are present
+            model.addTemplate(new TemplateModel(model.getTitle(), classification));
+        } else {
+            // if no default values are given, set the definition to none
+            model.addTemplate(new TemplateModel(model.getTitle(), null));
+        }
         return model;
     }
 
     private static MixinModel buildMixinModel(MixinClassification classification) {
         MixinModel model = new MixinModel(classification.getSchema(), classification.getTerm(), classification.getApplies());
         model.setTitle(classification.getTitle());
-        buildAttributeModels(model, classification.getAttributeClassificationArray());
+        if (buildAttributeModels(model, classification.getAttributeClassificationArray())) {
+            model.addTemplate(new TemplateModel(model.getTitle(), classification));
+        } else {
+            model.addTemplate(new TemplateModel(model.getTitle(), null));
+        }
         return model;
     }
 
     private static LinkModel buildLinkModel(LinkClassification classification) {
         LinkModel model = new LinkModel(classification.getSchema(), classification.getTerm(), classification.getRelation());
         model.setTitle(classification.getTitle());
-        buildAttributeModels(model, classification.getAttributeClassificationArray());
+        if (buildAttributeModels(model, classification.getAttributeClassificationArray())) {
+            model.addTemplate(new TemplateModel(model.getTitle(), classification));
+        } else {
+            model.addTemplate(new TemplateModel(model.getTitle(), null));
+        }
         return model;
     }
 
-    private static CategoryModel buildAttributeModels(CategoryModel categoryModel,
+    private static boolean buildAttributeModels(CategoryModel categoryModel,
                                                       AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
+        boolean hasDefaultValue = false;
         if (null != attributeClassifications && 0 < attributeClassifications.length) {
             for (AttributeClassificationDocument.AttributeClassification a : attributeClassifications) {
                 AttributeModel attributeModel = new AttributeModel(a.getName(), a.getType().toString(), a.getRequired(), a.getMutable(), a.getDescription());
                 addAttributeDefaultValue(attributeModel, a);
+                hasDefaultValue |= attributeModel.hasValue();
                 categoryModel.addAttribute(attributeModel);
             }
         }
-        return categoryModel;
+        return hasDefaultValue;
     }
 
     private static AttributeModel addAttributeDefaultValue(AttributeModel attributeModel,
@@ -120,7 +137,7 @@ public class ClassificationModelBuilder {
                     case LIST:
                     case MAP:
                     default:
-                        // TODO string representation
+                        // ignore List & MAP - log warning
                         logger.warn("Could not set default value of classification attribute. {}, value: {}", attributeModel, defaultValue);
                 }
             } catch (Exception e) {
@@ -128,5 +145,15 @@ public class ClassificationModelBuilder {
             }
         }
         return attributeModel;
+    }
+
+    public static void setAttributeDefaultValues(CategoryModel categoryModel,
+                                                                 AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
+        for (AttributeClassificationDocument.AttributeClassification attributeClassification : attributeClassifications) {
+            AttributeModel attributeModel = categoryModel.getAttribute(attributeClassification.getName());
+            if (null != attributeModel) {
+                addAttributeDefaultValue(attributeModel, attributeClassification);
+            }
+        }
     }
 }

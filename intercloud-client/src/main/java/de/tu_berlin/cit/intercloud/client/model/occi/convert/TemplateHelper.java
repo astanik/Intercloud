@@ -7,6 +7,9 @@ import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassification;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification;
+import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
@@ -117,17 +120,33 @@ public class TemplateHelper {
             a.clearValue();
         }
         if (null == template) {
-            // TODO default values (taken from ClassificationModel)
-            categoryModel.setTitle(null); // TODO Title from ClassificationModel
+            categoryModel.setTitle(null);
+            return categoryModel;
+        } else if (null == template.getReference()) {
+            categoryModel.setTitle(template.getName());
             return categoryModel;
         }
-        if (categoryModel instanceof KindModel && template.getReference() instanceof CategoryType) {
-            applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
-        } else if (categoryModel instanceof MixinModel && template.getReference() instanceof CategoryType) {
-            applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
-        } else if (categoryModel instanceof LinkModel && template.getReference() instanceof LinkType) {
-            // TODO link + mixin template?
-            applyLinkTemplate((LinkModel) categoryModel, (LinkType) template.getReference());
+        if (categoryModel instanceof KindModel) {
+            if (template.getReference() instanceof CategoryType) {
+                applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
+            } else if (template.getReference() instanceof CategoryClassification) {
+                ClassificationModelBuilder.setAttributeDefaultValues(categoryModel,
+                        ((CategoryClassification) template.getReference()).getAttributeClassificationArray());
+            }
+        } else if (categoryModel instanceof MixinModel) {
+            if (template.getReference() instanceof CategoryType) {
+                applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
+            } else if (template.getReference() instanceof MixinClassification) {
+                ClassificationModelBuilder.setAttributeDefaultValues(categoryModel,
+                        ((CategoryClassification) template.getReference()).getAttributeClassificationArray());
+            }
+        } else if (categoryModel instanceof LinkModel) {
+            if (template.getReference() instanceof LinkType) {
+                applyLinkTemplate((LinkModel) categoryModel, (LinkType) template.getReference());
+            } else if (template.getReference() instanceof LinkClassification) {
+                ClassificationModelBuilder.setAttributeDefaultValues(categoryModel,
+                        ((CategoryClassification) template.getReference()).getAttributeClassificationArray());
+            }
         }
         return categoryModel;
     }
@@ -140,7 +159,7 @@ public class TemplateHelper {
 
 
     private static LinkModel applyLinkTemplate(LinkModel linkModel, LinkType template) {
-        // TODO apply mixins
+        // TODO link + mixin template?
         linkModel.setTitle(template.getTitle());
         applyAttributes(linkModel, template.getAttributeArray());
         return linkModel;
