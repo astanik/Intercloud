@@ -116,9 +116,7 @@ public class TemplateHelper {
 
     public static CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel template) {
         // clear all attributes
-        for (AttributeModel a : categoryModel.getAttributes()) {
-            a.clearValue();
-        }
+        categoryModel.getAttributes().forEach(AttributeModel::clearValue);
         if (null == template) {
             categoryModel.setTitle(null);
             return categoryModel;

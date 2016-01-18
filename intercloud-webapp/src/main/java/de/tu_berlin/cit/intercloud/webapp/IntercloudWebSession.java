@@ -94,4 +94,12 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
     public static IntercloudWebSession get() {
         return (IntercloudWebSession) Session.get();
     }
+
+    // only for test case, therefore packet protected
+    void initialize(User user, IXmppService xmppService) {
+        signIn(true);
+        this.user = user;
+        this.xmppService = xmppService;
+        this.intercloudService = new IntercloudService(xmppService);
+    }
 }

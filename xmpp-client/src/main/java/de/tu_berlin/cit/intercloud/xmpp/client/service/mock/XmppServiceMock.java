@@ -10,6 +10,8 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,8 @@ import java.util.List;
  * It creates static data depending on the input parameters.
  */
 public class XmppServiceMock implements IXmppService {
+    private static final Logger logger = LoggerFactory.getLogger(XmppServiceMock.class);
+
     @Override
     public void connect(XmppURI uri, String password) throws XMPPException, IOException, SmackException {
         // do nothing, accept any credentials
@@ -70,11 +74,14 @@ public class XmppServiceMock implements IXmppService {
      */
     @Override
     public ResourceTypeDocument getXwadlDocument(XmppURI uri) throws XMPPException, IOException, SmackException {
-        File file = new File(System.getProperty("user.home"), uri.getPath());
+        long timeMillis = System.currentTimeMillis();
+        File file = new File(uri.getPath());
         try {
             return ResourceTypeDocument.Factory.parse(file);
         } catch (XmlException e) {
             throw new SmackException("Failed to parse resource type document. file: " + file, e);
+        } finally {
+            logger.info("Xml --> XmlBean: {} ms", System.currentTimeMillis() - timeMillis);
         }
     }
 }

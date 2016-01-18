@@ -212,7 +212,7 @@ public class BrowserPage extends UserTemplate {
                 @Override
                 protected void populateItem(ListItem<MethodModel> listItem) {
                     MethodModel methodModel = listItem.getModelObject();
-                    listItem.add(newLink("method", methodModel));
+                    listItem.add(newLink("methodLink", methodModel));
                     listItem.add(newLabel("documentation", methodModel.getDocumentation()));
                     listItem.add(newLabel("request", methodModel.getRequestMediaType()));
                     listItem.add(newLabel("response", methodModel.getResponseMediaType()));
