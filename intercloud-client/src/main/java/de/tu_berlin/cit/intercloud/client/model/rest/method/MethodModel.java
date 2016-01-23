@@ -8,11 +8,31 @@ import java.io.Serializable;
 public class MethodModel implements Serializable {
     private static final long serialVersionUID = 1297202550449311014L;
 
+    public class RequestResponseModel implements Serializable {
+        private static final long serialVersionUID = 8836550349575306648L;
+
+        private final String mediaType;
+        private final String documentation;
+
+        public RequestResponseModel(String mediaType, String documentation) {
+            this.mediaType = mediaType;
+            this.documentation = documentation;
+        }
+
+        public String getMediaType() {
+            return mediaType;
+        }
+
+        public String getDocumentation() {
+            return documentation;
+        }
+    }
+
     private final XmppURI uri;
 
     private final String type;
-    private final String requestMediaType;
-    private final String responseMediaType;
+    private final RequestResponseModel request;
+    private final RequestResponseModel response;
     private final String documentation;
     private final MethodDocument.Method reference;
 
@@ -21,14 +41,24 @@ public class MethodModel implements Serializable {
         this.reference = method;
         this.type = method.getType().toString();
         if (method.isSetRequest()) {
-            this.requestMediaType = method.getRequest().getMediaType();
+            if (null != method.getRequest().getDocumentation()) {
+                this.request = new RequestResponseModel(method.getRequest().getMediaType(),
+                        method.getRequest().getDocumentation().getStringValue());
+            } else {
+                this.request = new RequestResponseModel(method.getRequest().getMediaType(), null);
+            }
         } else {
-            this.requestMediaType = null;
+            this.request = null;
         }
         if (method.isSetResponse()) {
-            this.responseMediaType = method.getResponse().getMediaType();
+            if (null != method.getResponse().getDocumentation()) {
+                this.response = new RequestResponseModel(method.getResponse().getMediaType(),
+                        method.getResponse().getDocumentation().getStringValue());
+            } else {
+                this.response = new RequestResponseModel(method.getResponse().getMediaType(), null);
+            }
         } else {
-            this.responseMediaType = null;
+            this.response = null;
         }
         if (null != method.getDocumentation()) {
             this.documentation = method.getDocumentation().getStringValue();
@@ -45,12 +75,20 @@ public class MethodModel implements Serializable {
         return type;
     }
 
+    public RequestResponseModel getRequest() {
+        return request;
+    }
+
+    public RequestResponseModel getResponse() {
+        return response;
+    }
+
     public String getRequestMediaType() {
-        return requestMediaType;
+        return null != this.request ? this.request.getMediaType() : null;
     }
 
     public String getResponseMediaType() {
-        return responseMediaType;
+        return null != this.response ? this.response.getMediaType() : null;
     }
 
     public String getDocumentation() {
@@ -64,8 +102,8 @@ public class MethodModel implements Serializable {
     @Override
     public String toString() {
         return "MethodModel{" +
-                "responseMediaType='" + responseMediaType + '\'' +
-                ", requestMediaType='" + requestMediaType + '\'' +
+                ", requestMediaType='" + getRequestMediaType() + '\'' +
+                "responseMediaType='" + getResponseMediaType() + '\'' +
                 ", type='" + type + '\'' +
                 ", uri=" + uri +
                 '}';
