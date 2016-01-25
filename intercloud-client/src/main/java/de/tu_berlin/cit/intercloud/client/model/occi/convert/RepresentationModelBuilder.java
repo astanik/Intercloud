@@ -74,7 +74,11 @@ public class RepresentationModelBuilder {
                 mixinContainersMap.put(mixin.getId(), mixinContainers);
             } else if (null != classificationModel.getMixin(mixin.getApplies())) {
                 // applies to Mixin?
-                mixinAppliesMixin.add(mixin);
+                if (!addMixinModelToContainer(mixinContainersMap, mixin)) {
+                    // if mixin does not apply to an already "known" mixin
+                    // double check the mixin in the second run
+                    mixinAppliesMixin.add(mixin);
+                }
             } else if (null != classificationModel.getKind() && classificationModel.getKind().getId().equals(mixin.getApplies())) {
                 // applies to Kind?
                 representationModel.addMixin(mixin);
@@ -96,19 +100,11 @@ public class RepresentationModelBuilder {
             size = mixinAppliesMixin.size();
             for (int i = 0; i < mixinAppliesMixin.size(); ) {
                 MixinModel mixin = mixinAppliesMixin.get(i);
-                List<IMixinModelContainer> mixinContainers = mixinContainersMap.get(mixin.getApplies());
-                if (null != mixinContainers && !mixinContainers.isEmpty()) {
+                if (addMixinModelToContainer(mixinContainersMap, mixin)) {
+                    // mixin applies to an already "known" mixin
                     mixinAppliesMixin.remove(i);
-                    // add container
-                    mixinContainersMap.put(mixin.getId(), mixinContainers);
-                    // apply first
-                    mixinContainers.get(0).addMixin(mixin);
-                    // clone others
-                    for (int k = 1; k < mixinContainers.size(); k++) {
-                        MixinModel clone = SerializationUtils.clone(mixin);
-                        mixinContainers.get(k).addMixin(clone);
-                    }
                 } else {
+                    // mixin applies to an not yet "known" mixin
                     i++;
                 }
             }
@@ -118,6 +114,24 @@ public class RepresentationModelBuilder {
         }
 
         return representationModel;
+    }
+
+    private static boolean addMixinModelToContainer(Map<String, List<IMixinModelContainer>> mixinContainerMap, MixinModel mixin) {
+        List <IMixinModelContainer> mixinContainers = mixinContainerMap.get(mixin.getApplies());
+        if (null != mixinContainers && !mixinContainers.isEmpty()) {
+            // add container
+            mixinContainerMap.put(mixin.getId(), mixinContainers);
+            // apply first
+            mixinContainers.get(0).addMixin(mixin);
+            // clone others
+            for (int k = 1; k < mixinContainers.size(); k++) {
+                MixinModel clone = SerializationUtils.clone(mixin);
+                mixinContainers.get(k).addMixin(clone);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static OcciListRepresentationModel build(ClassificationModel classificationModel, CategoryListDocument categoryListDocument) {
