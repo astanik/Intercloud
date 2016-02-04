@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.client.model.rest;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.rwx4j.XmppURI;
 
 import java.io.Serializable;
 

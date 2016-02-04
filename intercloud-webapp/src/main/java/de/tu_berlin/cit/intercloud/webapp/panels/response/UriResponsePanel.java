@@ -2,7 +2,7 @@ package de.tu_berlin.cit.intercloud.webapp.panels.response;
 
 import de.tu_berlin.cit.intercloud.client.model.rest.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.pages.BrowserPage;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.list.ListItem;

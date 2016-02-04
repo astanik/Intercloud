@@ -29,7 +29,7 @@ import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
 import de.tu_berlin.cit.intercloud.occi.sla.TimeWindowMetricMixin;
 import de.tu_berlin.cit.intercloud.xmpp.cep.events.CpuUtilizationEvent;
 import de.tu_berlin.cit.intercloud.xmpp.cep.mixins.EventLogMixin;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
+import de.tu_berlin.cit.rwx4j.representations.Representation;
 
 /**
  * TODO

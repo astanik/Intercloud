@@ -19,7 +19,6 @@ package de.tu_berlin.cit.intercloud.root;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.jivesoftware.whack.ExternalComponentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +27,9 @@ import de.tu_berlin.cit.intercloud.configuration.RootConfig;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.root.services.IaaSCatalog;
 import de.tu_berlin.cit.intercloud.util.monitoring.CpuMeter;
-import de.tu_berlin.cit.intercloud.xmpp.core.component.ComponentException;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.xmpp.core.ComponentException;
+import de.tu_berlin.cit.rwx4j.xmpp.whack.ExternalComponentManager;
 
 /**
  * TODO

@@ -26,11 +26,11 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
 import de.tu_berlin.cit.intercloud.sla.links.AvailabilityGuaranteeTerm;
 import de.tu_berlin.cit.intercloud.sla.mixins.AvailabilityMixin;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
+import de.tu_berlin.cit.rwx4j.annotations.Consumes;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.Produces;
+import de.tu_berlin.cit.rwx4j.annotations.XmppMethod;
+import de.tu_berlin.cit.rwx4j.representations.UriListText;
 
 /**
  * TODO

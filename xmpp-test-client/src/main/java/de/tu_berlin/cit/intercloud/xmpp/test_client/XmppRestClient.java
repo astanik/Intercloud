@@ -31,10 +31,10 @@ import org.slf4j.LoggerFactory;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.GetXwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.rest.RestDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.MethodDocument.Method;
 
 /**
  * TODO
@@ -50,7 +50,7 @@ public class XmppRestClient extends OcciClient {
 	
 	private final XMPPConnection connection;
 	
-	private XmppRestClient(XMPPConnection connection, XmppURI uri, ResourceTypeDocument xwadl) {
+	private XmppRestClient(XMPPConnection connection, XmppURI uri, XwadlDocument xwadl) {
 		super(xwadl);
 		this.connection = connection;
 		this.uri = uri;
@@ -60,7 +60,7 @@ public class XmppRestClient extends OcciClient {
 
 	@Override
 	public XmppRestMethod buildMethodInvocation(Method method) {
-		ResourceDocument resourceDoc = super.createBasicResourceDocument();
+		RestDocument resourceDoc = super.createBasicRestDocument();
 		return new XmppRestMethod(this.connection, this.uri, resourceDoc, method);
 	}
 
@@ -81,7 +81,7 @@ public class XmppRestClient extends OcciClient {
 			PacketCollector collector = connection
 					.createPacketCollector(filter);
 			IQ resultIQ = collector.nextResultOrThrow();
-			ResourceTypeDocument xwadl = null;
+			XwadlDocument xwadl = null;
 			if(resultIQ instanceof XwadlIQ) {
 				// create xwadl
 				xwadl = ((XwadlIQ) resultIQ).getXwadl();

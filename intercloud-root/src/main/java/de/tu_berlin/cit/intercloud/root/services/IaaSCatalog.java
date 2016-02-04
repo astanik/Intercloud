@@ -17,7 +17,7 @@
 package de.tu_berlin.cit.intercloud.root.services;
 
 import de.tu_berlin.cit.intercloud.occi.core.Collection;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
+import de.tu_berlin.cit.rwx4j.annotations.Path;
 
 /**
  * TODO

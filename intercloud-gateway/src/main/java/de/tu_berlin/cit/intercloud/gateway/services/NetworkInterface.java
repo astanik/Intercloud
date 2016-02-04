@@ -8,7 +8,7 @@ import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
 
 /**
  * TODO

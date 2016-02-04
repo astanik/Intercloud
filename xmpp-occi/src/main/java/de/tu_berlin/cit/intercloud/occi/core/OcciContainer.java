@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tu_berlin.cit.intercloud.occi.core.incarnation.ClassificationRegistry;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ParameterDocument.Parameter;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
+import de.tu_berlin.cit.rwx4j.container.ResourceContainer;
+import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.rest.ParameterDocument.Parameter;
+import de.tu_berlin.cit.rwx4j.rest.RestDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
 
 
 /**
@@ -43,7 +43,7 @@ public class OcciContainer extends ResourceContainer {
 	}
 	
 	@Override
-	public ResourceTypeDocument getXWADL(String path) {
+	public XwadlDocument getXWADL(String path) {
 		logger.info("An XWADL is requested for path=" + path);
 		// search instance
 		ResourceInstance instance = this.getResource(path);
@@ -64,11 +64,11 @@ public class OcciContainer extends ResourceContainer {
 	}
 
 	@Override
-	public ResourceDocument execute(ResourceDocument xmlRequest) {
+	public RestDocument execute(RestDocument xmlRequest) {
 		logger.info("An invocation is requested with xml=" + xmlRequest.toString());
 		// create response document
-		ResourceDocument xmlResponse = (ResourceDocument) xmlRequest.copy();
-		String path = xmlRequest.getResource().getPath();
+		RestDocument xmlResponse = (RestDocument) xmlRequest.copy();
+		String path = xmlRequest.getRest().getPath();
 		// search instance
 		ResourceInstance instance = this.getResource(path);
 		if(instance == null)
@@ -76,9 +76,9 @@ public class OcciContainer extends ResourceContainer {
 					+ "Resource not found");
 		
 		// invoke method
-		if(xmlRequest.getResource().isSetMethod()) {
+		if(xmlRequest.getRest().isSetMethod()) {
 			try {
-				this.invokeMethod(xmlResponse.getResource().getMethod(), instance);
+				this.invokeMethod(xmlResponse.getRest().getMethod(), instance);
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
 				// TODO Auto-generated catch block
@@ -87,18 +87,18 @@ public class OcciContainer extends ResourceContainer {
 						+ e.getMessage());
 			}
 			// remove request part
-			if(xmlResponse.getResource().getMethod().isSetRequest()) {
-				xmlResponse.getResource().getMethod().unsetRequest();
+			if(xmlResponse.getRest().getMethod().isSetRequest()) {
+				xmlResponse.getRest().getMethod().unsetRequest();
 			}
 		}
 		
 		// invoke action
-		if(xmlRequest.getResource().isSetAction()) {
-			this.invokeAction(xmlResponse.getResource().getAction(), instance);
+		if(xmlRequest.getRest().isSetAction()) {
+			this.invokeAction(xmlResponse.getRest().getAction(), instance);
 			// remove request part
-			Parameter[] params = xmlResponse.getResource().getAction().getParameterArray();
+			Parameter[] params = xmlResponse.getRest().getAction().getParameterArray();
 			for(int i = params.length; i >= 0; i--) {
-				xmlResponse.getResource().getAction().removeParameter(i);
+				xmlResponse.getRest().getAction().removeParameter(i);
 			}
 		}
 		

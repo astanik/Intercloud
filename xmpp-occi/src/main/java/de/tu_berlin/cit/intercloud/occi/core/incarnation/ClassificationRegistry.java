@@ -35,7 +35,7 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassifi
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
+import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
 
 /**
  * TODO

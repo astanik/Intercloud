@@ -31,9 +31,9 @@ import de.tu_berlin.cit.intercloud.gateway.services.Network;
 import de.tu_berlin.cit.intercloud.gateway.services.Storage;
 import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.xmpp.cep.sensor.Sensor;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
+import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
 
 /**
  * TODO
@@ -45,7 +45,7 @@ public class ResourceTest {
 
 	private static final String testURI = "test.cit.tu-berlin.de";
 
-	private void writeXWADL(ResourceTypeDocument doc, String filePrefix) {
+	private void writeXWADL(XwadlDocument doc, String filePrefix) {
 		try {
 			Writer out = new FileWriter(
 					new File("target/" + filePrefix + "XWADL.xml").getAbsoluteFile());

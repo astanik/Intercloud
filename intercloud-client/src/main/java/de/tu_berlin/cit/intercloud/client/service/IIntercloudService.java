@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.client.service;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 

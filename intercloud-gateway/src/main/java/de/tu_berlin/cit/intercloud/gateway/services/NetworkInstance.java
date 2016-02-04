@@ -24,7 +24,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkingMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
 
 /**
  * Open Stack implementation for network instances.

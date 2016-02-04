@@ -25,9 +25,9 @@ import org.dom4j.Element;
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
 import de.tu_berlin.cit.intercloud.xmpp.cep.ComplexEventProcessor;
 import de.tu_berlin.cit.intercloud.xmpp.cep.eventlog.LogDocument;
-import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
-import de.tu_berlin.cit.intercloud.xmpp.core.packet.Message;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
+import de.tu_berlin.cit.rwx4j.component.ResourceContainerComponent;
+import de.tu_berlin.cit.rwx4j.xmpp.packet.Message;
+import de.tu_berlin.cit.rwx4j.container.ResourceContainer;
 import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**

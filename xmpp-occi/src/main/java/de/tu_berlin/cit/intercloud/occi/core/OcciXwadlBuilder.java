@@ -22,12 +22,12 @@ import org.slf4j.LoggerFactory;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.core.incarnation.ClassificationRegistry;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XwadlBuilder;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument.ResourceType;
+import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
+import de.tu_berlin.cit.rwx4j.container.XwadlBuilder;
+import de.tu_berlin.cit.rwx4j.annotations.XmppAction;
+import de.tu_berlin.cit.rwx4j.annotations.XmppMethod;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument.Xwadl;
 
 /**
  * TODO
@@ -38,13 +38,13 @@ public class OcciXwadlBuilder extends XwadlBuilder {
 
 	protected final static Logger logger = LoggerFactory.getLogger(OcciXwadlBuilder.class);
 
-	public static ResourceTypeDocument build(String path,
+	public static XwadlDocument build(String path,
 			ResourceInstance instance) {
 		logger.info("Start building xwadl document ...");
 		// create new document 
-		ResourceTypeDocument xwadl = ResourceTypeDocument.Factory.newInstance();
+		XwadlDocument xwadl = XwadlDocument.Factory.newInstance();
 		// set resource path
-		ResourceType resType = xwadl.addNewResourceType();
+		Xwadl resType = xwadl.addNewXwadl();
 		resType.setPath(path);
 		logger.info("resource path=" + path);
 		// check summary annotation
@@ -71,7 +71,7 @@ public class OcciXwadlBuilder extends XwadlBuilder {
 		return xwadl;
 	}
 
-	private static ResourceType checkSummaryAnnotation(Class<? extends Object> resourceClass, ResourceType resType) {
+	private static Xwadl checkSummaryAnnotation(Class<? extends Object> resourceClass, Xwadl resType) {
 		if (resourceClass.isAnnotationPresent(Summary.class)) {
 			String summary = resourceClass.getAnnotation(Summary.class).value();
 			resType.addNewDocumentation().setTitle("Summary");

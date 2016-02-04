@@ -30,10 +30,10 @@ import org.slf4j.LoggerFactory;
 
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument.Method;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.representations.Representation;
+import de.tu_berlin.cit.rwx4j.rest.MethodDocument.Method;
+import de.tu_berlin.cit.rwx4j.rest.RestDocument;
 
 /**
  * TODO
@@ -49,7 +49,7 @@ public class XmppRestMethod extends OcciMethodInvocation {
 	private final XMPPConnection connection;
 
 	public XmppRestMethod(XMPPConnection connection, XmppURI uri,
-			ResourceDocument resourceDoc, de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method method) {
+			RestDocument resourceDoc, de.tu_berlin.cit.rwx4j.xwadl.MethodDocument.Method method) {
 		super(resourceDoc, method);
 		this.connection = connection;
 		this.uri = uri;
@@ -75,7 +75,7 @@ public class XmppRestMethod extends OcciMethodInvocation {
 		PacketCollector collector = connection
 				.createPacketCollector(filter);
 		IQ resultIQ = collector.nextResultOrThrow();
-		ResourceDocument doc = null;
+		RestDocument doc = null;
 		if(resultIQ instanceof RestIQ) {
 			// create rest doc
 			doc = ((RestIQ) resultIQ).getResourceDocument();
@@ -88,9 +88,9 @@ public class XmppRestMethod extends OcciMethodInvocation {
 		return getPresentation(doc);
 	}
 
-	private Representation getPresentation(ResourceDocument xmlRepresentationDoc) throws XmlException {
-		if(xmlRepresentationDoc.getResource().isSetMethod()) {
-			Method method = xmlRepresentationDoc.getResource().getMethod();
+	private Representation getPresentation(RestDocument xmlRepresentationDoc) throws XmlException {
+		if(xmlRepresentationDoc.getRest().isSetMethod()) {
+			Method method = xmlRepresentationDoc.getRest().getMethod();
 			if(method.isSetResponse()) {
 				return this.getResponseRepresentation(method);
 			}

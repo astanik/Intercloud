@@ -19,15 +19,15 @@ package de.tu_berlin.cit.intercloud.occi.client;
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.client.ResourceClient;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
+import de.tu_berlin.cit.rwx4j.transformation.ResourceClient;
+import de.tu_berlin.cit.rwx4j.representations.PlainText;
+import de.tu_berlin.cit.rwx4j.representations.Representation;
+import de.tu_berlin.cit.rwx4j.representations.UriListText;
+import de.tu_berlin.cit.rwx4j.representations.UriText;
+import de.tu_berlin.cit.rwx4j.rest.RestDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.GrammarsDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.MethodDocument.Method;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
 import org.apache.xmlbeans.XmlObject;
 
 /**
@@ -38,13 +38,13 @@ import org.apache.xmlbeans.XmlObject;
 public class OcciClient extends ResourceClient {
 
 
-	public OcciClient(ResourceTypeDocument doc) {
+	public OcciClient(XwadlDocument doc) {
 		super(doc);
 	}
 
 	@Override
 	public OcciMethodInvocation buildMethodInvocation(Method method) {
-		ResourceDocument resourceDoc = createBasicResourceDocument();
+		RestDocument resourceDoc = createBasicRestDocument();
 		return new OcciMethodInvocation(resourceDoc, method);
 	}
 
@@ -69,7 +69,7 @@ public class OcciClient extends ResourceClient {
 
 	public ClassificationDocument.Classification getClassification() {
 		ClassificationDocument.Classification result = null;
-		GrammarsDocument.Grammars grammars = getResourceTypeDocument().getResourceType().getGrammars();
+		GrammarsDocument.Grammars grammars = getXwadlDocument().getXwadl().getGrammars();
 		if (null != grammars) {
 			XmlObject[] classifications = grammars.selectChildren("urn:xmpp:occi-classification", "Classification");
 			if (null != classifications && 0 < classifications.length) {

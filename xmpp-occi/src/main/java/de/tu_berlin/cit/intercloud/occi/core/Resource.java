@@ -17,10 +17,10 @@
 package de.tu_berlin.cit.intercloud.occi.core;
 
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
-import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.rwx4j.container.CollectionResourceInstance;
+import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
+import de.tu_berlin.cit.rwx4j.annotations.Produces;
+import de.tu_berlin.cit.rwx4j.annotations.XmppMethod;
 
 /**
  * TODO

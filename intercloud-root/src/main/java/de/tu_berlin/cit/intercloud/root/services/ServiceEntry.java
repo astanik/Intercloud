@@ -24,7 +24,7 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.occi.servicecatalog.ProviderLink;
 import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
 
 /**
  * TODO

@@ -44,12 +44,12 @@ import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.IpNetworkInterfaceMixin;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.NetworkInterfaceLink;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageLink;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Parameter;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Result;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppAction;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
+import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
+import de.tu_berlin.cit.rwx4j.annotations.Parameter;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.Result;
+import de.tu_berlin.cit.rwx4j.annotations.XmppAction;
+import de.tu_berlin.cit.rwx4j.annotations.XmppMethod;
 
 /**
  * Open Stack implementation for compute instances.

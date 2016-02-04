@@ -17,8 +17,8 @@
 package de.tu_berlin.cit.intercloud.components;
 
 import de.tu_berlin.cit.intercloud.util.constants.ServiceNames;
-import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerComponent;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceContainer;
+import de.tu_berlin.cit.rwx4j.component.ResourceContainerComponent;
+import de.tu_berlin.cit.rwx4j.container.ResourceContainer;
 
 /**
  * TODO

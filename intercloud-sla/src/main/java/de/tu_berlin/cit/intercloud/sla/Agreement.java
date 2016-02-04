@@ -23,11 +23,11 @@ import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.sla.AgreementKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.rwx4j.annotations.Consumes;
+import de.tu_berlin.cit.rwx4j.annotations.Path;
+import de.tu_berlin.cit.rwx4j.annotations.Produces;
+import de.tu_berlin.cit.rwx4j.annotations.XmppMethod;
+import de.tu_berlin.cit.rwx4j.representations.UriText;
 
 /**
  * TODO

@@ -28,14 +28,14 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.representations.PlainText;
+import de.tu_berlin.cit.rwx4j.representations.UriListText;
+import de.tu_berlin.cit.rwx4j.representations.UriText;
+import de.tu_berlin.cit.rwx4j.rest.RestDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.MethodDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.MethodType;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -55,7 +55,7 @@ public class IntercloudClient implements IIntercloudClient {
     private final OcciClient occiClient;
     private final XmppURI uri;
 
-    public IntercloudClient(IXmppService xmppService, ResourceTypeDocument xwadl, XmppURI uri) {
+    public IntercloudClient(IXmppService xmppService, XwadlDocument xwadl, XmppURI uri) {
         this.xmppService = xmppService;
         this.occiClient = new OcciClient(xwadl);
         this.uri = uri;
@@ -64,7 +64,7 @@ public class IntercloudClient implements IIntercloudClient {
     @Override
     public List<MethodModel> getMethods() {
         List<MethodModel> result = new ArrayList<>();
-        MethodDocument.Method[] methodArray = occiClient.getResourceTypeDocument().getResourceType().getMethodArray();
+        MethodDocument.Method[] methodArray = occiClient.getXwadlDocument().getXwadl().getMethodArray();
         if (null != methodArray) {
             for (MethodDocument.Method m : methodArray) {
                 String requestMediaType = null;
@@ -330,12 +330,12 @@ public class IntercloudClient implements IIntercloudClient {
             throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
         }
 
-        ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
+        RestDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
         // Response: ResourceDocument (rest xml) --> RepresentationModel
         AbstractRepresentationModel representationModel = null;
-        if (response.getResource().getMethod().isSetResponse()) {
-            String responseMediaType = response.getResource().getMethod().getResponse().getMediaType();
-            String responseRepresentation = response.getResource().getMethod().getResponse().getRepresentation();
+        if (response.getRest().getMethod().isSetResponse()) {
+            String responseMediaType = response.getRest().getMethod().getResponse().getMediaType();
+            String responseRepresentation = response.getRest().getMethod().getResponse().getRepresentation();
             if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
                     && UriText.MEDIA_TYPE.equals(responseMediaType)) {
                 representationModel = new UriRepresentationModel(responseRepresentation);
@@ -387,6 +387,6 @@ public class IntercloudClient implements IIntercloudClient {
     @Override
     public String toString() {
         // TODO: rest xml and xwadl as getter somewhere
-        return occiClient.getResourceTypeDocument().toString();
+        return occiClient.getXwadlDocument().toString();
     }
 }

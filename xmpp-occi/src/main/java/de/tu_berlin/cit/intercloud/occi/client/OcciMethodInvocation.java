@@ -18,13 +18,13 @@ package de.tu_berlin.cit.intercloud.occi.client;
 
 import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.xmpp.rest.client.MethodInvocation;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument.Method;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
+import de.tu_berlin.cit.rwx4j.transformation.MethodInvocation;
+import de.tu_berlin.cit.rwx4j.representations.PlainText;
+import de.tu_berlin.cit.rwx4j.representations.Representation;
+import de.tu_berlin.cit.rwx4j.representations.UriListText;
+import de.tu_berlin.cit.rwx4j.representations.UriText;
+import de.tu_berlin.cit.rwx4j.rest.MethodDocument.Method;
+import de.tu_berlin.cit.rwx4j.rest.RestDocument;
 
 /**
  * TODO
@@ -34,7 +34,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 public class OcciMethodInvocation extends MethodInvocation {
 
 
-	public OcciMethodInvocation(ResourceDocument resourceDoc, de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method method) {
+	public OcciMethodInvocation(RestDocument resourceDoc, de.tu_berlin.cit.rwx4j.xwadl.MethodDocument.Method method) {
 		super(resourceDoc, method);
 	}
 

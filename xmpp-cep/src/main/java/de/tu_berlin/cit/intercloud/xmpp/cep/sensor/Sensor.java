@@ -24,7 +24,7 @@ import de.tu_berlin.cit.intercloud.occi.monitoring.CollectorLink;
 import de.tu_berlin.cit.intercloud.occi.monitoring.MetricMixin;
 import de.tu_berlin.cit.intercloud.occi.monitoring.PassiveSensorMixin;
 import de.tu_berlin.cit.intercloud.occi.monitoring.SensorKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Path;
+import de.tu_berlin.cit.rwx4j.annotations.Path;
 
 /**
  * TODO

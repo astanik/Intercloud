@@ -23,7 +23,7 @@ import org.apache.xmlbeans.XmlException;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
+import de.tu_berlin.cit.rwx4j.representations.Representation;
 
 /**
  * TODO

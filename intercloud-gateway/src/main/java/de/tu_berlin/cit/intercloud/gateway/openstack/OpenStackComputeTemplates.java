@@ -38,7 +38,7 @@ import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.intercloud.occi.core.incarnation.RepresentationBuilder;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.ComputeKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.Representation;
+import de.tu_berlin.cit.rwx4j.representations.Representation;
 
 /**
  * TODO

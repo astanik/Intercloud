@@ -16,7 +16,7 @@ import de.tu_berlin.cit.intercloud.webapp.panels.request.OcciRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;

@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.model;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
+import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 
 import java.net.URISyntaxException;

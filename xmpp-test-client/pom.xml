@@ -59,13 +59,18 @@
     <dependencies>
         <!-- intercloud dependencies -->
         <dependency>
-            <groupId>de.tu_berlin.cit.intercloud</groupId>
-            <artifactId>xmpp-client</artifactId>
-            <version>0.0.1</version>
+            <groupId>de.tu-berlin.cit.rwx4j</groupId>
+            <artifactId>rwx4j-client</artifactId>
+            <version>0.3.0</version>
         </dependency>
         <dependency>
             <groupId>de.tu_berlin.cit.intercloud</groupId>
             <artifactId>intercloud-component</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>de.tu_berlin.cit.intercloud</groupId>
+            <artifactId>intercloud-util</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>

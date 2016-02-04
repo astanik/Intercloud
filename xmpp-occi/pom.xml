@@ -116,8 +116,8 @@
 	<dependencies>
 		<!-- intercloud dependencies -->
 		<dependency>
-			<groupId>de.tu_berlin.cit.rwx4j</groupId>
-			<artifactId>rwx4j-core</artifactId>
+			<groupId>de.tu-berlin.cit.rwx4j</groupId>
+			<artifactId>rwx4j-container</artifactId>
 			<version>0.3.0</version>
 		</dependency>
 		<!-- xmlbeans -->

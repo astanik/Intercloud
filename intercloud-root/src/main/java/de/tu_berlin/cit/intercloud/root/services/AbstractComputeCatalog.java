@@ -27,11 +27,11 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.occi.servicecatalog.ServiceCatalogMixin;
-import de.tu_berlin.cit.intercloud.xmpp.rest.ResourceInstance;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Consumes;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.Produces;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
+import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
+import de.tu_berlin.cit.rwx4j.annotations.Consumes;
+import de.tu_berlin.cit.rwx4j.annotations.Produces;
+import de.tu_berlin.cit.rwx4j.annotations.XmppMethod;
+import de.tu_berlin.cit.rwx4j.representations.UriText;
 
 /**
  * TODO

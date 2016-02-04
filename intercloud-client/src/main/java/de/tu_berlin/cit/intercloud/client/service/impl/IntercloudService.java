@@ -3,8 +3,8 @@ package de.tu_berlin.cit.intercloud.client.service.impl;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudService;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
@@ -23,7 +23,7 @@ public class IntercloudService implements IIntercloudService {
     }
 
     public synchronized IIntercloudClient newIntercloudClient(XmppURI uri) throws XMPPException, IOException, SmackException {
-        ResourceTypeDocument xwadl = this.xmppService.getXwadlDocument(uri);
+    	XwadlDocument xwadl = this.xmppService.getXwadlDocument(uri);
         this.intercloudClient = new IntercloudClient(this.xmppService, xwadl, uri);
         this.intercloudClientUri = uri;
         return intercloudClient;

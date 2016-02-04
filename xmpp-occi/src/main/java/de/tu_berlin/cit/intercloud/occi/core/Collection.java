@@ -16,7 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.occi.core;
 
-import de.tu_berlin.cit.intercloud.xmpp.rest.CollectionResourceInstance;
+import de.tu_berlin.cit.rwx4j.container.CollectionResourceInstance;
 
 /**
  * TODO

@@ -23,7 +23,7 @@ import de.tu_berlin.cit.intercloud.occi.sla.ServiceEvaluatorLink;
 import de.tu_berlin.cit.intercloud.occi.sla.TimeWindowMetricMixin;
 import de.tu_berlin.cit.intercloud.sla.mixins.AvailabilityMixin;
 import de.tu_berlin.cit.intercloud.xmpp.cep.mixins.EventLogMixin;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
 
 /**
  * This class implements an evaluation link that measures the availability of

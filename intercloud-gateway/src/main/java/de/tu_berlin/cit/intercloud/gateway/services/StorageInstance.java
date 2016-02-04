@@ -20,7 +20,7 @@ import de.tu_berlin.cit.intercloud.occi.core.Resource;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.annotations.Summary;
 import de.tu_berlin.cit.intercloud.occi.infrastructure.StorageKind;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
 
 
 /**

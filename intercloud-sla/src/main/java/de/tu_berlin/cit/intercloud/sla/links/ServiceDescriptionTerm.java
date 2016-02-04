@@ -25,12 +25,12 @@ import de.tu_berlin.cit.intercloud.occi.core.annotations.Classification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.sla.ServiceReferenceLink;
 import de.tu_berlin.cit.intercloud.occi.sla.ServiceReferenceLink.State;
-import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerSocket;
-import de.tu_berlin.cit.intercloud.xmpp.component.ResourceContainerSocketManager;
-import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.PathID;
-import de.tu_berlin.cit.intercloud.xmpp.rest.annotations.XmppMethod;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
+import de.tu_berlin.cit.rwx4j.component.ResourceContainerSocket;
+import de.tu_berlin.cit.rwx4j.component.ResourceContainerSocketManager;
+import de.tu_berlin.cit.rwx4j.XmppURI;
+import de.tu_berlin.cit.rwx4j.annotations.PathID;
+import de.tu_berlin.cit.rwx4j.annotations.XmppMethod;
+import de.tu_berlin.cit.rwx4j.rest.RestDocument;
 
 /**
  * This link points to a service. Furthermore, it not only links to and describes
@@ -61,8 +61,8 @@ public class ServiceDescriptionTerm extends Link {
 	    public void run() {
 	    	// retrieve representation
 	    	// TODO
-	    	ResourceDocument request = null;
-	    	ResourceDocument response = null;
+	    	RestDocument request = null;
+	    	RestDocument response = null;
 	    	try {
 				response = this.socket.invokeRestXML(request);
 			} catch (InterruptedException e) {

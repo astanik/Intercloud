@@ -88,12 +88,8 @@
 
 	<modules>
 		<module>intercloud-util</module>
-		<module>xmpp-core</module>
-		<module>xmpp-rest</module>
 		<module>xmpp-occi</module>
 		<module>xmpp-cep</module>
-		<module>xmpp-component</module>
-		<module>xmpp-client</module>
 		<module>xmpp-test-client</module>
 		<module>intercloud-sla</module>
 		<module>intercloud-component</module>
@@ -169,6 +165,30 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
