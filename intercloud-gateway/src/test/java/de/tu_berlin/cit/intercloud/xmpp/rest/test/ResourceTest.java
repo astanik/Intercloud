@@ -29,8 +29,9 @@ import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.gateway.services.Manager;
 import de.tu_berlin.cit.intercloud.gateway.services.Network;
 import de.tu_berlin.cit.intercloud.gateway.services.Storage;
-import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXwadlPlugin;
 import de.tu_berlin.cit.intercloud.xmpp.cep.sensor.Sensor;
+import de.tu_berlin.cit.rwx4j.container.ResourceContainer;
 import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
@@ -60,7 +61,8 @@ public class ResourceTest {
 	public void computeTest() {
 		try {
 			XmppURI uri = new XmppURI(testURI, "/occi");
-			OcciContainer container = new OcciContainer(uri);
+			ResourceContainer container = new ResourceContainer(uri);
+			container.addPlugin(new OcciXwadlPlugin());
 			container.addResource(new Compute());
 			ResourceInstance cmp = container.getResource("/compute");
 			Assert.assertTrue(cmp != null);
@@ -74,7 +76,8 @@ public class ResourceTest {
 	public void managerTest() {
 		try {
 			XmppURI uri = new XmppURI(testURI, "/occi");
-			OcciContainer container = new OcciContainer(uri);
+			ResourceContainer container = new ResourceContainer(uri);
+			container.addPlugin(new OcciXwadlPlugin());
 			container.addResource(new Manager());
 			ResourceInstance cmp = container.getResource("/manager");
 			Assert.assertTrue(cmp != null);
@@ -88,7 +91,8 @@ public class ResourceTest {
 	public void sensorTest() {
 		try {
 			XmppURI uri = new XmppURI(testURI, "/occi");
-			OcciContainer container = new OcciContainer(uri);
+			ResourceContainer container = new ResourceContainer(uri);
+			container.addPlugin(new OcciXwadlPlugin());
 			container.addResource(new Sensor());
 			ResourceInstance cmp = container.getResource("/sensor");
 			Assert.assertTrue(cmp != null);
@@ -102,7 +106,8 @@ public class ResourceTest {
 	public void networkTest() {
 		try {
 			XmppURI uri = new XmppURI(testURI, "/occi");
-			OcciContainer container = new OcciContainer(uri);
+			ResourceContainer container = new ResourceContainer(uri);
+			container.addPlugin(new OcciXwadlPlugin());
 			container.addResource(new Network());
 			ResourceInstance cmp = container.getResource("/network");
 			Assert.assertTrue(cmp != null);
@@ -116,7 +121,8 @@ public class ResourceTest {
 	public void storageTest() {
 		try {
 			XmppURI uri = new XmppURI(testURI, "/occi");
-			OcciContainer container = new OcciContainer(uri);
+			ResourceContainer container = new ResourceContainer(uri);
+			container.addPlugin(new OcciXwadlPlugin());
 			container.addResource(new Storage());
 			ResourceInstance cmp = container.getResource("/storage");
 			Assert.assertTrue(cmp != null);

@@ -24,8 +24,9 @@ import org.junit.Test;
 import de.tu_berlin.cit.intercloud.gateway.services.Compute;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
-import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXwadlPlugin;
+import de.tu_berlin.cit.rwx4j.container.ResourceContainer;
 import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import de.tu_berlin.cit.rwx4j.representations.UriListText;
@@ -47,7 +48,8 @@ public class ContainerTest {
 	public void computeTest() {
 	    try {
 			XmppURI uri = new XmppURI("exchange.cit-mac1.cit.tu-berlin.de", "");
-			OcciContainer container = new OcciContainer(uri);
+			ResourceContainer container = new ResourceContainer(uri);
+			container.addPlugin(new OcciXwadlPlugin());
 			System.out.println("Container base path: " + container.getPath());
 			container.addResource(new Compute());
 			ResourceInstance cmp = container.getResource("/compute");
@@ -56,7 +58,6 @@ public class ContainerTest {
 			Assert.assertTrue(cmp != null);
 			System.out.println("Compute absolute path: " + cmp.getPath());
 			XwadlDocument doc = container.getXWADL("/compute");
-			System.out.println(container.getSupportedTypes());
 			// client test
 /*
 			OcciClient client = new OcciClient(doc);

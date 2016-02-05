@@ -26,9 +26,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.tu_berlin.cit.intercloud.occi.core.OcciContainer;
-import de.tu_berlin.cit.intercloud.occi.core.OcciXwadlBuilder;
+import de.tu_berlin.cit.intercloud.occi.core.OcciXwadlPlugin;
 import de.tu_berlin.cit.intercloud.root.services.IaaSCatalog;
+import de.tu_berlin.cit.rwx4j.container.ResourceContainer;
 import de.tu_berlin.cit.rwx4j.container.ResourceInstance;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
@@ -59,7 +59,8 @@ public class ResourceTest {
 	public void catalogTest() {
 		try {
 			XmppURI uri = new XmppURI(testURI, "/occi");
-			OcciContainer container = new OcciContainer(uri);
+			ResourceContainer container = new ResourceContainer(uri);
+			container.addPlugin(new OcciXwadlPlugin());
 			container.addResource(new IaaSCatalog());
 			testXWADL(container);
 		} catch (URISyntaxException e) {
@@ -73,7 +74,7 @@ public class ResourceTest {
 			String path = resource.getPath();
 			String file = path.replace(uriPrefix, "test");
 			file = file.replace("/", "-");
-			writeXWADL(OcciXwadlBuilder.build(path, resource), file);
+//			writeXWADL(OcciXwadlPlugin.build(path, resource), file);
 			testXWADL(resource);
 		}
 	}
