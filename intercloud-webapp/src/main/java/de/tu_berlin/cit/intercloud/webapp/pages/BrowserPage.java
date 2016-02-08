@@ -284,9 +284,10 @@ public class BrowserPage extends UserTemplate {
             ComponentUtils.displayNone(this);
         }
 
-        public void setModel(AbstractRepresentationModel representation, MethodModel method) {
-            this.representationModel.setObject(representation);
-            this.methodModel.setObject(method);
+        @Override
+        protected void onBeforeRender() {
+            MethodModel method = methodModel.getObject();
+            AbstractRepresentationModel representation = representationModel.getObject();
 
             if (null != method && representation instanceof OcciRepresentationModel) {
                 this.replace(new OcciRequestPanel("requestPanel", methodModel, Model.of((OcciRepresentationModel) representation)));
@@ -295,6 +296,12 @@ public class BrowserPage extends UserTemplate {
                 this.replace(new EmptyPanel("requestPanel"));
                 ComponentUtils.displayNone(this);
             }
+            super.onBeforeRender();
+        }
+
+        public void setModel(AbstractRepresentationModel representation, MethodModel method) {
+            this.representationModel.setObject(representation);
+            this.methodModel.setObject(method);
         }
     }
 
@@ -307,8 +314,9 @@ public class BrowserPage extends UserTemplate {
             this.add(new EmptyPanel("responsePanel"));
         }
 
-        public void setModel(AbstractRepresentationModel representation) {
-            this.representationModel.setObject(representation);
+        @Override
+        protected void onBeforeRender() {
+            AbstractRepresentationModel representation = representationModel.getObject();
 
             if (representation instanceof UriRepresentationModel) {
                 this.replace(new UriResponsePanel("responsePanel",
@@ -328,6 +336,12 @@ public class BrowserPage extends UserTemplate {
             } else {
                 this.replace(new EmptyPanel("responsePanel"));
             }
+
+            super.onBeforeRender();
+        }
+
+        public void setModel(AbstractRepresentationModel representation) {
+            this.representationModel.setObject(representation);
         }
     }
 }
