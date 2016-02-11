@@ -1,10 +1,8 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
-import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
-import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -25,7 +23,7 @@ public abstract class CategoryRequestPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(CategoryRequestPanel.class);
     private final WebMarkupContainer container;
 
-    public CategoryRequestPanel(String markupId, IModel<MethodModel> methodModel, IModel<? extends CategoryModel> categoryModel) {
+    public CategoryRequestPanel(String markupId, IModel<? extends CategoryModel> categoryModel) {
         super(markupId);
 
         this.container = new WebMarkupContainer("container");
@@ -50,13 +48,11 @@ public abstract class CategoryRequestPanel extends Panel {
         templateChoice.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                MethodModel method = methodModel.getObject();
                 TemplateModel template = templateChoice.getModelObject();
                 try {
-                    IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(method.getUri());
-                    intercloudClient.applyTemplate(categoryModel.getObject(), template);
+                    TemplateHelper.applyTemplate(categoryModel.getObject(), template);
                 } catch (Exception e) {
-                    logger.error("Could apply template. title: {}, method: {}", template.getName(), method, e);
+                    logger.error("Could apply template. title: {}", template.getName(), e);
                     target.appendJavaScript("alert('Failed to apply template.');");
                 }
                 target.add(container);

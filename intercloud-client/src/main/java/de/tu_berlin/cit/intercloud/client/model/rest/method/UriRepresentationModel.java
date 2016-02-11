@@ -1,6 +1,8 @@
 package de.tu_berlin.cit.intercloud.client.model.rest.method;
 
-public class UriRepresentationModel extends AbstractRepresentationModel {
+public class UriRepresentationModel implements IRepresentationModel {
+    private static final long serialVersionUID = 491682385199857076L;
+
     String uri;
 
     public UriRepresentationModel() {

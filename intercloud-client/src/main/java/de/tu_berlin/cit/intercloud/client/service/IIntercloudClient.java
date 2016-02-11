@@ -5,12 +5,10 @@ import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationExcepti
 import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.ActionModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.ParameterModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -28,11 +26,9 @@ public interface IIntercloudClient {
 
     List<MethodModel> getMethods();
 
-    AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException;
+    IRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException;
 
-    CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel templateModel);
-
-    AbstractRepresentationModel executeMethod(MethodModel methodModel, AbstractRepresentationModel requestRepresentationModel)
+    IRepresentationModel executeMethod(MethodModel methodModel, IRepresentationModel requestRepresentationModel)
             throws XMPPException, IOException, SmackException, UnsupportedMethodException, AttributeFormatException, XmlException;
 
     /*

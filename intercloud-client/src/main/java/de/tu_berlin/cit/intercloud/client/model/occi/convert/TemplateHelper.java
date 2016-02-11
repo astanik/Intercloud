@@ -14,7 +14,7 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
-import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.RequestDocument;
 import org.apache.xmlbeans.XmlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +28,8 @@ import java.util.List;
 public class TemplateHelper {
     private static final Logger logger = LoggerFactory.getLogger(TemplateHelper.class);
 
-    public static ClassificationModel addTemplatesToClassificationModel(ClassificationModel classificationModel, MethodDocument.Method method) {
-        List<CategoryDocument.Category> templateDocuments = getTemplateDocuments(method);
+    public static ClassificationModel addTemplatesToClassificationModel(ClassificationModel classificationModel, RequestDocument.Request request) {
+        List<CategoryDocument.Category> templateDocuments = getTemplateDocuments(request);
         for (CategoryDocument.Category template : templateDocuments) {
             addTemplatesToClassificationModel(classificationModel, template);
         }
@@ -95,12 +95,11 @@ public class TemplateHelper {
         }
     }
 
-    private static List<CategoryDocument.Category> getTemplateDocuments(MethodDocument.Method method) {
+    private static List<CategoryDocument.Category> getTemplateDocuments(RequestDocument.Request request) {
         List<CategoryDocument.Category> result = new ArrayList<>();
-        if (method.isSetRequest()
-                && null != method.getRequest().getTemplateArray()
-                && 0 < method.getRequest().getTemplateArray().length) {
-            for (String template : method.getRequest().getTemplateArray()) {
+        if ( null != request.getTemplateArray()
+                && 0 < request.getTemplateArray().length) {
+            for (String template : request.getTemplateArray()) {
                 try {
                     CategoryDocument templateDocument = CategoryDocument.Factory.parse(template);
                     if (null != templateDocument.getCategory()) {

@@ -1,15 +1,14 @@
-package de.tu_berlin.cit.intercloud.client.model.rest.method;
+package de.tu_berlin.cit.intercloud.client.model.occi;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.IMixinModelContainer;
-import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.MixinModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OcciRepresentationModel extends AbstractRepresentationModel implements IMixinModelContainer {
+public class OcciRepresentationModel implements IRepresentationModel, IMixinModelContainer {
+    private static final long serialVersionUID = -7696772280697269027L;
+
     private KindModel kind;
     private final List<MixinModel> mixinList;
     // list of actual used links

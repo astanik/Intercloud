@@ -4,38 +4,19 @@ import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModelPlugin;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.ClassificationModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.ClassificationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelBuilder;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelConverter;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.ActionModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.ParameterModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelBuilder;
 import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelConverter;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.TextRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
-import de.tu_berlin.cit.intercloud.occi.core.OcciListXml;
-import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
-import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.PlainText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
-import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ActionDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
@@ -48,12 +29,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IntercloudClient implements IIntercloudClient {
     private static final Logger logger = LoggerFactory.getLogger(IntercloudClient.class);
 
+    private final RepresentationModelRegistry representationModelRegistry = RepresentationModelRegistry.getInstance();
     private final IXmppService xmppService;
     private final OcciClient occiClient;
     private final XmppURI uri;
@@ -85,59 +66,22 @@ public class IntercloudClient implements IIntercloudClient {
     }
 
     @Override
-    public AbstractRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException {
-        AbstractRepresentationModel result = null;
+    public IRepresentationModel getRepresentationModel(MethodModel methodModel) throws UnsupportedMethodException, MissingClassificationException {
         if (null == methodModel.getRequestMediaType()) {
             // do nothing --> return null
-        } else if (PlainText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // text/plain
-            result = new TextRepresentationModel();
-        } else if (UriText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // text/uri
-            result = new UriRepresentationModel();
-        } else if (UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // text/uri-list
-            result = new UriListRepresentationModel();
-        } else if (OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // xml/occi - occi representation model
-            result = buildOcciRepresentationModel(methodModel);
-        } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            // xml/occi-list - occi list representation model
-            OcciRepresentationModel representationModel = buildOcciRepresentationModel(methodModel);
-            OcciListRepresentationModel listRepresentationModel = new OcciListRepresentationModel(Arrays.asList(representationModel));
-            result = listRepresentationModel;
-        } else {
+            return null;
+        }
+        IRepresentationModelPlugin modelPlugin = representationModelRegistry.getRepresentationModelPlugin(methodModel.getRequestMediaType());
+        if (null == modelPlugin) {
             throw new UnsupportedMethodException("The request media type is not supported.");
         }
 
-        return result;
-    }
-
-    private OcciRepresentationModel buildOcciRepresentationModel(MethodModel methodModel) throws MissingClassificationException {
-        long start = System.currentTimeMillis();
-
-        MethodDocument.Method methodDocument = methodModel.getReference();
-        ClassificationDocument.Classification classificationDocument = occiClient.getClassification();
-        if (null == classificationDocument) {
-            throw new MissingClassificationException("Classification is not specified in xwadl.");
-        }
-        ClassificationModel classificationModel = ClassificationModelBuilder.build(classificationDocument);
-        TemplateHelper.addTemplatesToClassificationModel(classificationModel, methodDocument);
-        OcciRepresentationModel representation = RepresentationModelBuilder.build(classificationModel);
-
-        logger.info("XmlBean --> RepresentationModel: {} ms", System.currentTimeMillis() - start);
-        return representation;
+        MethodDocument.Method method = methodModel.getReference();
+        return modelPlugin.getRequestModel(method.getRequest(), occiClient.getResourceTypeDocument().getResourceType().getGrammars());
     }
 
     @Override
-    public CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel templateModel) {
-        // apply template
-        TemplateHelper.applyTemplate(categoryModel, templateModel);
-        return categoryModel;
-    }
-
-    @Override
-    public AbstractRepresentationModel executeMethod(MethodModel methodModel, AbstractRepresentationModel requestRepresentationModel)
+    public IRepresentationModel executeMethod(MethodModel methodModel, IRepresentationModel requestRepresentationModel)
             throws XMPPException, IOException, SmackException, AttributeFormatException, XmlException, UnsupportedMethodException {
         MethodDocument.Method methodDocument = methodModel.getReference();
 
@@ -145,80 +89,31 @@ public class IntercloudClient implements IIntercloudClient {
         OcciMethodInvocation methodInvocation = occiClient.buildMethodInvocation(methodDocument);
         if (null == requestRepresentationModel && null == methodModel.getRequestMediaType()) {
             // do nothing
-        } else if (requestRepresentationModel instanceof TextRepresentationModel && PlainText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            methodInvocation.setRequestRepresentation(((TextRepresentationModel) requestRepresentationModel).getText());
-        } else if (requestRepresentationModel instanceof UriRepresentationModel && UriText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            methodInvocation.setRequestRepresentation(((UriRepresentationModel) requestRepresentationModel).getUri());
-        } else if (requestRepresentationModel instanceof UriListRepresentationModel && UriListText.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            methodInvocation = invokeMethod(methodInvocation, (UriListRepresentationModel) requestRepresentationModel);
-        } else if (requestRepresentationModel instanceof OcciRepresentationModel && OcciXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            CategoryDocument categoryDocument = RepresentationModelConverter.convertToXml((OcciRepresentationModel) requestRepresentationModel);
-            methodInvocation.setRequestRepresentation(categoryDocument.toString());
-        } else if (requestRepresentationModel instanceof OcciListRepresentationModel && OcciListXml.MEDIA_TYPE.equals(methodModel.getRequestMediaType())) {
-            CategoryListDocument categoryListDocument = RepresentationModelConverter.convertToXml((OcciListRepresentationModel) requestRepresentationModel);
-            methodInvocation.setRequestRepresentation(categoryListDocument.toString());
         } else {
-            throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
+            IRepresentationModelPlugin modelPlugin = representationModelRegistry.getRepresentationModelPlugin(methodModel.getRequestMediaType());
+            if (null != modelPlugin) {
+                methodInvocation.setRequestRepresentation(modelPlugin.getRepresentationString(requestRepresentationModel));
+            } else {
+                throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
+            }
         }
 
         loggingModel.setRestRequest(methodInvocation.getXmlDocument());
         ResourceDocument response = xmppService.sendRestDocument(this.uri, methodInvocation.getXmlDocument());
         loggingModel.setRestResponse(response);
         // Response: ResourceDocument (rest xml) --> RepresentationModel
-        AbstractRepresentationModel representationModel = null;
+        IRepresentationModel representationModel = null;
         if (response.getResource().isSetMethod()
                 && response.getResource().getMethod().isSetResponse()) {
             String responseMediaType = response.getResource().getMethod().getResponse().getMediaType();
-            String responseRepresentation = response.getResource().getMethod().getResponse().getRepresentation();
-            if (UriText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
-                    && UriText.MEDIA_TYPE.equals(responseMediaType)) {
-                representationModel = new UriRepresentationModel(responseRepresentation);
-            } else if (UriListText.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
-                    && UriListText.MEDIA_TYPE.equals(responseMediaType)) {
-                representationModel = parseUriListMethodResponse(responseRepresentation);
-            } else if (OcciXml.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
-                    && OcciXml.MEDIA_TYPE.equals(responseMediaType)) {
-                representationModel = parseOcciMethodResponse(responseRepresentation);
-            } else if (OcciListXml.MEDIA_TYPE.equals(methodModel.getResponseMediaType())
-                    && OcciListXml.MEDIA_TYPE.equals(responseMediaType)) {
-                representationModel = parseOcciListMethodResponse(responseRepresentation);
-            } else {
-                representationModel = new TextRepresentationModel(responseRepresentation);
+            IRepresentationModelPlugin modelPlugin = representationModelRegistry.getRepresentationModelPlugin(responseMediaType);
+            if (null != modelPlugin) {
+                representationModel = modelPlugin.getResponseModel(response.getResource().getMethod().getResponse(),
+                        occiClient.getResourceTypeDocument().getResourceType().getGrammars());
             }
         }
 
         return representationModel;
-    }
-
-    private OcciMethodInvocation invokeMethod(OcciMethodInvocation methodInvocation, UriListRepresentationModel representationModel) {
-        List<String> uriList = representationModel.getUriList();
-        if (null != uriList) {
-            methodInvocation.setRequestRepresentation(String.join(";", uriList));
-        }
-        return methodInvocation;
-    }
-
-    private OcciRepresentationModel parseOcciMethodResponse(String response) throws XmlException {
-        CategoryDocument categoryDocument = CategoryDocument.Factory.parse(response);
-        ClassificationModel classificationModel = ClassificationModelBuilder.build(occiClient.getClassification());
-        return RepresentationModelBuilder.build(classificationModel, categoryDocument);
-    }
-
-    private OcciListRepresentationModel parseOcciListMethodResponse(String response) throws XmlException {
-        CategoryListDocument categoryListDocument = CategoryListDocument.Factory.parse(response);
-        ClassificationModel classificationModel = ClassificationModelBuilder.build(occiClient.getClassification());
-        return RepresentationModelBuilder.build(classificationModel, categoryListDocument);
-    }
-
-    private UriListRepresentationModel parseUriListMethodResponse(String response) {
-        UriListRepresentationModel uriRepresentationModel = new UriListRepresentationModel();
-        if (null != response) {
-            String[] links = response.split(";");
-            if (null != links) {
-                uriRepresentationModel.setUriList(Arrays.asList(links));
-            }
-        }
-        return uriRepresentationModel;
     }
 
     @Override

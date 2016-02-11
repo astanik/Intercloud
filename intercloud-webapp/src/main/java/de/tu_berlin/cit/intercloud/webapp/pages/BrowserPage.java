@@ -4,10 +4,10 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.AbstractRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.occi.OcciListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.occi.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.TextRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.UriRepresentationModel;
@@ -145,12 +145,12 @@ public class BrowserPage extends UserTemplate {
         }
     }
 
-    private void executeMethod(AbstractRepresentationModel representationModel, MethodModel methodModel) {
+    private void executeMethod(IRepresentationModel representationModel, MethodModel methodModel) {
         try {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
                     .getIntercloudClient(methodModel.getUri());
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
-            AbstractRepresentationModel representation = intercloudClient.executeMethod(methodModel, representationModel);
+            IRepresentationModel representation = intercloudClient.executeMethod(methodModel, representationModel);
             // display response
             this.responseContainer.setModel(representation);
             // hide request
@@ -216,7 +216,7 @@ public class BrowserPage extends UserTemplate {
                     } else {
                         // get request representation model
                         try {
-                            AbstractRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
+                            IRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
                                     .getIntercloudClient(methodModel.getUri())
                                     .getRepresentationModel(methodModel);
                             // display request
@@ -246,7 +246,7 @@ public class BrowserPage extends UserTemplate {
 
     private class RequestForm extends Form {
         private Model<MethodModel> methodModel = Model.of();
-        private Model<AbstractRepresentationModel> representationModel = Model.of();
+        private Model<IRepresentationModel> representationModel = Model.of();
 
         public RequestForm(String markupId) {
             super(markupId);
@@ -265,10 +265,10 @@ public class BrowserPage extends UserTemplate {
         @Override
         protected void onBeforeRender() {
             MethodModel method = methodModel.getObject();
-            AbstractRepresentationModel representation = representationModel.getObject();
+            IRepresentationModel representation = representationModel.getObject();
 
             if (null != method && representation instanceof OcciRepresentationModel) {
-                this.replace(new OcciRequestPanel("requestPanel", methodModel, Model.of((OcciRepresentationModel) representation)));
+                this.replace(new OcciRequestPanel("requestPanel", Model.of((OcciRepresentationModel) representation)));
             }
             super.onBeforeRender();
         }
@@ -279,14 +279,14 @@ public class BrowserPage extends UserTemplate {
                     && representationModel.getObject() instanceof OcciRepresentationModel;
         }
 
-        public void setModel(AbstractRepresentationModel representation, MethodModel method) {
+        public void setModel(IRepresentationModel representation, MethodModel method) {
             this.representationModel.setObject(representation);
             this.methodModel.setObject(method);
         }
     }
 
     private class ResponseContainer extends WebMarkupContainer {
-        private Model<AbstractRepresentationModel> representationModel = Model.of();
+        private Model<IRepresentationModel> representationModel = Model.of();
 
         public ResponseContainer(String markupId) {
             super(markupId);
@@ -296,7 +296,7 @@ public class BrowserPage extends UserTemplate {
 
         @Override
         protected void onBeforeRender() {
-            AbstractRepresentationModel representation = representationModel.getObject();
+            IRepresentationModel representation = representationModel.getObject();
 
             if (representation instanceof UriRepresentationModel) {
                 this.replace(new UriResponsePanel("responsePanel",
@@ -323,7 +323,7 @@ public class BrowserPage extends UserTemplate {
             return null != representationModel.getObject();
         }
 
-        public void setModel(AbstractRepresentationModel representation) {
+        public void setModel(IRepresentationModel representation) {
             this.representationModel.setObject(representation);
         }
     }

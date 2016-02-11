@@ -13,7 +13,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,6 @@ public class ExamplePage extends Template {
 
         this.add(new AttributeForm("attributeForm"));
         this.add(new KindRequestPanel("kindPanel",
-                Model.of(),
                 new LoadableDetachableModel<KindModel>() {
                     @Override
                     protected KindModel load() {
