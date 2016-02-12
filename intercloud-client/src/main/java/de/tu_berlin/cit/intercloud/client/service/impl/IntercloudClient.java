@@ -71,7 +71,7 @@ public class IntercloudClient implements IIntercloudClient {
             // do nothing --> return null
             return null;
         }
-        IRepresentationModelPlugin modelPlugin = representationModelRegistry.getRepresentationModelPlugin(methodModel.getRequestMediaType());
+        IRepresentationModelPlugin modelPlugin = representationModelRegistry.getPlugin(methodModel.getRequestMediaType());
         if (null == modelPlugin) {
             throw new UnsupportedMethodException("The request media type is not supported.");
         }
@@ -90,7 +90,7 @@ public class IntercloudClient implements IIntercloudClient {
         if (null == requestRepresentationModel && null == methodModel.getRequestMediaType()) {
             // do nothing
         } else {
-            IRepresentationModelPlugin modelPlugin = representationModelRegistry.getRepresentationModelPlugin(methodModel.getRequestMediaType());
+            IRepresentationModelPlugin modelPlugin = representationModelRegistry.getPlugin(methodModel.getRequestMediaType());
             if (null != modelPlugin) {
                 methodInvocation.setRequestRepresentation(modelPlugin.getRepresentationString(requestRepresentationModel));
             } else {
@@ -106,7 +106,7 @@ public class IntercloudClient implements IIntercloudClient {
         if (response.getResource().isSetMethod()
                 && response.getResource().getMethod().isSetResponse()) {
             String responseMediaType = response.getResource().getMethod().getResponse().getMediaType();
-            IRepresentationModelPlugin modelPlugin = representationModelRegistry.getRepresentationModelPlugin(responseMediaType);
+            IRepresentationModelPlugin modelPlugin = representationModelRegistry.getPlugin(responseMediaType);
             if (null != modelPlugin) {
                 representationModel = modelPlugin.getResponseModel(response.getResource().getMethod().getResponse(),
                         occiClient.getResourceTypeDocument().getResourceType().getGrammars());

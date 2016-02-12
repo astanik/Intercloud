@@ -6,19 +6,12 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.OcciRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.TextRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.UriRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.request.OcciRequestPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciListResponsePanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciResponsePanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.IRepresentationPanelPlugin;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.RepresentationPanelRegistry;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -34,6 +27,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
@@ -247,6 +241,7 @@ public class BrowserPage extends UserTemplate {
     private class RequestForm extends Form {
         private Model<MethodModel> methodModel = Model.of();
         private Model<IRepresentationModel> representationModel = Model.of();
+        private Panel requestPanel = null;
 
         public RequestForm(String markupId) {
             super(markupId);
@@ -263,20 +258,30 @@ public class BrowserPage extends UserTemplate {
         }
 
         @Override
-        protected void onBeforeRender() {
-            MethodModel method = methodModel.getObject();
+        protected void onConfigure() {
             IRepresentationModel representation = representationModel.getObject();
-
-            if (null != method && representation instanceof OcciRepresentationModel) {
-                this.replace(new OcciRequestPanel("requestPanel", Model.of((OcciRepresentationModel) representation)));
+            IRepresentationPanelPlugin panelPlugin = RepresentationPanelRegistry.getInstance().getPlugin(representation);
+            if (null != panelPlugin) {
+                this.requestPanel = panelPlugin.getRequestPanel("requestPanel", representation);
+            } else {
+                this.requestPanel = null;
             }
+
+            super.onConfigure();
+        }
+
+        @Override
+        protected void onBeforeRender() {
+            if (null != this.requestPanel) {
+                this.replace(this.requestPanel);
+            }
+
             super.onBeforeRender();
         }
 
         @Override
         public boolean isVisible() {
-            return null != methodModel.getObject()
-                    && representationModel.getObject() instanceof OcciRepresentationModel;
+            return null != this.requestPanel;
         }
 
         public void setModel(IRepresentationModel representation, MethodModel method) {
@@ -287,6 +292,7 @@ public class BrowserPage extends UserTemplate {
 
     private class ResponseContainer extends WebMarkupContainer {
         private Model<IRepresentationModel> representationModel = Model.of();
+        private Panel responsePanel = null;
 
         public ResponseContainer(String markupId) {
             super(markupId);
@@ -295,24 +301,22 @@ public class BrowserPage extends UserTemplate {
         }
 
         @Override
-        protected void onBeforeRender() {
+        protected void onConfigure() {
             IRepresentationModel representation = representationModel.getObject();
+            IRepresentationPanelPlugin panelPlugin = RepresentationPanelRegistry.getInstance().getPlugin(representation);
+            if (null != panelPlugin) {
+                this.responsePanel = panelPlugin.getResponsePanel("responsePanel", representation);
+            } else {
+                this.responsePanel = null;
+            }
 
-            if (representation instanceof UriRepresentationModel) {
-                this.replace(new UriResponsePanel("responsePanel",
-                        Model.of(new UriListRepresentationModel(((UriRepresentationModel) representation).getUri()))));
-            } else if (representation instanceof UriListRepresentationModel) {
-                this.replace(new UriResponsePanel("responsePanel",
-                        Model.of((UriListRepresentationModel) representation)));
-            } else if (representation instanceof TextRepresentationModel) {
-                this.replace(new Label("responsePanel",
-                        Model.of(((TextRepresentationModel) representation).getText())));
-            } else if (representation instanceof OcciRepresentationModel) {
-                this.replace(new OcciResponsePanel("responsePanel",
-                        Model.of((OcciRepresentationModel) representation)));
-            } else if (representation instanceof OcciListRepresentationModel) {
-                this.replace(new OcciListResponsePanel("responsePanel",
-                        Model.of((OcciListRepresentationModel) representation)));
+            super.onConfigure();
+        }
+
+        @Override
+        protected void onBeforeRender() {
+            if (null != this.responsePanel) {
+                this.replace(this.responsePanel);
             }
 
             super.onBeforeRender();
@@ -320,7 +324,7 @@ public class BrowserPage extends UserTemplate {
 
         @Override
         public boolean isVisible() {
-            return null != representationModel.getObject();
+            return null != this.responsePanel;
         }
 
         public void setModel(IRepresentationModel representation) {

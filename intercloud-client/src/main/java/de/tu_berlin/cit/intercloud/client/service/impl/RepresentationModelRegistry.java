@@ -18,22 +18,22 @@ public class RepresentationModelRegistry implements IRepresentationModelRegistry
 
     private RepresentationModelRegistry() {
         pluginMap = new ConcurrentHashMap<>();
-        registerRepresentationModelPlugin(new TextRepresentationModelPlugin());
-        registerRepresentationModelPlugin(new UriRepresentationModelPlugin());
-        registerRepresentationModelPlugin(new UriListRepresentationModelPlugin());
-        registerRepresentationModelPlugin(new OcciRepresentationModelPlugin());
-        registerRepresentationModelPlugin(new OcciListRepresentationModelPlugin());
+        registerPlugin(new TextRepresentationModelPlugin());
+        registerPlugin(new UriRepresentationModelPlugin());
+        registerPlugin(new UriListRepresentationModelPlugin());
+        registerPlugin(new OcciRepresentationModelPlugin());
+        registerPlugin(new OcciListRepresentationModelPlugin());
     }
 
     public static RepresentationModelRegistry getInstance() {
         return INSTANCE;
     }
 
-    public IRepresentationModelPlugin getRepresentationModelPlugin(String mediaType) {
+    public IRepresentationModelPlugin getPlugin(String mediaType) {
         return pluginMap.get(mediaType);
     }
 
-    public void registerRepresentationModelPlugin(IRepresentationModelPlugin plugin) {
+    public void registerPlugin(IRepresentationModelPlugin plugin) {
         pluginMap.put(plugin.getMediaType(), plugin);
     }
 }
