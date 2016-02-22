@@ -18,7 +18,7 @@ public class UriRepresentationPanelPlugin implements IRepresentationPanelPlugin<
     }
 
     @Override
-    public Panel getResponsePanel(String markupId, UriRepresentationModel representationModel) {
+    public UriResponsePanel getResponsePanel(String markupId, UriRepresentationModel representationModel) {
         return new UriResponsePanel(markupId,
                 Model.of(new UriListRepresentationModel(representationModel.getUri())));
     }

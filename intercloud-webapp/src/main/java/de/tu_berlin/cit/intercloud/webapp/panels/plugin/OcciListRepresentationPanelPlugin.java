@@ -17,7 +17,7 @@ public class OcciListRepresentationPanelPlugin implements IRepresentationPanelPl
     }
 
     @Override
-    public Panel getResponsePanel(String markupId, OcciListRepresentationModel representationModel) {
+    public OcciListResponsePanel getResponsePanel(String markupId, OcciListRepresentationModel representationModel) {
         return new OcciListResponsePanel(markupId, Model.of(representationModel));
     }
 }

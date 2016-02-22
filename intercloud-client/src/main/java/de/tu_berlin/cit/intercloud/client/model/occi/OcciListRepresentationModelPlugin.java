@@ -29,7 +29,7 @@ public class OcciListRepresentationModelPlugin implements IRepresentationModelPl
 
     @Override
     public String getRepresentationString(OcciListRepresentationModel representationModel) {
-        return representationModel instanceof OcciListRepresentationModel
+        return null != representationModel
                 ? RepresentationModelConverter.convertToXml(representationModel).toString()
                 : null;
     }
