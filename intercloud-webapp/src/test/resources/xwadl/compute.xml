@@ -4,406 +4,428 @@
     </urn:documentation>
     <urn:grammars>
         <urn:documentation title="foo">bar</urn:documentation>
-        <urn1:Classification xmlns:urn1="urn:xmpp:occi-classification">
-            <urn1:KindType>
-                <urn1:term>compute</urn1:term>
-                <urn1:schema>http://schema.ogf.org/occi/infrastructure#</urn1:schema>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.compute.architecture</urn1:name>
-                    <urn1:type>ENUM</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>CPU Architecture of the instance: Enum{x86,x64}</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.compute.cores</urn1:name>
-                    <urn1:type>INTEGER</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default>1</urn1:default>
-                    <urn1:description>Number of virtual CPU cores assigned to the instance</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.compute.hostname</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Fully qualified DNS host name for the instance</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.compute.share</urn1:name>
-                    <urn1:type>INTEGER</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Relative number of CPU shares for the instance</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.compute.memory</urn1:name>
-                    <urn1:type>DOUBLE</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Minimum RAM in gigabytes allocated to the instance</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.compute.state</urn1:name>
-                    <urn1:type>ENUM</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Current state of the instance: Enum{active, inactive, suspended, error}
-                    </urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.compute.state.message</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Human-readable explanation of the current instance state</urn1:description>
-                </urn1:attributeClassification>
-            </urn1:KindType>
-            <urn1:MixinType>
-                <urn1:term>openstackcompute</urn1:term>
-                <urn1:schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</urn1:schema>
-                <urn1:attributeClassification>
-                    <urn1:name>openstack.compute.name</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>The name of the virtual machine.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>openstack.compute.keyname</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>The name of the key to access the virtual machine.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:applies>http://schema.ogf.org/occi/infrastructure#compute</urn1:applies>
-            </urn1:MixinType>
-            <urn1:MixinType>
-                <urn1:term>openstackimage</urn1:term>
-                <urn1:schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</urn1:schema>
-                <urn1:attributeClassification>
-                    <urn1:name>openstack.image.name</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>The name of the image.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>openstack.image.mindisk</urn1:name>
-                    <urn1:type>INTEGER</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Minimum disk space required for this image.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>openstack.image.minram</urn1:name>
-                    <urn1:type>INTEGER</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Minimum memory required for this image.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:applies>http://schema.ogf.org/occi/infrastructure#compute</urn1:applies>
-            </urn1:MixinType>
-            <urn1:MixinType>
-                <urn1:term>ipnetworkinterface</urn1:term>
-                <urn1:schema>http://schema.ogf.org/occi/infrastructure/networkinterface#</urn1:schema>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.networkinterface.address</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Internet Protocol(IP) network address (e.g. 192.168.0.1/24, fc00::/7) of the
+        <Classification xmlns="urn:xmpp:occi-classification">
+            <KindType>
+                <term>compute</term>
+                <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                <attributeClassification>
+                    <name>occi.compute.architecture</name>
+                    <type>ENUM</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>CPU Architecture of the instance: Enum{x86,x64}</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.compute.cores</name>
+                    <type>INTEGER</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default>1</default>
+                    <description>Number of virtual CPU cores assigned to the instance</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.compute.hostname</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Fully qualified DNS host name for the instance</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.compute.share</name>
+                    <type>INTEGER</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Relative number of CPU shares for the instance</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.compute.memory</name>
+                    <type>DOUBLE</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Minimum RAM in gigabytes allocated to the instance</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.compute.state</name>
+                    <type>ENUM</type>
+                    <mutable>false</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>Current state of the instance: Enum{active, inactive, suspended, error}
+                    </description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.compute.state.message</name>
+                    <type>STRING</type>
+                    <mutable>false</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Human-readable explanation of the current instance state</description>
+                </attributeClassification>
+            </KindType>
+            <MixinType>
+                <term>openstackcompute</term>
+                <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
+                <attributeClassification>
+                    <name>openstack.compute.name</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>The name of the virtual machine.</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>openstack.compute.keyname</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>The name of the key to access the virtual machine.</description>
+                </attributeClassification>
+                <applies>http://schema.ogf.org/occi/infrastructure#compute</applies>
+            </MixinType>
+            <MixinType>
+                <term>openstackimage</term>
+                <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
+                <attributeClassification>
+                    <name>openstack.image.name</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>The name of the image.</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>openstack.image.mindisk</name>
+                    <type>INTEGER</type>
+                    <mutable>false</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Minimum disk space required for this image.</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>openstack.image.minram</name>
+                    <type>INTEGER</type>
+                    <mutable>false</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Minimum memory required for this image.</description>
+                </attributeClassification>
+                <applies>http://schema.ogf.org/occi/infrastructure#compute</applies>
+            </MixinType>
+            <MixinType>
+                <term>ipnetworkinterface</term>
+                <schema>http://schema.ogf.org/occi/infrastructure/networkinterface#</schema>
+                <attributeClassification>
+                    <name>occi.networkinterface.address</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>Internet Protocol(IP) network address (e.g. 192.168.0.1/24, fc00::/7) of the
                         link
-                    </urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.networkinterface.gateway</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Internet Protocol(IP) network address (e.g. 192.168.0.1/24, fc00::/7)
-                    </urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.networkinterface.allocation</urn1:name>
-                    <urn1:type>ENUM</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Address mechanism: dynamic e.g. usesthe dynamic host configuration protocol,static
+                    </description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.networkinterface.gateway</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Internet Protocol(IP) network address (e.g. 192.168.0.1/24, fc00::/7)
+                    </description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.networkinterface.allocation</name>
+                    <type>ENUM</type>
+                    <mutable>true</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>Address mechanism: dynamic e.g. usesthe dynamic host configuration protocol,static
                         e.g. uses user supplied static network configurations.
-                    </urn1:description>
-                </urn1:attributeClassification>
-                <urn1:applies>http://schema.ogf.org/occi/infrastructure#networkinterface</urn1:applies>
-            </urn1:MixinType>
-            <urn1:LinkType>
-                <urn1:term>storagelink</urn1:term>
-                <urn1:schema>http://schema.ogf.org/occi/infrastructure#</urn1:schema>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.storagelink.deviceid</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Device identifier as defined by the OCCI service provider.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.storagelink.mountpoint</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Point to where the storage is mounted in the guest OS.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.storagelink.state</urn1:name>
-                    <urn1:type>ENUM</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Current status of the instance.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.storagelink.state.message</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Human-readable explanation of the current instance state.</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:relation>http://schema.ogf.org/occi/infrastructure#storage</urn1:relation>
-            </urn1:LinkType>
-            <urn1:LinkType>
-                <urn1:term>networkinterface</urn1:term>
-                <urn1:schema>http://schema.ogf.org/occi/infrastructure#</urn1:schema>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.networkinterface.interface</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Identifier that relates the link to the link’s device interface</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.networkinterface.mac</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>true</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>MAC address associated with the link's device interface</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.networkinterface.state</urn1:name>
-                    <urn1:type>ENUM</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>true</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Current state of the instance: Enum{active, inactive, error}</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:attributeClassification>
-                    <urn1:name>occi.networkinterface.message</urn1:name>
-                    <urn1:type>STRING</urn1:type>
-                    <urn1:mutable>false</urn1:mutable>
-                    <urn1:required>false</urn1:required>
-                    <urn1:default/>
-                    <urn1:description>Human-readable explanation of the current instance state</urn1:description>
-                </urn1:attributeClassification>
-                <urn1:relation>http://schema.ogf.org/occi/infrastructure#network</urn1:relation>
-            </urn1:LinkType>
-        </urn1:Classification>
+                    </description>
+                </attributeClassification>
+                <applies>http://schema.ogf.org/occi/infrastructure#networkinterface</applies>
+            </MixinType>
+            <LinkType>
+                <term>storagelink</term>
+                <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                <attributeClassification>
+                    <name>occi.storagelink.deviceid</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>Device identifier as defined by the OCCI service provider.</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.storagelink.mountpoint</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Point to where the storage is mounted in the guest OS.</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.storagelink.state</name>
+                    <type>ENUM</type>
+                    <mutable>false</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>Current status of the instance.</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.storagelink.state.message</name>
+                    <type>STRING</type>
+                    <mutable>false</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Human-readable explanation of the current instance state.</description>
+                </attributeClassification>
+                <relation>http://schema.ogf.org/occi/infrastructure#storage</relation>
+            </LinkType>
+            <LinkType>
+                <term>networkinterface</term>
+                <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                <attributeClassification>
+                    <name>occi.networkinterface.interface</name>
+                    <type>STRING</type>
+                    <mutable>false</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>Identifier that relates the link to the link’s device interface</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.networkinterface.mac</name>
+                    <type>STRING</type>
+                    <mutable>true</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>MAC address associated with the link's device interface</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.networkinterface.state</name>
+                    <type>ENUM</type>
+                    <mutable>false</mutable>
+                    <required>true</required>
+                    <default/>
+                    <description>Current state of the instance: Enum{active, inactive, error}</description>
+                </attributeClassification>
+                <attributeClassification>
+                    <name>occi.networkinterface.message</name>
+                    <type>STRING</type>
+                    <mutable>false</mutable>
+                    <required>false</required>
+                    <default/>
+                    <description>Human-readable explanation of the current instance state</description>
+                </attributeClassification>
+                <relation>http://schema.ogf.org/occi/infrastructure#network</relation>
+            </LinkType>
+        </Classification>
     </urn:grammars>
     <urn:method type="POST">
         <urn:request mediaType="xml/occi">
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>1</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>1</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>512.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name m1.tiny</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>2</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>1</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>2048.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name m1.small</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>2c6f7dfe-c997-467a-8da9-2805d531d5b2</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>2</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>8192.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name m1.DNS</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>3</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>2</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>4096.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name m1.medium</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>4</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>4</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>8192.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name m1.large</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>5</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>8</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>16384.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name m1.xlarge</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>99444788-dda2-4dd4-8989-c665bd141534</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>2</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>2048.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name CLEARWATER</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Kind>
-    <term>compute</term>
-    <schema>http://schema.ogf.org/occi/infrastructure#</schema>
-    <title>dbe7b223-d7d8-4729-ade0-7dbbdfa105ca</title>
-    <attribute name="occi.compute.cores">
-      <INTEGER>4</INTEGER>
-    </attribute>
-    <attribute name="occi.compute.memory">
-      <DOUBLE>8192.0</DOUBLE>
-    </attribute>
-    <attribute name="occi.compute.state.message">
-      <STRING>Flavor name m1.POWER</STRING>
-    </attribute>
-  </Kind>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Mixin>
-    <term>openstackimage</term>
-    <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
-    <title>f5036ba0-429a-4dfb-9abc-3c7399c319bf</title>
-    <attribute name="openstack.image.name">
-      <STRING>Ubuntu GUI Client</STRING>
-    </attribute>
-    <attribute name="openstack.image.mindisk">
-      <INTEGER>40</INTEGER>
-    </attribute>
-    <attribute name="openstack.image.minram">
-      <INTEGER>0</INTEGER>
-    </attribute>
-  </Mixin>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Mixin>
-    <term>openstackimage</term>
-    <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
-    <title>c2f214b1-e2ea-4e40-a075-41038bca88c2</title>
-    <attribute name="openstack.image.name">
-      <STRING>Ubuntu</STRING>
-    </attribute>
-    <attribute name="openstack.image.mindisk">
-      <INTEGER>0</INTEGER>
-    </attribute>
-    <attribute name="openstack.image.minram">
-      <INTEGER>0</INTEGER>
-    </attribute>
-  </Mixin>
-</Category>]]></urn:template>
-            <urn:template><![CDATA[<Category xmlns="urn:xmpp:occi-representation">
-  <Mixin>
-    <term>openstackimage</term>
-    <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
-    <title>86dc9779-d153-4a97-9262-86edcaa81b02</title>
-    <attribute name="openstack.image.name">
-      <STRING>Cirros</STRING>
-    </attribute>
-    <attribute name="openstack.image.mindisk">
-      <INTEGER>0</INTEGER>
-    </attribute>
-    <attribute name="openstack.image.minram">
-      <INTEGER>0</INTEGER>
-    </attribute>
-  </Mixin>
-</Category>]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>1</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>1</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>512.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name m1.tiny</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>2</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>1</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>2048.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name m1.small</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>2c6f7dfe-c997-467a-8da9-2805d531d5b2</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>2</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>8192.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name m1.DNS</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>3</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>2</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>4096.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name m1.medium</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>4</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>4</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>8192.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name m1.large</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>5</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>8</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>16384.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name m1.xlarge</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>99444788-dda2-4dd4-8989-c665bd141534</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>2</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>2048.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name CLEARWATER</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Kind>
+                        <term>compute</term>
+                        <schema>http://schema.ogf.org/occi/infrastructure#</schema>
+                        <title>dbe7b223-d7d8-4729-ade0-7dbbdfa105ca</title>
+                        <attribute name="occi.compute.cores">
+                            <INTEGER>4</INTEGER>
+                        </attribute>
+                        <attribute name="occi.compute.memory">
+                            <DOUBLE>8192.0</DOUBLE>
+                        </attribute>
+                        <attribute name="occi.compute.state.message">
+                            <STRING>Flavor name m1.POWER</STRING>
+                        </attribute>
+                    </Kind>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Mixin>
+                        <term>openstackimage</term>
+                        <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
+                        <title>f5036ba0-429a-4dfb-9abc-3c7399c319bf</title>
+                        <attribute name="openstack.image.name">
+                            <STRING>Ubuntu GUI Client</STRING>
+                        </attribute>
+                        <attribute name="openstack.image.mindisk">
+                            <INTEGER>40</INTEGER>
+                        </attribute>
+                        <attribute name="openstack.image.minram">
+                            <INTEGER>0</INTEGER>
+                        </attribute>
+                    </Mixin>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Mixin>
+                        <term>openstackimage</term>
+                        <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
+                        <title>c2f214b1-e2ea-4e40-a075-41038bca88c2</title>
+                        <attribute name="openstack.image.name">
+                            <STRING>Ubuntu</STRING>
+                        </attribute>
+                        <attribute name="openstack.image.mindisk">
+                            <INTEGER>0</INTEGER>
+                        </attribute>
+                        <attribute name="openstack.image.minram">
+                            <INTEGER>0</INTEGER>
+                        </attribute>
+                    </Mixin>
+                </Category>
+            ]]></urn:template>
+            <urn:template><![CDATA[
+                <Category xmlns="urn:xmpp:occi-representation">
+                    <Mixin>
+                        <term>openstackimage</term>
+                        <schema>http://schema.cit.tu-berlin.de/occi/openstack/compute#</schema>
+                        <title>86dc9779-d153-4a97-9262-86edcaa81b02</title>
+                        <attribute name="openstack.image.name">
+                            <STRING>Cirros</STRING>
+                        </attribute>
+                        <attribute name="openstack.image.mindisk">
+                            <INTEGER>0</INTEGER>
+                        </attribute>
+                        <attribute name="openstack.image.minram">
+                            <INTEGER>0</INTEGER>
+                        </attribute>
+                    </Mixin>
+                </Category>
+            ]]></urn:template>
         </urn:request>
         <urn:response mediaType="text/uri"/>
     </urn:method>
