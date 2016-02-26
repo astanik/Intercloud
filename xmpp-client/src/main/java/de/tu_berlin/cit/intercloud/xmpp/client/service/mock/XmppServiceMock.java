@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResponseDocument;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.xmlbeans.XmlException;
 import org.jivesoftware.smack.SmackException;
@@ -15,13 +16,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * This mock should <b>ONLY</b> be used for test purpose.
  * It can be used when no xmpp connection or components are up and running.
- *
+ * <p>
  * It creates static data depending on the input parameters.
  */
 public class XmppServiceMock implements IXmppService {
@@ -46,7 +49,9 @@ public class XmppServiceMock implements IXmppService {
     }
 
     /**
-     * Returns a static representation depending on the response media type
+     * Returns a static representation depending on the response media type.
+     * <p>
+     * text/uri-list: if path is a directory, return list of all directory items
      */
     @Override
     public ResourceDocument sendRestDocument(XmppURI uri, ResourceDocument document) throws XMPPException, IOException, SmackException {
@@ -59,13 +64,35 @@ public class XmppServiceMock implements IXmppService {
             ResponseDocument.Response response = method.getResponse();
             if (null != response) {
                 if (UriListText.MEDIA_TYPE.equals(response.getMediaType())) {
-                    response.setRepresentation("xmpp://example.component.de#/path0;"
-                            + "xmpp://example.component.com#/path0/path1;"
-                    + "xmpp://example.component.edu#/path0/path1/path2");
+                    File file = new File(document.getResource().getPath());
+                    if (file.isDirectory()) {
+                        response.setRepresentation(getDirectoryList(uri, file));
+                    } else {
+                        response.setRepresentation("xmpp://example.component.de#/path0;"
+                                + "xmpp://example.component.com#/path0/path1;"
+                                + "xmpp://example.component.edu#/path0/path1/path2");
+                    }
                 }
             }
         }
         return result;
+    }
+
+    private String getDirectoryList(XmppURI uri, File directory) {
+        String[] list = directory.list();
+        if (null != list) {
+            List<String> directoryList = new ArrayList<>();
+            for (int i = 0; i < list.length; i++) {
+                try {
+                    directoryList.add(new XmppURI(uri.getJID(), new File(directory, list[i]).getPath()).toString());
+                } catch (URISyntaxException e) {
+                    logger.error("Could not add file to directory list.", e);
+                }
+            }
+            return String.join(";", directoryList);
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -77,11 +104,26 @@ public class XmppServiceMock implements IXmppService {
         long timeMillis = System.currentTimeMillis();
         File file = new File(uri.getPath());
         try {
-            return ResourceTypeDocument.Factory.parse(file);
+            if (file.isDirectory()) {
+                return getDirectoryXwadl(file);
+            } else {
+                return ResourceTypeDocument.Factory.parse(file);
+            }
         } catch (XmlException e) {
             throw new SmackException("Failed to parse resource type document. file: " + file, e);
         } finally {
             logger.info("Xml --> XmlBean: {} ms", System.currentTimeMillis() - timeMillis);
         }
+    }
+
+    private ResourceTypeDocument getDirectoryXwadl(File directory) {
+        ResourceTypeDocument resourceTypeDocument = ResourceTypeDocument.Factory.newInstance();
+        ResourceTypeDocument.ResourceType resourceType = resourceTypeDocument.addNewResourceType();
+        resourceType.setPath(directory.getPath());
+        de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method method = resourceType.addNewMethod();
+        method.setType(MethodType.GET);
+        de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResponseDocument.Response response = method.addNewResponse();
+        response.setMediaType(UriListText.MEDIA_TYPE);
+        return resourceTypeDocument;
     }
 }

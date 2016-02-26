@@ -31,10 +31,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class BrowserPage extends UserTemplate {
@@ -48,15 +50,13 @@ public class BrowserPage extends UserTemplate {
     private Code restResponseCode;
     private Code restRequestCode;
 
-    private final IModel<String> entity;
-    private IModel<String> resourcePath;
+    private IModel<XmppURI> uri;
     private ListModel<MethodModel> methodModelList = new ListModel<>();
     private IModel<LoggingModel> loggingModel = Model.of();
 
     public BrowserPage(IModel<XmppURI> uri) {
         super();
-        this.entity = new Model<>(uri.getObject().getJID());
-        this.resourcePath = new Model<>(uri.getObject().getPath());
+        this.uri = uri;
 
         this.add(new BreadcrumbPanel("breadcrumb", uri, Model.of((XmppURI redirectUri) -> new BrowserPage(Model.of(redirectUri)))));
 
@@ -99,8 +99,9 @@ public class BrowserPage extends UserTemplate {
         this.add(this.responseContainer);
 
         // request xwadl
-        if (!resourcePath.getObject().trim().isEmpty()) {
-            requestXwadl(entity.getObject(), resourcePath.getObject());
+
+        if (!uri.getObject().getPath().trim().isEmpty()) {
+            requestXwadl(uri.getObject());
         }
     }
 
@@ -123,9 +124,20 @@ public class BrowserPage extends UserTemplate {
         return code;
     }
 
-    private void requestXwadl(String entity, String path) {
+    private void requestXwadl(String path) {
         try {
-            XmppURI uri = new XmppURI(entity, path);
+            XmppURI oldUri = this.uri.getObject();
+            this.uri.setObject(new XmppURI(oldUri.getJID(), path));
+
+            requestXwadl(this.uri.getObject());
+        } catch (URISyntaxException e) {
+            logger.error("Failed to set Uri. Path \"{}\"is not supported. ", path, e);
+            logError(e);
+        }
+    }
+
+    private void requestXwadl(XmppURI uri) {
+        try {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(uri);
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
             this.methodModelList.setObject(intercloudClient.getMethods());
@@ -133,7 +145,7 @@ public class BrowserPage extends UserTemplate {
             this.responseContainer.setModel(null);
             ComponentUtils.displayNone(this.alert);
         } catch (Exception e) {
-            logger.error("Failed to request xwadl from entity: {}, path: {}", entity, path, e);
+            logger.error("Failed to request xwadl from {}", uri, e);
             this.methodModelList.setObject(null);
             logError(e);
         }
@@ -157,16 +169,17 @@ public class BrowserPage extends UserTemplate {
     }
 
     private class XwadlForm extends Form {
+        private String resourcePath = BrowserPage.this.uri.getObject().getPath();
 
         public XwadlForm(String markupId) {
             super(markupId);
 
-            this.add(new Label("domain", BrowserPage.this.entity));
-            this.add(new TextField<>("resourcePath", resourcePath).setRequired(true));
+            this.add(new Label("domain", BrowserPage.this.uri.getObject().getJID()));
+            this.add(new TextField<>("resourcePath", new PropertyModel(this, "resourcePath")).setRequired(true));
             AjaxButton button = new AjaxButton("getXwadlBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    BrowserPage.this.requestXwadl(entity.getObject(), resourcePath.getObject());
+                    BrowserPage.this.requestXwadl(resourcePath);
                     setResponsePage(BrowserPage.this);
                 }
             };

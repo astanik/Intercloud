@@ -15,7 +15,7 @@ public final class MockHelper {
 
     public static void login() {
         try {
-            IntercloudWebSession.get().initialize(new User("hans", Roles.USER), new XmppServiceMock());
+            IntercloudWebSession.get().initializeTestWebSession(new User("hans", Roles.USER), new XmppServiceMock());
         } catch (URISyntaxException e) {
             Assert.fail(e.getMessage());
         }

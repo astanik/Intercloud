@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,18 +22,12 @@ public class BreadcrumbPanel extends Panel {
     public BreadcrumbPanel(String id, IModel<XmppURI> uriModel, IModel<IBreadcrumbRedirect> redirect) {
         super(id);
 
-        XmppURI currentUri = uriModel.getObject();
-        List<Item> itemList = new ArrayList<>();
-        if (null != currentUri.getPath()) {
-            String[] paths = currentUri.getPath().split("/");
-            String path = "";
-            for (String p : paths) {
-                if (!p.trim().isEmpty()) {
-                    path += "/" + p;
-                    itemList.add(new Item(p, path));
-                }
+        IModel<List<Item>> itemList = new LoadableDetachableModel<List<Item>>() {
+            @Override
+            protected List<Item> load() {
+                return getItems(uriModel.getObject());
             }
-        }
+        };
 
         this.add(new ListView<Item>("breadcrumb", itemList) {
             @Override
@@ -43,7 +38,7 @@ public class BreadcrumbPanel extends Panel {
                     @Override
                     public void onClick() {
                         try {
-                            XmppURI redirectUri = new XmppURI(currentUri.getJID(), item.getPath());
+                            XmppURI redirectUri = new XmppURI(uriModel.getObject().getJID(), item.getPath());
                             setResponsePage(redirect.getObject().getResponsePage(redirectUri));
                         } catch (URISyntaxException e) {
                             logger.error("Failed to redirect via Breadcrumb.", e);
@@ -52,6 +47,21 @@ public class BreadcrumbPanel extends Panel {
                 }.setBody(Model.of(item.getLabel())));
             }
         });
+    }
+
+    private List<Item> getItems(XmppURI uri) {
+        List<Item> itemList = new ArrayList<>();
+        if (null != uri.getPath()) {
+            String[] paths = uri.getPath().split("/");
+            String path = "";
+            for (String p : paths) {
+                if (!p.trim().isEmpty()) {
+                    path += "/" + p;
+                    itemList.add(new Item(p, path));
+                }
+            }
+        }
+        return itemList;
     }
 
     private class Item implements Serializable {
