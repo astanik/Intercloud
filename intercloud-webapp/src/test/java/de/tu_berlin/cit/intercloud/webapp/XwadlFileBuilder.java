@@ -9,23 +9,30 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassifi
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
+import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.RequestDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class XwadlFileBuilder {
     public static final String XWADL_ROOT = "target/test-xwadl";
     public static final String SCHEMA = IntercloudSchemas.CitSchemaURL + "test#";
 
+    private static final Random RANDOM = new Random();
     private static final XwadlFileBuilder INSTANCE = new XwadlFileBuilder();
 
     public static XwadlFileBuilder getInstance() {
@@ -34,24 +41,31 @@ public class XwadlFileBuilder {
 
     public String createXwadlFile(boolean hasKind, int numOfKindMixins,
                                   int numOfLinks, int numOfLinkMixins,
-                                  int numOfCategoryMixins
+                                  int numOfCategoryMixins, int numOfTemplates
     ) throws IOException {
         ResourceTypeDocument resourceTypeDocument = ResourceTypeDocument.Factory.newInstance();
         ResourceTypeDocument.ResourceType resourceType = resourceTypeDocument.addNewResourceType();
         GrammarsDocument.Grammars grammars = resourceType.addNewGrammars();
-        grammars.set(createClassifiactin(hasKind, numOfKindMixins, numOfLinks, numOfLinkMixins, numOfCategoryMixins));
+        ClassificationDocument classification = createClassification(hasKind, numOfKindMixins, numOfLinks, numOfLinkMixins, numOfCategoryMixins);
+        grammars.set(classification);
+        // METHOD: POST
         MethodDocument.Method method = resourceType.addNewMethod();
         method.setType(MethodType.POST);
-        method.addNewRequest().setMediaType(OcciXml.MEDIA_TYPE);
+        RequestDocument.Request request = method.addNewRequest();
+        request.setMediaType(OcciXml.MEDIA_TYPE);
+        List<String> templates = createTemplates(classification, numOfTemplates);
+        if (!templates.isEmpty()) {
+            request.setTemplateArray(templates.toArray(new String[templates.size()]));
+        }
         method.addNewResponse().setMediaType(UriText.MEDIA_TYPE);
 
         return createXwadlFile(resourceTypeDocument,
-                generateFilename(hasKind, numOfKindMixins, numOfLinks, numOfLinkMixins, numOfCategoryMixins));
+                generateFilename(hasKind, numOfKindMixins, numOfLinks, numOfLinkMixins, numOfCategoryMixins, numOfTemplates));
     }
 
     private String generateFilename(boolean hasKind, int numOfKindMixins,
                                     int numOfLinks, int numOfLinkMixins,
-                                    int numOfCategoryMixins
+                                    int numOfCategoryMixins, int numOfTemplates
     ) {
         StringBuilder fileName = new StringBuilder();
         if (hasKind) {
@@ -69,13 +83,16 @@ public class XwadlFileBuilder {
         if (0 < numOfCategoryMixins) {
             fileName.append(numOfCategoryMixins).append("cm-");
         }
+        if (0 < numOfTemplates) {
+            fileName.append(numOfTemplates).append("t-");
+        }
         return fileName.toString();
     }
 
     private String createXwadlFile(ResourceTypeDocument resourceTypeDocument, String name) throws IOException {
         File xwadlRoot = new File(XWADL_ROOT);
         xwadlRoot.mkdirs();
-        File file = new File(xwadlRoot, "xwadl-" + name + System.currentTimeMillis() +  ".xml");
+        File file = new File(xwadlRoot, "xwadl-" + name + System.currentTimeMillis() + ".xml");
         if (file.exists()) {
             file.delete();
         }
@@ -89,9 +106,9 @@ public class XwadlFileBuilder {
         return file.getPath();
     }
 
-    private ClassificationDocument createClassifiactin(boolean hasKind, int numOfKindMixins,
-                                                       int numOfLinks, int numOfLinkMixins,
-                                                       int numOfCategoryMiins
+    private ClassificationDocument createClassification(boolean hasKind, int numOfKindMixins,
+                                                        int numOfLinks, int numOfLinkMixins,
+                                                        int numOfCategoryMiins
     ) {
         ClassificationDocument classificationDocument = ClassificationDocument.Factory.newInstance();
         ClassificationDocument.Classification classification = classificationDocument.addNewClassification();
@@ -120,7 +137,7 @@ public class XwadlFileBuilder {
         CategoryClassification kind = CategoryClassification.Factory.newInstance();
         kind.setSchema(SCHEMA);
         kind.setTerm(term);
-        kind.setTitle(UUID.randomUUID().toString());
+        kind.setTitle("kind-" + UUID.randomUUID().toString());
         kind.setAttributeClassificationArray(createAttributes());
         return kind;
     }
@@ -141,7 +158,7 @@ public class XwadlFileBuilder {
         LinkClassification link = LinkClassification.Factory.newInstance();
         link.setSchema(SCHEMA);
         link.setTerm(term);
-        link.setTitle(UUID.randomUUID().toString());
+        link.setTitle("link-" + UUID.randomUUID().toString());
         link.setRelation(SCHEMA + "target_term");
         //link.setAttributeClassificationArray(createAttributes());
         return link;
@@ -173,7 +190,7 @@ public class XwadlFileBuilder {
         MixinClassification mixin = MixinClassification.Factory.newInstance();
         mixin.setSchema(SCHEMA);
         mixin.setTerm(term);
-        mixin.setTitle(UUID.randomUUID().toString());
+        mixin.setTitle("mixin-" + UUID.randomUUID().toString());
         mixin.setApplies(applies);
         mixin.setAttributeClassificationArray(createAttributes());
         return mixin;
@@ -219,5 +236,128 @@ public class XwadlFileBuilder {
         attribute.setDescription(description);
         attribute.setDefault(xdefault);
         return attribute;
+    }
+
+    /*
+     * TEMPLATE
+     */
+
+    private List<String> createTemplates(ClassificationDocument classificationDocument, int numOfTemplates) {
+        ClassificationDocument.Classification classification = classificationDocument.getClassification();
+        List<String> templateList = new ArrayList<>();
+        for (int i = 0; i < numOfTemplates; i++) {
+            if (null != classification.getKindType()) {
+                templateList.add(createKindTemplate(classification.getKindType()));
+            }
+            if (null != classification.getMixinTypeArray()) {
+                templateList.addAll(createMixinTemplates(classification.getMixinTypeArray()));
+            }
+            if (null != classification.getLinkTypeArray()) {
+                templateList.addAll(createLinkTemplates(classification.getLinkTypeArray()));
+            }
+        }
+        return templateList;
+    }
+
+    private String createKindTemplate(CategoryClassification kind) {
+        CategoryDocument categoryDocument = CategoryDocument.Factory.newInstance();
+        CategoryDocument.Category category = categoryDocument.addNewCategory();
+        CategoryType kindTemplate = category.addNewKind();
+        kindTemplate.setSchema(kind.getSchema());
+        kindTemplate.setTerm(kind.getTerm());
+        kindTemplate.setTitle("template-" + UUID.randomUUID().toString());
+        if (null != kind.getAttributeClassificationArray()) {
+            kindTemplate.setAttributeArray(createAttributeTemplates(kind.getAttributeClassificationArray()));
+        }
+        return categoryDocument.toString();
+    }
+
+    private List<String> createLinkTemplates(LinkClassification[] linkArray) {
+        List<String> templateList = new ArrayList<>();
+        CategoryDocument categoryDocument;
+        CategoryDocument.Category category;
+        LinkType linkTemplate;
+        for (LinkClassification link : linkArray) {
+            categoryDocument = CategoryDocument.Factory.newInstance();
+            category = categoryDocument.addNewCategory();
+            linkTemplate = category.addNewLink();
+
+            linkTemplate.setSchema(link.getSchema());
+            linkTemplate.setTerm(link.getTerm());
+            linkTemplate.setTitle("template-" + UUID.randomUUID().toString());
+            if (null != link.getAttributeClassificationArray()) {
+                linkTemplate.setAttributeArray(createAttributeTemplates(link.getAttributeClassificationArray()));
+            }
+            linkTemplate.setTarget(UUID.randomUUID().toString());
+            templateList.add(categoryDocument.toString());
+        }
+        return templateList;
+    }
+
+    private List<String> createMixinTemplates(MixinClassification[] mixinArray) {
+        List<String> templateList = new ArrayList<>();
+        CategoryDocument categoryDocument;
+        CategoryDocument.Category category;
+        CategoryType mixinTemplate;
+        for (MixinClassification mixin : mixinArray) {
+            categoryDocument = CategoryDocument.Factory.newInstance();
+            category = categoryDocument.addNewCategory();
+            mixinTemplate = category.addNewMixin();
+
+            mixinTemplate.setSchema(mixin.getSchema());
+            mixinTemplate.setTerm(mixin.getTerm());
+            mixinTemplate.setTitle("template-" + UUID.randomUUID().toString());
+            if (null != mixin.getAttributeClassificationArray()) {
+                mixinTemplate.setAttributeArray(createAttributeTemplates(mixin.getAttributeClassificationArray()));
+            }
+            templateList.add(categoryDocument.toString());
+        }
+        return templateList;
+    }
+
+    private de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType[]
+    createAttributeTemplates(AttributeClassificationDocument.AttributeClassification[] attributeArray) {
+        List<de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType> templateList =
+                new ArrayList<>();
+        de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType attributeTemplate;
+        Calendar calendar;
+        for (AttributeClassificationDocument.AttributeClassification attribute : attributeArray) {
+            AttributeType.Enum type = attribute.getType();
+            if (AttributeType.STRING.equals(type)) {
+                attributeTemplate = de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType.Factory.newInstance();
+                attributeTemplate.setName(attribute.getName());
+                attributeTemplate.setSTRING(UUID.randomUUID().toString());
+                templateList.add(attributeTemplate);
+            } else if (AttributeType.INTEGER.equals(type)) {
+                attributeTemplate = de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType.Factory.newInstance();
+                attributeTemplate.setName(attribute.getName());
+                attributeTemplate.setINTEGER(RANDOM.nextInt());
+                templateList.add(attributeTemplate);
+            } else if (AttributeType.DOUBLE.equals(type)) {
+                attributeTemplate = de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType.Factory.newInstance();
+                attributeTemplate.setName(attribute.getName());
+                attributeTemplate.setDOUBLE(RANDOM.nextDouble());
+                templateList.add(attributeTemplate);
+            } else if (AttributeType.FLOAT.equals(type)) {
+                attributeTemplate = de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType.Factory.newInstance();
+                attributeTemplate.setName(attribute.getName());
+                attributeTemplate.setFLOAT(RANDOM.nextFloat());
+                templateList.add(attributeTemplate);
+            } else if (AttributeType.DATETIME.equals(type)) {
+                attributeTemplate = de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType.Factory.newInstance();
+                attributeTemplate.setName(attribute.getName());
+                calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(RANDOM.nextInt());
+                attributeTemplate.setDATETIME(calendar);
+                templateList.add(attributeTemplate);
+            } else if (AttributeType.BOOLEAN.equals(type)) {
+                attributeTemplate = de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType.Factory.newInstance();
+                attributeTemplate.setName(attribute.getName());
+                attributeTemplate.setBOOLEAN(RANDOM.nextBoolean());
+                templateList.add(attributeTemplate);
+            }
+
+        }
+        return templateList.toArray(new de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType[templateList.size()]);
     }
 }
