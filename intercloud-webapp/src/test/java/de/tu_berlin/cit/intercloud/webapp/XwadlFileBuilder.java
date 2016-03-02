@@ -19,6 +19,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.RequestDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,52 +40,48 @@ public class XwadlFileBuilder {
         return INSTANCE;
     }
 
-    public String createXwadlFile(boolean hasKind, int numOfKindMixins,
-                                  int numOfLinks, int numOfLinkMixins,
-                                  int numOfCategoryMixins, int numOfTemplates
-    ) throws IOException {
+    public String createXwadlFile(XwadlFileConfig config) throws IOException {
         ResourceTypeDocument resourceTypeDocument = ResourceTypeDocument.Factory.newInstance();
         ResourceTypeDocument.ResourceType resourceType = resourceTypeDocument.addNewResourceType();
         GrammarsDocument.Grammars grammars = resourceType.addNewGrammars();
-        ClassificationDocument classification = createClassification(hasKind, numOfKindMixins, numOfLinks, numOfLinkMixins, numOfCategoryMixins);
+        ClassificationDocument classification = createClassification(config);
         grammars.set(classification);
         // METHOD: POST
         MethodDocument.Method method = resourceType.addNewMethod();
         method.setType(MethodType.POST);
         RequestDocument.Request request = method.addNewRequest();
         request.setMediaType(OcciXml.MEDIA_TYPE);
-        List<String> templates = createTemplates(classification, numOfTemplates);
+        List<String> templates = createTemplates(classification, config.getNumOfTemplates());
         if (!templates.isEmpty()) {
             request.setTemplateArray(templates.toArray(new String[templates.size()]));
         }
         method.addNewResponse().setMediaType(UriText.MEDIA_TYPE);
 
-        return createXwadlFile(resourceTypeDocument,
-                generateFilename(hasKind, numOfKindMixins, numOfLinks, numOfLinkMixins, numOfCategoryMixins, numOfTemplates));
+        return createXwadlFile(resourceTypeDocument, generateFilename(config));
     }
 
-    private String generateFilename(boolean hasKind, int numOfKindMixins,
-                                    int numOfLinks, int numOfLinkMixins,
-                                    int numOfCategoryMixins, int numOfTemplates
-    ) {
+    private String generateFilename(XwadlFileConfig config) {
         StringBuilder fileName = new StringBuilder();
-        if (hasKind) {
+        if (config.hasKind()) {
             fileName.append("k-");
         }
-        if (0 < numOfKindMixins) {
-            fileName.append(numOfKindMixins).append("km-");
+        if (0 < config.getNumOfKindMixins()) {
+            fileName.append(config.getNumOfKindMixins()).append("km-");
         }
-        if (0 < numOfLinks) {
-            fileName.append(numOfLinks).append("l-");
+        if (0 < config.getNumOfLinks()) {
+            fileName.append(config.getNumOfLinks()).append("l-");
         }
-        if (0 < numOfLinkMixins) {
-            fileName.append(numOfLinkMixins).append("lm-");
+        if (0 < config.getNumOfLinkMixins()) {
+            fileName.append(config.getNumOfLinkMixins()).append("lm-");
         }
-        if (0 < numOfCategoryMixins) {
-            fileName.append(numOfCategoryMixins).append("cm-");
+        if (0 < config.getNumOfCategoryMixins()) {
+            fileName.append(config.getNumOfCategoryMixins()).append("cm-");
         }
-        if (0 < numOfTemplates) {
-            fileName.append(numOfTemplates).append("t-");
+        if (0 < config.getNumOfTemplates()) {
+            fileName.append(config.getNumOfTemplates()).append("t-");
+        }
+        if (config.hasDefaultValues()) {
+            fileName.append("d-");
         }
         return fileName.toString();
     }
@@ -106,55 +103,53 @@ public class XwadlFileBuilder {
         return file.getPath();
     }
 
-    private ClassificationDocument createClassification(boolean hasKind, int numOfKindMixins,
-                                                        int numOfLinks, int numOfLinkMixins,
-                                                        int numOfCategoryMiins
-    ) {
+    private ClassificationDocument createClassification(XwadlFileConfig config) {
         ClassificationDocument classificationDocument = ClassificationDocument.Factory.newInstance();
         ClassificationDocument.Classification classification = classificationDocument.addNewClassification();
         List<MixinClassification> mixinList = new ArrayList<>();
         // Kind
-        if (hasKind) {
-            classification.setKindType(createKind("my_kind"));
-            mixinList.addAll(createMixins("my_kind_mixin_", SCHEMA + "my_kind", numOfKindMixins));
+        if (config.hasKind()) {
+            classification.setKindType(createKind("my_kind", config.hasDefaultValues()));
+            mixinList.addAll(createMixins("my_kind_mixin_", SCHEMA + "my_kind", config.getNumOfKindMixins(), config.hasDefaultValues()));
         }
         // Links
-        if (0 < numOfLinks) {
-            List<LinkClassification> linkList = createLinks("my_link_", numOfLinks);
+        if (0 < config.getNumOfLinks()) {
+            List<LinkClassification> linkList = createLinks("my_link_", config.getNumOfLinks(), config.hasDefaultValues());
             classification.setLinkTypeArray(linkList.toArray(new LinkClassification[linkList.size()]));
-            mixinList.addAll(createMixins(linkList, numOfLinkMixins));
+            mixinList.addAll(createMixins(linkList, config.getNumOfLinkMixins(), config.hasDefaultValues()));
         }
         // Category Mixins
-        if (0 < numOfCategoryMiins) {
-            mixinList.addAll(createMixins("my_category_mixin_", Category.CategorySchema + Category.CategoryTerm, numOfCategoryMiins));
+        if (0 < config.getNumOfCategoryMixins()) {
+            mixinList.addAll(createMixins("my_category_mixin_", Category.CategorySchema + Category.CategoryTerm,
+                    config.getNumOfCategoryMixins(), config.hasDefaultValues()));
         }
 
         classification.setMixinTypeArray(mixinList.toArray(new MixinClassification[mixinList.size()]));
         return classificationDocument;
     }
 
-    private CategoryClassification createKind(String term) {
+    private CategoryClassification createKind(String term, boolean hasDefaultValues) {
         CategoryClassification kind = CategoryClassification.Factory.newInstance();
         kind.setSchema(SCHEMA);
         kind.setTerm(term);
         kind.setTitle("kind-" + UUID.randomUUID().toString());
-        kind.setAttributeClassificationArray(createAttributes());
+        kind.setAttributeClassificationArray(createAttributes(hasDefaultValues));
         return kind;
     }
 
-    private List<LinkClassification> createLinks(String termPrefix, int numberOfLinks) {
+    private List<LinkClassification> createLinks(String termPrefix, int numberOfLinks, boolean hasDefaultValues) {
         List<LinkClassification> linkList = new ArrayList<>();
         if (0 < numberOfLinks) {
-            linkList.add(createLink(termPrefix + 0));
+            linkList.add(createLink(termPrefix + 0, hasDefaultValues));
 
             for (int i = 1; i < numberOfLinks; i++) {
-                linkList.add(createLink(termPrefix + i));
+                linkList.add(createLink(termPrefix + i, hasDefaultValues));
             }
         }
         return linkList;
     }
 
-    private LinkClassification createLink(String term) {
+    private LinkClassification createLink(String term, boolean hasDafaultValues) {
         LinkClassification link = LinkClassification.Factory.newInstance();
         link.setSchema(SCHEMA);
         link.setTerm(term);
@@ -164,61 +159,74 @@ public class XwadlFileBuilder {
         return link;
     }
 
-    private List<MixinClassification> createMixins(List<LinkClassification> appliesList, int numberOfMixins) {
+    private List<MixinClassification> createMixins(List<LinkClassification> appliesList, int numberOfMixins, boolean hasDefaultValues) {
         List<MixinClassification> mixinList = new ArrayList<>();
         if (0 < numberOfMixins) {
             for (LinkClassification link : appliesList) {
-                mixinList.addAll(createMixins(link.getTerm() + "_mixin_", link.getSchema() + link.getTerm(), numberOfMixins));
+                mixinList.addAll(createMixins(link.getTerm() + "_mixin_", link.getSchema() + link.getTerm(), numberOfMixins, hasDefaultValues));
             }
         }
         return mixinList;
     }
 
-    private List<MixinClassification> createMixins(String termPrefix, String applies, int numberOfMixins) {
+    private List<MixinClassification> createMixins(String termPrefix, String applies, int numberOfMixins, boolean hasDefaultValues) {
         List<MixinClassification> mixinList = new ArrayList<>();
         if (0 < numberOfMixins) {
-            mixinList.add(createMixin(termPrefix + 0, applies));
+            mixinList.add(createMixin(termPrefix + 0, applies, hasDefaultValues));
 
             for (int i = 1; i < numberOfMixins; i++) {
-                mixinList.add(createMixin(termPrefix + i, SCHEMA + termPrefix + (i - 1)));
+                mixinList.add(createMixin(termPrefix + i, SCHEMA + termPrefix + (i - 1), hasDefaultValues));
             }
         }
         return mixinList;
     }
 
-    private MixinClassification createMixin(String term, String applies) {
+    private MixinClassification createMixin(String term, String applies, boolean hasDefaultValues) {
         MixinClassification mixin = MixinClassification.Factory.newInstance();
         mixin.setSchema(SCHEMA);
         mixin.setTerm(term);
         mixin.setTitle("mixin-" + UUID.randomUUID().toString());
         mixin.setApplies(applies);
-        mixin.setAttributeClassificationArray(createAttributes());
+        mixin.setAttributeClassificationArray(createAttributes(hasDefaultValues));
         return mixin;
     }
 
-    private AttributeClassificationDocument.AttributeClassification[] createAttributes() {
+    private AttributeClassificationDocument.AttributeClassification[] createAttributes(boolean hasDefaultValues) {
         List<AttributeClassificationDocument.AttributeClassification> attributeList = new ArrayList<>();
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.STRING, "some string..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.ENUM, "some enum..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.INTEGER, "some integer..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DOUBLE, "some double..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.FLOAT, "some float..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.BOOLEAN, "some boolean..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.URI, "some uri..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.SIGNATURE, "some signature..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.KEY, "some key..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DATETIME, "some datetime..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DURATION, "some duration..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.LIST, "some list..."));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.MAP, "some map..."));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.STRING, "some string...",
+                hasDefaultValues ? UUID.randomUUID().toString() : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.INTEGER, "some integer...",
+                hasDefaultValues ? Integer.toString(RANDOM.nextInt()) : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DOUBLE, "some double...",
+                hasDefaultValues ? Double.toString(RANDOM.nextDouble()) : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.FLOAT, "some float...",
+                hasDefaultValues ? Float.toString(RANDOM.nextFloat()) : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.BOOLEAN, "some boolean...",
+                hasDefaultValues ? Boolean.toString(RANDOM.nextBoolean()) : null));
+        String xdefault = null;
+        if (hasDefaultValues) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(RANDOM.nextInt());
+            xdefault = DatatypeConverter.printDateTime(calendar);
+        }
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DATETIME, "some datetime...", xdefault));
+        // no defaults
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.ENUM, "some enum...", null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.URI, "some uri...", null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.SIGNATURE, "some signature...", null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.KEY, "some key...", null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DURATION, "some duration...", null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.LIST, "some list...", null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.MAP, "some map...", null));
         return attributeList.toArray(new AttributeClassificationDocument.AttributeClassification[attributeList.size()]);
     }
 
     private AttributeClassificationDocument.AttributeClassification createAttribute(String name,
                                                                                     AttributeType.Enum type,
-                                                                                    String description
+                                                                                    String description,
+                                                                                    String xdefault
     ) {
-        return createAttribute(name, type, false, true, description, null);
+        return createAttribute(name, type, false, true, description, xdefault);
     }
 
     private AttributeClassificationDocument.AttributeClassification createAttribute(String name,
