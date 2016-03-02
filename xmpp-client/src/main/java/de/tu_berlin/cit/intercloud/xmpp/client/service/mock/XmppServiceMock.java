@@ -6,6 +6,7 @@ import de.tu_berlin.cit.intercloud.xmpp.rest.representations.UriListText;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.MethodDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResponseDocument;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.DocumentationType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodType;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResourceTypeDocument;
 import org.apache.xmlbeans.XmlException;
@@ -122,6 +123,8 @@ public class XmppServiceMock implements IXmppService {
         resourceType.setPath(directory.getPath());
         de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.MethodDocument.Method method = resourceType.addNewMethod();
         method.setType(MethodType.GET);
+        DocumentationType documentationType = method.addNewDocumentation();
+        documentationType.setStringValue("Get list of files contained in this folder resource.");
         de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.ResponseDocument.Response response = method.addNewResponse();
         response.setMediaType(UriListText.MEDIA_TYPE);
         return resourceTypeDocument;
