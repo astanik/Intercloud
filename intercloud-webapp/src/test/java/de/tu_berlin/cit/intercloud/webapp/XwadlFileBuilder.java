@@ -45,21 +45,48 @@ public class XwadlFileBuilder {
         method.addNewRequest().setMediaType(OcciXml.MEDIA_TYPE);
         method.addNewResponse().setMediaType(UriText.MEDIA_TYPE);
 
-        return createXwadlFile(resourceTypeDocument);
+        return createXwadlFile(resourceTypeDocument,
+                generateFilename(hasKind, numOfKindMixins, numOfLinks, numOfLinkMixins, numOfCategoryMixins));
     }
 
-    private String createXwadlFile(ResourceTypeDocument resourceTypeDocument) throws IOException {
+    private String generateFilename(boolean hasKind, int numOfKindMixins,
+                                    int numOfLinks, int numOfLinkMixins,
+                                    int numOfCategoryMixins
+    ) {
+        StringBuilder fileName = new StringBuilder();
+        if (hasKind) {
+            fileName.append("k-");
+        }
+        if (0 < numOfKindMixins) {
+            fileName.append(numOfKindMixins).append("km-");
+        }
+        if (0 < numOfLinks) {
+            fileName.append(numOfLinks).append("l-");
+        }
+        if (0 < numOfLinkMixins) {
+            fileName.append(numOfLinkMixins).append("lm-");
+        }
+        if (0 < numOfCategoryMixins) {
+            fileName.append(numOfCategoryMixins).append("cm-");
+        }
+        return fileName.toString();
+    }
+
+    private String createXwadlFile(ResourceTypeDocument resourceTypeDocument, String name) throws IOException {
         File xwadlRoot = new File(XWADL_ROOT);
         xwadlRoot.mkdirs();
-        File tempFile = File.createTempFile("xwadl-", ".xml", xwadlRoot);
-        resourceTypeDocument.getResourceType().setPath(tempFile.getPath());
-        PrintWriter printWriter = new PrintWriter(tempFile);
+        File file = new File(xwadlRoot, "xwadl-" + name + System.currentTimeMillis() +  ".xml");
+        if (file.exists()) {
+            file.delete();
+        }
+        resourceTypeDocument.getResourceType().setPath(file.getPath());
+        PrintWriter printWriter = new PrintWriter(file);
         try {
             printWriter.print(resourceTypeDocument.toString());
         } finally {
             printWriter.close();
         }
-        return tempFile.getPath();
+        return file.getPath();
     }
 
     private ClassificationDocument createClassifiactin(boolean hasKind, int numOfKindMixins,
