@@ -45,8 +45,15 @@ public class XmppServiceMock implements IXmppService {
      * Creates a static list of dummy items.
      */
     @Override
-    public List<String> discoverRestfulItems(XmppURI uri) throws XMPPException, IOException, SmackException {
-        return Arrays.asList("example.component.de", "exmaple.component.edu", "example.component.com");
+    public List<XmppURI> discoverRestfulItems(XmppURI uri) throws XMPPException, IOException, SmackException {
+        try {
+            String userHome = new File(System.getProperty("user.home")).getAbsolutePath();
+            return Arrays.asList(new XmppURI("example.component.de", userHome),
+                    new XmppURI("exmaple.component.edu", userHome),
+                    new XmppURI("example.component.com", userHome));
+        } catch (URISyntaxException e) {
+            return new ArrayList<>();
+        }
     }
 
     /**

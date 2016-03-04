@@ -1,9 +1,9 @@
 package de.tu_berlin.cit.intercloud.xmpp.client.service.impl;
 
-import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppConnectionManager;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.GetXwadlIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.RestIQ;
 import de.tu_berlin.cit.intercloud.xmpp.client.extension.XwadlIQ;
+import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppConnectionManager;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResourceDocument;
@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,16 +47,16 @@ public class XmppService implements IXmppService {
     }
 
     @Override
-    public List<String> discoverRestfulItems(XmppURI uri) throws XMPPException, IOException, SmackException {
+    public List<XmppURI> discoverRestfulItems(XmppURI uri) throws XMPPException, IOException, SmackException {
         return discoverItemsByFeature(uri, Arrays.asList(XwadlIQ.NAMESPACE, RestIQ.NAMESPACE));
     }
 
-    private List<String> discoverItemsByFeature(XmppURI uri, List<String> features) throws XMPPException, IOException, SmackException {
+    private List<XmppURI> discoverItemsByFeature(XmppURI uri, List<String> features) throws XMPPException, IOException, SmackException {
         // discover items
         ServiceDiscoveryManager discoveryManager = ServiceDiscoveryManager.getInstanceFor(this.connectionManager.getConnection());
         DiscoverItems discoverItems = discoveryManager.discoverItems(uri.getDomain());
         List<DiscoverItems.Item> items = discoverItems.getItems();
-        List<String> result = new ArrayList<>();
+        List<XmppURI> resultList = new ArrayList<>();
         // discover infos per item and check if specified feature set is supported
         for (DiscoverItems.Item item : items) {
             DiscoverInfo discoverInfo = discoveryManager.discoverInfo(item.getEntityID());
@@ -67,12 +68,27 @@ public class XmppService implements IXmppService {
                 }
             }
             if (conatinsAllFeatures) {
-                result.add(item.getEntityID());
+                try {
+                    resultList.add(getUri(item.getEntityID()));
+                } catch (URISyntaxException e) {
+                    logger.error("Could not discover item: jid: {}", item.getEntityID(), e);
+                }
             } else if (logger.isDebugEnabled()) {
                 logger.debug("Entity {} does not support the specified features.", item.getEntityID());
             }
         }
-        return result;
+
+        return resultList;
+    }
+
+    private XmppURI getUri(String jid) throws URISyntaxException {
+        String restPath = "";
+        if (jid.contains("root")) {
+            restPath = "/iaas";
+        } else if (jid.contains("gateway")) {
+            restPath = "/compute";
+        }
+        return new XmppURI(jid, restPath);
     }
 
     @Override
@@ -87,7 +103,7 @@ public class XmppService implements IXmppService {
         StanzaFilter filter = new AndFilter(new IQReplyFilter(setIQ, connection));
         PacketCollector collector = connection.createPacketCollector(filter);
         IQ resultIQ = collector.nextResultOrThrow();
-        if(resultIQ instanceof RestIQ) {
+        if (resultIQ instanceof RestIQ) {
             // create rest doc
             return ((RestIQ) resultIQ).getResourceDocument();
         } else {

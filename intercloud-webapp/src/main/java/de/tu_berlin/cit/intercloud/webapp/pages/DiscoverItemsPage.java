@@ -1,7 +1,7 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
-import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
+import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,7 +21,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class DiscoverItemsPage extends UserTemplate {
     private static final Logger logger = LoggerFactory.getLogger(DiscoverItemsPage.class);
 
     private final WebMarkupContainer itemsContainer;
-    private transient List<String> discoItems = new ArrayList<>();
+    private transient List<XmppURI> discoItems = new ArrayList<>();
 
     public DiscoverItemsPage() {
         super();
@@ -39,9 +38,9 @@ public class DiscoverItemsPage extends UserTemplate {
         itemsContainer = new WebMarkupContainer("itemsContainer");
         itemsContainer.setOutputMarkupId(true);
         ComponentUtils.displayNone(itemsContainer);
-        itemsContainer.add(new ItemsForm("itemsForm", new LoadableDetachableModel<List<String>>() {
+        itemsContainer.add(new ItemsForm("itemsForm", new LoadableDetachableModel<List<XmppURI>>() {
             @Override
-            protected List<String> load() {
+            protected List<XmppURI> load() {
                 return discoItems;
             }
         }));
@@ -81,17 +80,17 @@ public class DiscoverItemsPage extends UserTemplate {
     }
 
     private class ItemsForm extends Form {
-        private final RadioGroup radioGroup;
+        private final RadioGroup<XmppURI> radioGroup;
 
-        public ItemsForm(String markupId, IModel<List<String>> discoItems) {
+        public ItemsForm(String markupId, IModel<List<XmppURI>> discoItems) {
             super(markupId);
 
-            radioGroup = new RadioGroup<String>("radioGroup", new Model<>());
-            radioGroup.add(new ListView<String>("radioView", discoItems) {
+            radioGroup = new RadioGroup<>("radioGroup", new Model<>());
+            radioGroup.add(new ListView<XmppURI>("radioView", discoItems) {
                 @Override
-                protected void populateItem(ListItem<String> listItem) {
+                protected void populateItem(ListItem<XmppURI> listItem) {
                     listItem.add(new Radio<>("radioItem", listItem.getModel()));
-                    listItem.add(new Label("radioLabel", listItem.getModelObject()));
+                    listItem.add(new Label("radioLabel", listItem.getModelObject().getJID()));
                 }
             });
             this.add(radioGroup);
@@ -99,19 +98,8 @@ public class DiscoverItemsPage extends UserTemplate {
             this.add(new AjaxButton("connectBtn") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    String domain = radioGroup.getDefaultModelObjectAsString();
-                    if (null != domain && !domain.trim().isEmpty()) {
-                        String path = "";
-                        if (domain.contains("root")) {
-                            path = "/iaas";
-                        } else if (domain.contains("gateway")) {
-                            path = "/compute";
-                        }
-                        try {
-                            setResponsePage(new BrowserPage(Model.of(new XmppURI(domain, path))));
-                        } catch (URISyntaxException e) {
-                            logger.error("Failed to parse xmpp uri. entity: " + domain + ", resource: " + path);
-                        }
+                    if (null != radioGroup.getModel().getObject()) {
+                        setResponsePage(new BrowserPage(radioGroup.getModel()));
                     } else {
                         target.appendJavaScript("alert('Please select a value from the radio group!');");
                     }
