@@ -134,9 +134,11 @@ public class RepresentationModelConverter {
                         case SIGNATURE:
                             byte[] signature = Base64.getEncoder().encode(attributeModel.getSignature().getBytes());
                             attributeType.setSIGNATURE(signature);
+                            break;
                         case KEY:
                             byte[] key = Base64.getEncoder().encode(attributeModel.getKey().getBytes());
                             attributeType.setKEY(key);
+                            break;
                         default:
                             throw new AttributeFormatException("Could not set attribute representation: type is not supported " + attributeModel);
                     }
