@@ -1,7 +1,5 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
-import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
@@ -10,6 +8,7 @@ import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.LoggingPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.IRepresentationPanelPlugin;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.RepresentationPanelRegistry;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
@@ -29,7 +28,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
@@ -46,9 +44,6 @@ public class BrowserPage extends UserTemplate {
     private RequestForm requestForm;
     private ResponseContainer responseContainer;
     private Alert alert;
-    private Code xwadlCode;
-    private Code restResponseCode;
-    private Code restRequestCode;
 
     private IModel<XmppURI> uri;
     private ListModel<MethodModel> methodModelList = new ListModel<>();
@@ -66,27 +61,7 @@ public class BrowserPage extends UserTemplate {
         this.add(new XwadlForm("xwadlForm"));
 
         // Code section, kind of debugging
-        this.xwadlCode = newCodePanel("xwadlCode", new LoadableDetachableModel<String>() {
-            @Override
-            protected String load() {
-                return null != loggingModel.getObject() ? loggingModel.getObject().getXwadl() : null;
-            }
-        });
-        this.add(this.xwadlCode);
-        this.restRequestCode = newCodePanel("restRequestCode", new LoadableDetachableModel<String>() {
-            @Override
-            protected String load() {
-                return null != loggingModel.getObject() ? loggingModel.getObject().getRestRequest() : null;
-            }
-        });
-        this.add(this.restRequestCode);
-        this.restResponseCode = newCodePanel("restResponseCode", new LoadableDetachableModel<String>() {
-            @Override
-            protected String load() {
-                return null != loggingModel.getObject() ? loggingModel.getObject().getRestResponse() : null;
-            }
-        });
-        this.add(this.restResponseCode);
+        this.add(new LoggingPanel("loggingPanel", this.loggingModel));
 
         // method table
         this.methodTable = new MethodTable("methodTable", methodModelList);
@@ -123,12 +98,6 @@ public class BrowserPage extends UserTemplate {
         alert.withHeader(Model.of(ExceptionUtils.getMessage(t)));
         alert.withMessage(Model.of(ExceptionUtils.getStackTrace(t)));
         return ComponentUtils.displayBlock(alert);
-    }
-
-    private Code newCodePanel(String markupId, IModel<String> model) {
-        Code code = new Code(markupId, model);
-        code.setLanguage(CodeBehavior.Language.XML);
-        return code;
     }
 
     private void requestXwadl(String path) {

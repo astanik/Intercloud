@@ -74,23 +74,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
-                    <h5 class="modal-title">Debug</h5>
+                    <h5 class="modal-title">Log</h5>
                 </div>
                 <div class="modal-body">
-                    <h5>XWADL</h5>
-                    <pre>
-                        <code wicket:id="xwadlCode"/>
-                    </pre>
-
-                    <h5>REST Request</h5>
-                    <pre>
-                        <code wicket:id="restRequestCode"/>
-                    </pre>
-
-                    <h5>REST Response</h5>
-                    <pre>
-                        <code wicket:id="restResponseCode"/>
-                    </pre>
+                    <wicket:panel wicket:id="loggingPanel"/>
                 </div>
             </div>
         </div>
