@@ -206,7 +206,7 @@ public class XwadlFileBuilder {
         String xdefault = null;
         if (hasDefaultValues) {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(RANDOM.nextInt());
+            calendar.setTimeInMillis(System.currentTimeMillis() + RANDOM.nextInt());
             xdefault = DatatypeConverter.printDateTime(calendar);
         }
         attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DATETIME, "some datetime...", xdefault));
@@ -355,7 +355,7 @@ public class XwadlFileBuilder {
                 attributeTemplate = de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType.Factory.newInstance();
                 attributeTemplate.setName(attribute.getName());
                 calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(RANDOM.nextInt());
+                calendar.setTimeInMillis(System.currentTimeMillis() + RANDOM.nextInt());
                 attributeTemplate.setDATETIME(calendar);
                 templateList.add(attributeTemplate);
             } else if (AttributeType.BOOLEAN.equals(type)) {

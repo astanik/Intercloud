@@ -105,6 +105,13 @@ public class BrowserPage extends UserTemplate {
         }
     }
 
+    @Override
+    protected void onRender() {
+        long time = System.currentTimeMillis();
+        super.onRender();
+        logger.info("Render Browser Page: {} ms", System.currentTimeMillis() - time);
+    }
+
     private Alert newAlert(String markupId) {
         Alert alert = new Alert(markupId, Model.of(), Model.of());
         alert.type(Alert.Type.Danger);

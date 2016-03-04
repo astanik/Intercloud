@@ -12,6 +12,8 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.classification.CategoryClassifi
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification;
 import de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification;
+import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;
+import org.apache.xmlbeans.XmlObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,32 +25,52 @@ import java.util.Calendar;
 public class ClassificationModelBuilder {
     private final static Logger logger = LoggerFactory.getLogger(ClassificationModelBuilder.class);
 
-    public static ClassificationModel build(ClassificationDocument.Classification classification) {
+    public static ClassificationModel build(GrammarsDocument.Grammars grammars, boolean setDefaulValues) {
+        ClassificationModel classificationModel = null;
+        ClassificationDocument.Classification classification = getClassification(grammars);
+        if (null != classification) {
+            classificationModel = build(classification, setDefaulValues);
+        }
+        return classificationModel;
+    }
+
+    private static ClassificationDocument.Classification getClassification(GrammarsDocument.Grammars grammars) {
+        ClassificationDocument.Classification result = null;
+        if (null != grammars) {
+            XmlObject[] classifications = grammars.selectChildren("urn:xmpp:occi-classification", "Classification");
+            if (null != classifications && 0 < classifications.length) {
+                result = (ClassificationDocument.Classification) classifications[0];
+            }
+        }
+        return result;
+    }
+
+    public static ClassificationModel build(ClassificationDocument.Classification classification, boolean setDafaultValues) {
         ClassificationModel classificationModel = new ClassificationModel();
         // read kind from classification
         if (null != classification.getKindType()) {
-            classificationModel.setKind(buildKindModel(classification.getKindType()));
+            classificationModel.setKind(buildKindModel(classification.getKindType(), setDafaultValues));
         }
         // read links from classification
         if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
             for (LinkClassification c : classification.getLinkTypeArray()) {
-                classificationModel.addLink(buildLinkModel(c));
+                classificationModel.addLink(buildLinkModel(c, setDafaultValues));
             }
         }
         // read mixins from classification
         if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
             for (MixinClassification c : classification.getMixinTypeArray()) {
-                classificationModel.addMixin(buildMixinModel(c));
+                classificationModel.addMixin(buildMixinModel(c, setDafaultValues));
             }
         }
 
         return classificationModel;
     }
 
-    private static KindModel buildKindModel(CategoryClassification classification) {
+    private static KindModel buildKindModel(CategoryClassification classification, boolean setDefaultValues) {
         KindModel model = new KindModel(classification.getSchema(), classification.getTerm());
         model.setTitle(classification.getTitle());
-        if (buildAttributeModels(model, classification.getAttributeClassificationArray())) {
+        if (buildAttributeModels(model, classification.getAttributeClassificationArray(), setDefaultValues)) {
             // only add kind definition to template if default values are present
             model.addTemplate(new TemplateModel(model.getTitle(), classification));
         } else {
@@ -58,10 +80,10 @@ public class ClassificationModelBuilder {
         return model;
     }
 
-    private static MixinModel buildMixinModel(MixinClassification classification) {
+    private static MixinModel buildMixinModel(MixinClassification classification, boolean setDefaultValues) {
         MixinModel model = new MixinModel(classification.getSchema(), classification.getTerm(), classification.getApplies());
         model.setTitle(classification.getTitle());
-        if (buildAttributeModels(model, classification.getAttributeClassificationArray())) {
+        if (buildAttributeModels(model, classification.getAttributeClassificationArray(), setDefaultValues)) {
             model.addTemplate(new TemplateModel(model.getTitle(), classification));
         } else {
             model.addTemplate(new TemplateModel(model.getTitle(), null));
@@ -69,10 +91,10 @@ public class ClassificationModelBuilder {
         return model;
     }
 
-    private static LinkModel buildLinkModel(LinkClassification classification) {
+    private static LinkModel buildLinkModel(LinkClassification classification, boolean setDefaultValues) {
         LinkModel model = new LinkModel(classification.getSchema(), classification.getTerm(), classification.getRelation());
         model.setTitle(classification.getTitle());
-        if (buildAttributeModels(model, classification.getAttributeClassificationArray())) {
+        if (buildAttributeModels(model, classification.getAttributeClassificationArray(), setDefaultValues)) {
             model.addTemplate(new TemplateModel(model.getTitle(), classification));
         } else {
             model.addTemplate(new TemplateModel(model.getTitle(), null));
@@ -81,14 +103,17 @@ public class ClassificationModelBuilder {
     }
 
     private static boolean buildAttributeModels(CategoryModel categoryModel,
-                                                      AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
+                                                AttributeClassificationDocument.AttributeClassification[] attributeClassifications,
+                                                boolean setDafaultValues) {
         boolean hasDefaultValue = false;
         if (null != attributeClassifications && 0 < attributeClassifications.length) {
             for (AttributeClassificationDocument.AttributeClassification a : attributeClassifications) {
                 AttributeModel attributeModel = new AttributeModel(a.getName(), a.getType().toString(), a.getRequired(), a.getMutable(), a.getDescription());
-                addAttributeDefaultValue(attributeModel, a);
-                hasDefaultValue |= attributeModel.hasValue();
-                categoryModel.addAttribute(attributeModel);
+                if (setDafaultValues) {
+                    addAttributeDefaultValue(attributeModel, a);
+                    hasDefaultValue |= attributeModel.hasValue();
+                    categoryModel.addAttribute(attributeModel);
+                }
             }
         }
         return hasDefaultValue;
@@ -148,7 +173,7 @@ public class ClassificationModelBuilder {
     }
 
     public static void setAttributeDefaultValues(CategoryModel categoryModel,
-                                                                 AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
+                                                 AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
         for (AttributeClassificationDocument.AttributeClassification attributeClassification : attributeClassifications) {
             AttributeModel attributeModel = categoryModel.getAttribute(attributeClassification.getName());
             if (null != attributeModel) {

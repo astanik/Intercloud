@@ -4,7 +4,6 @@ import de.tu_berlin.cit.intercloud.client.model.occi.convert.ClassificationModel
 import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelBuilder;
 import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelConverter;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModelPlugin;
-import de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResponseDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;
@@ -39,9 +38,8 @@ public class OcciListRepresentationModelPlugin implements IRepresentationModelPl
         OcciListRepresentationModel result = null;
         if (null != response) {
             CategoryListDocument categoryListDocument = CategoryListDocument.Factory.parse(response.getRepresentation());
-            ClassificationDocument.Classification classification = occiRepresentationModelPlugin.getClassification(grammars);
-            ClassificationModel classificationModel = ClassificationModelBuilder.build(classification);
-            result = RepresentationModelBuilder.build(classificationModel, categoryListDocument);
+            ClassificationModel classificationModel = ClassificationModelBuilder.build(grammars, false);
+            result = RepresentationModelBuilder.build(categoryListDocument, classificationModel);
         }
         return result;
     }

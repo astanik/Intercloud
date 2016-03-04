@@ -32,6 +32,9 @@ import java.util.Map;
 public class RepresentationModelBuilder {
     private static final Logger logger = LoggerFactory.getLogger(RepresentationModelBuilder.class);
 
+    /**
+     * Converts a {@link MapType} to a {@link Map<String, String>}.
+     */
     public static Map<String, String> mapTypeToMap(MapType mapType) {
         Map<String, String> map = new HashMap<>();
         MapItem[] itemArray = mapType.getItemArray();
@@ -42,6 +45,10 @@ public class RepresentationModelBuilder {
         }
         return map;
     }
+
+    /*
+     *  REQUEST REPRESENTATION MODEL
+     */
 
     public static OcciRepresentationModel build(ClassificationModel classificationModel) {
 
@@ -117,7 +124,7 @@ public class RepresentationModelBuilder {
     }
 
     private static boolean addMixinModelToContainer(Map<String, List<IMixinModelContainer>> mixinContainerMap, MixinModel mixin) {
-        List <IMixinModelContainer> mixinContainers = mixinContainerMap.get(mixin.getApplies());
+        List<IMixinModelContainer> mixinContainers = mixinContainerMap.get(mixin.getApplies());
         if (null != mixinContainers && !mixinContainers.isEmpty()) {
             // add container
             mixinContainerMap.put(mixin.getId(), mixinContainers);
@@ -134,22 +141,26 @@ public class RepresentationModelBuilder {
         }
     }
 
-    public static OcciListRepresentationModel build(ClassificationModel classificationModel, CategoryListDocument categoryListDocument) {
+    /*
+     * RESPONSE REPRESENTATION MODEL
+     */
+
+    public static OcciListRepresentationModel build(CategoryListDocument categoryListDocument, ClassificationModel classificationModel) {
         CategoryListDocument.CategoryList categoryList = categoryListDocument.getCategoryList();
         List<OcciRepresentationModel> representationList = new ArrayList<>();
 
         for (CategoryDocument.Category category : categoryList.getCategoryArray()) {
-            representationList.add(build(classificationModel, category));
+            representationList.add(build(category, classificationModel));
         }
         return new OcciListRepresentationModel(representationList);
     }
 
-    public static OcciRepresentationModel build(ClassificationModel classificationModel, CategoryDocument categoryDocument) {
+    public static OcciRepresentationModel build(CategoryDocument categoryDocument, ClassificationModel classificationModel) {
         CategoryDocument.Category category = categoryDocument.getCategory();
-        return build(classificationModel, category);
+        return build(category, classificationModel);
     }
 
-    private static OcciRepresentationModel build(ClassificationModel classificationModel, CategoryDocument.Category category) {
+    private static OcciRepresentationModel build(CategoryDocument.Category category, ClassificationModel classificationModel) {
         KindModel kind = null;
         List<MixinModel> mixinList = new ArrayList<>();
         List<LinkModel> linkList = new ArrayList<>();
@@ -175,7 +186,7 @@ public class RepresentationModelBuilder {
 
     private static KindModel buildKindModel(CategoryType kindType, ClassificationModel classificationModel) {
         String kindId = kindType.getSchema() + kindType.getTerm();
-        KindModel kindModel = classificationModel.getKind();
+        KindModel kindModel = null != classificationModel ? classificationModel.getKind() : null;
         KindModel result = new KindModel(kindType.getSchema(), kindType.getTerm());
         result.setTitle(kindType.getTitle());
         buildAttributes(result, kindModel, kindType.getAttributeArray());
@@ -188,9 +199,9 @@ public class RepresentationModelBuilder {
 
     private static MixinModel buildMixinModel(CategoryType mixinType, ClassificationModel classificationModel) {
         String mixinId = mixinType.getSchema() + mixinType.getTerm();
-        MixinModel mixinModel = classificationModel.getMixin(mixinId);
+        MixinModel mixinModel = null != classificationModel ? classificationModel.getMixin(mixinId) : null;
         MixinModel result;
-        if (null == mixinModel || !mixinModel.getId().equals(mixinId)) {
+        if (null == mixinModel) {
             result = new MixinModel(mixinType.getSchema(), mixinType.getTerm(), null);
             logger.warn("Rest document contains Mixin, but Mixin not defined in Classification, mixin: {}", mixinId);
         } else {
@@ -204,9 +215,9 @@ public class RepresentationModelBuilder {
 
     private static LinkModel buildLinkModel(LinkType linkType, ClassificationModel classificationModel) {
         String linkId = linkType.getSchema() + linkType.getTerm();
-        LinkModel linkModel = classificationModel.getLink(linkId);
+        LinkModel linkModel = null != classificationModel ? classificationModel.getLink(linkId) : null;
         LinkModel result;
-        if (null == linkModel || !linkModel.getId().equals(linkId)) {
+        if (null == linkModel) {
             result = new LinkModel(linkType.getSchema(), linkType.getTerm(), null);
             logger.warn("Rest document contains Link, but Link not defined in Classification, link: {}", linkId);
         } else {
@@ -235,14 +246,17 @@ public class RepresentationModelBuilder {
                 } else if (null == categoryModel) {
                     // attribute type to model
                     attributeModel = buildAttributeModel(attributeType);
-                } else if (null == categoryModel.getAttribute(attributeType.getName())) {
-                    // attribute type to model
-                    logger.warn("Rest document contains Attribute, but Attribute not defined in Classification. category: {}, attribute: {}",
-                            result.getId(), attributeType.getName());
-                    attributeModel = buildAttributeModel(attributeType);
                 } else {
-                    // compare attribute type to classification attributes
-                    attributeModel = buildAttributeModel(attributeType, categoryModel.getAttribute(attributeType.getName()));
+                    attributeModel = categoryModel.getAttribute(attributeType.getName());
+                    if (null == attributeModel) {
+                        // attribute type to model
+                        logger.warn("Rest document contains Attribute, but Attribute not defined in Classification. category: {}, attribute: {}",
+                                result.getId(), attributeType.getName());
+                        attributeModel = buildAttributeModel(attributeType);
+                    } else {
+                        // compare attribute type to classification attributes
+                        attributeModel = buildAttributeModel(attributeType, attributeModel);
+                    }
                 }
                 if (null != attributeModel) {
                     result.addAttribute(attributeModel);
@@ -307,13 +321,11 @@ public class RepresentationModelBuilder {
             result = new AttributeModel(attributeType.getName(), AttributeModel.Type.KEY, required, mutable, description);
             byte[] key = Base64.getDecoder().decode(attributeType.getKEY());
             result.setKey(new String(key));
-            logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
 
         } else if (attributeType.isSetSIGNATURE()) {
             result = new AttributeModel(attributeType.getName(), AttributeModel.Type.SIGNATURE, required, mutable, description);
             byte[] signature = Base64.getDecoder().decode(attributeType.getKEY());
             result.setSignature(new String(signature));
-            logger.warn("Unsupported attribute type: KEY, {}", attributeType.getName());
 
         } else if (attributeType.isSetSTRING()) {
             result = new AttributeModel(attributeType.getName(), AttributeModel.Type.STRING, required, mutable, description);
