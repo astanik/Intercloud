@@ -31,7 +31,7 @@ public class IntercloudService implements IIntercloudService {
 
     @Override
     public synchronized IIntercloudClient getIntercloudClient(XmppURI uri) throws XMPPException, IOException, SmackException {
-        if (!this.intercloudClientUri.equals(uri)) {
+        if (null == this.intercloudClientUri || !this.intercloudClientUri.equals(uri)) {
             return newIntercloudClient(uri);
         }
         return this.intercloudClient;
