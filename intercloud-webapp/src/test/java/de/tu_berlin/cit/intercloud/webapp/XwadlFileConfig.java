@@ -81,4 +81,31 @@ public class XwadlFileConfig {
     public void setHasDefaultValues(boolean hasDefaultValues) {
         this.hasDefaultValues = hasDefaultValues;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder("xwadl");
+        if (hasKind()) {
+            s.append("-k");
+        }
+        if (0 < getNumOfKindMixins()) {
+            s.append("-").append(getNumOfKindMixins()).append("km");
+        }
+        if (0 < getNumOfLinks()) {
+            s.append("-").append(getNumOfLinks()).append("l");
+        }
+        if (0 < getNumOfLinkMixins()) {
+            s.append("-").append(getNumOfLinkMixins()).append("lm");
+        }
+        if (0 < getNumOfCategoryMixins()) {
+            s.append("-").append(getNumOfCategoryMixins()).append("cm");
+        }
+        if (0 < getNumOfTemplates()) {
+            s.append("-").append(getNumOfTemplates()).append("t");
+        }
+        if (hasDefaultValues()) {
+            s.append("-d");
+        }
+        return s.toString();
+    }
 }

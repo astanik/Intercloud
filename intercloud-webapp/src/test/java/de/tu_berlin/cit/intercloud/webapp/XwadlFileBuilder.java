@@ -57,43 +57,17 @@ public class XwadlFileBuilder {
         }
         method.addNewResponse().setMediaType(UriText.MEDIA_TYPE);
 
-        return createXwadlFile(resourceTypeDocument, generateFilename(config));
+        return createXwadlFile(resourceTypeDocument, config);
     }
 
-    private String generateFilename(XwadlFileConfig config) {
-        StringBuilder fileName = new StringBuilder();
-        if (config.hasKind()) {
-            fileName.append("k-");
-        }
-        if (0 < config.getNumOfKindMixins()) {
-            fileName.append(config.getNumOfKindMixins()).append("km-");
-        }
-        if (0 < config.getNumOfLinks()) {
-            fileName.append(config.getNumOfLinks()).append("l-");
-        }
-        if (0 < config.getNumOfLinkMixins()) {
-            fileName.append(config.getNumOfLinkMixins()).append("lm-");
-        }
-        if (0 < config.getNumOfCategoryMixins()) {
-            fileName.append(config.getNumOfCategoryMixins()).append("cm-");
-        }
-        if (0 < config.getNumOfTemplates()) {
-            fileName.append(config.getNumOfTemplates()).append("t-");
-        }
-        if (config.hasDefaultValues()) {
-            fileName.append("d-");
-        }
-        return fileName.toString();
-    }
-
-    private String createXwadlFile(ResourceTypeDocument resourceTypeDocument, String name) throws IOException {
+    private String createXwadlFile(ResourceTypeDocument resourceTypeDocument, XwadlFileConfig config) throws IOException {
         File xwadlRoot = new File(XWADL_ROOT);
         xwadlRoot.mkdirs();
-        File file = new File(xwadlRoot, "xwadl-" + name + System.currentTimeMillis() + ".xml");
+        File file = new File(xwadlRoot, config.toString() + ".xml");
         if (file.exists()) {
             file.delete();
         }
-        resourceTypeDocument.getResourceType().setPath(file.getPath());
+        resourceTypeDocument.getResourceType().setPath(file.getAbsolutePath());
         PrintWriter printWriter = new PrintWriter(file);
         try {
             printWriter.print(resourceTypeDocument.toString());

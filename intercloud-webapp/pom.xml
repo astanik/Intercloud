@@ -7,11 +7,11 @@
 		<artifactId>intercloud</artifactId>
 		<version>0.0.1</version>
 	</parent>
-	
+
 	<groupId>de.tu_berlin.cit.intercloud</groupId>
 	<artifactId>webapp</artifactId>
 	<packaging>war</packaging>
-	
+
 	<name>Intercloud Webapp</name>
 	<description>Webapp for Intercloud Component Management</description>
 
@@ -88,7 +88,7 @@
 						</contextHandler>
 					</contextHandlers>
 				</configuration -->
-				
+
 			</plugin>
 		</plugins>
 	</build>
@@ -157,12 +157,20 @@
 			<version>${jetty.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
+
+		<!-- TEST -->
+		<dependency>
+			<groupId>com.carrotsearch</groupId>
+			<artifactId>junit-benchmarks</artifactId>
+			<version>0.7.2</version>
+		</dependency>
+
 
 	</dependencies>
 

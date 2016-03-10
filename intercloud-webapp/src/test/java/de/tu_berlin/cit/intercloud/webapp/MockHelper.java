@@ -26,6 +26,7 @@ public final class MockHelper {
     }
 
     public static void initialize() {
-        WebApplication.get().setServletContext(new MockServletContext(WebApplication.get(), WEBAPP_ROOT));
+        WebApplication webApplication = WebApplication.get();
+        webApplication.setServletContext(new MockServletContext(WebApplication.get(), WEBAPP_ROOT));
     }
 }

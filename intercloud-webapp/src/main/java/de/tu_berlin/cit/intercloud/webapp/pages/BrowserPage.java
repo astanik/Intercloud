@@ -4,6 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.profiling.IProfilingInterceptor;
+import de.tu_berlin.cit.intercloud.client.profiling.ProfilingItem;
+import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
@@ -82,9 +85,56 @@ public class BrowserPage extends UserTemplate {
 
     @Override
     protected void onRender() {
-        long time = System.currentTimeMillis();
-        super.onRender();
-        logger.info("Render Browser Page: {} ms", System.currentTimeMillis() - time);
+        ProfilingService.getInstance().invokeAndProfile(
+                new IProfilingInterceptor() {
+                    @Override
+                    public void profile(ProfilingItem item, long millis) {
+                        item.setOnRender(millis);
+                    }
+
+                    @Override
+                    public Object invoke() {
+                        BrowserPage.super.onRender();
+                        return null;
+                    }
+                }
+        );
+    }
+
+    @Override
+    protected void onBeforeRender() {
+        ProfilingService.getInstance().invokeAndProfile(
+                new IProfilingInterceptor() {
+                    @Override
+                    public void profile(ProfilingItem item, long millis) {
+                        item.setOnBeforeRender(millis);
+                    }
+
+                    @Override
+                    public Object invoke() {
+                        BrowserPage.super.onBeforeRender();
+                        return null;
+                    }
+                }
+        );
+    }
+
+    @Override
+    protected void onConfigure() {
+        ProfilingService.getInstance().invokeAndProfile(
+                new IProfilingInterceptor() {
+                    @Override
+                    public void profile(ProfilingItem item, long millis) {
+                        item.setOnConfigure(millis);
+                    }
+
+                    @Override
+                    public Object invoke() {
+                        BrowserPage.super.onConfigure();
+                        return null;
+                    }
+                }
+        );
     }
 
     private Alert newAlert(String markupId) {

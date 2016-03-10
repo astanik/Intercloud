@@ -6,6 +6,9 @@ import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModel
 import de.tu_berlin.cit.intercloud.client.model.occi.convert.RepresentationModelConverter;
 import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModelPlugin;
+import de.tu_berlin.cit.intercloud.client.profiling.IProfilingInterceptor;
+import de.tu_berlin.cit.intercloud.client.profiling.ProfilingItem;
+import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xml.ResponseDocument;
 import de.tu_berlin.cit.intercloud.xmpp.rest.xwadl.GrammarsDocument;
@@ -24,24 +27,35 @@ public class OcciRepresentationModelPlugin implements IRepresentationModelPlugin
 
     @Override
     public OcciRepresentationModel getRequestModel(RequestDocument.Request request, GrammarsDocument.Grammars grammars) {
-        long start = System.currentTimeMillis();
+        return (OcciRepresentationModel) ProfilingService.getInstance().invokeAndProfile(
+                new IProfilingInterceptor() {
+                    @Override
+                    public void profile(ProfilingItem item, long millis) {
+                        item.setTransform(millis);
+                    }
 
-        ClassificationModel classificationModel = ClassificationModelBuilder.build(grammars, true);
-        if (null == classificationModel) {
-            throw new MissingClassificationException("Classification is not specified in xwadl.");
-        }
-        TemplateHelper.addTemplatesToClassificationModel(classificationModel, request);
-        OcciRepresentationModel representation = RepresentationModelBuilder.build(classificationModel);
-
-        logger.info("XmlBean --> RepresentationModel: {} ms", System.currentTimeMillis() - start);
-        return representation;
+                    @Override
+                    public Object invoke() {
+                        ClassificationModel classificationModel = ClassificationModelBuilder.build(grammars, true);
+                        if (null == classificationModel) {
+                            throw new MissingClassificationException("Classification is not specified in xwadl.");
+                        }
+                        TemplateHelper.addTemplatesToClassificationModel(classificationModel, request);
+                        OcciRepresentationModel representation = RepresentationModelBuilder.build(classificationModel);
+                        return representation;
+                    }
+                }
+        );
     }
 
     @Override
     public String getRepresentationString(OcciRepresentationModel representationModel) {
-        return null != representationModel
+        long start = System.currentTimeMillis();
+        String representation = null != representationModel
                 ? RepresentationModelConverter.convertToXml(representationModel).toString()
                 : null;
+        logger.info("RepresentationModel --> XmlBean: {} ms", System.currentTimeMillis() - start);
+        return representation;
     }
 
     @Override
