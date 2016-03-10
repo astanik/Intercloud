@@ -12,13 +12,6 @@ public interface IProfilingService {
     ProfilingItem start(String context);
 
     /**
-     * Get the {@link ProfilingItem} of the current Thread.
-     *
-     * @return An instance if start was successful, NULL if not.
-     */
-    ProfilingItem getProfilingItem();
-
-    /**
      * Invokes a {@link IProfilingInterceptor} and
      * measures the execution time of its invoke method.
      * @param interceptor
@@ -29,11 +22,13 @@ public interface IProfilingService {
     /**
      * Stop profiling of the current Thread.
      */
-    void stop();
+    ProfilingItem stop();
 
     /**
      * Specifies a filter whether or not to profile the current Thread.
      * @param regex
      */
     void setFilter(String regex);
+
+    void setProfilingListener(IProfilingListener listener);
 }

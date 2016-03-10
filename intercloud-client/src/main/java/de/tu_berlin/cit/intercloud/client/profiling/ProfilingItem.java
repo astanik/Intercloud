@@ -2,27 +2,31 @@ package de.tu_berlin.cit.intercloud.client.profiling;
 
 public class ProfilingItem {
 
-    String requestName;
-    long requestDuration;
+    String context;
+    long duration;
     long onConfigure;
     long onBeforeRender;
     long onRender;
     long transform;
 
-    public String getRequestName() {
-        return requestName;
+    public ProfilingItem(String context) {
+        this.context = context;
     }
 
-    public void setRequestName(String requestName) {
-        this.requestName = requestName;
+    public String getContext() {
+        return context;
     }
 
-    public long getRequestDuration() {
-        return requestDuration;
+    public void setContext(String context) {
+        this.context = context;
     }
 
-    public void setRequestDuration(long requestDuration) {
-        this.requestDuration = requestDuration;
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     public long getOnConfigure() {
@@ -55,5 +59,17 @@ public class ProfilingItem {
 
     public void setTransform(long transform) {
         this.transform = transform;
+    }
+
+    @Override
+    public String toString() {
+        return "ProfilingItem{" +
+                "context='" + context + '\'' +
+                ", duration=" + duration +
+                ", onConfigure=" + onConfigure +
+                ", onBeforeRender=" + onBeforeRender +
+                ", onRender=" + onRender +
+                ", transform=" + transform +
+                '}';
     }
 }
