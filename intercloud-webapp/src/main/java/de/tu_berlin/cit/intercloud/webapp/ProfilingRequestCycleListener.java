@@ -15,7 +15,7 @@ public class ProfilingRequestCycleListener extends AbstractRequestCycleListener 
     @Override
     public void onBeginRequest(RequestCycle cycle) {
         time = System.currentTimeMillis();
-        profilingService.newProfilingItem();
+        profilingService.start(cycle.getRequest().getUrl().toString());
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ProfilingRequestCycleListener extends AbstractRequestCycleListener 
         if (null != profilingItem) {
             profilingItem.setRequestName(cycle.getRequest().getUrl().toString());
             profilingItem.setRequestDuration(System.currentTimeMillis() - time);
-            profilingService.writeToCsv();
+            profilingService.stop();
             logger.info("Processing Request: {}, {} ms", profilingItem.getRequestName(), profilingItem.getRequestDuration());
         }
     }

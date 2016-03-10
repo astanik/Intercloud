@@ -40,16 +40,15 @@ public class RenderOcciRequestRepresentationTest extends AbstractBenchmark {
 
     @Test
     public void getWebSession() throws Exception {
-        XwadlFileConfig xwadlConfig = new XwadlFileConfig(false, 0, 0, 0, 30, 0, true);
+        XwadlFileConfig xwadlConfig = new XwadlFileConfig(false, 0, 0, 0, 3, 0, true);
         String xwadlPath = XwadlFileBuilder.getInstance().createXwadlFile(xwadlConfig);
 
         profilingService.setFileName("target/" + xwadlConfig + ".csv");
-        profilingService.setEnabled(false);
+        profilingService.setFilter("methodTable.methodList.0.methodLink");
         //tester.startPage(new BrowserPage(Model.of(new XmppURI("foo", MockHelper.XWADL_ROOT + "/20mixins.xml"))));
         tester.startPage(new BrowserPage(Model.of(new XmppURI("foo", xwadlPath))));
         tester.assertRenderedPage(BrowserPage.class);
 
-        profilingService.setEnabled(true);
         // test post method
         tester.clickLink("methodTable:methodList:0:methodLink");
         tester.assertRenderedPage(BrowserPage.class);

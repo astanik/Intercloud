@@ -9,13 +9,21 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
-public class ProfilingService {
+public class ProfilingService implements IProfilingService {
+    private static final Logger logger = LoggerFactory.getLogger(ProfilingService.class);
+
     private static final ProfilingService INSTANCE = new ProfilingService();
     private static final String CSV_SEPERATOR = ";";
+
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
-    private static final ThreadLocal<ProfilingItem> PROFILING_THREAD = new ThreadLocal<>();
-    private static final Logger logger = LoggerFactory.getLogger(ProfilingService.class);
+    private static final ThreadLocal<ProfilingItem> PROFILING_THREAD = new ThreadLocal<ProfilingItem>() {
+        @Override
+        protected ProfilingItem initialValue() {
+            return null;
+        }
+    };
 
     public static ProfilingService getInstance() {
         return INSTANCE;
@@ -24,29 +32,26 @@ public class ProfilingService {
     private ProfilingService() {
     }
 
-    private boolean enabled = false;
+    private Pattern filter = null;
     private String fileName = null;
 
-    public ProfilingItem newProfilingItem() {
-        if (enabled) {
-            ProfilingItem item = new ProfilingItem();
-            PROFILING_THREAD.set(item);
-            return item;
-        } else {
-            return null;
+    @Override
+    public ProfilingItem start(String context) {
+        ProfilingItem item = null;
+        if (null != filter && filter.matcher(context).find()) {
+            item = new ProfilingItem();
         }
+        PROFILING_THREAD.set(item);
+        return item;
     }
 
     public ProfilingItem getProfilingItem() {
-        if (enabled) {
-            return PROFILING_THREAD.get();
-        } else {
-            return null;
-        }
+        return PROFILING_THREAD.get();
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    @Override
+    public void setFilter(String regex) {
+        this.filter = Pattern.compile(regex);
     }
 
     public void setFileName(String fileName) {
@@ -56,32 +61,37 @@ public class ProfilingService {
         }
     }
 
+    @Override
     public Object invokeAndProfile(IProfilingInterceptor interceptor) {
-        if (enabled) {
+        ProfilingItem item = PROFILING_THREAD.get();
+        if (null != item) {
             long time = System.currentTimeMillis();
             try {
                 return interceptor.invoke();
             } finally {
-                interceptor.profile(PROFILING_THREAD.get(), System.currentTimeMillis() - time);
+                interceptor.profile(item, System.currentTimeMillis() - time);
             }
         } else {
             return interceptor.invoke();
         }
     }
 
-    public void writeToCsv() {
+    public void stop() {
         ProfilingItem item = PROFILING_THREAD.get();
-        EXECUTOR_SERVICE.execute(() -> {
-            try {
-                writeToCsv(item);
-            } catch (Exception e) {
-                logger.error("Could not write profiling item to csv.", e);
-            }
-        });
+        if (null != item) {
+            PROFILING_THREAD.set(null);
+            EXECUTOR_SERVICE.execute(() -> {
+                try {
+                    writeToCsv(item);
+                } catch (Exception e) {
+                    logger.error("Could not write profiling item to csv.", e);
+                }
+            });
+        }
     }
 
     private void writeToCsv(ProfilingItem item) throws FileNotFoundException {
-        if (enabled && null != fileName) {
+        if (null != fileName) {
             PrintWriter printWriter = new PrintWriter(new FileOutputStream(fileName, true));
             try {
                 printWriter.println(item.getRequestName() + CSV_SEPERATOR
@@ -98,7 +108,7 @@ public class ProfilingService {
     }
 
     private void writeHeaderToCsv() {
-        if (enabled && null != fileName) {
+        if (null != fileName) {
             try {
                 PrintWriter printWriter = new PrintWriter(fileName);
                 try {
