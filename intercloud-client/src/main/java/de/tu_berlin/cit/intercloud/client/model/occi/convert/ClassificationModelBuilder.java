@@ -156,9 +156,11 @@ public class ClassificationModelBuilder {
                     case SIGNATURE:
                         byte[] signature = Base64.getDecoder().decode(defaultValue);
                         attributeModel.setSignature(new String(signature));
+                        break;
                     case KEY:
                         byte[] key = Base64.getDecoder().decode(defaultValue);
                         attributeModel.setKey(new String(key));
+                        break;
                     case LIST:
                     case MAP:
                     default:
