@@ -14,10 +14,11 @@ public interface IProfilingService {
     /**
      * Invokes a {@link IProfilingInterceptor} and
      * measures the execution time of its invoke method.
+     *
      * @param interceptor
      * @return The result of the interceptor's invoke method.
      */
-    Object invokeAndProfile(IProfilingInterceptor interceptor);
+    <T> T invokeAndProfile(IProfilingInterceptor<T> interceptor);
 
     /**
      * Stop profiling of the current Thread.
@@ -26,9 +27,10 @@ public interface IProfilingService {
 
     /**
      * Specifies a filter whether or not to profile the current Thread.
+     *
      * @param regex
      */
     void setFilter(String regex);
 
-    void setProfilingListener(IProfilingListener listener);
+    void setListener(IProfilingListener listener);
 }

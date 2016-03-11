@@ -36,21 +36,7 @@ public class ProfilingService implements IProfilingService {
     }
 
     @Override
-    public void setProfilingListener(IProfilingListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void setFilter(String regex) {
-        if (null != regex) {
-            this.filter = Pattern.compile(regex);
-        } else {
-            this.filter = null;
-        }
-    }
-
-    @Override
-    public Object invokeAndProfile(IProfilingInterceptor interceptor) {
+    public <T> T invokeAndProfile(IProfilingInterceptor<T> interceptor) {
         ProfilingItem item = PROFILING_THREAD.get();
         if (null != item) {
             long time = System.currentTimeMillis();
@@ -77,5 +63,17 @@ public class ProfilingService implements IProfilingService {
         return item;
     }
 
+    @Override
+    public void setListener(IProfilingListener listener) {
+        this.listener = listener;
+    }
 
+    @Override
+    public void setFilter(String regex) {
+        if (null != regex) {
+            this.filter = Pattern.compile(regex);
+        } else {
+            this.filter = null;
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.client.profiling;
 
-public interface IProfilingInterceptor {
+public interface IProfilingInterceptor<T> {
     void profile(ProfilingItem item, long millis);
-    Object invoke();
+    T invoke();
 }

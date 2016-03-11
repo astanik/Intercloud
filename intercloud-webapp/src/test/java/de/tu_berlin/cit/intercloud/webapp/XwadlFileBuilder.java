@@ -23,7 +23,9 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -184,12 +186,17 @@ public class XwadlFileBuilder {
             xdefault = DatatypeConverter.printDateTime(calendar);
         }
         attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DATETIME, "some datetime...", xdefault));
-        // no defaults
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.ENUM, "some enum...", null));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.URI, "some uri...", null));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.SIGNATURE, "some signature...", null));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.KEY, "some key...", null));
-        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DURATION, "some duration...", null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.DURATION, "some duration...",
+                hasDefaultValues ? Duration.ofMillis(System.currentTimeMillis() + RANDOM.nextInt()).toString() : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.ENUM, "some enum...",
+                hasDefaultValues ? UUID.randomUUID().toString() : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.URI, "some uri...",
+                hasDefaultValues ? UUID.randomUUID().toString() : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.SIGNATURE, "some signature...",
+                hasDefaultValues ? Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()) : null));
+        attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.KEY, "some key...",
+                hasDefaultValues ? Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()) : null));
+        // no defaults - not supported
         attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.LIST, "some list...", null));
         attributeList.add(createAttribute(UUID.randomUUID().toString(), AttributeType.MAP, "some map...", null));
         return attributeList.toArray(new AttributeClassificationDocument.AttributeClassification[attributeList.size()]);
