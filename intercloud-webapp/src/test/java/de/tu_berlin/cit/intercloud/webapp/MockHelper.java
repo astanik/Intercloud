@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 
 public final class MockHelper {
     public static final String WEBAPP_ROOT = "src/main/webapp";
-    public static final String XWADL_ROOT = "src/test/resources/xwadl";
 
     public static void login() {
         try {

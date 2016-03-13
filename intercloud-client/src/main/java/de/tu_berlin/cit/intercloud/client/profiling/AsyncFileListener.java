@@ -10,14 +10,14 @@ import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FileListener implements IProfilingListener {
-    private static final Logger logger = LoggerFactory.getLogger(FileListener.class);
+public class AsyncFileListener implements IProfilingListener {
+    private static final Logger logger = LoggerFactory.getLogger(AsyncFileListener.class);
     private static final String CSV_SEPERATOR = ";";
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
     private String fileName;
 
-    public FileListener(String fileName) {
+    public AsyncFileListener(String fileName) {
         this.fileName = fileName;
         if (!new File(fileName).exists()) {
             writeHeaderToCsv();

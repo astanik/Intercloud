@@ -1,13 +1,13 @@
 package de.tu_berlin.cit.intercloud.webapp;
 
 public class XwadlFileConfig {
-    private boolean hasKind;
-    private int numOfKindMixins;
-    private int numOfLinks;
-    private int numOfLinkMixins;
-    private int numOfCategoryMixins;
-    private int numOfTemplates;
-    private boolean hasDefaultValues;
+    private boolean hasKind = false;
+    private int numOfKindMixins = 0;
+    private int numOfLinks = 0;
+    private int numOfLinkMixins = 0;
+    private int numOfCategoryMixins = 0;
+    private int numOfTemplates = 0;
+    private boolean hasDefaultValues = false;
 
     public XwadlFileConfig() {
     }

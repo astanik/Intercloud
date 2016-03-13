@@ -1,5 +1,7 @@
-package de.tu_berlin.cit.intercloud.webapp.test;
+package de.tu_berlin.cit.intercloud.webapp.test.request;
 
+import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
+import com.carrotsearch.junitbenchmarks.BenchmarkOptions;
 import de.tu_berlin.cit.intercloud.client.profiling.ProfilingItem;
 import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebApplication;
@@ -13,8 +15,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -22,10 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RenderOcciRequestRepresentationTest {
+@BenchmarkOptions(warmupRounds = 0, benchmarkRounds = 10)
+public abstract class AbstractRenderTest extends AbstractBenchmark {
     private static final int WARMUP_ROUNDS = 10;
     private static final int TEST_ROUNDS = 40;
-    private static final boolean HAS_DAFAULT = true;
+
     private WicketTester tester;
     private ProfilingService profilingService = ProfilingService.getInstance();
 
@@ -44,71 +47,41 @@ public class RenderOcciRequestRepresentationTest {
         profilingService.setFilter(null);
     }
 
-    @Test
-    public void tenCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 10, 0, HAS_DAFAULT));
-    }
+    public abstract void test1() throws Exception;
 
-    @Test
-    public void twentyCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 20, 0, HAS_DAFAULT));
-    }
+    public abstract void test10() throws Exception;
 
-    @Test
-    public void thrityCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 30, 0, HAS_DAFAULT));
-    }
+    public abstract void test20() throws Exception;
 
-    @Test
-    public void fourtyCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 40, 0, HAS_DAFAULT));
-    }
+    public abstract void test30() throws Exception;
 
-    @Test
-    public void fiftyCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 50, 0, HAS_DAFAULT));
-    }
+    public abstract void test40() throws Exception;
 
-    @Test
-    public void sixtyCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 60, 0, HAS_DAFAULT));
-    }
+    public abstract void test50() throws Exception;
 
-    @Test
-    public void seventyCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 70, 0, HAS_DAFAULT));
-    }
+    public abstract void test60() throws Exception;
 
-    @Test
-    public void eightyCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 80, 0, HAS_DAFAULT));
-    }
+    public abstract void test70() throws Exception;
 
-    @Test
-    public void ninetyCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 90, 0, HAS_DAFAULT));
-    }
+    public abstract void test80() throws Exception;
 
-    @Test
-    public void hundredCategoryMixins() throws Exception {
-        testBrowserPage(new XwadlFileConfig(false, 0, 0, 0, 100, 0, HAS_DAFAULT));
-    }
+    public abstract void test90() throws Exception;
 
-    public void testBrowserPage(XwadlFileConfig xwadlConfig) throws Exception {
+    public abstract void test100() throws Exception;
+
+    protected void testBrowserPage(XwadlFileConfig xwadlConfig) throws Exception {
         testBrowserPage(xwadlConfig, WARMUP_ROUNDS);
         ListListener listener = new ListListener();
-        //profilingService.setListener(new FileListener("target/" + xwadlConfig + ".csv"));
         profilingService.setListener(listener);
         profilingService.setFilter("methodTable.methodList.0.methodLink");
         testBrowserPage(xwadlConfig, TEST_ROUNDS);
         writeToCsv(aggregate(listener.getList()), xwadlConfig.toString());
     }
 
-    public void testBrowserPage(XwadlFileConfig xwadlConfig, int rounds) throws Exception {
+    private void testBrowserPage(XwadlFileConfig xwadlConfig, int rounds) throws Exception {
         for (int i = 0; i < rounds; i++) {
             String xwadlPath = XwadlFileBuilder.getInstance().createXwadlFile(xwadlConfig);
 
-            //tester.startPage(new BrowserPage(Model.of(new XmppURI("foo", MockHelper.XWADL_ROOT + "/20mixins.xml"))));
             tester.startPage(new BrowserPage(Model.of(new XmppURI("foo", xwadlPath))));
             tester.assertRenderedPage(BrowserPage.class);
 
@@ -119,8 +92,13 @@ public class RenderOcciRequestRepresentationTest {
     }
 
     private void writeToCsv(Map<String, Double> map, String id) throws FileNotFoundException {
-        PrintWriter writer = new PrintWriter(new FileOutputStream("target/result.csv", true));
+        File file = new File("target/" + this.getClass().getSimpleName() + ".csv");
+        boolean fileExists = file.exists();
+        PrintWriter writer = new PrintWriter(new FileOutputStream(file, true));
         try {
+            if (!fileExists) {
+                writer.println("id;request;onConfigure;onBeforeRender;onRender;transform");
+            }
             StringBuilder s = new StringBuilder();
             s.append(id).append(";")
                     .append(map.get("request")).append(";")
@@ -145,7 +123,7 @@ public class RenderOcciRequestRepresentationTest {
         }
 
         for (Map.Entry<String, Double> entry : map.entrySet()) {
-            entry.setValue(entry.getValue()/list.size());
+            entry.setValue(entry.getValue() / list.size());
         }
         return map;
     }
