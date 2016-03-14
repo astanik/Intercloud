@@ -97,7 +97,7 @@ public class TemplateHelper {
 
     private static List<CategoryDocument.Category> getTemplateDocuments(RequestDocument.Request request) {
         List<CategoryDocument.Category> result = new ArrayList<>();
-        if ( null != request.getTemplateArray()
+        if (null != request && null != request.getTemplateArray()
                 && 0 < request.getTemplateArray().length) {
             for (String template : request.getTemplateArray()) {
                 try {

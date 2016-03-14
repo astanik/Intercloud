@@ -109,10 +109,10 @@ public class ClassificationModelBuilder {
         if (null != attributeClassifications && 0 < attributeClassifications.length) {
             for (AttributeClassificationDocument.AttributeClassification a : attributeClassifications) {
                 AttributeModel attributeModel = new AttributeModel(a.getName(), a.getType().toString(), a.getRequired(), a.getMutable(), a.getDescription());
+                categoryModel.addAttribute(attributeModel);
                 if (setDafaultValues) {
                     addAttributeDefaultValue(attributeModel, a);
                     hasDefaultValue |= attributeModel.hasValue();
-                    categoryModel.addAttribute(attributeModel);
                 }
             }
         }

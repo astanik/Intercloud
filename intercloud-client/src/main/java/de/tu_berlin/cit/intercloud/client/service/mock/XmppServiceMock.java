@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.xmpp.client.service.mock;
+package de.tu_berlin.cit.intercloud.client.service.mock;
 
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This mock should <b>ONLY</b> be used for test purpose.
@@ -30,6 +32,14 @@ import java.util.List;
  */
 public class XmppServiceMock implements IXmppService {
     private static final Logger logger = LoggerFactory.getLogger(XmppServiceMock.class);
+    public static final Map<String, IMockResponsePlugin> RESPONSE_PLUGIN_REGISTRY;
+    static {
+        RESPONSE_PLUGIN_REGISTRY = new HashMap<>();
+        IMockResponsePlugin plugin = new UriListMockResponsePlugin();
+        RESPONSE_PLUGIN_REGISTRY.put(plugin.getMediaType(), plugin);
+        plugin = new OcciMockResponsePlugin();
+        RESPONSE_PLUGIN_REGISTRY.put(plugin.getMediaType(), plugin);
+    }
 
     @Override
     public void connect(XmppURI uri, String password) throws XMPPException, IOException, SmackException {
@@ -60,6 +70,8 @@ public class XmppServiceMock implements IXmppService {
      * Returns a static representation depending on the response media type.
      * <p>
      * text/uri-list: if path is a directory, return list of all directory items
+     * text/occi: returns a representation according to the classification of the xwadl's grammars section
+     *              with attributes randomly set or default values if given
      */
     @Override
     public ResourceDocument sendRestDocument(XmppURI uri, ResourceDocument document) throws XMPPException, IOException, SmackException {
@@ -71,36 +83,13 @@ public class XmppServiceMock implements IXmppService {
             }
             ResponseDocument.Response response = method.getResponse();
             if (null != response) {
-                if (UriListText.MEDIA_TYPE.equals(response.getMediaType())) {
-                    File file = new File(document.getResource().getPath());
-                    if (file.isDirectory()) {
-                        response.setRepresentation(getDirectoryList(uri, file));
-                    } else {
-                        response.setRepresentation("xmpp://example.component.de#/path0;"
-                                + "xmpp://example.component.com#/path0/path1;"
-                                + "xmpp://example.component.edu#/path0/path1/path2");
-                    }
+                IMockResponsePlugin plugin = RESPONSE_PLUGIN_REGISTRY.get(response.getMediaType());
+                if (null != plugin) {
+                    response.setRepresentation(plugin.getRepresentationString(uri));
                 }
             }
         }
         return result;
-    }
-
-    private String getDirectoryList(XmppURI uri, File directory) {
-        String[] list = directory.list();
-        if (null != list) {
-            List<String> directoryList = new ArrayList<>();
-            for (int i = 0; i < list.length; i++) {
-                try {
-                    directoryList.add(new XmppURI(uri.getJID(), new File(directory, list[i]).getPath()).toString());
-                } catch (URISyntaxException e) {
-                    logger.error("Could not add file to directory list.", e);
-                }
-            }
-            return String.join(";", directoryList);
-        } else {
-            return "";
-        }
     }
 
     /**

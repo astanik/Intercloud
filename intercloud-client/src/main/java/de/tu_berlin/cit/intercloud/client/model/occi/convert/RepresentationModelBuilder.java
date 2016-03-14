@@ -324,7 +324,7 @@ public class RepresentationModelBuilder {
 
         } else if (attributeType.isSetSIGNATURE()) {
             result = new AttributeModel(attributeType.getName(), AttributeModel.Type.SIGNATURE, required, mutable, description);
-            byte[] signature = Base64.getDecoder().decode(attributeType.getKEY());
+            byte[] signature = Base64.getDecoder().decode(attributeType.getSIGNATURE());
             result.setSignature(new String(signature));
 
         } else if (attributeType.isSetSTRING()) {

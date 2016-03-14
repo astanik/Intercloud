@@ -58,6 +58,10 @@ public class XwadlFileBuilder {
             request.setTemplateArray(templates.toArray(new String[templates.size()]));
         }
         method.addNewResponse().setMediaType(UriText.MEDIA_TYPE);
+        // METHOD: GET
+        method = resourceType.addNewMethod();
+        method.setType(MethodType.GET);
+        method.addNewResponse().setMediaType(OcciXml.MEDIA_TYPE);
 
         return createXwadlFile(resourceTypeDocument, config);
     }

@@ -46,7 +46,7 @@ public class OcciRepresentationModelPlugin implements IRepresentationModelPlugin
     @Override
     public OcciRepresentationModel getResponseModel(ResponseDocument.Response response, GrammarsDocument.Grammars grammars) throws XmlException {
         OcciRepresentationModel result = null;
-        if (response != null) {
+        if (null != response && null != response.getRepresentation()) {
             CategoryDocument categoryDocument = CategoryDocument.Factory.parse(response.getRepresentation());
             ClassificationModel classificationModel = ClassificationModelBuilder.build(grammars, false);
             result = RepresentationModelBuilder.build(categoryDocument, classificationModel);

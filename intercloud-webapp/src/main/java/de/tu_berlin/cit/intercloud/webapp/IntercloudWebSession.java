@@ -21,7 +21,7 @@ import de.tu_berlin.cit.intercloud.client.service.impl.IntercloudService;
 import de.tu_berlin.cit.intercloud.webapp.model.User;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.impl.XmppService;
-import de.tu_berlin.cit.intercloud.xmpp.client.service.mock.XmppServiceMock;
+import de.tu_berlin.cit.intercloud.client.service.mock.XmppServiceMock;
 import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
