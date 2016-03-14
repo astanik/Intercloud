@@ -18,5 +18,5 @@ public interface IXmppService {
     List<XmppURI> discoverRestfulItems(XmppURI uri) throws XMPPException, IOException, SmackException;
 
     ResourceDocument sendRestDocument(XmppURI uri, ResourceDocument document) throws XMPPException, IOException, SmackException;
-    ResourceTypeDocument getXwadlDocument(XmppURI uri) throws XMPPException, IOException, SmackException;
+    ResourceTypeDocument receiveXwadlDocument(XmppURI uri) throws XMPPException, IOException, SmackException;
 }

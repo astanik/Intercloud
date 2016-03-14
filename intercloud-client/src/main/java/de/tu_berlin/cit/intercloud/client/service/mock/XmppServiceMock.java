@@ -97,7 +97,7 @@ public class XmppServiceMock implements IXmppService {
      * The file location is taken from the xmpp uri path.
      */
     @Override
-    public ResourceTypeDocument getXwadlDocument(XmppURI uri) throws XMPPException, IOException, SmackException {
+    public ResourceTypeDocument receiveXwadlDocument(XmppURI uri) throws XMPPException, IOException, SmackException {
         long timeMillis = System.currentTimeMillis();
         File file = new File(uri.getPath());
         try {

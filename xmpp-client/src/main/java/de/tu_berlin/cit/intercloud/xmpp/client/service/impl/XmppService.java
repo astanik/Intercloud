@@ -112,7 +112,7 @@ public class XmppService implements IXmppService {
     }
 
     @Override
-    public ResourceTypeDocument getXwadlDocument(XmppURI uri) throws XMPPException, IOException, SmackException {
+    public ResourceTypeDocument receiveXwadlDocument(XmppURI uri) throws XMPPException, IOException, SmackException {
         AbstractXMPPConnection connection = this.connectionManager.getConnection();
         // create an get IQ stanza to uri
         IQ getIQ = new GetXwadlIQ(uri);

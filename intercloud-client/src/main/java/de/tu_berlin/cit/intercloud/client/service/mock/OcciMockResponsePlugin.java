@@ -36,7 +36,7 @@ public class OcciMockResponsePlugin implements IMockResponsePlugin {
             ResourceTypeDocument.ResourceType resourceType = resourceTypeDocument.getResourceType();
             OcciRepresentationModel representationModel = occiPlugin.getRequestModel(null, resourceType.getGrammars());
             addLinks(representationModel);
-            setRandomAttributes(representationModel);
+            setRandomAttributes(representationModel, xwadl);
             return occiPlugin.getRepresentationString(representationModel);
         } catch (Exception e) {
             logger.error("Could not create sample OCCI response representation.", e);
@@ -50,13 +50,14 @@ public class OcciMockResponsePlugin implements IMockResponsePlugin {
         }
     }
 
-    private void setRandomAttributes(OcciRepresentationModel representationModel) {
+    private void setRandomAttributes(OcciRepresentationModel representationModel, XmppURI xwadl) {
         if (null != representationModel.getKind()) {
             setRandomAttributes(representationModel.getKind());
         }
         setRandomAttributes(representationModel.getMixins());
 
         for (LinkModel link : representationModel.getLinks()) {
+            link.setTarget(xwadl.toString());
             setRandomAttributes(link);
             setRandomAttributes(link.getMixins());
         }

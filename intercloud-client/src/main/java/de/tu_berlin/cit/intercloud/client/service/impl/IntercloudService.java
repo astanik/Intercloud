@@ -23,7 +23,7 @@ public class IntercloudService implements IIntercloudService {
     }
 
     public synchronized IIntercloudClient newIntercloudClient(XmppURI uri) throws XMPPException, IOException, SmackException {
-        ResourceTypeDocument xwadl = this.xmppService.getXwadlDocument(uri);
+        ResourceTypeDocument xwadl = this.xmppService.receiveXwadlDocument(uri);
         this.intercloudClient = new IntercloudClient(this.xmppService, xwadl, uri);
         this.intercloudClientUri = uri;
         return intercloudClient;
