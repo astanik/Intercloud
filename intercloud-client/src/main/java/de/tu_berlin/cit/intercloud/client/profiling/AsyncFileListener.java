@@ -25,12 +25,12 @@ public class AsyncFileListener implements IProfilingListener {
     }
 
     @Override
-    public void start(ProfilingItem item) {
+    public void onStart(ProfilingItem item) {
 
     }
 
     @Override
-    public void stop(ProfilingItem item) {
+    public void onStop(ProfilingItem item) {
         EXECUTOR_SERVICE.execute(() -> {
             try {
                 writeToCsv(item);

@@ -13,12 +13,12 @@ public class ListListener implements IProfilingListener {
     private List<ProfilingItem> list = new ArrayList<>();
 
     @Override
-    public void start(ProfilingItem item) {
+    public void onStart(ProfilingItem item) {
         list.add(item);
     }
 
     @Override
-    public void stop(ProfilingItem item) {
+    public void onStop(ProfilingItem item) {
         logger.info("Profiling: {}", item);
     }
 

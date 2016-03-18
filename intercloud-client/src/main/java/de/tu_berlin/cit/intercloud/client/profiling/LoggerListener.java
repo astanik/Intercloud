@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 public class LoggerListener implements IProfilingListener {
     private final static Logger logger = LoggerFactory.getLogger(LoggerListener.class);
     @Override
-    public void start(ProfilingItem item) {
+    public void onStart(ProfilingItem item) {
 
     }
 
     @Override
-    public void stop(ProfilingItem item) {
+    public void onStop(ProfilingItem item) {
         logger.info("profile: {}", item);
     }
 }

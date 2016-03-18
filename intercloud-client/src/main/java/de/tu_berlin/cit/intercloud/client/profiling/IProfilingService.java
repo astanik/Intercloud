@@ -28,7 +28,7 @@ public interface IProfilingService {
     /**
      * Specifies a filter whether or not to profile the current Thread.
      *
-     * @param regex
+     * @param regex A regular expression matching the context to be profiled.
      */
     void setFilter(String regex);
 

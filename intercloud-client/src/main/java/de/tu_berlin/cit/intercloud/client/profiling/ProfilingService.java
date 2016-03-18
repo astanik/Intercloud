@@ -28,7 +28,7 @@ public class ProfilingService implements IProfilingService {
             item = new ProfilingItem(context);
             item.setDuration(System.currentTimeMillis());
             if (null != listener) {
-                listener.start(item);
+                listener.onStart(item);
             }
         }
         PROFILING_THREAD.set(item);
@@ -57,7 +57,7 @@ public class ProfilingService implements IProfilingService {
             item.setDuration(System.currentTimeMillis() - item.getDuration());
             PROFILING_THREAD.set(null);
             if (null != listener) {
-                listener.stop(item);
+                listener.onStop(item);
             }
         }
         return item;
