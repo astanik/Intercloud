@@ -12,13 +12,13 @@ public interface IProfilingService {
     ProfilingItem start(String context);
 
     /**
-     * Invokes a {@link IProfilingInterceptor} and
+     * Invokes a {@link IProfilingTask} and
      * measures the execution time of its invoke method.
      *
      * @param interceptor
      * @return The result of the interceptor's invoke method.
      */
-    <T> T invokeAndProfile(IProfilingInterceptor<T> interceptor);
+    <T> T invokeAndProfile(IProfilingTask<T> interceptor);
 
     /**
      * Stop profiling of the current Thread.

@@ -4,8 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.profiling.IProfilingInterceptor;
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingItem;
+import de.tu_berlin.cit.intercloud.client.profiling.IProfilingTask;
 import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
@@ -86,10 +85,10 @@ public class BrowserPage extends UserTemplate {
     @Override
     protected void onRender() {
         ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingInterceptor() {
+                new IProfilingTask() {
                     @Override
-                    public void profile(ProfilingItem item, long millis) {
-                        item.setOnRender(millis);
+                    public String getIdentifier() {
+                        return "render";
                     }
 
                     @Override
@@ -104,10 +103,10 @@ public class BrowserPage extends UserTemplate {
     @Override
     protected void onBeforeRender() {
         ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingInterceptor() {
+                new IProfilingTask() {
                     @Override
-                    public void profile(ProfilingItem item, long millis) {
-                        item.setOnBeforeRender(millis);
+                    public String getIdentifier() {
+                        return "beforeRender";
                     }
 
                     @Override
@@ -122,10 +121,10 @@ public class BrowserPage extends UserTemplate {
     @Override
     protected void onConfigure() {
         ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingInterceptor() {
+                new IProfilingTask() {
                     @Override
-                    public void profile(ProfilingItem item, long millis) {
-                        item.setOnConfigure(millis);
+                    public String getIdentifier() {
+                        return "configure";
                     }
 
                     @Override

@@ -12,8 +12,7 @@ import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelB
 import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelConverter;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.profiling.IProfilingInterceptor;
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingItem;
+import de.tu_berlin.cit.intercloud.client.profiling.IProfilingTask;
 import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
 import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
@@ -80,10 +79,10 @@ public class IntercloudClient implements IIntercloudClient {
         }
 
         return ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingInterceptor<IRepresentationModel>() {
+                new IProfilingTask<IRepresentationModel>() {
                     @Override
-                    public void profile(ProfilingItem item, long millis) {
-                        item.setTransform(millis);
+                    public String getIdentifier() {
+                        return "transform";
                     }
 
                     @Override

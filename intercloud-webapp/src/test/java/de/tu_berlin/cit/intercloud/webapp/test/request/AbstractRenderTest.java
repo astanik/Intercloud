@@ -102,9 +102,9 @@ public abstract class AbstractRenderTest extends AbstractBenchmark {
             StringBuilder s = new StringBuilder();
             s.append(id).append(";")
                     .append(map.get("request")).append(";")
-                    .append(map.get("onConfigure")).append(";")
-                    .append(map.get("onBeforeRender")).append(";")
-                    .append(map.get("onRender")).append(";")
+                    .append(map.get("configure")).append(";")
+                    .append(map.get("beforeRender")).append(";")
+                    .append(map.get("render")).append(";")
                     .append(map.get("transform")).append(";");
             writer.println(s);
         } finally {
@@ -116,10 +116,10 @@ public abstract class AbstractRenderTest extends AbstractBenchmark {
         Map<String, Double> map = new HashMap<>();
         for (ProfilingItem item : list) {
             increment(map, "request", item.getDuration());
-            increment(map, "onConfigure", item.getOnConfigure());
-            increment(map, "onBeforeRender", item.getOnBeforeRender());
-            increment(map, "onRender", item.getOnRender());
-            increment(map, "transform", item.getTransform());
+            increment(map, "configure", item.get("configure"));
+            increment(map, "beforeRender", item.get("beforeRender"));
+            increment(map, "render", item.get("render"));
+            increment(map, "transform", item.get("transform"));
         }
 
         for (Map.Entry<String, Double> entry : map.entrySet()) {

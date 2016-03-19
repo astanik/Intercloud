@@ -46,10 +46,10 @@ public class AsyncFileListener implements IProfilingListener {
             try {
                 printWriter.println(item.getContext() + CSV_SEPERATOR
                         + item.getDuration() + CSV_SEPERATOR
-                        + item.getOnConfigure() + CSV_SEPERATOR
-                        + item.getOnBeforeRender() + CSV_SEPERATOR
-                        + item.getOnRender() + CSV_SEPERATOR
-                        + item.getTransform() + CSV_SEPERATOR
+                        + item.get("configure") + CSV_SEPERATOR
+                        + item.get("beforeRender") + CSV_SEPERATOR
+                        + item.get("render") + CSV_SEPERATOR
+                        + item.get("transform") + CSV_SEPERATOR
                 );
             } finally {
                 printWriter.close();

@@ -36,14 +36,14 @@ public class ProfilingService implements IProfilingService {
     }
 
     @Override
-    public <T> T invokeAndProfile(IProfilingInterceptor<T> interceptor) {
+    public <T> T invokeAndProfile(IProfilingTask<T> interceptor) {
         ProfilingItem item = PROFILING_THREAD.get();
         if (null != item) {
             long time = System.currentTimeMillis();
             try {
                 return interceptor.invoke();
             } finally {
-                interceptor.profile(item, System.currentTimeMillis() - time);
+                item.add(interceptor.getIdentifier(), System.currentTimeMillis() - time);
             }
         } else {
             return interceptor.invoke();
