@@ -82,7 +82,7 @@ public class IntercloudClient implements IIntercloudClient {
                 new IProfilingTask<IRepresentationModel>() {
                     @Override
                     public String getIdentifier() {
-                        return "transform";
+                        return "getRequestModel";
                     }
 
                     @Override
@@ -106,7 +106,18 @@ public class IntercloudClient implements IIntercloudClient {
         } else {
             IRepresentationModelPlugin modelPlugin = representationModelRegistry.getPlugin(methodModel.getRequestMediaType());
             if (null != modelPlugin) {
-                methodInvocation.setRequestRepresentation(modelPlugin.getRepresentationString(requestRepresentationModel));
+                String representationString = ProfilingService.getInstance().invokeAndProfile(new IProfilingTask<String>() {
+                    @Override
+                    public String getIdentifier() {
+                        return null;
+                    }
+
+                    @Override
+                    public String invoke() {
+                        return modelPlugin.getRepresentationString(requestRepresentationModel);
+                    }
+                });
+                methodInvocation.setRequestRepresentation(representationString);
             } else {
                 throw new UnsupportedMethodException("Cannot execute method: method not supported. " + methodModel);
             }
@@ -122,8 +133,18 @@ public class IntercloudClient implements IIntercloudClient {
             String responseMediaType = response.getResource().getMethod().getResponse().getMediaType();
             IRepresentationModelPlugin modelPlugin = representationModelRegistry.getPlugin(responseMediaType);
             if (null != modelPlugin) {
-                representationModel = modelPlugin.getResponseModel(response.getResource().getMethod().getResponse(),
-                        occiClient.getResourceTypeDocument().getResourceType().getGrammars());
+                representationModel = ProfilingService.getInstance().invokeAndProfile(new IProfilingTask<IRepresentationModel>() {
+                    @Override
+                    public String getIdentifier() {
+                        return "getResponseModel";
+                    }
+
+                    @Override
+                    public IRepresentationModel invoke() {
+                        return modelPlugin.getResponseModel(response.getResource().getMethod().getResponse(),
+                                occiClient.getResourceTypeDocument().getResourceType().getGrammars());
+                    }
+                });
             }
         }
 

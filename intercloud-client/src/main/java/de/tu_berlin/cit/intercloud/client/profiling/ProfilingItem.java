@@ -30,7 +30,8 @@ public class ProfilingItem {
     }
 
     public long get(String identifier) {
-        return durationMap.get(identifier);
+        Long l = durationMap.get(identifier);
+        return null != l ? l : 0;
     }
 
     @Override

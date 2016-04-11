@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.test.request;
+package de.tu_berlin.cit.intercloud.webapp.test.request.render;
 
 import de.tu_berlin.cit.intercloud.webapp.XwadlFileConfig;
 import org.junit.Before;
@@ -6,7 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @Ignore
-public class RenderCategoryMixinsDefault extends AbstractRenderTest {
+public class RequestRenderCategoryMixins extends AbstractRequestRenderTest {
     private XwadlFileConfig xwadlConfig;
 
     @Before
@@ -14,7 +14,6 @@ public class RenderCategoryMixinsDefault extends AbstractRenderTest {
     public void setUp() {
         super.setUp();
         xwadlConfig = new XwadlFileConfig();
-        xwadlConfig.setHasDefaultValues(true);
     }
 
     @Test

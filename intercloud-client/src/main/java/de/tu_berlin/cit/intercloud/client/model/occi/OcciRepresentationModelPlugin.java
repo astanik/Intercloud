@@ -44,12 +44,16 @@ public class OcciRepresentationModelPlugin implements IRepresentationModelPlugin
     }
 
     @Override
-    public OcciRepresentationModel getResponseModel(ResponseDocument.Response response, GrammarsDocument.Grammars grammars) throws XmlException {
+    public OcciRepresentationModel getResponseModel(ResponseDocument.Response response, GrammarsDocument.Grammars grammars) {
         OcciRepresentationModel result = null;
         if (null != response && null != response.getRepresentation()) {
-            CategoryDocument categoryDocument = CategoryDocument.Factory.parse(response.getRepresentation());
-            ClassificationModel classificationModel = ClassificationModelBuilder.build(grammars, false);
-            result = RepresentationModelBuilder.build(categoryDocument, classificationModel);
+            try {
+                CategoryDocument categoryDocument = CategoryDocument.Factory.parse(response.getRepresentation());
+                ClassificationModel classificationModel = ClassificationModelBuilder.build(grammars, false);
+                result = RepresentationModelBuilder.build(categoryDocument, classificationModel);
+            } catch (XmlException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
         return result;
     }

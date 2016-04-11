@@ -1,8 +1,7 @@
-package de.tu_berlin.cit.intercloud.webapp.test.request;
+package de.tu_berlin.cit.intercloud.webapp.test.response;
 
 import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import com.carrotsearch.junitbenchmarks.BenchmarkOptions;
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingItem;
 import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebApplication;
 import de.tu_berlin.cit.intercloud.webapp.MockHelper;
@@ -10,22 +9,15 @@ import de.tu_berlin.cit.intercloud.webapp.XwadlFileBuilder;
 import de.tu_berlin.cit.intercloud.webapp.XwadlFileConfig;
 import de.tu_berlin.cit.intercloud.webapp.pages.BrowserPage;
 import de.tu_berlin.cit.intercloud.webapp.profiling.ListListener;
+import de.tu_berlin.cit.intercloud.webapp.profiling.ProfilingUtil;
 import de.tu_berlin.cit.intercloud.xmpp.rest.XmppURI;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @BenchmarkOptions(warmupRounds = 0, benchmarkRounds = 10)
-public abstract class AbstractRenderTest extends AbstractBenchmark {
+public abstract class AbstractResponseRenderTest extends AbstractBenchmark {
     private static final int WARMUP_ROUNDS = 10;
     private static final int TEST_ROUNDS = 40;
 
@@ -45,6 +37,7 @@ public abstract class AbstractRenderTest extends AbstractBenchmark {
         tester.destroy();
         tester = null;
         profilingService.setFilter(null);
+        profilingService.setListener(null);
     }
 
     public abstract void test1() throws Exception;
@@ -73,9 +66,9 @@ public abstract class AbstractRenderTest extends AbstractBenchmark {
         testBrowserPage(xwadlConfig, WARMUP_ROUNDS);
         ListListener listener = new ListListener();
         profilingService.setListener(listener);
-        profilingService.setFilter("methodTable.methodList.0.methodLink");
+        profilingService.setFilter("methodTable.methodList.1.methodLink");
         testBrowserPage(xwadlConfig, TEST_ROUNDS);
-        writeToCsv(aggregate(listener.getList()), xwadlConfig.toString());
+        ProfilingUtil.writeToCsv(listener.getList(), xwadlConfig.toString(), this.getClass().getSimpleName());
     }
 
     private void testBrowserPage(XwadlFileConfig xwadlConfig, int rounds) throws Exception {
@@ -86,55 +79,8 @@ public abstract class AbstractRenderTest extends AbstractBenchmark {
             tester.assertRenderedPage(BrowserPage.class);
 
             // test post method
-            tester.clickLink("methodTable:methodList:0:methodLink");
+            tester.clickLink("methodTable:methodList:1:methodLink");
             tester.assertRenderedPage(BrowserPage.class);
         }
-    }
-
-    private void writeToCsv(Map<String, Double> map, String id) throws FileNotFoundException {
-        File file = new File("target/" + this.getClass().getSimpleName() + ".csv");
-        boolean fileExists = file.exists();
-        PrintWriter writer = new PrintWriter(new FileOutputStream(file, true));
-        try {
-            if (!fileExists) {
-                writer.println("id;request;onConfigure;onBeforeRender;onRender;transform");
-            }
-            StringBuilder s = new StringBuilder();
-            s.append(id).append(";")
-                    .append(map.get("request")).append(";")
-                    .append(map.get("configure")).append(";")
-                    .append(map.get("beforeRender")).append(";")
-                    .append(map.get("render")).append(";")
-                    .append(map.get("transform")).append(";");
-            writer.println(s);
-        } finally {
-            writer.close();
-        }
-    }
-
-    private Map<String, Double> aggregate(List<ProfilingItem> list) {
-        Map<String, Double> map = new HashMap<>();
-        for (ProfilingItem item : list) {
-            increment(map, "request", item.getDuration());
-            increment(map, "configure", item.get("configure"));
-            increment(map, "beforeRender", item.get("beforeRender"));
-            increment(map, "render", item.get("render"));
-            increment(map, "transform", item.get("transform"));
-        }
-
-        for (Map.Entry<String, Double> entry : map.entrySet()) {
-            entry.setValue(entry.getValue() / list.size());
-        }
-        return map;
-    }
-
-    private void increment(Map<String, Double> map, String name, long value) {
-        Double d = map.get(name);
-        if (null == d) {
-            d = new Double(value);
-        } else {
-            d = d + value;
-        }
-        map.put(name, d);
     }
 }
