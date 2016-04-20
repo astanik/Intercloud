@@ -17,7 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 
 @BenchmarkOptions(warmupRounds = 0, benchmarkRounds = 10)
-public abstract class AbstractRequestRenderTest extends AbstractBenchmark {
+abstract class AbstractRequestRenderTest extends AbstractBenchmark {
     private static final int WARMUP_ROUNDS = 10;
     private static final int TEST_ROUNDS = 40;
 

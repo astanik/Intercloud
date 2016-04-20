@@ -109,7 +109,7 @@ public class IntercloudClient implements IIntercloudClient {
                 String representationString = ProfilingService.getInstance().invokeAndProfile(new IProfilingTask<String>() {
                     @Override
                     public String getIdentifier() {
-                        return null;
+                        return "getRepresentationString";
                     }
 
                     @Override

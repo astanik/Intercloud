@@ -1,7 +1,8 @@
-package de.tu_berlin.cit.intercloud.webapp.test.response;
+package de.tu_berlin.cit.intercloud.webapp.test.request.execute;
 
 import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import com.carrotsearch.junitbenchmarks.BenchmarkOptions;
+import de.tu_berlin.cit.intercloud.client.model.occi.OcciRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebApplication;
 import de.tu_berlin.cit.intercloud.webapp.MockHelper;
@@ -16,8 +17,10 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
 
+import java.lang.reflect.Field;
+
 @BenchmarkOptions(warmupRounds = 0, benchmarkRounds = 10)
-abstract class AbstractResponseRenderTest extends AbstractBenchmark {
+abstract class AbstractRequestTest extends AbstractBenchmark {
     private static final int WARMUP_ROUNDS = 10;
     private static final int TEST_ROUNDS = 40;
 
@@ -36,8 +39,8 @@ abstract class AbstractResponseRenderTest extends AbstractBenchmark {
         MockHelper.logout();
         tester.destroy();
         tester = null;
-        profilingService.setFilter(null);
         profilingService.setListener(null);
+        profilingService.setFilter(null);
     }
 
     public abstract void test1() throws Exception;
@@ -66,7 +69,7 @@ abstract class AbstractResponseRenderTest extends AbstractBenchmark {
         testBrowserPage(xwadlConfig, WARMUP_ROUNDS);
         ListListener listener = new ListListener();
         profilingService.setListener(listener);
-        profilingService.setFilter("methodTable.methodList.1.methodLink");
+        profilingService.setFilter("requestForm.requestSubmit");
         testBrowserPage(xwadlConfig, TEST_ROUNDS);
         ProfilingUtil.writeToCsv(listener.getList(), xwadlConfig.toString(), this.getClass().getSimpleName());
     }
@@ -74,13 +77,31 @@ abstract class AbstractResponseRenderTest extends AbstractBenchmark {
     private void testBrowserPage(XwadlFileConfig xwadlConfig, int rounds) throws Exception {
         for (int i = 0; i < rounds; i++) {
             String xwadlPath = XwadlFileBuilder.getInstance().createXwadlFile(xwadlConfig);
+            BrowserPage browserPage = new BrowserPage(Model.of(new XmppURI("foo", xwadlPath)));
 
-            tester.startPage(new BrowserPage(Model.of(new XmppURI("foo", xwadlPath))));
+            tester.startPage(browserPage);
             tester.assertRenderedPage(BrowserPage.class);
 
             // test post method
-            tester.clickLink("methodTable:methodList:1:methodLink");
+            tester.clickLink("methodTable:methodList:0:methodLink");
+            tester.assertRenderedPage(BrowserPage.class);
+
+            addOcciLinks(browserPage);
+
+            tester.executeAjaxEvent("requestForm:requestSubmit", "click");
             tester.assertRenderedPage(BrowserPage.class);
         }
+    }
+
+    private void addOcciLinks(BrowserPage browserPage) throws NoSuchFieldException, IllegalAccessException {
+        BrowserPage.RequestForm requestForm = (BrowserPage.RequestForm) browserPage.get("requestForm");
+        Field field = requestForm.getClass().getDeclaredField("representationModel");
+        field.setAccessible(true);
+        Model model = (Model) field.get(requestForm);
+        OcciRepresentationModel representationModel = (OcciRepresentationModel) model.getObject();
+        model.setObject(new OcciRepresentationModel(representationModel.getKind(),
+                representationModel.getMixins(),
+                representationModel.getLinkDefinitions()
+        ));
     }
 }

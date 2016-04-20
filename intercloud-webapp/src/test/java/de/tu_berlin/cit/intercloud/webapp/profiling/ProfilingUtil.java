@@ -19,6 +19,7 @@ public class ProfilingUtil {
             StringBuilder s = new StringBuilder();
             if (!fileExists) {
                 s.append("id").append(COL_SEP)
+                        .append("request").append(COL_SEP)
                         .append("configure").append(COL_SEP)
                         .append("beforeRender").append(COL_SEP)
                         .append("render").append(COL_SEP)

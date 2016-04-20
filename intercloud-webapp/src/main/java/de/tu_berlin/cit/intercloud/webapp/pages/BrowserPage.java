@@ -276,7 +276,7 @@ public class BrowserPage extends UserTemplate {
         }
     }
 
-    private class RequestForm extends Form {
+    public class RequestForm extends Form {
         private Model<MethodModel> methodModel = Model.of();
         private Model<IRepresentationModel> representationModel = Model.of();
         private Panel requestPanel = null;
