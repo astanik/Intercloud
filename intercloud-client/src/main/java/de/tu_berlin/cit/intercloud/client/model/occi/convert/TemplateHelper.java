@@ -25,9 +25,22 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
+/**
+ * This class provides methods to add {@link TemplateModel}s
+ * to a {@link CategoryModel} sub-types contained in a {@link ClassificationModel}.
+ * Further, it provides methods to apply Attribute Values of a Template to the corresponding
+ * {@link AttributeModel}.
+ */
 public class TemplateHelper {
     private static final Logger logger = LoggerFactory.getLogger(TemplateHelper.class);
 
+    /**
+     * Add {@link TemplateModel}s to the {@link CategoryModel} sub-types contained in a
+     * {@link ClassificationModel}.
+     * @param classificationModel
+     * @param request The XWADL Request containing Templates
+     * @return
+     */
     public static ClassificationModel addTemplatesToClassificationModel(ClassificationModel classificationModel, RequestDocument.Request request) {
         List<CategoryDocument.Category> templateDocuments = getTemplateDocuments(request);
         for (CategoryDocument.Category template : templateDocuments) {
@@ -113,6 +126,13 @@ public class TemplateHelper {
         return result;
     }
 
+    /**
+     * Applies the Attribute Values of a Template to the corresponding
+     * {@link AttributeModel}s contained in a {@link CategoryModel}.
+     * @param categoryModel
+     * @param template
+     * @return
+     */
     public static CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel template) {
         // clear all attributes
         categoryModel.getAttributes().forEach(AttributeModel::clearValue);
@@ -125,22 +145,28 @@ public class TemplateHelper {
         }
         if (categoryModel instanceof KindModel) {
             if (template.getReference() instanceof CategoryType) {
+                // Rest Representation
                 applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
             } else if (template.getReference() instanceof CategoryClassification) {
+                // XWADL Classification (default values)
                 ClassificationModelBuilder.setAttributeDefaultValues(categoryModel,
                         ((CategoryClassification) template.getReference()).getAttributeClassificationArray());
             }
         } else if (categoryModel instanceof MixinModel) {
             if (template.getReference() instanceof CategoryType) {
+                // Rest Representation
                 applyCategoryTemplate(categoryModel, (CategoryType) template.getReference());
             } else if (template.getReference() instanceof MixinClassification) {
+                // XWADL Classification (default values)
                 ClassificationModelBuilder.setAttributeDefaultValues(categoryModel,
                         ((CategoryClassification) template.getReference()).getAttributeClassificationArray());
             }
         } else if (categoryModel instanceof LinkModel) {
             if (template.getReference() instanceof LinkType) {
+                // Rest Representation
                 applyLinkTemplate((LinkModel) categoryModel, (LinkType) template.getReference());
             } else if (template.getReference() instanceof LinkClassification) {
+                // XWADL Classification (default values)
                 ClassificationModelBuilder.setAttributeDefaultValues(categoryModel,
                         ((CategoryClassification) template.getReference()).getAttributeClassificationArray());
             }

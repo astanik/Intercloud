@@ -29,6 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class provides Methods to create an {@link OcciRepresentationModel}
+ * and {@link OcciListRepresentationModel},
+ * either based on a {@link ClassificationModel} or the Method's Response section of a
+ * {@link de.tu_berlin.cit.rwx4j.rest.RestDocument}
+ */
 public class RepresentationModelBuilder {
     private static final Logger logger = LoggerFactory.getLogger(RepresentationModelBuilder.class);
 
@@ -50,6 +56,11 @@ public class RepresentationModelBuilder {
      *  REQUEST REPRESENTATION MODEL
      */
 
+    /**
+     * Builds an {@link OcciRepresentationModel} based on a {@link ClassificationModel}
+     * @param classificationModel
+     * @return
+     */
     public static OcciRepresentationModel build(ClassificationModel classificationModel) {
 
         OcciRepresentationModel representationModel = new OcciRepresentationModel();
@@ -123,6 +134,15 @@ public class RepresentationModelBuilder {
         return representationModel;
     }
 
+    /**
+     * Adds a {@link MixinModel} to the Representation or
+     * Link ({@link IMixinModelContainer}) depending on where it applies to.
+     * @param mixinContainerMap Map containing Mixins and their Containers.
+     *                          Where the key specifies the Mixin's Schema + Term and the value
+     *                          specifies the Representation and Links containing this Mixin.
+     * @param mixin The Mixin to be added.
+     * @return
+     */
     private static boolean addMixinModelToContainer(Map<String, List<IMixinModelContainer>> mixinContainerMap, MixinModel mixin) {
         List<IMixinModelContainer> mixinContainers = mixinContainerMap.get(mixin.getApplies());
         if (null != mixinContainers && !mixinContainers.isEmpty()) {
@@ -145,6 +165,13 @@ public class RepresentationModelBuilder {
      * RESPONSE REPRESENTATION MODEL
      */
 
+    /**
+     * Builds an {@link OcciListRepresentationModel} based on the Response Representation and the
+     * {@link ClassificationModel}.
+     * @param categoryListDocument The XML Representation.
+     * @param classificationModel The ClassificationModel is used to extract Documentations and verify the Representation.
+     * @return
+     */
     public static OcciListRepresentationModel build(CategoryListDocument categoryListDocument, ClassificationModel classificationModel) {
         CategoryListDocument.CategoryList categoryList = categoryListDocument.getCategoryList();
         List<OcciRepresentationModel> representationList = new ArrayList<>();
@@ -155,6 +182,13 @@ public class RepresentationModelBuilder {
         return new OcciListRepresentationModel(representationList);
     }
 
+    /**
+     * Builds an {@link OcciRepresentationModel} based on the Response Representation and the
+     * {@link ClassificationModel}.
+     * @param categoryDocument The XML Representation.
+     * @param classificationModel The ClassificationModel is used to extract Documentations and verify the Representation.
+     * @return
+     */
     public static OcciRepresentationModel build(CategoryDocument categoryDocument, ClassificationModel classificationModel) {
         CategoryDocument.Category category = categoryDocument.getCategory();
         return build(category, classificationModel);
@@ -189,7 +223,7 @@ public class RepresentationModelBuilder {
         KindModel kindModel = null != classificationModel ? classificationModel.getKind() : null;
         KindModel result = new KindModel(kindType.getSchema(), kindType.getTerm());
         result.setTitle(kindType.getTitle());
-        buildAttributes(result, kindModel, kindType.getAttributeArray());
+        addAttributes(result, kindModel, kindType.getAttributeArray());
         if (null == kindModel || !kindModel.getId().equals(kindId)) {
             logger.warn("Rest document contains Kind, but Kind not defined in Classification. kind: {}", kindId);
         }
@@ -208,7 +242,7 @@ public class RepresentationModelBuilder {
             result = new MixinModel(mixinModel.getSchema(), mixinModel.getTerm(), mixinModel.getApplies());
         }
         result.setTitle(mixinType.getTitle());
-        buildAttributes(result, mixinModel, mixinType.getAttributeArray());
+        addAttributes(result, mixinModel, mixinType.getAttributeArray());
 
         return result;
     }
@@ -225,7 +259,7 @@ public class RepresentationModelBuilder {
         }
         result.setTitle(linkType.getTitle());
         result.setTarget(linkType.getTarget());
-        buildAttributes(result, linkModel, linkType.getAttributeArray());
+        addAttributes(result, linkModel, linkType.getAttributeArray());
 
         if (null != linkType.getAttributeArray() && 0 < linkType.getMixinArray().length) {
             for (CategoryType mixinType : linkType.getMixinArray()) {
@@ -236,7 +270,13 @@ public class RepresentationModelBuilder {
         return result;
     }
 
-    private static CategoryModel buildAttributes(CategoryModel result, CategoryModel categoryModel, AttributeType[] attributeTypes) {
+    /**
+     * Builds an
+     * @param result
+     * @param categoryModel
+     * @param attributeTypes
+     */
+    private static void addAttributes(CategoryModel result, CategoryModel categoryModel, AttributeType[] attributeTypes) {
         if (null != attributeTypes) {
             for (AttributeType attributeType : attributeTypes) {
                 AttributeModel attributeModel;
@@ -263,7 +303,6 @@ public class RepresentationModelBuilder {
                 }
             }
         }
-        return result;
     }
 
     private static AttributeModel buildAttributeModel(AttributeType attributeType) {

@@ -25,9 +25,19 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This class provides methods to convert an {@link OcciRepresentationModel}
+ * and {@link OcciListRepresentationModel} into an XML Representation.
+ */
 public class RepresentationModelConverter {
     private static final Logger logger = LoggerFactory.getLogger(RepresentationModelConverter.class);
 
+    /**
+     * Converts an {@link OcciListRepresentationModel} into an XML Representation.
+     * @param representationListModel
+     * @return
+     * @throws AttributeFormatException
+     */
     public static CategoryListDocument convertToXml(OcciListRepresentationModel representationListModel) throws AttributeFormatException {
         CategoryListDocument categoryListDocument = CategoryListDocument.Factory.newInstance();
         CategoryListDocument.CategoryList categoryList = categoryListDocument.addNewCategoryList();
@@ -37,6 +47,12 @@ public class RepresentationModelConverter {
         return categoryListDocument;
     }
 
+    /**
+     * Converts an {@link OcciRepresentationModel} into an XML Representation.
+     * @param representationModel
+     * @return
+     * @throws AttributeFormatException
+     */
     public static CategoryDocument convertToXml(OcciRepresentationModel representationModel) throws AttributeFormatException {
         CategoryDocument categoryDocument = CategoryDocument.Factory.newInstance();
         CategoryDocument.Category category = categoryDocument.addNewCategory();
@@ -44,7 +60,13 @@ public class RepresentationModelConverter {
         return categoryDocument;
     }
 
-    private static CategoryDocument.Category convertToXml(OcciRepresentationModel representationModel, CategoryDocument.Category category) throws AttributeFormatException {
+    /**
+     * Adds the CategoryModel sub-types of an {@link OcciRepresentationModel} to an XML Representation.
+     * @param representationModel
+     * @param category The XML Representation
+     * @throws AttributeFormatException
+     */
+    private static void convertToXml(OcciRepresentationModel representationModel, CategoryDocument.Category category) throws AttributeFormatException {
         // KIND
         KindModel kindModel = representationModel.getKind();
         if (null != kindModel) {
@@ -59,7 +81,6 @@ public class RepresentationModelConverter {
         for (LinkModel linkModel : representationModel.getLinks()) {
             addLinkRepresentation(category.addNewLink(), linkModel);
         }
-        return category;
     }
 
     private static void addLinkRepresentation(LinkType type, LinkModel model) throws AttributeFormatException {

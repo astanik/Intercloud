@@ -22,18 +22,36 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Calendar;
 
+/**
+ * This class provides methods to convert a {@link ClassificationDocument.Classification}
+ * into a {@link ClassificationModel}.
+ */
 public class ClassificationModelBuilder {
     private final static Logger logger = LoggerFactory.getLogger(ClassificationModelBuilder.class);
 
-    public static ClassificationModel build(GrammarsDocument.Grammars grammars, boolean setDefaulValues) {
+    /**
+     * Builds a {@link ClassificationModel} based on the {@link ClassificationDocument.Classification}
+     * contained in the {@link GrammarsDocument.Grammars} section of an
+     * {@link de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument}
+     * @param grammars The grammars section containing a Classification.
+     * @param setDefaultValues Whether or not to set the default Attribute Values.
+     * @return
+     */
+    public static ClassificationModel build(GrammarsDocument.Grammars grammars, boolean setDefaultValues) {
         ClassificationModel classificationModel = null;
         ClassificationDocument.Classification classification = getClassification(grammars);
         if (null != classification) {
-            classificationModel = build(classification, setDefaulValues);
+            classificationModel = build(classification, setDefaultValues);
         }
         return classificationModel;
     }
 
+    /**
+     * Returns the {@link ClassificationDocument.Classification} contained
+     * in the {@link GrammarsDocument.Grammars} section.
+     * @param grammars The grammars section containing a Classification.
+     * @return
+     */
     private static ClassificationDocument.Classification getClassification(GrammarsDocument.Grammars grammars) {
         ClassificationDocument.Classification result = null;
         if (null != grammars) {
@@ -45,28 +63,41 @@ public class ClassificationModelBuilder {
         return result;
     }
 
-    public static ClassificationModel build(ClassificationDocument.Classification classification, boolean setDafaultValues) {
+    /**
+     * Builds a {@link ClassificationModel} based on a {@link ClassificationDocument.Classification}.
+     * @param classification The Classification.
+     * @param setDefaultValues Whether or not to set the default Attribute Values.
+     * @return
+     */
+    public static ClassificationModel build(ClassificationDocument.Classification classification, boolean setDefaultValues) {
         ClassificationModel classificationModel = new ClassificationModel();
         // read kind from classification
         if (null != classification.getKindType()) {
-            classificationModel.setKind(buildKindModel(classification.getKindType(), setDafaultValues));
+            classificationModel.setKind(buildKindModel(classification.getKindType(), setDefaultValues));
         }
         // read links from classification
         if (null != classification.getLinkTypeArray() && 0 < classification.getLinkTypeArray().length) {
             for (LinkClassification c : classification.getLinkTypeArray()) {
-                classificationModel.addLink(buildLinkModel(c, setDafaultValues));
+                classificationModel.addLink(buildLinkModel(c, setDefaultValues));
             }
         }
         // read mixins from classification
         if (null != classification.getMixinTypeArray() && 0 < classification.getMixinTypeArray().length) {
             for (MixinClassification c : classification.getMixinTypeArray()) {
-                classificationModel.addMixin(buildMixinModel(c, setDafaultValues));
+                classificationModel.addMixin(buildMixinModel(c, setDefaultValues));
             }
         }
 
         return classificationModel;
     }
 
+    /**
+     * Builds a {@link KindModel} based on the Kind definition
+     * of a {@link ClassificationDocument.Classification}.
+     * @param classification The Kind XML definition.
+     * @param setDefaultValues Whether or not to set the default Attribute Values.
+     * @return
+     */
     private static KindModel buildKindModel(CategoryClassification classification, boolean setDefaultValues) {
         KindModel model = new KindModel(classification.getSchema(), classification.getTerm());
         model.setTitle(classification.getTitle());
@@ -80,6 +111,13 @@ public class ClassificationModelBuilder {
         return model;
     }
 
+    /**
+     * Builds a {@link MixinModel} based on the Mixin definition
+     * of a {@link ClassificationDocument.Classification}.
+     * @param classification The Mixin XML definition
+     * @param setDefaultValues Whether or not to set the default Attribute Values.
+     * @return
+     */
     private static MixinModel buildMixinModel(MixinClassification classification, boolean setDefaultValues) {
         MixinModel model = new MixinModel(classification.getSchema(), classification.getTerm(), classification.getApplies());
         model.setTitle(classification.getTitle());
@@ -91,6 +129,13 @@ public class ClassificationModelBuilder {
         return model;
     }
 
+    /**
+     * Builds a {@link LinkModel} based on the Link definition
+     * of a {@link ClassificationDocument.Classification}.
+     * @param classification The Link XML definition
+     * @param setDefaultValues Whether or not to set the default Attribute Values.
+     * @return
+     */
     private static LinkModel buildLinkModel(LinkClassification classification, boolean setDefaultValues) {
         LinkModel model = new LinkModel(classification.getSchema(), classification.getTerm(), classification.getRelation());
         model.setTitle(classification.getTitle());
@@ -102,15 +147,23 @@ public class ClassificationModelBuilder {
         return model;
     }
 
+    /**
+     * Builds and adds the {@link AttributeModel} list to a {@link CategoryModel}
+     * based on the corresponding XML object.
+     * @param categoryModel The CategoryModel where to add the Attributes.
+     * @param attributeClassifications List ob Attribute XML objects.
+     * @param setDefaultValues Whether or not to set the default Attribute Values.
+     * @return True if any Attribute contains a default value, False otherwise.
+     */
     private static boolean buildAttributeModels(CategoryModel categoryModel,
                                                 AttributeClassificationDocument.AttributeClassification[] attributeClassifications,
-                                                boolean setDafaultValues) {
+                                                boolean setDefaultValues) {
         boolean hasDefaultValue = false;
         if (null != attributeClassifications && 0 < attributeClassifications.length) {
             for (AttributeClassificationDocument.AttributeClassification a : attributeClassifications) {
                 AttributeModel attributeModel = new AttributeModel(a.getName(), a.getType().toString(), a.getRequired(), a.getMutable(), a.getDescription());
                 categoryModel.addAttribute(attributeModel);
-                if (setDafaultValues) {
+                if (setDefaultValues) {
                     addAttributeDefaultValue(attributeModel, a);
                     hasDefaultValue |= attributeModel.hasValue();
                 }
@@ -119,6 +172,13 @@ public class ClassificationModelBuilder {
         return hasDefaultValue;
     }
 
+    /**
+     * Sets the default value of an {@link AttributeModel} based on the
+     * {@link AttributeClassificationDocument.AttributeClassification}
+     * @param attributeModel
+     * @param attributeClassification
+     * @return
+     */
     private static AttributeModel addAttributeDefaultValue(AttributeModel attributeModel,
                                                            AttributeClassificationDocument.AttributeClassification attributeClassification) {
         String defaultValue = attributeClassification.getDefault();
@@ -174,6 +234,11 @@ public class ClassificationModelBuilder {
         return attributeModel;
     }
 
+    /**
+     * Set the {@link AttributeModel} list of a {@link CategoryModel} to default values.
+     * @param categoryModel The CategoryModel containing the AttributeModel where to set the default values.
+     * @param attributeClassifications The AttributeClassification defining the default values.
+     */
     public static void setAttributeDefaultValues(CategoryModel categoryModel,
                                                  AttributeClassificationDocument.AttributeClassification[] attributeClassifications) {
         for (AttributeClassificationDocument.AttributeClassification attributeClassification : attributeClassifications) {
