@@ -56,7 +56,7 @@ public class ResourceTest {
 			Assert.fail(e.getMessage());
 		}
 	}
-	
+/*	
 	@Test
 	public void computeTest() {
 		try {
@@ -131,4 +131,5 @@ public class ResourceTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+*/
 }

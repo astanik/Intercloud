@@ -43,7 +43,7 @@ import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
  */
 public class ContainerTest {
 
-
+/*
 	@Test
 	public void computeTest() {
 	    try {
@@ -86,10 +86,9 @@ public class ContainerTest {
 						
 				}
 			}
-*/
 		} catch (URISyntaxException e) {
 	        Assert.fail(e.getMessage());
 		}
 	}
-
+*/
 }

@@ -22,6 +22,6 @@ textarea.form-control {
     margin-bottom: 0px;
 }
 
-.form-control.invalid {
-    border: 1px solid #C00;
+label.invalid {
+    color: red !important;
 }

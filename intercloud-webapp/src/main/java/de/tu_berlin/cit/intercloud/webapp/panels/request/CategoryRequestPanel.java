@@ -1,14 +1,13 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
-import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
-import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
-import de.tu_berlin.cit.intercloud.webapp.panels.request.attribute.AttributeInputPanel;
+import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
+import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -24,7 +23,7 @@ public abstract class CategoryRequestPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(CategoryRequestPanel.class);
     private final WebMarkupContainer container;
 
-    public CategoryRequestPanel(String markupId, IModel<MethodModel> methodModel, IModel<? extends CategoryModel> categoryModel) {
+    public CategoryRequestPanel(String markupId, IModel<? extends CategoryModel> categoryModel) {
         super(markupId);
 
         this.container = new WebMarkupContainer("container");
@@ -42,29 +41,28 @@ public abstract class CategoryRequestPanel extends Panel {
                 return null != title.getObject();
             }
         }.add(new Label("title", title)));
-        this.container.add(new AttributeInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
+        this.container.add(new AttributeListInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
 
-        DropDownChoice<String> templateChoice = new DropDownChoice<>("templates", new Model<>(), new ArrayList<>(category.getTemplates()));
+        DropDownChoice<TemplateModel> templateChoice = new DropDownChoice<>("templates", new Model<>(),
+                category.getTemplates(), new ChoiceRenderer<>("name"));
         templateChoice.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                MethodModel method = methodModel.getObject();
-                String templateTitle = templateChoice.getModelObject();
+                TemplateModel template = templateChoice.getModelObject();
                 try {
-                    IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(method.getUri());
-                    intercloudClient.applyTemplate(categoryModel.getObject(), method, templateTitle);
+                    TemplateHelper.applyTemplate(categoryModel.getObject(), template);
                 } catch (Exception e) {
-                    logger.error("Could apply template. title: {}, method: {}", templateTitle, method, e);
+                    logger.error("Could apply template. title: {}", template.getName(), e);
                     target.appendJavaScript("alert('Failed to apply template.');");
                 }
                 target.add(container);
             }
         });
-        templateChoice.setNullValid(true); // keep null to be selectable
+        //templateChoice.setNullValid(true); // keep null to be selectable
         this.container.add(new WebMarkupContainer("templatesRow") {
             @Override
             public boolean isVisible() {
-                return !category.getTemplates().isEmpty();
+                return 1 < category.getTemplates().size();
             }
         }.add(templateChoice));
     }

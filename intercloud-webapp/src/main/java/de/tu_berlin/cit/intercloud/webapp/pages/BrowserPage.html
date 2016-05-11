@@ -5,6 +5,12 @@
 
 <wicket:extend>
     <div class="row">
+        <div class="col-md-12">
+            <wicket:panel wicket:id="breadcrumb"/>
+        </div>
+    </div>
+
+    <div class="row">
         <form wicket:id="xwadlForm">
             <div class="form-group col-md-12">
                 <div class="input-group">
@@ -36,7 +42,7 @@
                     <th>Response</th>
                 </tr>
                 <tr wicket:id="methodList">
-                    <td><a wicket:id="method" class="btn btn-default"></a></td>
+                    <td><a wicket:id="methodLink" class="btn btn-default"></a></td>
                     <td wicket:id="documentation"></td>
                     <td wicket:id="request"></td>
                     <td wicket:id="response"></td>
@@ -52,18 +58,8 @@
                 <button wicket:id="requestSubmit" type="submit" class="btn btn-danger">Submit</button>
             </form>
         </div>
-        <div class="col-md-12">
-            <div wicket:id="responseContainer">
+        <div class="col-md-12" wicket:id="responseContainer">
                 <div wicket:id="responsePanel"/>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-        <!--pre>
-            <code wicket:id="code">[xwadl]</code>
-            </pre-->
         </div>
     </div>
 
@@ -78,18 +74,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
-                    <h5 class="modal-title">Debug</h5>
+                    <h5 class="modal-title">Log</h5>
                 </div>
                 <div class="modal-body">
-                    <h5>XWADL</h5>
-                    <pre>
-                        <code wicket:id="xwadlCode"/>
-                    </pre>
-
-                    <h5>REST XML</h5>
-                    <pre>
-                        <code wicket:id="restCode"/>
-                    </pre>
+                    <wicket:panel wicket:id="loggingPanel"/>
                 </div>
             </div>
         </div>

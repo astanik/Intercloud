@@ -21,6 +21,7 @@ import de.tu_berlin.cit.intercloud.client.service.impl.IntercloudService;
 import de.tu_berlin.cit.intercloud.webapp.model.User;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.impl.XmppService;
+import de.tu_berlin.cit.intercloud.client.service.mock.XmppServiceMock;
 import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -44,7 +45,13 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
     protected boolean authenticate(String username, String password) {
         try {
             User user = new User(username, Roles.USER);
-            this.xmppService = new XmppService(user.getUri(), password);
+            if ("development".equalsIgnoreCase(IntercloudWebApplication.get().getConfigurationType().name())
+                    && "test".equalsIgnoreCase(username)
+                    && "test".equalsIgnoreCase(password)) {
+                this.xmppService = new XmppServiceMock();
+            } else {
+                this.xmppService = new XmppService(user.getUri(), password);
+            }
             this.intercloudService = new IntercloudService(this.xmppService);
             this.user = user;
             return true;
@@ -93,5 +100,13 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
 
     public static IntercloudWebSession get() {
         return (IntercloudWebSession) Session.get();
+    }
+
+    // only for test case, therefore packet protected
+    void initializeTestWebSession(User user, IXmppService xmppService) {
+        signIn(true);
+        this.user = user;
+        this.xmppService = xmppService;
+        this.intercloudService = new IntercloudService(xmppService);
     }
 }

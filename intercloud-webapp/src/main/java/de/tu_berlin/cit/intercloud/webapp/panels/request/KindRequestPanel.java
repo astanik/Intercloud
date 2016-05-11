@@ -1,12 +1,11 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
 import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.MethodModel;
 import org.apache.wicket.model.IModel;
 
 public class KindRequestPanel extends CategoryRequestPanel {
-    public KindRequestPanel(String markupId, IModel<MethodModel> methodModel, IModel<KindModel> kindModel) {
-        super(markupId, methodModel, kindModel);
+    public KindRequestPanel(String markupId, IModel<KindModel> kindModel) {
+        super(markupId, kindModel);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ListConverter implements IConverter<List<String>> {
 
     @Override
     public List<String> convertToObject(String s, Locale locale) throws ConversionException {
-        return null != s ? Arrays.asList(s.trim().split(LIST_SEPARATOR)) : null;
+        return null != s ? Arrays.asList(s.trim().split(LIST_SPLIT_PATTERN)) : null;
     }
 
     @Override
