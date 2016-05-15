@@ -4,17 +4,18 @@ import de.tu_berlin.cit.intercloud.client.exception.AttributeFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.MissingClassificationException;
 import de.tu_berlin.cit.intercloud.client.exception.ParameterFormatException;
 import de.tu_berlin.cit.intercloud.client.exception.UnsupportedMethodException;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModelPlugin;
+import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModelPlugin;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.action.ActionModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.action.ParameterModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelBuilder;
-import de.tu_berlin.cit.intercloud.client.model.rest.action.convert.ActionModelConverter;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.profiling.IProfilingTask;
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
-import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
+import de.tu_berlin.cit.intercloud.client.model.action.ActionModel;
+import de.tu_berlin.cit.intercloud.client.model.action.ParameterModel;
+import de.tu_berlin.cit.intercloud.client.model.action.convert.ActionModelBuilder;
+import de.tu_berlin.cit.intercloud.client.model.action.convert.ActionModelConverter;
+import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.impl.RepresentationModelRegistry;
+import de.tu_berlin.cit.intercloud.client.profiling.api.IProfilingCommand;
+import de.tu_berlin.cit.intercloud.client.profiling.impl.ProfilingService;
+import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciClient;
 import de.tu_berlin.cit.intercloud.occi.client.OcciMethodInvocation;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
@@ -78,15 +79,15 @@ public class IntercloudClient implements IIntercloudClient {
             throw new UnsupportedMethodException("The request media type is not supported.");
         }
 
-        return ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingTask<IRepresentationModel>() {
+        return ProfilingService.getInstance().execute(
+                new IProfilingCommand<IRepresentationModel>() {
                     @Override
                     public String getIdentifier() {
                         return "getRequestModel";
                     }
 
                     @Override
-                    public IRepresentationModel invoke() {
+                    public IRepresentationModel execute() {
                         return modelPlugin.getRequestModel(methodModel.getReference().getRequest(),
                                 occiClient.getXwadlDocument().getXwadl().getGrammars());
                     }
@@ -106,14 +107,14 @@ public class IntercloudClient implements IIntercloudClient {
         } else {
             IRepresentationModelPlugin modelPlugin = representationModelRegistry.getPlugin(methodModel.getRequestMediaType());
             if (null != modelPlugin) {
-                String representationString = ProfilingService.getInstance().invokeAndProfile(new IProfilingTask<String>() {
+                String representationString = ProfilingService.getInstance().execute(new IProfilingCommand<String>() {
                     @Override
                     public String getIdentifier() {
                         return "getRepresentationString";
                     }
 
                     @Override
-                    public String invoke() {
+                    public String execute() {
                         return modelPlugin.getRepresentationString(requestRepresentationModel);
                     }
                 });
@@ -133,14 +134,14 @@ public class IntercloudClient implements IIntercloudClient {
             String responseMediaType = response.getRest().getMethod().getResponse().getMediaType();
             IRepresentationModelPlugin modelPlugin = representationModelRegistry.getPlugin(responseMediaType);
             if (null != modelPlugin) {
-                representationModel = ProfilingService.getInstance().invokeAndProfile(new IProfilingTask<IRepresentationModel>() {
+                representationModel = ProfilingService.getInstance().execute(new IProfilingCommand<IRepresentationModel>() {
                     @Override
                     public String getIdentifier() {
                         return "getResponseModel";
                     }
 
                     @Override
-                    public IRepresentationModel invoke() {
+                    public IRepresentationModel execute() {
                         return modelPlugin.getResponseModel(response.getRest().getMethod().getResponse(),
                                 occiClient.getXwadlDocument().getXwadl().getGrammars());
                     }

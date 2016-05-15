@@ -1,7 +1,7 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.response;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.AttributeModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.CategoryModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;

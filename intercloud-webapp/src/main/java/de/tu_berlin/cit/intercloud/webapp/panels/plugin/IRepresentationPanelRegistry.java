@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.plugin;
 
-import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
 
 public interface IRepresentationPanelRegistry {
 

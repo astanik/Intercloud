@@ -2,7 +2,7 @@ package de.tu_berlin.cit.intercloud.webapp.test.response;
 
 import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import com.carrotsearch.junitbenchmarks.BenchmarkOptions;
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
+import de.tu_berlin.cit.intercloud.client.profiling.impl.ProfilingService;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebApplication;
 import de.tu_berlin.cit.intercloud.webapp.MockHelper;
 import de.tu_berlin.cit.intercloud.webapp.XwadlFileBuilder;

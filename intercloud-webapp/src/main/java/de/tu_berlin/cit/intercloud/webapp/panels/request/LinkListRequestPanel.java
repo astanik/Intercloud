@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.LinkModel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;

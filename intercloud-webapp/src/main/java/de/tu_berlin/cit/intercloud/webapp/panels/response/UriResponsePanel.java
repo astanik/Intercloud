@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.response;
 
-import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.impl.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.pages.BrowserPage;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.wicket.ajax.AjaxRequestTarget;

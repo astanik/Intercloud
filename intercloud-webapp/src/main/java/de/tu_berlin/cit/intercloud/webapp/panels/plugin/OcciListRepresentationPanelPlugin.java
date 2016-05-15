@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.plugin;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.OcciListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.OcciListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciListResponsePanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;

@@ -1,7 +1,7 @@
 package de.tu_berlin.cit.intercloud.client.service.impl;
 
-import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
-import de.tu_berlin.cit.intercloud.client.service.IIntercloudService;
+import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudClient;
+import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudService;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;

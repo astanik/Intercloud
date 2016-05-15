@@ -1,8 +1,8 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.convert.TemplateHelper;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.CategoryModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.convert.TemplateHelper;
+import de.tu_berlin.cit.intercloud.client.model.method.TemplateModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;

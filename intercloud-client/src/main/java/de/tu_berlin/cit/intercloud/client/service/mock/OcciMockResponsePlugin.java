@@ -1,10 +1,10 @@
 package de.tu_berlin.cit.intercloud.client.service.mock;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.CategoryModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.LinkModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.OcciRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.OcciRepresentationModelPlugin;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.AttributeModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.CategoryModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.LinkModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.OcciRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.OcciRepresentationModelPlugin;
 import de.tu_berlin.cit.intercloud.occi.core.OcciXml;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;

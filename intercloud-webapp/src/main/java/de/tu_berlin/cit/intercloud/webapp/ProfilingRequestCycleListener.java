@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp;
 
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
+import de.tu_berlin.cit.intercloud.client.profiling.impl.ProfilingService;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 

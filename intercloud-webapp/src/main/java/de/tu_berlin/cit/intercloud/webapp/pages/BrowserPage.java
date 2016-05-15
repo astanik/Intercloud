@@ -2,11 +2,11 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.MethodModel;
-import de.tu_berlin.cit.intercloud.client.profiling.IProfilingTask;
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingService;
-import de.tu_berlin.cit.intercloud.client.service.IIntercloudClient;
+import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.profiling.api.IProfilingCommand;
+import de.tu_berlin.cit.intercloud.client.profiling.impl.ProfilingService;
+import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
@@ -84,15 +84,15 @@ public class BrowserPage extends UserTemplate {
 
     @Override
     protected void onRender() {
-        ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingTask() {
+        ProfilingService.getInstance().execute(
+                new IProfilingCommand() {
                     @Override
                     public String getIdentifier() {
                         return "render";
                     }
 
                     @Override
-                    public Object invoke() {
+                    public Object execute() {
                         BrowserPage.super.onRender();
                         return null;
                     }
@@ -102,15 +102,15 @@ public class BrowserPage extends UserTemplate {
 
     @Override
     protected void onBeforeRender() {
-        ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingTask() {
+        ProfilingService.getInstance().execute(
+                new IProfilingCommand() {
                     @Override
                     public String getIdentifier() {
                         return "beforeRender";
                     }
 
                     @Override
-                    public Object invoke() {
+                    public Object execute() {
                         BrowserPage.super.onBeforeRender();
                         return null;
                     }
@@ -120,15 +120,15 @@ public class BrowserPage extends UserTemplate {
 
     @Override
     protected void onConfigure() {
-        ProfilingService.getInstance().invokeAndProfile(
-                new IProfilingTask() {
+        ProfilingService.getInstance().execute(
+                new IProfilingCommand() {
                     @Override
                     public String getIdentifier() {
                         return "configure";
                     }
 
                     @Override
-                    public Object invoke() {
+                    public Object execute() {
                         BrowserPage.super.onConfigure();
                         return null;
                     }

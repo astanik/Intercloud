@@ -1,9 +1,9 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
-import de.tu_berlin.cit.intercloud.client.model.occi.KindModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.TemplateModel;
-import de.tu_berlin.cit.intercloud.client.model.rest.method.UriListRepresentationModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.AttributeModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.KindModel;
+import de.tu_berlin.cit.intercloud.client.model.method.TemplateModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.impl.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.panels.request.AttributeListInputPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.request.KindRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;

@@ -16,7 +16,7 @@
 
 package de.tu_berlin.cit.intercloud.webapp;
 
-import de.tu_berlin.cit.intercloud.client.service.IIntercloudService;
+import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudService;
 import de.tu_berlin.cit.intercloud.client.service.impl.IntercloudService;
 import de.tu_berlin.cit.intercloud.webapp.model.User;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;

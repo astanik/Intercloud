@@ -1,7 +1,7 @@
 package de.tu_berlin.cit.intercloud.webapp.profiling;
 
-import de.tu_berlin.cit.intercloud.client.profiling.IProfilingListener;
-import de.tu_berlin.cit.intercloud.client.profiling.ProfilingItem;
+import de.tu_berlin.cit.intercloud.client.profiling.api.IProfilingListener;
+import de.tu_berlin.cit.intercloud.client.profiling.api.ProfilingItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

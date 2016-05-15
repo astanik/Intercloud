@@ -1,6 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.request;
 
-import de.tu_berlin.cit.intercloud.client.model.occi.AttributeModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.occi.AttributeModel;
 import de.tu_berlin.cit.intercloud.webapp.components.AjaxFormComponentValidationBehavior;
 import de.tu_berlin.cit.intercloud.webapp.panels.input.AbstractFormComponentPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.input.BooleanInputPanel;
