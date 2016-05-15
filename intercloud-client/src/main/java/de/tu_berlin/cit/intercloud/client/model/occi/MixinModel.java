@@ -1,5 +1,9 @@
 package de.tu_berlin.cit.intercloud.client.model.occi;
 
+/**
+ * Domain Model of {@link de.tu_berlin.cit.intercloud.occi.core.xml.classification.MixinClassification}
+ * and {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType}.
+ */
 public class MixinModel extends CategoryModel {
     private final String applies;
 

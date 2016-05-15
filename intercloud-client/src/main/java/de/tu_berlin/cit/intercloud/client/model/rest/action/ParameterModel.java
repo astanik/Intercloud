@@ -2,6 +2,11 @@ package de.tu_berlin.cit.intercloud.client.model.rest.action;
 
 import java.io.Serializable;
 
+/**
+ * Domain Model of {@link de.tu_berlin.cit.rwx4j.xwadl.ParameterType}
+ * and
+ * {@link de.tu_berlin.cit.rwx4j.rest.ParameterDocument.Parameter}.
+ */
 public class ParameterModel implements Serializable {
     private static final long serialVersionUID = -6182746543572339674L;
     private static final String WRONG_TYPE_MSG = "Cannot set %s Parameter for type %s.";

@@ -12,9 +12,18 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides methods to convert XWADL Actions and Parameters
+ * into {@link ActionModel}s and {@link ParameterModel}s.
+ */
 public class ActionModelBuilder {
     private final static Logger logger = LoggerFactory.getLogger(ActionModelBuilder.class);
 
+    /**
+     * Extracts the {@link ActionModel}s from an {@link XwadlDocument}.
+     * @param xwadlDocument
+     * @return
+     */
     public static List<ActionModel> buildActionModels(XwadlDocument xwadlDocument) {
         List<ActionModel> actionModels = new ArrayList<>();
         XwadlDocument.Xwadl xwadl = xwadlDocument.getXwadl();
@@ -36,10 +45,20 @@ public class ActionModelBuilder {
         return null != documentationType ? documentationType.getStringValue() : null;
     }
 
+    /**
+     * Extracts the {@link ParameterModel}s of an {@link ActionDocument.Action}.
+     * @param action
+     * @return
+     */
     public static List<ParameterModel> buildParameterModelList(ActionDocument.Action action) {
         return buildParameterModelList(action.getParameterArray());
     }
 
+    /**
+     * Converts {@link ParameterDocument.Parameter}s into {@link ParameterModel}s.
+     * @param parameterArray
+     * @return
+     */
     private static List<ParameterModel> buildParameterModelList(ParameterDocument.Parameter[] parameterArray) {
         List<ParameterModel> parameterModels = new ArrayList<>();
         if (null != parameterArray && 0 < parameterArray.length) {

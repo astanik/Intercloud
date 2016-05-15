@@ -6,14 +6,23 @@ import org.apache.commons.lang3.SerializationUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Domain Model for media type {@code xml/occi} and
+ * {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument.Category}
+ */
 public class OcciRepresentationModel implements IRepresentationModel, IMixinModelContainer {
     private static final long serialVersionUID = -7696772280697269027L;
 
     private KindModel kind;
     private final List<MixinModel> mixinList;
-    // list of actual used links
+    /**
+     * List of Link Models contained in the actual Representation.
+     */
     private final List<LinkModel> linkList;
-    // map of link definitions
+    /**
+     * List of Link Models defined by the Classification Model.
+     * May be provided to a user to select Links.
+     */
     private final List<LinkModel> linkDefinitionList = new ArrayList<>();
 
     public OcciRepresentationModel() {

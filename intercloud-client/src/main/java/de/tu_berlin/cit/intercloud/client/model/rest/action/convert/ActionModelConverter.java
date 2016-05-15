@@ -12,9 +12,22 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides methods to convert an {@link ActionModel} and its {@link ParameterModel}s
+ * into an XML {@link ActionDocument.Action}.
+ * Further, it converts a {@link ResultDocument.Result} into a {@link ParameterModel}.
+ */
 public class ActionModelConverter {
     private static final Logger logger = LoggerFactory.getLogger(ActionModelConverter.class);
 
+    /**
+     * Converts an {@link ActionModel}s and its {@link ParameterModel}s
+     * int an {@link ActionDocument.Action}.
+     * @param actionModel
+     * @param parameterModelList
+     * @return
+     * @throws ParameterFormatException If a parameter could not be converted.
+     */
     public static ActionDocument.Action convertToXml(ActionModel actionModel, List<ParameterModel> parameterModelList) throws ParameterFormatException {
         ActionDocument.Action action = ActionDocument.Action.Factory.newInstance();
         action.setName(actionModel.getName());
@@ -24,6 +37,12 @@ public class ActionModelConverter {
         return action;
     }
 
+    /**
+     * Converts {@link ParameterModel}s int an array of {@link ParameterDocument.Parameter}.
+     * @param parameterModelList
+     * @return
+     * @throws ParameterFormatException If a parameter could not be converted.
+     */
     private static ParameterDocument.Parameter[] getParameterArray(List<ParameterModel> parameterModelList) throws ParameterFormatException {
         List<ParameterDocument.Parameter> resultList = new ArrayList<>();
         for (ParameterModel parameterModel : parameterModelList) {
@@ -34,6 +53,12 @@ public class ActionModelConverter {
         return resultList.toArray(new ParameterDocument.Parameter[resultList.size()]);
     }
 
+    /**
+     * Converts a {@link ParameterModel} into a {@link ParameterDocument.Parameter}.
+     * @param parameterModel
+     * @return
+     * @throws ParameterFormatException If a parameter could not be converted.
+     */
     private static ParameterDocument.Parameter getParameter(ParameterModel parameterModel) throws ParameterFormatException {
         ParameterDocument.Parameter result = ParameterDocument.Parameter.Factory.newInstance();
         result.setName(parameterModel.getName());
@@ -59,6 +84,12 @@ public class ActionModelConverter {
         return result;
     }
 
+    /**
+     * Converts {@link ResultDocument.Result} into a {@link ParameterModel}.
+     * @param result
+     * @param documentation The documentation provided by an XWADL.
+     * @return
+     */
     public static ParameterModel convertToModel(ResultDocument.Result result, String documentation) {
         final String parameterName = "result";
         final boolean required = true;

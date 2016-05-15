@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Domain Model of {@link de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument.Classification}.
+ */
 public class ClassificationModel implements IMixinModelContainer {
     private KindModel kind;
     private Map<String, MixinModel> mixinMap = new HashMap<>();

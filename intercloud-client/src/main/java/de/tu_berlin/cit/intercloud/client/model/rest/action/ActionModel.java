@@ -4,6 +4,11 @@ import de.tu_berlin.cit.rwx4j.xwadl.ActionDocument;
 
 import java.io.Serializable;
 
+/**
+ * Domain Model of {@link de.tu_berlin.cit.rwx4j.xwadl.ActionDocument.Action}
+ * and
+ * {@link de.tu_berlin.cit.rwx4j.rest.ActionDocument.Action}.
+ */
 public class ActionModel implements Serializable {
     private static final long serialVersionUID = 5148561604973349432L;
 

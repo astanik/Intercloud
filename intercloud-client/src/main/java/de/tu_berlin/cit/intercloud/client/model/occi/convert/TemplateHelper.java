@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * This class provides methods to add {@link TemplateModel}s
- * to a {@link CategoryModel} sub-types contained in a {@link ClassificationModel}.
+ * to {@link CategoryModel} sub-types contained in a {@link ClassificationModel}.
  * Further, it provides methods to apply Attribute Values of a Template to the corresponding
  * {@link AttributeModel}.
  */
@@ -37,7 +37,7 @@ public class TemplateHelper {
     /**
      * Add {@link TemplateModel}s to the {@link CategoryModel} sub-types contained in a
      * {@link ClassificationModel}.
-     * @param classificationModel
+     * @param classificationModel The Category Model containing Category Models where to add the Templates to.
      * @param request The XWADL Request containing Templates
      * @return
      */
@@ -129,8 +129,9 @@ public class TemplateHelper {
     /**
      * Applies the Attribute Values of a Template to the corresponding
      * {@link AttributeModel}s contained in a {@link CategoryModel}.
-     * @param categoryModel
-     * @param template
+     * Further it sets the title as defined by the Template.
+     * @param categoryModel The Category Model where to apply the Template to.
+     * @param template The Template to be applied.
      * @return
      */
     public static CategoryModel applyTemplate(CategoryModel categoryModel, TemplateModel template) {

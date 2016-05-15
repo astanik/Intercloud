@@ -20,8 +20,10 @@ import org.apache.xmlbeans.GDuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,14 +38,15 @@ public class RepresentationModelConverter {
      * Converts an {@link OcciListRepresentationModel} into an XML Representation.
      * @param representationListModel
      * @return
-     * @throws AttributeFormatException
+     * @throws AttributeFormatException If an Attribute could not be converted.
      */
     public static CategoryListDocument convertToXml(OcciListRepresentationModel representationListModel) throws AttributeFormatException {
         CategoryListDocument categoryListDocument = CategoryListDocument.Factory.newInstance();
-        CategoryListDocument.CategoryList categoryList = categoryListDocument.addNewCategoryList();
+        List<CategoryDocument.Category> categoryList = new ArrayList<>();
         for (OcciRepresentationModel representationModel : representationListModel.getOcciRepresentationModels()) {
-            convertToXml(representationModel, categoryList.addNewCategory());
+            categoryList.add(convertToCategory(representationModel));
         }
+        categoryListDocument.addNewCategoryList().setCategoryArray(categoryList.toArray(new CategoryDocument.Category[categoryList.size()]));
         return categoryListDocument;
     }
 
@@ -51,22 +54,21 @@ public class RepresentationModelConverter {
      * Converts an {@link OcciRepresentationModel} into an XML Representation.
      * @param representationModel
      * @return
-     * @throws AttributeFormatException
+     * @throws AttributeFormatException If an Attribute could not be converted.
      */
     public static CategoryDocument convertToXml(OcciRepresentationModel representationModel) throws AttributeFormatException {
         CategoryDocument categoryDocument = CategoryDocument.Factory.newInstance();
-        CategoryDocument.Category category = categoryDocument.addNewCategory();
-        convertToXml(representationModel, category);
+        categoryDocument.setCategory(convertToCategory(representationModel));
         return categoryDocument;
     }
 
     /**
-     * Adds the CategoryModel sub-types of an {@link OcciRepresentationModel} to an XML Representation.
+     * Converts an {@link OcciRepresentationModel} into an XML Representation.
      * @param representationModel
-     * @param category The XML Representation
-     * @throws AttributeFormatException
+     * @throws AttributeFormatException If an Attribute could not be converted.
      */
-    private static void convertToXml(OcciRepresentationModel representationModel, CategoryDocument.Category category) throws AttributeFormatException {
+    private static CategoryDocument.Category convertToCategory(OcciRepresentationModel representationModel) throws AttributeFormatException {
+        CategoryDocument.Category category = CategoryDocument.Category.Factory.newInstance();
         // KIND
         KindModel kindModel = representationModel.getKind();
         if (null != kindModel) {
@@ -81,8 +83,15 @@ public class RepresentationModelConverter {
         for (LinkModel linkModel : representationModel.getLinks()) {
             addLinkRepresentation(category.addNewLink(), linkModel);
         }
+        return category;
     }
 
+    /**
+     * Converts a {@link LinkModel} into a {@link LinkType}.
+     * @param type The resulting Link Type.
+     * @param model The Link Model to be converted.
+     * @throws AttributeFormatException If an Attribute could not be converted.
+     */
     private static void addLinkRepresentation(LinkType type, LinkModel model) throws AttributeFormatException {
         addCategoryRepresentation(type, model);
         type.setTarget(model.getTarget());
@@ -92,6 +101,12 @@ public class RepresentationModelConverter {
         }
     }
 
+    /**
+     * Converts a {@link CategoryModel} into a {@link CategoryType}.
+     * @param type The resulting Category Type.
+     * @param model The Category Model to be converted.
+     * @throws AttributeFormatException If an Attribute could not be converted.
+     */
     private static void addCategoryRepresentation(CategoryType type, CategoryModel model) throws AttributeFormatException {
         type.setSchema(model.getSchema());
         type.setTerm(model.getTerm());
@@ -99,6 +114,13 @@ public class RepresentationModelConverter {
         addAttributeRepresentation(type, model);
     }
 
+    /**
+     * Converts the {@link AttributeModel}s of a {@link CategoryModel} into {@link AttributeType}s
+     * and adds them to the {@link CategoryType}
+     * @param categoryType The Category Type where to add the converted Attribute Types.
+     * @param categoryModel The Category Model containing the Attribute Models
+     * @throws AttributeFormatException If an Attribute could not be converted.
+     */
     private static void addAttributeRepresentation(CategoryType categoryType, CategoryModel categoryModel) throws AttributeFormatException {
         for (AttributeModel attributeModel : categoryModel.getAttributes()) {
             if (attributeModel.isMutable() && attributeModel.isRequired() && !attributeModel.hasValue()) {
@@ -169,14 +191,5 @@ public class RepresentationModelConverter {
             }
         }
 
-    }
-
-    private static boolean hasAttributes(CategoryModel category) {
-        for (AttributeModel a : category.getAttributes()) {
-            if (a.isMutable() && (a.isRequired() || a.hasValue())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

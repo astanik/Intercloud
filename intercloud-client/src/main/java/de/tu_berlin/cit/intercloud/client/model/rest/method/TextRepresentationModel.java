@@ -1,5 +1,8 @@
 package de.tu_berlin.cit.intercloud.client.model.rest.method;
 
+/**
+ * Domain Model for media type {@code text/plain}.
+ */
 public class TextRepresentationModel implements IRepresentationModel {
     private static final long serialVersionUID = 1117224125569444798L;
 

@@ -9,6 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Base Class of the OCCI Classification.
+ */
 public abstract class CategoryModel implements Serializable {
     private static final long serialVersionUID = -158045063500836807L;
 

@@ -5,6 +5,10 @@ import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
 
 import java.io.Serializable;
 
+/**
+ * This class is used to log the recently received XWADL,
+ * send XML-REST and received XML-REST documents.
+ */
 public class LoggingModel implements Serializable {
     private static final long serialVersionUID = -3148741249548656428L;
 

@@ -4,6 +4,10 @@ import de.tu_berlin.cit.intercloud.client.model.rest.method.IRepresentationModel
 
 import java.util.List;
 
+/**
+ * Domain Model for media type {@code xml/occi-list} and
+ * {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryListDocument.CategoryList}.
+ */
 public class OcciListRepresentationModel implements IRepresentationModel {
     private static final long serialVersionUID = 5713372756643337932L;
 

@@ -3,6 +3,10 @@ package de.tu_berlin.cit.intercloud.client.model.occi;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Domain Model of {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType}
+ * and {@link de.tu_berlin.cit.intercloud.occi.core.xml.classification.LinkClassification}.
+ */
 public class LinkModel extends CategoryModel implements IMixinModelContainer {
     private final List<MixinModel> mixinList = new ArrayList<>();
     private final String relates;

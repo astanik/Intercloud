@@ -57,8 +57,11 @@ public class RepresentationModelBuilder {
      */
 
     /**
-     * Builds an {@link OcciRepresentationModel} based on a {@link ClassificationModel}
-     * @param classificationModel
+     * Builds an {@link OcciRepresentationModel} based on a {@link ClassificationModel}.
+     * This method builds an {@link OcciListRepresentationModel} depending on the applies
+     * attribute of its {@link MixinModel}s.
+     * @param classificationModel The Classification containing the Representation's
+     *                            Kinds, Mixins and Links.
      * @return
      */
     public static OcciRepresentationModel build(ClassificationModel classificationModel) {
@@ -271,10 +274,13 @@ public class RepresentationModelBuilder {
     }
 
     /**
-     * Builds an
-     * @param result
-     * @param categoryModel
-     * @param attributeTypes
+     * Builds the {@link AttributeModel}s of a Category's Attributes
+     * and adds them its {@link CategoryModel}.
+     * @param result The Category Model where the created Attribute Model are added to.
+     * @param categoryModel The corresponding Category Model of the Classification.
+     *                      It is used to verify the Attributes and provides Documentation.
+     * @param attributeTypes The XML Attribute definitions to be converted into Attribute Models
+     *                       and finally added to the {@code result}.
      */
     private static void addAttributes(CategoryModel result, CategoryModel categoryModel, AttributeType[] attributeTypes) {
         if (null != attributeTypes) {
@@ -305,10 +311,23 @@ public class RepresentationModelBuilder {
         }
     }
 
+    /**
+     * Converts an {@link AttributeType} in an {@link AttributeModel}.
+     * @param attributeType The Attribute Type to be converted into a Model.
+     * @return
+     */
     private static AttributeModel buildAttributeModel(AttributeType attributeType) {
         return buildAttributeModel(attributeType, null);
     }
 
+    /**
+     * Converts an {@link AttributeType} in an {@link AttributeModel}.
+     * @param attributeType The Attribute Type to be converted into a Model.
+     * @param attributeModel The corresponding Attribute Model of the Classification Model.
+     *                       It serves to verify the types and provides Documentation.
+     *                       It may be null if not contained in the Classification.
+     * @return
+     */
     private static AttributeModel buildAttributeModel(AttributeType attributeType, AttributeModel attributeModel) {
         AttributeModel result = null;
         String description = null;

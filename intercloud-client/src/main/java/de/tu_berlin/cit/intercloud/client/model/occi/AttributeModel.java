@@ -6,6 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Type save implementation of OCCI Attribute.
+ * Domain Model of {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType}
+ * and
+ * {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType}.
+ */
 public class AttributeModel implements Serializable {
     private static final long serialVersionUID = -4070567697021876585L;
     private static final String WRONG_TYPE_MSG = "Cannot set %s Attribute for type %s.";

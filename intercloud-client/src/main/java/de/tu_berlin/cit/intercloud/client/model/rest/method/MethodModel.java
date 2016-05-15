@@ -5,6 +5,11 @@ import de.tu_berlin.cit.rwx4j.xwadl.MethodDocument;
 
 import java.io.Serializable;
 
+/**
+ * Domain Model of {@link de.tu_berlin.cit.rwx4j.xwadl.MethodDocument.Method}
+ * and
+ * {@link de.tu_berlin.cit.rwx4j.rest.MethodDocument.Method}.
+ */
 public class MethodModel implements Serializable {
     private static final long serialVersionUID = 1297202550449311014L;
 
