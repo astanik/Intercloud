@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.nav;
+package de.tu_berlin.cit.intercloud.webapp.navigation;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
