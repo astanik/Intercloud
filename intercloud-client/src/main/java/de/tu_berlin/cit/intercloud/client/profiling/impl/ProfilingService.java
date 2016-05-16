@@ -7,8 +7,14 @@ import de.tu_berlin.cit.intercloud.client.profiling.api.ProfilingItem;
 
 import java.util.regex.Pattern;
 
+/**
+ * This implementation of the {@link IProfilingService} provides a
+ * mechanism to do thread-based profiling.
+ */
 public class ProfilingService implements IProfilingService {
     private static final ProfilingService INSTANCE = new ProfilingService();
+    // provides a ProfilingItem per Thread
+    // an instance of a ProfilingItem is initialized by the start method, only if the context matches the filter
     private static final ThreadLocal<ProfilingItem> PROFILING_THREAD = new ThreadLocal<ProfilingItem>() {
         @Override
         protected ProfilingItem initialValue() {

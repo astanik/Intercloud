@@ -67,11 +67,14 @@ public class XmppServiceMock implements IXmppService {
     }
 
     /**
-     * Returns a static representation depending on the response media type.
+     * Returns a static representation depending on the response media type:
      * <p>
      * text/uri-list: if path is a directory, return list of all directory items
+     * <p>
      * text/occi: returns a representation according to the classification of the xwadl's grammars section
      *              with attributes randomly set or default values if given
+     * <p>
+     * otherwise: an empty representaiton
      */
     @Override
     public RestDocument sendRestDocument(XmppURI uri, RestDocument restDocument) throws XMPPException, IOException, SmackException {
@@ -93,7 +96,7 @@ public class XmppServiceMock implements IXmppService {
     }
 
     /**
-     * Reads a xml file from within the user's home directory.
+     * Reads a xml file from the local disc.
      * The file location is taken from the xmpp uri path.
      */
     @Override

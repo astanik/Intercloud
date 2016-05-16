@@ -28,6 +28,17 @@ public class OcciMockResponsePlugin implements IMockResponsePlugin {
         return OcciXml.MEDIA_TYPE;
     }
 
+    /**
+     * Parses a file, whose location is specified by the path of an {@link XmppURI}, into an {@link XwadlDocument}.
+     * Creates the {@link OcciRepresentationModel} based on the
+     * {@link de.tu_berlin.cit.intercloud.occi.core.xml.classification.ClassificationDocument.Classification}.
+     * Adds each {@link LinkModel} to the {@link OcciRepresentationModel} and sets every {@link AttributeModel} to random values.
+     * Finally, converts the {@link OcciRepresentationModel} into a
+     * {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument}
+     * and returns it as a string.
+     * @param xwadlUri
+     * @return
+     */
     @Override
     public String getRepresentationString(XmppURI xwadlUri) {
         try {
@@ -35,18 +46,12 @@ public class OcciMockResponsePlugin implements IMockResponsePlugin {
             XwadlDocument xwadlDocument = XwadlDocument.Factory.parse(file);
             XwadlDocument.Xwadl xwadl = xwadlDocument.getXwadl();
             OcciRepresentationModel representationModel = occiPlugin.getRequestModel(null, xwadl.getGrammars());
-            addLinks(representationModel);
+            representationModel.getLinks().addAll(representationModel.getLinkDefinitions());
             setRandomAttributes(representationModel, xwadlUri);
             return occiPlugin.getRepresentationString(representationModel);
         } catch (Exception e) {
             logger.error("Could not create sample OCCI response representation.", e);
             return null;
-        }
-    }
-
-    private void addLinks(OcciRepresentationModel representationModel) {
-        for (LinkModel link : representationModel.getLinkDefinitions()) {
-            representationModel.addToLinkList(link);
         }
     }
 

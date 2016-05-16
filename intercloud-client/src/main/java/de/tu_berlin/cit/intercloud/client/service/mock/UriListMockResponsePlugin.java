@@ -18,6 +18,15 @@ public class UriListMockResponsePlugin implements IMockResponsePlugin {
         return UriListText.MEDIA_TYPE;
     }
 
+    /**
+     * The path of the {@link XmppURI} specifies a file that if:
+     * <ul>
+     *     <li>it is a directory, returns the a list of files contained in this directory</li>
+     *     <li>it is not a directory, returns a static dummy list.</li>
+     * </ul>
+     * @param xwadl
+     * @return
+     */
     @Override
     public String getRepresentationString(XmppURI xwadl) {
         File file = new File(xwadl.getPath());
