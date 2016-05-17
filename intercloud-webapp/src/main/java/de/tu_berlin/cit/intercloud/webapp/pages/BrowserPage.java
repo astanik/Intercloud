@@ -13,16 +13,17 @@ import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.LoggingPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionRequestPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.AddressBarPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodRequestPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl.RepresentationPanelRegistry;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -236,8 +237,8 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         try {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(this.uri.getObject());
             ParameterModel parameterModel = intercloudClient.executeAction(actionModel, parameterModelList);
-            // TODO display result
-            this.replace(new EmptyPanel("browserPanel"));
+            // display result
+            this.replace(new Label("browserPanel", parameterModel));
             // hide alert
             ComponentUtils.displayNone(alert);
         } catch (Throwable t) {
