@@ -5,9 +5,7 @@
 
 <wicket:extend>
     <div class="row">
-        <div class="col-md-12">
-            <wicket:panel wicket:id="breadcrumb"/>
-        </div>
+        <div class="col-md-12" wicket:id="breadcrumb"/>
     </div>
 
     <div class="row">
@@ -16,12 +14,17 @@
     </div>
 
     <div class="row">
-        <div wicket:id="alert"/>
+        <div class="col-md-12" wicket:id="alert"/>
     </div>
 
     <div class="row">
         <!-- Table of available Methods-->
         <div class="col-md-12" wicket:id="methodPanel"/>
+    </div>
+
+    <div class="row">
+        <!-- Table of available Actions -->
+        <div class="col-md-12" wicket:id="actionPanel"/>
     </div>
 
     <div class="row">

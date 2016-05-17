@@ -3,6 +3,7 @@ package de.tu_berlin.cit.intercloud.client.service.mock;
 import de.tu_berlin.cit.intercloud.xmpp.client.service.IXmppService;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import de.tu_berlin.cit.rwx4j.representations.UriListText;
+import de.tu_berlin.cit.rwx4j.rest.ActionDocument;
 import de.tu_berlin.cit.rwx4j.rest.MethodDocument;
 import de.tu_berlin.cit.rwx4j.rest.ResponseDocument;
 import de.tu_berlin.cit.rwx4j.rest.RestDocument;
@@ -80,16 +81,21 @@ public class XmppServiceMock implements IXmppService {
     public RestDocument sendRestDocument(XmppURI uri, RestDocument restDocument) throws XMPPException, IOException, SmackException {
         RestDocument result = (RestDocument) restDocument.copy();
         if (null != result.getRest()) {
-            MethodDocument.Method method = result.getRest().getMethod();
-            if (method.isSetRequest()) {
-                method.unsetRequest();
-            }
-            ResponseDocument.Response response = method.getResponse();
-            if (null != response) {
-                IMockResponsePlugin plugin = RESPONSE_PLUGIN_REGISTRY.get(response.getMediaType());
-                if (null != plugin) {
-                    response.setRepresentation(plugin.getRepresentationString(uri));
+            if (result.getRest().isSetMethod()) {
+                MethodDocument.Method method = result.getRest().getMethod();
+                if (method.isSetRequest()) {
+                    method.unsetRequest();
                 }
+                ResponseDocument.Response response = method.getResponse();
+                if (null != response) {
+                    IMockResponsePlugin plugin = RESPONSE_PLUGIN_REGISTRY.get(response.getMediaType());
+                    if (null != plugin) {
+                        response.setRepresentation(plugin.getRepresentationString(uri));
+                    }
+                }
+            } else if (result.getRest().isSetAction()) {
+                ActionDocument.Action action = result.getRest().getAction();
+                action.setParameterArray(null);
             }
         }
         return result;

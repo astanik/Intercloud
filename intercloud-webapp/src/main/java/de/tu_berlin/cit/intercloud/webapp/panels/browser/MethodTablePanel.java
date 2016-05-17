@@ -14,10 +14,10 @@ import org.apache.wicket.model.Model;
 
 import java.util.List;
 
-public class MethodPanel extends Panel {
+public class MethodTablePanel extends Panel {
     IModel<List<MethodModel>> methodList;
 
-    public MethodPanel(String id, IModel<List<MethodModel>> methodList, IBrowserPage browserPage) {
+    public MethodTablePanel(String id, IModel<List<MethodModel>> methodList, IBrowserPage browserPage) {
         super(id);
         this.methodList = methodList;
 

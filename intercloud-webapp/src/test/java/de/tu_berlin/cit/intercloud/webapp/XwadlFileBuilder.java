@@ -13,9 +13,13 @@ import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryDocument
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.CategoryType;
 import de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType;
 import de.tu_berlin.cit.rwx4j.representations.UriText;
+import de.tu_berlin.cit.rwx4j.xwadl.ActionDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.DocumentationType;
 import de.tu_berlin.cit.rwx4j.xwadl.GrammarsDocument;
 import de.tu_berlin.cit.rwx4j.xwadl.MethodDocument;
 import de.tu_berlin.cit.rwx4j.xwadl.MethodType;
+import de.tu_berlin.cit.rwx4j.xwadl.ParameterDocument;
+import de.tu_berlin.cit.rwx4j.xwadl.ParameterType;
 import de.tu_berlin.cit.rwx4j.xwadl.RequestDocument;
 import de.tu_berlin.cit.rwx4j.xwadl.XwadlDocument;
 
@@ -62,6 +66,15 @@ public class XwadlFileBuilder {
         method = xwadl.addNewMethod();
         method.setType(MethodType.GET);
         method.addNewResponse().setMediaType(OcciXml.MEDIA_TYPE);
+
+        // ACTION: with params
+        ActionDocument.Action action = xwadl.addNewAction();
+        action.setName("foo");
+        action.setParameterArray(createParameters());
+
+        // ACTION: without params
+        action = xwadl.addNewAction();
+        action.setName("bar");
 
         return createXwadlFile(xwadlDocument, config);
     }
@@ -352,5 +365,27 @@ public class XwadlFileBuilder {
 
         }
         return templateList.toArray(new de.tu_berlin.cit.intercloud.occi.core.xml.representation.AttributeType[templateList.size()]);
+    }
+
+    /*
+     *      ACTION
+     */
+
+    private ParameterDocument.Parameter[] createParameters() {
+        List<ParameterDocument.Parameter> parameters = new ArrayList<>();
+        parameters.add(createParameter(UUID.randomUUID().toString(), "some string...", ParameterType.STRING));
+        parameters.add(createParameter(UUID.randomUUID().toString(), "some integer...", ParameterType.INTEGER));
+        parameters.add(createParameter(UUID.randomUUID().toString(), "some double...", ParameterType.DOUBLE));
+        parameters.add(createParameter(UUID.randomUUID().toString(), "some boolean...", ParameterType.BOOLEAN));
+        parameters.add(createParameter(UUID.randomUUID().toString(), "some link...", ParameterType.LINK));
+        return parameters.toArray(new ParameterDocument.Parameter[parameters.size()]);
+    }
+
+    private ParameterDocument.Parameter createParameter(String name, String documentation, ParameterType.Enum type) {
+        ParameterDocument.Parameter parameter = ParameterDocument.Parameter.Factory.newInstance();
+        parameter.setName(name);
+        parameter.addNewDocumentation().setStringValue(documentation);
+        parameter.setType(type);
+        return parameter;
     }
 }

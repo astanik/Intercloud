@@ -19,7 +19,7 @@ import java.util.List;
 public class BreadcrumbPanel extends Panel {
     private static Logger logger = LoggerFactory.getLogger(BreadcrumbPanel.class);
 
-    public BreadcrumbPanel(String id, IModel<XmppURI> uriModel, IModel<IBreadcrumbRedirect> redirect) {
+    public BreadcrumbPanel(String id, IModel<XmppURI> uriModel, IBreadcrumbRedirect redirect) {
         super(id);
 
         IModel<List<Item>> itemList = new LoadableDetachableModel<List<Item>>() {
@@ -39,7 +39,7 @@ public class BreadcrumbPanel extends Panel {
                     public void onClick() {
                         try {
                             XmppURI redirectUri = new XmppURI(uriModel.getObject().getJID(), item.getPath());
-                            setResponsePage(redirect.getObject().getResponsePage(redirectUri));
+                            setResponsePage(redirect.getResponsePage(redirectUri));
                         } catch (URISyntaxException e) {
                             logger.error("Failed to redirect via Breadcrumb.", e);
                         }

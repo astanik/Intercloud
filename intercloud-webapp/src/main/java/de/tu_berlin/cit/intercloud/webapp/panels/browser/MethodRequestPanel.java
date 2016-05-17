@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 public class MethodRequestPanel extends Panel {
     private IModel<IRepresentationModel> representationModel;
@@ -32,7 +33,7 @@ public class MethodRequestPanel extends Panel {
                 this.setResponsePage(browserPage);
 
             }
-        });
+        }.setBody(Model.of(methodModel.getObject().getType())));
 
         this.requestForm.add(new EmptyPanel("requestPanel"));
         this.add(this.requestForm);

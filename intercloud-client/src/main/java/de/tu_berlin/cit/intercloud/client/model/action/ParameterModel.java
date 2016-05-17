@@ -58,6 +58,7 @@ public class ParameterModel implements Serializable {
                 "name='" + name + '\'' +
                 ", type=" + type +
                 ", value=" + value +
+                ", documentation=" + documentation +
                 '}';
     }
 

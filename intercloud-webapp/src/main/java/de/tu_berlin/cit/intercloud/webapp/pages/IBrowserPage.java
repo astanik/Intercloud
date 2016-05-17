@@ -15,6 +15,6 @@ public interface IBrowserPage extends IRequestablePage {
     void selectMethod(MethodModel methodModel);
     void executeMethod(MethodModel methodModel, IRepresentationModel representationModel);
 
-    default void selectAction(ActionModel actionModel) { }
-    default void executeAction(ActionModel actionModel, List<ParameterModel> parameterModelList) {}
+    void selectAction(ActionModel actionModel);
+    void executeAction(ActionModel actionModel, List<ParameterModel> parameterModelList);
 }

@@ -2,6 +2,8 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
+import de.tu_berlin.cit.intercloud.client.model.action.ActionModel;
+import de.tu_berlin.cit.intercloud.client.model.action.ParameterModel;
 import de.tu_berlin.cit.intercloud.client.model.method.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.profiling.api.IProfilingCommand;
@@ -11,8 +13,10 @@ import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.LoggingPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionTablePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.AddressBarPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl.RepresentationPanelRegistry;
@@ -27,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class BrowserPage extends UserTemplate implements IBrowserPage {
     private static final Logger logger = LoggerFactory.getLogger(BrowserPage.class);
@@ -35,13 +40,14 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
 
     private IModel<XmppURI> uri;
     private ListModel<MethodModel> methodModelList = new ListModel<>();
+    private ListModel<ActionModel> actionModelList = new ListModel<>();
     private IModel<LoggingModel> loggingModel = Model.of();
 
     public BrowserPage(IModel<XmppURI> uri) {
         super();
         this.uri = uri;
 
-        this.add(new BreadcrumbPanel("breadcrumb", uri, Model.of((XmppURI redirectUri) -> new BrowserPage(Model.of(redirectUri)))));
+        this.add(new BreadcrumbPanel("breadcrumb", uri, (XmppURI redirectUri) -> new BrowserPage(Model.of(redirectUri))));
 
         // alert
         this.alert = newAlert("alert");
@@ -52,7 +58,10 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         this.add(new LoggingPanel("loggingPanel", this.loggingModel));
 
         // method table
-        this.add(new MethodPanel("methodPanel", methodModelList, this));
+        this.add(new MethodTablePanel("methodPanel", methodModelList, this));
+
+        // action table
+        this.add(new ActionTablePanel("actionPanel", actionModelList, this));
 
         // request / response
         this.add(new EmptyPanel("browserPanel"));
@@ -146,11 +155,13 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(uri);
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
             this.methodModelList.setObject(intercloudClient.getMethods());
+            this.actionModelList.setObject(intercloudClient.getActions());
             this.replace(new EmptyPanel("browserPanel"));
             ComponentUtils.displayNone(this.alert);
         } catch (Exception e) {
             logger.error("Failed to request xwadl from {}", uri, e);
             this.methodModelList.setObject(null);
+            this.actionModelList.setObject(null);
             logError(e);
         }
     }
@@ -193,9 +204,45 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
                 this.replace(new EmptyPanel("browserPanel"));
             }
             ComponentUtils.displayNone(this.alert);
-        } catch (Exception e) {
-            logError(e);
-            logger.error("Failed to execute request. method: {}, representation: {}", methodModel, requestRepresentation, e);
+        } catch (Throwable t) {
+            logError(t);
+            logger.error("Failed to execute request. method: {}, representation: {}", methodModel, requestRepresentation, t);
+        }
+    }
+
+    @Override
+    public void selectAction(ActionModel actionModel) {
+        try {
+            IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(this.uri.getObject());
+            List<ParameterModel> parameters = intercloudClient.getParameters(actionModel);
+            if (null == parameters || parameters.isEmpty()) {
+                // execute action directly if no parameters are given
+                this.executeAction(actionModel, parameters);
+            } else {
+                // display parameters
+                this.replace(new ActionRequestPanel("browserPanel",
+                        Model.of(actionModel), new ListModel<>(parameters), this));
+                // hide alert
+                ComponentUtils.displayNone(alert);
+            }
+        } catch (Throwable t) {
+            logError(t);
+            logger.error("Failed to select action. {}", actionModel, t);
+        }
+    }
+
+    @Override
+    public void executeAction(ActionModel actionModel, List<ParameterModel> parameterModelList) {
+        try {
+            IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(this.uri.getObject());
+            ParameterModel parameterModel = intercloudClient.executeAction(actionModel, parameterModelList);
+            // TODO display result
+            this.replace(new EmptyPanel("browserPanel"));
+            // hide alert
+            ComponentUtils.displayNone(alert);
+        } catch (Throwable t) {
+            logError(t);
+            logger.error("Failed to execute action. {}, {}", actionModel, parameterModelList, t);
         }
     }
 }
