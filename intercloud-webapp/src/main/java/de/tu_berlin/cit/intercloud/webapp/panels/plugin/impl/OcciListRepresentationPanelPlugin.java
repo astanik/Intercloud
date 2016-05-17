@@ -1,11 +1,12 @@
-package de.tu_berlin.cit.intercloud.webapp.panels.plugin;
+package de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl;
 
 import de.tu_berlin.cit.intercloud.client.model.representation.occi.OcciListRepresentationModel;
-import de.tu_berlin.cit.intercloud.webapp.panels.response.OcciListResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.method.response.OcciListResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-public class OcciListRepresentationPanelPlugin implements IRepresentationPanelPlugin<OcciListRepresentationModel>{
+public class OcciListRepresentationPanelPlugin implements IRepresentationPanelPlugin<OcciListRepresentationModel> {
     @Override
     public Class<OcciListRepresentationModel> getRepresentationModelClass() {
         return OcciListRepresentationModel.class;

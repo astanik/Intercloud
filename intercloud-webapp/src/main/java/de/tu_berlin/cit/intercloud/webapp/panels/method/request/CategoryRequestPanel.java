@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels.request;
+package de.tu_berlin.cit.intercloud.webapp.panels.method.request;
 
 import de.tu_berlin.cit.intercloud.client.model.representation.occi.CategoryModel;
 import de.tu_berlin.cit.intercloud.client.model.representation.occi.convert.TemplateHelper;

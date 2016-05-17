@@ -3,23 +3,23 @@ package de.tu_berlin.cit.intercloud.webapp.panels.browser;
 import de.tu_berlin.cit.intercloud.client.model.method.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.pages.IBrowserPage;
-import de.tu_berlin.cit.intercloud.webapp.panels.plugin.IRepresentationPanelPlugin;
-import de.tu_berlin.cit.intercloud.webapp.panels.plugin.RepresentationPanelRegistry;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl.RepresentationPanelRegistry;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.IModel;
 
 public class MethodRequestPanel extends Panel {
-    private Model<IRepresentationModel> representationModel;
+    private IModel<IRepresentationModel> representationModel;
     private Form requestForm;
     private Panel requestPanel;
 
     public MethodRequestPanel(String markupId,
-                              Model<MethodModel> methodModel,
-                              Model<IRepresentationModel> representationModel,
+                              IModel<MethodModel> methodModel,
+                              IModel<IRepresentationModel> representationModel,
                               IBrowserPage browserPage) {
         super(markupId);
         this.representationModel = representationModel;

@@ -4,9 +4,9 @@ import de.tu_berlin.cit.intercloud.client.model.representation.occi.AttributeMod
 import de.tu_berlin.cit.intercloud.client.model.representation.occi.KindModel;
 import de.tu_berlin.cit.intercloud.client.model.method.TemplateModel;
 import de.tu_berlin.cit.intercloud.client.model.representation.impl.UriListRepresentationModel;
-import de.tu_berlin.cit.intercloud.webapp.panels.request.AttributeListInputPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.request.KindRequestPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.method.request.AttributeListInputPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.method.request.KindRequestPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.method.response.UriResponsePanel;
 import de.tu_berlin.cit.intercloud.webapp.template.Template;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -38,7 +38,7 @@ public class ExamplePage extends Template {
         this.add(new UriResponsePanel("uriResponsePanel", new LoadableDetachableModel<UriListRepresentationModel>() {
             @Override
             protected UriListRepresentationModel load() {
-                return createEmapmleUriRepresentationModel();
+                return createExapmleUriRepresentationModel();
             }
         }));
 
@@ -108,7 +108,7 @@ public class ExamplePage extends Template {
         return kindModel;
     }
 
-    public UriListRepresentationModel createEmapmleUriRepresentationModel() {
+    public UriListRepresentationModel createExapmleUriRepresentationModel() {
         UriListRepresentationModel representationModel = new UriListRepresentationModel();
         representationModel.setUriList(Arrays.asList("xmpp://john@doe.de/asdf#/path", "xmpp://example.component.de/asdf#/path0/path1"));
         return representationModel;

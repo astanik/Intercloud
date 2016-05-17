@@ -1,8 +1,9 @@
-package de.tu_berlin.cit.intercloud.webapp.panels.plugin;
+package de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl;
 
 import de.tu_berlin.cit.intercloud.client.model.representation.impl.UriListRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.representation.impl.UriRepresentationModel;
-import de.tu_berlin.cit.intercloud.webapp.panels.response.UriResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.method.response.UriResponsePanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 

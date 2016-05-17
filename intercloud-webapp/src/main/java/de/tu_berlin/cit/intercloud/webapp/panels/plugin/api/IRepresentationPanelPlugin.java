@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels.plugin;
+package de.tu_berlin.cit.intercloud.webapp.panels.plugin.api;
 
 import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
 import org.apache.wicket.markup.html.panel.Panel;

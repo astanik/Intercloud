@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels.response;
+package de.tu_berlin.cit.intercloud.webapp.panels.method.response;
 
 import de.tu_berlin.cit.intercloud.client.model.representation.occi.LinkModel;
 import de.tu_berlin.cit.intercloud.webapp.pages.BrowserPage;

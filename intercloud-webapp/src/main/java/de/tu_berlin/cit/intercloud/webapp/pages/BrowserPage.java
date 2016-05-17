@@ -11,22 +11,17 @@ import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.LoggingPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.AddressBarPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodRequestPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.plugin.IRepresentationPanelPlugin;
-import de.tu_berlin.cit.intercloud.webapp.panels.plugin.RepresentationPanelRegistry;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl.RepresentationPanelRegistry;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +46,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         // alert
         this.alert = newAlert("alert");
         this.add(this.alert);
-        this.add(new XwadlForm("xwadlForm"));
+        this.add(new AddressBarPanel("addressBarPanel", this.uri, this));
 
         // Code section, kind of debugging
         this.add(new LoggingPanel("loggingPanel", this.loggingModel));
@@ -64,7 +59,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
 
         // request xwadl
         if (!uri.getObject().getPath().trim().isEmpty()) {
-            requestXwadl(uri.getObject());
+            browse(uri.getObject());
         }
     }
 
@@ -135,18 +130,18 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         return ComponentUtils.displayBlock(alert);
     }
 
-    private void requestXwadl(String path) {
+    @Override
+    public void browse(String jid, String restPath) {
         try {
-            XmppURI oldUri = this.uri.getObject();
-            this.uri.setObject(new XmppURI(oldUri.getJID(), path));
-            requestXwadl(this.uri.getObject());
+            this.uri.setObject(new XmppURI(jid, restPath));
+            browse(this.uri.getObject());
         } catch (URISyntaxException e) {
-            logger.error("Failed to set Uri. Path \"{}\"is not supported. ", path, e);
+            logger.error("Failed to set Uri. Path \"{}\"is not supported. ", restPath, e);
             logError(e);
         }
     }
 
-    private void requestXwadl(XmppURI uri) {
+    private void browse(XmppURI uri) {
         try {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(uri);
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
@@ -201,26 +196,6 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         } catch (Exception e) {
             logError(e);
             logger.error("Failed to execute request. method: {}, representation: {}", methodModel, requestRepresentation, e);
-        }
-    }
-
-    private class XwadlForm extends Form {
-        private String resourcePath = BrowserPage.this.uri.getObject().getPath();
-
-        public XwadlForm(String markupId) {
-            super(markupId);
-
-            this.add(new Label("domain", BrowserPage.this.uri.getObject().getJID()));
-            this.add(new TextField<>("resourcePath", new PropertyModel(this, "resourcePath")).setRequired(true));
-            AjaxButton button = new AjaxButton("getXwadlBtn") {
-                @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    BrowserPage.this.requestXwadl(resourcePath);
-                    setResponsePage(BrowserPage.this);
-                }
-            };
-            this.add(button);
-            this.setDefaultButton(button);
         }
     }
 }

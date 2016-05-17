@@ -11,32 +11,21 @@
     </div>
 
     <div class="row">
-        <form wicket:id="xwadlForm">
-            <div class="form-group col-md-12">
-                <div class="input-group">
-                    <div wicket:id="domain" class="input-group-addon">[domain]</div>
-                    <input wicket:id="resourcePath" type="text" class="form-control" placeholder="Path">
-                    <div class="input-group-btn">
-                        <button wicket:id="getXwadlBtn" type="submit" class="btn btn-default">
-                            <span class="glyphicon glyphicon-save-file"></span> Get
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
+        <!-- REST path address bar -->
+        <div class="col-md-12" wicket:id="addressBarPanel"/>
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <div wicket:id="alert"/>
-        </div>
+        <div wicket:id="alert"/>
     </div>
 
     <div class="row">
+        <!-- Table of available Methods-->
         <div class="col-md-12" wicket:id="methodPanel"/>
     </div>
 
     <div class="row">
+        <!-- Representation and Parameter Panel -->
         <div class="col-md-12" wicket:id="browserPanel"/>
     </div>
 

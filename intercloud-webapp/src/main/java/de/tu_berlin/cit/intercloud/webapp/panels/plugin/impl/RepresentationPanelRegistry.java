@@ -1,6 +1,8 @@
-package de.tu_berlin.cit.intercloud.webapp.panels.plugin;
+package de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl;
 
 import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
+import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelRegistry;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
