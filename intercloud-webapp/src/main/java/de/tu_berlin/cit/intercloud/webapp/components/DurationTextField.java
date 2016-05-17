@@ -6,6 +6,9 @@ import org.apache.wicket.util.convert.IConverter;
 
 import java.time.Duration;
 
+/**
+ * A text field for a {@link Duration}.
+ */
 public class DurationTextField extends TextField<Duration> {
     private IConverter durationConverter = new DurationConverter();
 

@@ -6,6 +6,9 @@ import org.apache.wicket.util.convert.IConverter;
 import java.time.Duration;
 import java.util.Locale;
 
+/**
+ * Converts a {@link Duration} into a {@link String} and vise versa.
+ */
 public class DurationConverter implements IConverter<Duration> {
 
     @Override

@@ -6,6 +6,9 @@ import org.apache.wicket.util.convert.IConverter;
 
 import java.util.List;
 
+/**
+ * A TextArea for a {@link List<String>}.
+ */
 public class ListTextArea extends TextArea<List<String>> {
     IConverter listConverter = new ListConverter();
 

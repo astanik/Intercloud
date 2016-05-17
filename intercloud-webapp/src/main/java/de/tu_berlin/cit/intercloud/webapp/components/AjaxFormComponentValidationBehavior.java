@@ -7,11 +7,21 @@ import org.apache.wicket.markup.html.basic.Label;
 
 import java.util.Set;
 
+/**
+ * This Ajax behaviour may be added to a {@link org.apache.wicket.markup.html.form.FormComponent}.
+ * It validates the form component and
+ * enables to mark a label as invalid
+ * by setting its css class to "invalid".
+ */
 public class AjaxFormComponentValidationBehavior extends AjaxFormComponentUpdatingBehavior {
     private final Label label;
     private ValidAttributeModifier valid = new ValidAttributeModifier();
     private InvalidAttributeModifier invalid = new InvalidAttributeModifier();
 
+    /**
+     * @param event The event when this behaviour is performed.
+     * @param label The label where to set or rather unset the "invalid" css class.
+     */
     public AjaxFormComponentValidationBehavior(String event, Label label) {
         super(event);
         this.label = label;

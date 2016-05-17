@@ -6,6 +6,9 @@ import org.apache.wicket.util.convert.IConverter;
 
 import java.util.Map;
 
+/**
+ * A TextArea for a {@link Map<String, String>}.
+ */
 public class MapTextArea extends TextArea<Map<String, String>> {
     IConverter mapConverter = new MapConverter();
 

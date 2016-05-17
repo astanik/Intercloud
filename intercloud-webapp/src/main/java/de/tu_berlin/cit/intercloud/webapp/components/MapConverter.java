@@ -8,6 +8,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Converts a {@link Map<String, String>} into a {@link String} and vise versa.
+ * The {@link String}'s format is similar to {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.MapType}.
+ */
 public class MapConverter implements IConverter<Map<String, String>> {
     public static final String KEY_VALUE_SEPARATOR = "=";
     public static final String KEY_VALUE_SPLIT_PATTERN = "\\s*" + KEY_VALUE_SEPARATOR + "\\s*"; // split and trim

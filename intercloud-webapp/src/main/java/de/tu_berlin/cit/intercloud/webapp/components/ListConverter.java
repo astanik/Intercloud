@@ -7,6 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Converts a {@link List<String>} into a {@link String} and vise versa.
+ * The {@link String}'s format is similar to {@link de.tu_berlin.cit.intercloud.occi.core.xml.representation.LinkType}.
+ */
 public class ListConverter implements IConverter<List<String>> {
     public static final String LIST_SEPARATOR = ";";
     public static final String LIST_SPLIT_PATTERN = "\\s*" + LIST_SEPARATOR + "\\s*"; // split and trim

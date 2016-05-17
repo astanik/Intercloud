@@ -21,6 +21,10 @@ import org.apache.wicket.request.resource.ContextRelativeResourceReference;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This page provides the basic layout of the application.
+ * It defines a bootstrap navigation bar.
+ */
 public abstract class Template extends WebPage {
 
     public Template() {
