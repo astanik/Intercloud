@@ -2,8 +2,8 @@ package de.tu_berlin.cit.intercloud.webapp.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
-import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.model.method.MethodModel;
+import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.client.profiling.api.IProfilingCommand;
 import de.tu_berlin.cit.intercloud.client.profiling.impl.ProfilingService;
 import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudClient;
@@ -11,6 +11,8 @@ import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
 import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.LoggingPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.IRepresentationPanelPlugin;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.RepresentationPanelRegistry;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
@@ -18,17 +20,10 @@ import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -37,14 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
-import java.util.List;
 
-public class BrowserPage extends UserTemplate {
+public class BrowserPage extends UserTemplate implements IBrowserPage {
     private static final Logger logger = LoggerFactory.getLogger(BrowserPage.class);
 
-    private MethodTable methodTable;
-    private RequestForm requestForm;
-    private ResponseContainer responseContainer;
     private Alert alert;
 
     private IModel<XmppURI> uri;
@@ -66,17 +57,12 @@ public class BrowserPage extends UserTemplate {
         this.add(new LoggingPanel("loggingPanel", this.loggingModel));
 
         // method table
-        this.methodTable = new MethodTable("methodTable", methodModelList);
-        this.add(methodTable);
+        this.add(new MethodPanel("methodPanel", methodModelList, this));
 
         // request / response
-        this.requestForm = new RequestForm("requestForm");
-        this.add(this.requestForm);
-        this.responseContainer = new ResponseContainer("responseContainer");
-        this.add(this.responseContainer);
+        this.add(new EmptyPanel("browserPanel"));
 
         // request xwadl
-
         if (!uri.getObject().getPath().trim().isEmpty()) {
             requestXwadl(uri.getObject());
         }
@@ -153,7 +139,6 @@ public class BrowserPage extends UserTemplate {
         try {
             XmppURI oldUri = this.uri.getObject();
             this.uri.setObject(new XmppURI(oldUri.getJID(), path));
-
             requestXwadl(this.uri.getObject());
         } catch (URISyntaxException e) {
             logger.error("Failed to set Uri. Path \"{}\"is not supported. ", path, e);
@@ -166,8 +151,7 @@ public class BrowserPage extends UserTemplate {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(uri);
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
             this.methodModelList.setObject(intercloudClient.getMethods());
-            this.requestForm.setModel(null, null);
-            this.responseContainer.setModel(null);
+            this.replace(new EmptyPanel("browserPanel"));
             ComponentUtils.displayNone(this.alert);
         } catch (Exception e) {
             logger.error("Failed to request xwadl from {}", uri, e);
@@ -176,20 +160,47 @@ public class BrowserPage extends UserTemplate {
         }
     }
 
-    private void executeMethod(IRepresentationModel representationModel, MethodModel methodModel) {
+    @Override
+    public void selectMethod(MethodModel methodModel) {
+        if (null == methodModel.getRequestMediaType()) {
+            // execute method directly if no request media type is given
+            this.executeMethod(methodModel, null);
+        } else {
+            // get request representation model
+            try {
+                IRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
+                        .getIntercloudClient(methodModel.getUri())
+                        .getRepresentationModel(methodModel);
+                // display request
+                this.replace(new MethodRequestPanel("browserPanel",
+                        Model.of(methodModel), Model.of(representation), BrowserPage.this));
+                // hide alert
+                ComponentUtils.displayNone(alert);
+            } catch (Throwable t) {
+                logError(t);
+                logger.error("Could not create request model.", t);
+            }
+        }
+    }
+
+    @Override
+    public void executeMethod(MethodModel methodModel, IRepresentationModel requestRepresentation) {
         try {
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
                     .getIntercloudClient(methodModel.getUri());
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
-            IRepresentationModel representation = intercloudClient.executeMethod(methodModel, representationModel);
+            IRepresentationModel responseRepresentation = intercloudClient.executeMethod(methodModel, requestRepresentation);
             // display response
-            this.responseContainer.setModel(representation);
-            // hide request
-            this.requestForm.setModel(null, null);
+            IRepresentationPanelPlugin plugin = RepresentationPanelRegistry.getInstance().getPlugin(responseRepresentation);
+            if (null != plugin) {
+                this.replace(plugin.getResponsePanel("browserPanel", responseRepresentation));
+            } else {
+                this.replace(new EmptyPanel("browserPanel"));
+            }
             ComponentUtils.displayNone(this.alert);
         } catch (Exception e) {
             logError(e);
-            logger.error("Failed to execute request. method: {}, representation: {}", methodModel, representationModel, e);
+            logger.error("Failed to execute request. method: {}, representation: {}", methodModel, requestRepresentation, e);
         }
     }
 
@@ -210,163 +221,6 @@ public class BrowserPage extends UserTemplate {
             };
             this.add(button);
             this.setDefaultButton(button);
-        }
-    }
-
-    private class MethodTable extends WebMarkupContainer {
-
-        public MethodTable(String id, IModel<List<MethodModel>> methodList) {
-            super(id);
-
-            this.add(new ListView<MethodModel>("methodList", methodList) {
-                @Override
-                protected void populateItem(ListItem<MethodModel> listItem) {
-                    MethodModel methodModel = listItem.getModelObject();
-                    listItem.add(newLink("methodLink", methodModel));
-                    listItem.add(newLabel("documentation", methodModel.getDocumentation()));
-                    listItem.add(newLabel("request", methodModel.getRequestMediaType()));
-                    listItem.add(newLabel("response", methodModel.getResponseMediaType()));
-                }
-            });
-        }
-
-        private Label newLabel(String markupId, String s) {
-            Label label = new Label(markupId);
-            if (null != s) {
-                label.setDefaultModel(Model.of(s));
-            }
-            return label;
-        }
-
-        private AbstractLink newLink(String markupId, MethodModel methodModel) {
-            AbstractLink link = new Link(markupId) {
-                @Override
-                public void onClick() {
-                    if (null == methodModel.getRequestMediaType()) {
-                        // execute method directly if no request media type is given
-                        BrowserPage.this.executeMethod(null, methodModel);
-                    } else {
-                        // get request representation model
-                        try {
-                            IRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
-                                    .getIntercloudClient(methodModel.getUri())
-                                    .getRepresentationModel(methodModel);
-                            // display request
-                            BrowserPage.this.requestForm.setModel(representation, methodModel);
-                            // hide response
-                            BrowserPage.this.responseContainer.setModel(null);
-                            ComponentUtils.displayNone(alert);
-                        } catch (Exception e) {
-                            logError(e);
-                            logger.error("Could not create request model.", e);
-                        }
-                    }
-                }
-            }.setBody(Model.of(methodModel.getType()));
-
-            if (null == methodModel.getRequestMediaType()) {
-                link.add(new AttributeAppender("class", " btn-success"));
-            } else if ("xml/occi".equals(methodModel.getRequestMediaType())) {
-                link.add(new AttributeAppender("class", " btn-info"));
-            } else {
-                link.setEnabled(false);
-                link.add(new AttributeAppender("class", " disables"));
-            }
-            return link;
-        }
-    }
-
-    public class RequestForm extends Form {
-        private Model<MethodModel> methodModel = Model.of();
-        private Model<IRepresentationModel> representationModel = Model.of();
-        private Panel requestPanel = null;
-
-        public RequestForm(String markupId) {
-            super(markupId);
-
-            this.add(new AjaxButton("requestSubmit") {
-                @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    BrowserPage.this.executeMethod(representationModel.getObject(), methodModel.getObject());
-                    setResponsePage(BrowserPage.this);
-                }
-            });
-
-            this.add(new EmptyPanel("requestPanel"));
-        }
-
-        @Override
-        protected void onConfigure() {
-            IRepresentationModel representation = representationModel.getObject();
-            IRepresentationPanelPlugin panelPlugin = RepresentationPanelRegistry.getInstance().getPlugin(representation);
-            if (null != panelPlugin) {
-                this.requestPanel = panelPlugin.getRequestPanel("requestPanel", representation);
-            } else {
-                this.requestPanel = null;
-            }
-
-            super.onConfigure();
-        }
-
-        @Override
-        protected void onBeforeRender() {
-            if (null != this.requestPanel) {
-                this.replace(this.requestPanel);
-            }
-
-            super.onBeforeRender();
-        }
-
-        @Override
-        public boolean isVisible() {
-            return null != this.requestPanel;
-        }
-
-        public void setModel(IRepresentationModel representation, MethodModel method) {
-            this.representationModel.setObject(representation);
-            this.methodModel.setObject(method);
-        }
-    }
-
-    private class ResponseContainer extends WebMarkupContainer {
-        private Model<IRepresentationModel> representationModel = Model.of();
-        private Panel responsePanel = null;
-
-        public ResponseContainer(String markupId) {
-            super(markupId);
-
-            this.add(new EmptyPanel("responsePanel"));
-        }
-
-        @Override
-        protected void onConfigure() {
-            IRepresentationModel representation = representationModel.getObject();
-            IRepresentationPanelPlugin panelPlugin = RepresentationPanelRegistry.getInstance().getPlugin(representation);
-            if (null != panelPlugin) {
-                this.responsePanel = panelPlugin.getResponsePanel("responsePanel", representation);
-            } else {
-                this.responsePanel = null;
-            }
-
-            super.onConfigure();
-        }
-
-        @Override
-        protected void onBeforeRender() {
-            if (null != this.responsePanel) {
-                this.replace(this.responsePanel);
-            }
-
-            super.onBeforeRender();
-        }
-
-        @Override
-        public boolean isVisible() {
-            return null != this.responsePanel;
-        }
-
-        public void setModel(IRepresentationModel representation) {
-            this.representationModel.setObject(representation);
         }
     }
 }

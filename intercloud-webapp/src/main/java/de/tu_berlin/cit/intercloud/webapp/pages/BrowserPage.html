@@ -33,34 +33,11 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12" wicket:id="methodTable">
-            <table class="table table-striped">
-                <tr>
-                    <th>Method</th>
-                    <th>Documentation</th>
-                    <th>Request</th>
-                    <th>Response</th>
-                </tr>
-                <tr wicket:id="methodList">
-                    <td><a wicket:id="methodLink" class="btn btn-default"></a></td>
-                    <td wicket:id="documentation"></td>
-                    <td wicket:id="request"></td>
-                    <td wicket:id="response"></td>
-                </tr>
-            </table>
-        </div>
+        <div class="col-md-12" wicket:id="methodPanel"/>
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <form wicket:id="requestForm">
-                <wicket:panel wicket:id="requestPanel"/>
-                <button wicket:id="requestSubmit" type="submit" class="btn btn-danger">Submit</button>
-            </form>
-        </div>
-        <div class="col-md-12" wicket:id="responseContainer">
-                <div wicket:id="responsePanel"/>
-        </div>
+        <div class="col-md-12" wicket:id="browserPanel"/>
     </div>
 
     <!-- Button trigger modal -->

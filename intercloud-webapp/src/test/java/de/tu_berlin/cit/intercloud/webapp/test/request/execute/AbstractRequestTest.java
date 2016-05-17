@@ -9,6 +9,7 @@ import de.tu_berlin.cit.intercloud.webapp.MockHelper;
 import de.tu_berlin.cit.intercloud.webapp.XwadlFileBuilder;
 import de.tu_berlin.cit.intercloud.webapp.XwadlFileConfig;
 import de.tu_berlin.cit.intercloud.webapp.pages.BrowserPage;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.profiling.ListListener;
 import de.tu_berlin.cit.intercloud.webapp.profiling.ProfilingUtil;
 import de.tu_berlin.cit.rwx4j.XmppURI;
@@ -83,21 +84,21 @@ abstract class AbstractRequestTest extends AbstractBenchmark {
             tester.assertRenderedPage(BrowserPage.class);
 
             // test post method
-            tester.clickLink("methodTable:methodList:0:methodLink");
+            tester.clickLink("methodPanel:methodList:0:methodLink");
             tester.assertRenderedPage(BrowserPage.class);
 
             addOcciLinks(browserPage);
 
-            tester.executeAjaxEvent("requestForm:requestSubmit", "click");
+            tester.executeAjaxEvent("browserPanel:requestForm:requestSubmit", "click");
             tester.assertRenderedPage(BrowserPage.class);
         }
     }
 
     private void addOcciLinks(BrowserPage browserPage) throws NoSuchFieldException, IllegalAccessException {
-        BrowserPage.RequestForm requestForm = (BrowserPage.RequestForm) browserPage.get("requestForm");
-        Field field = requestForm.getClass().getDeclaredField("representationModel");
+        MethodRequestPanel requestPanel = (MethodRequestPanel) browserPage.get("browserPanel");
+        Field field = requestPanel.getClass().getDeclaredField("representationModel");
         field.setAccessible(true);
-        Model model = (Model) field.get(requestForm);
+        Model model = (Model) field.get(requestPanel);
         OcciRepresentationModel representationModel = (OcciRepresentationModel) model.getObject();
         model.setObject(new OcciRepresentationModel(representationModel.getKind(),
                 representationModel.getMixins(),

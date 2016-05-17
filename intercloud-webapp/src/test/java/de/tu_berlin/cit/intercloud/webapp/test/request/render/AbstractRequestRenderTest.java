@@ -66,7 +66,7 @@ abstract class AbstractRequestRenderTest extends AbstractBenchmark {
         testBrowserPage(xwadlConfig, WARMUP_ROUNDS);
         ListListener listener = new ListListener();
         profilingService.setListener(listener);
-        profilingService.setFilter("methodTable.methodList.0.methodLink");
+        profilingService.setFilter("methodPanel.methodList.0.methodLink");
         testBrowserPage(xwadlConfig, TEST_ROUNDS);
         ProfilingUtil.writeToCsv(listener.getList(), xwadlConfig.toString(), this.getClass().getSimpleName());
     }
@@ -79,7 +79,7 @@ abstract class AbstractRequestRenderTest extends AbstractBenchmark {
             tester.assertRenderedPage(BrowserPage.class);
 
             // test post method
-            tester.clickLink("methodTable:methodList:0:methodLink");
+            tester.clickLink("methodPanel:methodList:0:methodLink");
             tester.assertRenderedPage(BrowserPage.class);
         }
     }
