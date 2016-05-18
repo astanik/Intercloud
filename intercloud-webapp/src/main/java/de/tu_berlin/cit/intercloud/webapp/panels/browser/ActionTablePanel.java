@@ -56,12 +56,7 @@ public class ActionTablePanel extends Panel {
     }
 
     @Override
-    protected void onConfigure() {
-        super.onConfigure();
-        if (null == this.actionList.getObject() || this.actionList.getObject().isEmpty()) {
-            this.setVisible(false);
-        } else {
-            this.setVisible(true);
-        }
+    public boolean isVisible() {
+        return null != this.actionList.getObject() && !this.actionList.getObject().isEmpty();
     }
 }

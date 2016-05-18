@@ -66,12 +66,7 @@ public class MethodTablePanel extends Panel {
     }
 
     @Override
-    protected void onConfigure() {
-        super.onConfigure();
-        if (null == this.methodList.getObject() || this.methodList.getObject().isEmpty()) {
-            this.setVisible(false);
-        } else {
-            this.setVisible(true);
-        }
+    public boolean isVisible() {
+        return null != this.methodList.getObject() && !this.methodList.getObject().isEmpty();
     }
 }

@@ -1,10 +1,7 @@
 package de.tu_berlin.cit.intercloud.webapp.panels;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
-import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
-import de.tu_berlin.cit.intercloud.webapp.pages.DiscoverItemsPage;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import de.tu_berlin.cit.intercloud.webapp.components.Alert;
+import de.tu_berlin.cit.intercloud.webapp.pages.DiscoverPage;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -15,24 +12,15 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 
 public class LoginPanel extends Panel {
-    private final Alert alert;
+    private Alert alert;
 
     public LoginPanel(String id) {
         super(id);
 
-        alert = newAlert("loginAlert");
+        alert = new Alert("loginAlert", Model.of());
         add(alert);
 
         add(new LoginForm("loginForm"));
-    }
-
-    private Alert newAlert(String markupId) {
-        Alert alert = new Alert(markupId, Model.of());
-        alert.setOutputMarkupId(true);
-        alert.type(Alert.Type.Warning);
-        alert.withMessage(Model.of("Could not log in."));
-        ComponentUtils.displayNone(alert);
-        return alert;
     }
 
     public class LoginForm extends Form {
@@ -46,13 +34,13 @@ public class LoginPanel extends Panel {
             this.add(new TextField("username").setRequired(true));
             this.add(new PasswordTextField("password").setRequired(true));
 
-            Button submitBtn = new AjaxButton("loginBtn", Model.of("Sign In")) {
+            Button submitBtn = new Button("loginBtn", Model.of("Sign In")) {
                 @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                public void onSubmit() {
                     if (AuthenticatedWebSession.get().signIn(username, password))
-                        setResponsePage(DiscoverItemsPage.class);
+                        setResponsePage(DiscoverPage.class);
                     else {
-                        target.add(ComponentUtils.displayBlock(alert));
+                        LoginPanel.this.alert.withWarning(Model.of("Could not log in."), Model.of());
                     }
                 }
             };

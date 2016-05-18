@@ -1,6 +1,5 @@
 package de.tu_berlin.cit.intercloud.webapp.pages;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.tu_berlin.cit.intercloud.client.model.LoggingModel;
 import de.tu_berlin.cit.intercloud.client.model.action.ActionModel;
 import de.tu_berlin.cit.intercloud.client.model.action.ParameterModel;
@@ -10,19 +9,18 @@ import de.tu_berlin.cit.intercloud.client.profiling.api.IProfilingCommand;
 import de.tu_berlin.cit.intercloud.client.profiling.impl.ProfilingService;
 import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
-import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
-import de.tu_berlin.cit.intercloud.webapp.panels.browser.BreadcrumbPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.browser.LoggingPanel;
+import de.tu_berlin.cit.intercloud.webapp.components.Alert;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.AddressBarPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.BreadcrumbPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.LoggingPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.MethodTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.api.IRepresentationPanelPlugin;
 import de.tu_berlin.cit.intercloud.webapp.panels.plugin.impl.RepresentationPanelRegistry;
 import de.tu_berlin.cit.intercloud.webapp.template.UserTemplate;
 import de.tu_berlin.cit.rwx4j.XmppURI;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.IModel;
@@ -74,7 +72,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         this.add(new BreadcrumbPanel("breadcrumb", uri, (XmppURI redirectUri) -> new BrowserPage(Model.of(redirectUri))));
 
         // alert
-        this.alert = newAlert("alert");
+        this.alert = new Alert("alert", Model.of());
         this.add(this.alert);
         this.add(new AddressBarPanel("addressBarPanel", this.uri, this));
 
@@ -150,24 +148,6 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         );
     }
 
-    private Alert newAlert(String markupId) {
-        Alert alert = new Alert(markupId, Model.of(), Model.of());
-        alert.type(Alert.Type.Danger);
-        return ComponentUtils.displayNone(alert);
-    }
-
-    /**
-     * Displays the stack trace of an exception in the alert panel.
-     * @param t
-     * @return
-     */
-    private Alert logError(Throwable t) {
-        alert.type(Alert.Type.Danger);
-        alert.withHeader(Model.of(ExceptionUtils.getMessage(t)));
-        alert.withMessage(Model.of(ExceptionUtils.getStackTrace(t)));
-        return ComponentUtils.displayBlock(alert);
-    }
-
     @Override
     public void browse(String jid, String restPath) {
         try {
@@ -176,7 +156,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
             this.replace(new EmptyPanel("browserPanel"));
         } catch (URISyntaxException e) {
             logger.error("Failed to set Uri. Path \"{}\"is not supported. ", restPath, e);
-            logError(e);
+            this.alert.withError(e);
         }
     }
 
@@ -187,12 +167,12 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
             this.methodModelList.setObject(intercloudClient.getMethods());
             this.actionModelList.setObject(intercloudClient.getActions());
-            ComponentUtils.displayNone(this.alert);
+            this.alert.noMessage();
         } catch (Exception e) {
             logger.error("Failed to request xwadl from {}", uri, e);
             this.methodModelList.setObject(null);
             this.actionModelList.setObject(null);
-            logError(e);
+            this.alert.withError(e);
         }
     }
 
@@ -211,9 +191,9 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
                 this.replace(new MethodRequestPanel("browserPanel",
                         Model.of(methodModel), Model.of(representation), BrowserPage.this));
                 // hide alert
-                ComponentUtils.displayNone(alert);
+                this.alert.noMessage();
             } catch (Throwable t) {
-                logError(t);
+                this.alert.withError(t);
                 logger.error("Could not create request model.", t);
             }
         }
@@ -235,9 +215,9 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
                 this.replace(new EmptyPanel("browserPanel"));
             }
             // hide alert
-            ComponentUtils.displayNone(this.alert);
+            this.alert.noMessage();
         } catch (Throwable t) {
-            logError(t);
+            this.alert.withError(t);
             logger.error("Failed to execute request. method: {}, representation: {}", methodModel, requestRepresentation, t);
         }
     }
@@ -256,10 +236,10 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
                 this.replace(new ActionRequestPanel("browserPanel",
                         Model.of(actionModel), new ListModel<>(parameters), this));
                 // hide alert
-                ComponentUtils.displayNone(alert);
+                this.alert.noMessage();
             }
         } catch (Throwable t) {
-            logError(t);
+            this.alert.withError(t);
             logger.error("Failed to select action. {}", actionModel, t);
         }
     }
@@ -273,11 +253,11 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
             // display result
             this.replace(new Label("browserPanel", parameterModel));
             // hide alert
-            ComponentUtils.displayNone(alert);
+            this.alert.noMessage();
             // finally re-browse the resource, since the action may changed its state
             //browse();
         } catch (Throwable t) {
-            logError(t);
+            this.alert.withError(t);
             logger.error("Failed to execute action. {}, {}", actionModel, parameterModelList, t);
         }
     }

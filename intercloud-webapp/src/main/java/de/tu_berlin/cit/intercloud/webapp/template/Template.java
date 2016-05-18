@@ -9,7 +9,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarExternalLink;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
-import de.tu_berlin.cit.intercloud.webapp.pages.DiscoverItemsPage;
+import de.tu_berlin.cit.intercloud.webapp.pages.DiscoverPage;
 import de.tu_berlin.cit.intercloud.webapp.pages.LoginPage;
 import de.tu_berlin.cit.intercloud.webapp.pages.WelcomePage;
 import org.apache.wicket.markup.html.WebPage;
@@ -56,7 +56,7 @@ public abstract class Template extends WebPage {
                     }.setIconType(GlyphIconType.user))
             );
             navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                    new NavbarButton(DiscoverItemsPage.class, Model.of("Discover")).setIconType(GlyphIconType.search)));
+                    new NavbarButton(DiscoverPage.class, Model.of("Discover")).setIconType(GlyphIconType.search)));
         } else {
             navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT,
                     new NavbarButton(LoginPage.class, Model.of("Login")).setIconType(GlyphIconType.login)));
