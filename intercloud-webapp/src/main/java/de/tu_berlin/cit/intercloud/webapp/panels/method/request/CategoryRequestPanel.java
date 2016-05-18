@@ -19,8 +19,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+/**
+ * Displays a {@link CategoryModel} sub-type for the purpose of a request.
+ */
 public abstract class CategoryRequestPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(CategoryRequestPanel.class);
+    // additional container to enable ajax refresh when applying templates
     private final WebMarkupContainer container;
 
     public CategoryRequestPanel(String markupId, IModel<? extends CategoryModel> categoryModel) {
@@ -31,9 +35,11 @@ public abstract class CategoryRequestPanel extends Panel {
         this.add(this.container);
 
         CategoryModel category = categoryModel.getObject();
+        // display OCCI identification
         this.container.add(new Label("type", getType()));
         this.container.add(new Label("term", category.getTerm()));
         this.container.add(new Label("schema", category.getSchema()));
+        // only display title if present
         PropertyModel<String> title = new PropertyModel<>(category, "title");
         this.container.add(new WebMarkupContainer("titleRow") {
             @Override
@@ -41,8 +47,10 @@ public abstract class CategoryRequestPanel extends Panel {
                 return null != title.getObject();
             }
         }.add(new Label("title", title)));
+        // display attributes
         this.container.add(new AttributeListInputPanel("attributePanel", new ListModel<>(new ArrayList<>(category.getAttributes()))));
 
+        // display templates
         DropDownChoice<TemplateModel> templateChoice = new DropDownChoice<>("templates", new Model<>(),
                 category.getTemplates(), new ChoiceRenderer<>("name"));
         templateChoice.add(new AjaxFormComponentUpdatingBehavior("change") {
@@ -55,6 +63,7 @@ public abstract class CategoryRequestPanel extends Panel {
                     logger.error("Could apply template. title: {}", template.getName(), e);
                     target.appendJavaScript("alert('Failed to apply template.');");
                 }
+                // refresh this panel or rather its container after applying template
                 target.add(container);
             }
         });
@@ -71,5 +80,8 @@ public abstract class CategoryRequestPanel extends Panel {
         return container;
     }
 
+    /**
+     * @return The Category sub-type: Kind, Mixin or Link.
+     */
     public abstract String getType();
 }

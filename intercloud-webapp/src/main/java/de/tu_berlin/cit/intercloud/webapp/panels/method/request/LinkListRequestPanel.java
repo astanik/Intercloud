@@ -9,6 +9,10 @@ import org.apache.wicket.model.util.ListModel;
 
 import java.util.List;
 
+/**
+ * Displays a list of {@link LinkModel}s for the purpose of a request,
+ * including their {@link de.tu_berlin.cit.intercloud.client.model.representation.occi.MixinModel}s.
+ */
 public class LinkListRequestPanel extends Panel{
     public LinkListRequestPanel(String markupId, IModel<List<LinkModel>> linkModelList) {
         super(markupId);

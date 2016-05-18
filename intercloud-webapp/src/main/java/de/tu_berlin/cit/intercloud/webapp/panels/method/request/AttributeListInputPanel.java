@@ -8,6 +8,10 @@ import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
+/**
+ * Displays a list of {@link AttributeModel}s for user input.
+ * Displays every single {@link AttributeModel} with {@link AttributeInputPanel}.
+ */
 public class AttributeListInputPanel extends Panel {
 
     public AttributeListInputPanel(String markupId, IModel<List<AttributeModel>> attributesModel) {

@@ -10,6 +10,10 @@ import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
+/**
+ * Displays a list of {@link ParameterModel}s for user input.
+ * Displays every single {@link ParameterModel} with {@link ParameterInputPanel}.
+ */
 public class ParameterListInputPanel extends Panel {
 
     public ParameterListInputPanel(String markupId, IModel<List<ParameterModel>> parameterModels) {

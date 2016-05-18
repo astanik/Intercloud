@@ -8,11 +8,16 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+/**
+ * Displays a {@link LinkModel} for the purpose of a request, without its
+ * {@link de.tu_berlin.cit.intercloud.client.model.representation.occi.MixinModel}s.
+ */
 public class LinkRequestPanel extends CategoryRequestPanel {
     public LinkRequestPanel(String markupId, IModel<LinkModel> linkModel) {
         super(markupId, linkModel);
 
         LinkModel link = linkModel.getObject();
+        // display link specific properties
         getContainer().add(new Label("relation", link.getRelates()));
         getContainer().add(new TextField<>("target", new PropertyModel<>(link, "target"))
                 .add(new AjaxFormComponentUpdatingBehavior("blur") {

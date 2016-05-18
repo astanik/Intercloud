@@ -14,7 +14,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
+/**
+ * Displays an {@link OcciRepresentationModel} for the purpose of a request.
+ */
 public class OcciRequestPanel extends Panel {
+    // store link list panel to refresh with ajax when adding links
     private final LinkListRequestPanel linkListPanel;
 
     public OcciRequestPanel(String id, IModel<OcciRepresentationModel> representationModel) {
@@ -37,7 +41,7 @@ public class OcciRequestPanel extends Panel {
         this.linkListPanel.setOutputMarkupId(true);
         this.add(this.linkListPanel);
 
-
+        // Add LINKs
         Form linkForm = new Form("linkForm");
         this.add(linkForm);
         DropDownChoice<LinkModel> linkChoice = new DropDownChoice<>("linkSelect", new Model<>(),

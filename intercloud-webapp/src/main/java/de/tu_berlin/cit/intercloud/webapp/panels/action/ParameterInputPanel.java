@@ -13,6 +13,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+/**
+ * Displays a {@link ParameterModel} for user input.
+ * It displays the {@link ParameterModel#name} and {@link ParameterModel#documentation}
+ * as labels.
+ * It displays the {@link ParameterModel#value} as an input field, while
+ * it uses the {@link AbstractFormComponentPanel} to do so.
+ */
 public class ParameterInputPanel extends Panel {
     private final Label nameLabel;
 
@@ -45,6 +52,13 @@ public class ParameterInputPanel extends Panel {
         }
     }
 
+    /**
+     * Creates an input form component for a {@link ParameterModel}
+     * depending on the {@link ParameterModel#type}.
+     * @param markupId
+     * @param parameter
+     * @return
+     */
     public AbstractFormComponentPanel newInputPanel(String markupId, ParameterModel parameter) {
         AbstractFormComponentPanel formComponent;
         switch (parameter.getType()) {

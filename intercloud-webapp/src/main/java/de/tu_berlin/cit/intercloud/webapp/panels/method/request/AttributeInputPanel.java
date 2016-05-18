@@ -17,6 +17,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+/**
+ * Displays an {@link AttributeModel} for user input.
+ * It displays the {@link AttributeModel#name} and {@link AttributeModel#description}
+ * as labels.
+ * It displays the {@link AttributeModel#value} as an input field, while
+ * it uses the {@link AbstractFormComponentPanel} to do so.
+ */
 public class AttributeInputPanel extends Panel {
     private final Label nameLabel;
     private final IModel<AttributeModel> attributeModel;
@@ -57,6 +64,13 @@ public class AttributeInputPanel extends Panel {
         return attribute.isMutable() || (!attribute.isMutable() && attribute.hasValue());
     }
 
+    /**
+     * Creates an input form component for an {@link AttributeModel}
+     * depending on the {@link AttributeModel#type}.
+     * @param markupId
+     * @param attribute
+     * @return
+     */
     public AbstractFormComponentPanel newInputPanel(String markupId, AttributeModel attribute) {
         AbstractFormComponentPanel formComponent;
         switch (attribute.getType()) {
