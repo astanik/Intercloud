@@ -14,6 +14,11 @@ import org.apache.wicket.model.Model;
 
 import java.util.List;
 
+/**
+ * This Panel displays the {@link MethodModel}s provided by a resource.
+ * In order to select an {@link MethodModel}, it invokes the
+ * {@link IBrowserPage#selectMethod(MethodModel)} of the {@link IBrowserPage} containing this panel.
+ */
 public class MethodTablePanel extends Panel {
     IModel<List<MethodModel>> methodList;
 

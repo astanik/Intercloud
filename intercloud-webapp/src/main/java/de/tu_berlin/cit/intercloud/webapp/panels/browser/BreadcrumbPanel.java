@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels;
+package de.tu_berlin.cit.intercloud.webapp.panels.browser;
 
 import de.tu_berlin.cit.rwx4j.XmppURI;
 import org.apache.wicket.markup.html.link.Link;
@@ -16,6 +16,13 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The panel provides a breadcrumb navigation
+ * (<a href="https://en.wikipedia.org/wiki/Breadcrumb_(navigation)">Wikipedia Breadcrumb</a>)
+ * for an {@link XmppURI}.
+ * It display each resource path element as a separate link. The link's response page is specified
+ * by the {@link IBreadcrumbRedirect}.
+ */
 public class BreadcrumbPanel extends Panel {
     private static Logger logger = LoggerFactory.getLogger(BreadcrumbPanel.class);
 
@@ -49,6 +56,10 @@ public class BreadcrumbPanel extends Panel {
         });
     }
 
+    /**
+     * @param uri The XMPP URI providing a specific path.
+     * @return A list path elements separated by "/".
+     */
     private List<Item> getItems(XmppURI uri) {
         List<Item> itemList = new ArrayList<>();
         if (null != uri.getPath()) {
@@ -64,6 +75,9 @@ public class BreadcrumbPanel extends Panel {
         return itemList;
     }
 
+    /**
+     * Represents a resource path element.
+     */
     private class Item implements Serializable {
         private static final long serialVersionUID = 67036265165046241L;
 

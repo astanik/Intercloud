@@ -11,6 +11,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+/**
+ * This panel provides an address bar which allows to enter the resources path
+ * of an XMPP entity.
+ */
 public class AddressBarPanel extends Panel {
     private String restPath;
 

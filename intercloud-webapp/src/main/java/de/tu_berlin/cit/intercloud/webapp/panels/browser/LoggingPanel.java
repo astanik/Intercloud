@@ -1,4 +1,4 @@
-package de.tu_berlin.cit.intercloud.webapp.panels;
+package de.tu_berlin.cit.intercloud.webapp.panels.browser;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.Code;
 import de.agilecoders.wicket.core.markup.html.bootstrap.block.CodeBehavior;
@@ -7,6 +7,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 
+/**
+ * This panel displays the received XWADL, send XML-REST and receive XML-REST documents
+ * provided by a {@link LoggingModel}.
+ */
 public class LoggingPanel extends Panel {
     public LoggingPanel(String id, IModel<LoggingModel> loggingModel) {
         super(id);

@@ -13,6 +13,12 @@ import org.apache.wicket.model.Model;
 
 import java.util.List;
 
+/**
+ * This panel displays the {@link ParameterModel}s of an {@link ActionModel}
+ * in order to perform a request.
+ * It provides a button to invoke {@link IBrowserPage#executeAction(ActionModel, List)}
+ * of the {@link IBrowserPage} containing this panel.
+ */
 public class ActionRequestPanel extends Panel {
 
     public ActionRequestPanel(String markupId,

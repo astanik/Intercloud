@@ -35,11 +35,9 @@ public class OcciRepresentationModelPlugin implements IRepresentationModelPlugin
 
     @Override
     public String getRepresentationString(OcciRepresentationModel representationModel) {
-        long start = System.currentTimeMillis();
         String representation = null != representationModel
                 ? RepresentationModelConverter.convertToXml(representationModel).toString()
                 : null;
-        logger.info("RepresentationModel --> XmlBean: {} ms", System.currentTimeMillis() - start);
         return representation;
     }
 

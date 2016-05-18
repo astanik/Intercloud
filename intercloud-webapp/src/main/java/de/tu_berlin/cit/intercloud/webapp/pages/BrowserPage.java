@@ -11,8 +11,8 @@ import de.tu_berlin.cit.intercloud.client.profiling.impl.ProfilingService;
 import de.tu_berlin.cit.intercloud.client.service.api.IIntercloudClient;
 import de.tu_berlin.cit.intercloud.webapp.IntercloudWebSession;
 import de.tu_berlin.cit.intercloud.webapp.components.ComponentUtils;
-import de.tu_berlin.cit.intercloud.webapp.panels.BreadcrumbPanel;
-import de.tu_berlin.cit.intercloud.webapp.panels.LoggingPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.BreadcrumbPanel;
+import de.tu_berlin.cit.intercloud.webapp.panels.browser.LoggingPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionRequestPanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.ActionTablePanel;
 import de.tu_berlin.cit.intercloud.webapp.panels.browser.AddressBarPanel;
@@ -34,6 +34,29 @@ import org.slf4j.LoggerFactory;
 import java.net.URISyntaxException;
 import java.util.List;
 
+/**
+ * This page is inspired by an Internet browser.
+ * It is used to browse REST with XMPP resources.
+ * The page contains the following components:
+ * <ul>
+ * <li>{@link BreadcrumbPanel}
+ * displays the current path of a resource and provides links to navigate through the path.
+ * </li>
+ * <li>{@link AddressBarPanel}
+ * similar to the Internet browser's address bar, it is used to enter a resource path.
+ * </li>
+ * <li>{@link Alert}
+ * provides a Bootstrap alert in order to display exceptions in form of the stacktrace.
+ * </li>
+ * <li>{@link MethodTablePanel}
+ * shows the available Methods offered by the current resource.
+ * </li>
+ * <li>{@link ActionTablePanel}</li>
+ * shows the available Actions offered by the current resource.
+ * <li>{@code browserPanel}</li>
+ * acts as a container to show either representations or parameters.
+ * </ul>
+ */
 public class BrowserPage extends UserTemplate implements IBrowserPage {
     private static final Logger logger = LoggerFactory.getLogger(BrowserPage.class);
 
@@ -69,7 +92,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
 
         // request xwadl
         if (!uri.getObject().getPath().trim().isEmpty()) {
-            browse(uri.getObject());
+            browse();
         }
     }
 
@@ -133,6 +156,11 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
         return ComponentUtils.displayNone(alert);
     }
 
+    /**
+     * Displays the stack trace of an exception in the alert panel.
+     * @param t
+     * @return
+     */
     private Alert logError(Throwable t) {
         alert.type(Alert.Type.Danger);
         alert.withHeader(Model.of(ExceptionUtils.getMessage(t)));
@@ -144,20 +172,21 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
     public void browse(String jid, String restPath) {
         try {
             this.uri.setObject(new XmppURI(jid, restPath));
-            browse(this.uri.getObject());
+            browse();
+            this.replace(new EmptyPanel("browserPanel"));
         } catch (URISyntaxException e) {
             logger.error("Failed to set Uri. Path \"{}\"is not supported. ", restPath, e);
             logError(e);
         }
     }
 
-    private void browse(XmppURI uri) {
+    private void browse() {
         try {
-            IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().newIntercloudClient(uri);
+            IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
+                    .newIntercloudClient(this.uri.getObject());
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
             this.methodModelList.setObject(intercloudClient.getMethods());
             this.actionModelList.setObject(intercloudClient.getActions());
-            this.replace(new EmptyPanel("browserPanel"));
             ComponentUtils.displayNone(this.alert);
         } catch (Exception e) {
             logger.error("Failed to request xwadl from {}", uri, e);
@@ -173,12 +202,12 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
             // execute method directly if no request media type is given
             this.executeMethod(methodModel, null);
         } else {
-            // get request representation model
             try {
+                // get request representation model
                 IRepresentationModel representation = IntercloudWebSession.get().getIntercloudService()
                         .getIntercloudClient(methodModel.getUri())
                         .getRepresentationModel(methodModel);
-                // display request
+                // display request model
                 this.replace(new MethodRequestPanel("browserPanel",
                         Model.of(methodModel), Model.of(representation), BrowserPage.this));
                 // hide alert
@@ -193,6 +222,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
     @Override
     public void executeMethod(MethodModel methodModel, IRepresentationModel requestRepresentation) {
         try {
+            // execute method
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService()
                     .getIntercloudClient(methodModel.getUri());
             this.loggingModel.setObject(intercloudClient.getLoggingModel());
@@ -204,6 +234,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
             } else {
                 this.replace(new EmptyPanel("browserPanel"));
             }
+            // hide alert
             ComponentUtils.displayNone(this.alert);
         } catch (Throwable t) {
             logError(t);
@@ -214,6 +245,7 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
     @Override
     public void selectAction(ActionModel actionModel) {
         try {
+            // get parameters
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(this.uri.getObject());
             List<ParameterModel> parameters = intercloudClient.getParameters(actionModel);
             if (null == parameters || parameters.isEmpty()) {
@@ -235,12 +267,15 @@ public class BrowserPage extends UserTemplate implements IBrowserPage {
     @Override
     public void executeAction(ActionModel actionModel, List<ParameterModel> parameterModelList) {
         try {
+            // execute action
             IIntercloudClient intercloudClient = IntercloudWebSession.get().getIntercloudService().getIntercloudClient(this.uri.getObject());
             ParameterModel parameterModel = intercloudClient.executeAction(actionModel, parameterModelList);
             // display result
             this.replace(new Label("browserPanel", parameterModel));
             // hide alert
             ComponentUtils.displayNone(alert);
+            // finally re-browse the resource, since the action may changed its state
+            //browse();
         } catch (Throwable t) {
             logError(t);
             logger.error("Failed to execute action. {}, {}", actionModel, parameterModelList, t);

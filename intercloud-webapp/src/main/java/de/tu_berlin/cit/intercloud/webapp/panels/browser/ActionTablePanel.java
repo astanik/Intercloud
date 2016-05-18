@@ -15,6 +15,11 @@ import org.apache.wicket.model.Model;
 
 import java.util.List;
 
+/**
+ * This Panel displays the {@link ActionModel}s provided by a resource.
+ * In order to select an {@link ActionModel}, it invokes the
+ * {@link IBrowserPage#selectAction(ActionModel)} of the {@link IBrowserPage} containing this panel.
+ */
 public class ActionTablePanel extends Panel {
     IModel<List<ActionModel>> actionList;
 

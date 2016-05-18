@@ -1,5 +1,6 @@
 package de.tu_berlin.cit.intercloud.webapp.panels.browser;
 
+import de.tu_berlin.cit.intercloud.client.model.action.ActionModel;
 import de.tu_berlin.cit.intercloud.client.model.method.MethodModel;
 import de.tu_berlin.cit.intercloud.client.model.representation.api.IRepresentationModel;
 import de.tu_berlin.cit.intercloud.webapp.pages.IBrowserPage;
@@ -13,6 +14,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import java.util.List;
+
+/**
+ * This panel displays the {@link IRepresentationModel}s of an {@link MethodModel}
+ * in order to perform a request.
+ * It provides a button to invoke {@link IBrowserPage#executeAction(ActionModel, List)}
+ * of the {@link IBrowserPage} containing this panel.
+ */
 public class MethodRequestPanel extends Panel {
     private IModel<IRepresentationModel> representationModel;
     private Form requestForm;

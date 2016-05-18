@@ -9,6 +9,9 @@ import org.apache.wicket.model.IModel;
  * {@link org.apache.wicket.markup.html.form.TextField} or
  * {@link org.apache.wicket.markup.html.form.CheckBox}.
  * It enables to create type-safe {@link FormComponent}s at runtime.
+ *
+ * It provides input components for {@link de.tu_berlin.cit.intercloud.client.model.representation.occi.AttributeModel}s
+ * or {@link de.tu_berlin.cit.intercloud.client.model.action.ParameterModel}s.
  * @param <T> The type of data.
  */
 public abstract class AbstractFormComponentPanel<T> extends Panel {
