@@ -9,6 +9,11 @@ import org.apache.wicket.model.util.ListModel;
 
 import java.util.List;
 
+/**
+ * Displays a {@link List<LinkModel>} including their
+ * {@link de.tu_berlin.cit.intercloud.client.model.representation.occi.MixinModel}s
+ * in the context of a response.
+ */
 public class LinkListResponsePanel extends Panel {
     public LinkListResponsePanel(String id, IModel<List<LinkModel>> linkListModel) {
         super(id);

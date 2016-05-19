@@ -7,6 +7,10 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+/**
+ * The panel provides the input for {@link IDiscoverPage#discover(String)}
+ * of the {@link IDiscoverPage} containing this panl.
+ */
 public class DiscoverPanel extends Panel {
 
     public DiscoverPanel(String markupId, IModel<String> jid, IDiscoverPage discoverPage) {

@@ -20,7 +20,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 /**
- * Displays a {@link CategoryModel} sub-type for the purpose of a request.
+ * Displays a {@link CategoryModel} sub-type for the purpose of a request,
+ * thus it provides user input.
  */
 public abstract class CategoryRequestPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(CategoryRequestPanel.class);

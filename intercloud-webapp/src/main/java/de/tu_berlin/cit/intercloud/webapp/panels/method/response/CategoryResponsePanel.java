@@ -12,14 +12,20 @@ import org.apache.wicket.model.util.ListModel;
 
 import java.util.ArrayList;
 
+/**
+ * Displays a {@link CategoryModel} sub-type in the context of a response,
+ * thus it does NOT provide user input.
+ */
 public abstract class CategoryResponsePanel extends Panel {
     public CategoryResponsePanel(String id, IModel<? extends CategoryModel> categoryModel) {
         super(id);
 
         CategoryModel category = categoryModel.getObject();
+        // display OCCI identification
         this.add(new Label("type", getType()));
         this.add(new Label("term", category.getTerm()));
         this.add(new Label("schema", category.getSchema()));
+        // only display title if present
         this.add(new WebMarkupContainer("titleRow") {
             @Override
             public boolean isVisible() {
@@ -27,6 +33,7 @@ public abstract class CategoryResponsePanel extends Panel {
             }
         }.add(new Label("title", category.getTitle())));
 
+        // display attributes
         this.add(new ListView<AttributeModel>("attributeContainer", new ListModel<>(new ArrayList<>(category.getAttributes()))) {
             @Override
             protected void populateItem(ListItem<AttributeModel> listItem) {
@@ -38,5 +45,8 @@ public abstract class CategoryResponsePanel extends Panel {
         });
     }
 
+    /**
+     * @return The Category sub-type: Kind, Mixin or Link.
+     */
     protected abstract String getType();
 }

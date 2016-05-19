@@ -11,6 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 
+/**
+ * Displays a {@link LinkModel} without its
+ * {@link de.tu_berlin.cit.intercloud.client.model.representation.occi.MixinModel}s
+ * in the context of a response
+ */
 public class LinkResponsePanel extends CategoryResponsePanel {
     private static final Logger logger = LoggerFactory.getLogger(LinkResponsePanel.class);
 

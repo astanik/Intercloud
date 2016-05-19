@@ -15,6 +15,12 @@ import org.apache.wicket.model.Model;
 
 import java.util.List;
 
+/**
+ * This panel displays a {@link List<XmppURI>} as radio button
+ * and it invokes {@link IDiscoverPage#connect(XmppURI)} of the
+ * {@link IDiscoverPage} containing this panel.
+ * Thus, it enables to connect to a given {@link XmppURI}.
+ */
 public class DiscoveredItemsPanel extends Panel {
     private IModel<List<XmppURI>> discoItems;
 

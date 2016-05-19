@@ -13,7 +13,7 @@ import java.util.List;
  * The interface provides methods to browse REST with XMPP
  * resources of an XMPP entity.
  * These methods may be invoked by other Wicket components,
- * since they are part of the page implementing this interface.
+ * that are part of the page implementing this interface.
  */
 public interface IBrowserPage extends IRequestablePage {
     /**

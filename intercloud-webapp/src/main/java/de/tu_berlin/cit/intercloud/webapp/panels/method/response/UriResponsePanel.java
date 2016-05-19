@@ -16,6 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 
+/**
+ * This is the response panel for media types {@code text/uri} and {@code test/uir-list}.
+ * It displays {@link XmppURI}s as links targeting to the {@link BrowserPage}.
+ */
 public class UriResponsePanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(UriResponsePanel.class);
 

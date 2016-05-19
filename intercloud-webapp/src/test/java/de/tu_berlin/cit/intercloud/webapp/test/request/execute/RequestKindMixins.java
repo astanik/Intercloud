@@ -1,9 +1,13 @@
 package de.tu_berlin.cit.intercloud.webapp.test.request.execute;
 
 import de.tu_berlin.cit.intercloud.webapp.XwadlFileConfig;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Ignore
 public class RequestKindMixins extends AbstractRequestTest {

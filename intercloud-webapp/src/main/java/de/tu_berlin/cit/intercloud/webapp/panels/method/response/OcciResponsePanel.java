@@ -7,6 +7,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
+/**
+ * Displays an {@link OcciRepresentationModel} in the context of a response
+ * and thus the representation of media type {@code xml/occi}.
+ */
 public class OcciResponsePanel extends Panel {
     public OcciResponsePanel(String markupId, IModel<OcciRepresentationModel> representationModel) {
         super(markupId);

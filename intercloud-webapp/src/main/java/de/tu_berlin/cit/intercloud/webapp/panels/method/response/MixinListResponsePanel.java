@@ -8,6 +8,9 @@ import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
+/**
+ * Displays a {@link List<MixinModel>} in the context of a response.
+ */
 public class MixinListResponsePanel extends Panel {
     public MixinListResponsePanel(String id, IModel<List<MixinModel>> mixinListModel) {
         super(id);

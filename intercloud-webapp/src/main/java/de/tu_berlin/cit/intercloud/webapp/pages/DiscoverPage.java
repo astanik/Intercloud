@@ -14,6 +14,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * This page is used to discover XMPP entities supporting REST with XMPP.
+ * It contains the components:
+ * <ul>
+ * <li>{@link Alert}
+ * provides a Bootstrap alert in order to display exceptions or other information.
+ * </li>
+ * <li>{@link DiscoverPage}
+ * to select the XMPP entity that will be discovered.
+ * </li>
+ * <li>{@link DiscoveredItemsPanel}</li>
+ * provides a radio group of discovered items.
+ * </ul>
+ */
 public class DiscoverPage extends UserTemplate implements IDiscoverPage {
     private static final Logger logger = LoggerFactory.getLogger(DiscoverPage.class);
 

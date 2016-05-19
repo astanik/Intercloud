@@ -9,7 +9,7 @@ import org.apache.wicket.model.IModel;
 import java.util.List;
 
 /**
- * Displays a list of {@link MixinModel}s for the purpose of a request.
+ * Displays a {@link List<MixinModel>} for the purpose of a request.
  */
 public class MixinListRequestPanel extends Panel{
     public MixinListRequestPanel(String markupId, IModel<List<MixinModel>> mixinModelList) {
