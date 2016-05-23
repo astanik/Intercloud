@@ -59,9 +59,9 @@ public class XmppServiceMock implements IXmppService {
     public List<XmppURI> discoverRestfulItems(XmppURI uri) throws XMPPException, IOException, SmackException {
         try {
             String userHome = new File(System.getProperty("user.home")).getAbsolutePath();
-            return Arrays.asList(new XmppURI("example.component.de", userHome),
-                    new XmppURI("exmaple.component.edu", userHome),
-                    new XmppURI("example.component.com", userHome));
+            return Arrays.asList(new XmppURI("gateway." + uri.getDomain() , userHome),
+                    new XmppURI("exchange." + uri.getDomain(), userHome),
+                    new XmppURI("root." + uri.getDomain(), userHome));
         } catch (URISyntaxException e) {
             return new ArrayList<>();
         }

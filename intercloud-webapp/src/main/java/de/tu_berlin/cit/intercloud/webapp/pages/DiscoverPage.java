@@ -47,7 +47,7 @@ public class DiscoverPage extends UserTemplate implements IDiscoverPage {
     @Override
     public void discover(String jid) {
         try {
-            XmppURI xmppURI = new XmppURI(jid);
+            XmppURI xmppURI = new XmppURI(jid, "");
             List<XmppURI> discoItems = IntercloudWebSession.get().getXmppService().discoverRestfulItems(xmppURI);
             this.discoItems.setObject(discoItems);
             if (discoItems.isEmpty()) {
