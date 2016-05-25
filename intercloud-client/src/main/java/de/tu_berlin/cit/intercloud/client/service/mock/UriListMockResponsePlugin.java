@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UriListMockResponsePlugin implements IMockResponsePlugin {
     private static final Logger logger = LoggerFactory.getLogger(UriListMockResponsePlugin.class);
@@ -33,9 +34,11 @@ public class UriListMockResponsePlugin implements IMockResponsePlugin {
         if (file.isDirectory()) {
             return getDirectoryList(xwadl.getJID(), file);
         } else {
-            return "xmpp://example.component.de#/path0;"
-                    + "xmpp://example.component.com#/path0/path1;"
-                    + "xmpp://example.component.edu#/path0/path1/path2";
+            List<String> uriList = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                uriList.add(xwadl.toString() + "/" + UUID.randomUUID());
+            }
+            return String.join(";", uriList);
         }
     }
 

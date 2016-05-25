@@ -50,6 +50,6 @@ public class DiscoveredItemsPanel extends Panel {
 
     @Override
     public boolean isVisible() {
-        return null != this.discoItems.getObject();
+        return null != this.discoItems.getObject() && !this.discoItems.getObject().isEmpty();
     }
 }

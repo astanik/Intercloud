@@ -29,8 +29,11 @@ import org.apache.wicket.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.regex.Pattern;
+
 public class IntercloudWebSession extends AuthenticatedWebSession {
     private static final Logger logger = LoggerFactory.getLogger(IntercloudWebSession.class);
+    private static final Pattern TEST_JID = Pattern.compile("test@example\\.(org|com|net)");
 
     private User user = null;
     // TODO: not transient
@@ -46,7 +49,7 @@ public class IntercloudWebSession extends AuthenticatedWebSession {
         try {
             User user = new User(username, Roles.USER);
             if ("development".equalsIgnoreCase(IntercloudWebApplication.get().getConfigurationType().name())
-                    && "test".equalsIgnoreCase(username)
+                    && TEST_JID.matcher(username).matches()
                     && "test".equalsIgnoreCase(password)) {
                 this.xmppService = new XmppServiceMock();
             } else {

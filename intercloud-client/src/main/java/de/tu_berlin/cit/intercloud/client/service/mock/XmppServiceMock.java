@@ -40,6 +40,8 @@ public class XmppServiceMock implements IXmppService {
         RESPONSE_PLUGIN_REGISTRY.put(plugin.getMediaType(), plugin);
         plugin = new OcciMockResponsePlugin();
         RESPONSE_PLUGIN_REGISTRY.put(plugin.getMediaType(), plugin);
+        plugin = new UriMockResponsePlugin();
+        RESPONSE_PLUGIN_REGISTRY.put(plugin.getMediaType(), plugin);
     }
 
     @Override
@@ -58,10 +60,11 @@ public class XmppServiceMock implements IXmppService {
     @Override
     public List<XmppURI> discoverRestfulItems(XmppURI uri) throws XMPPException, IOException, SmackException {
         try {
-            String userHome = new File(System.getProperty("user.home")).getAbsolutePath();
-            return Arrays.asList(new XmppURI("gateway." + uri.getDomain() , userHome),
-                    new XmppURI("exchange." + uri.getDomain(), userHome),
-                    new XmppURI("root." + uri.getDomain(), userHome));
+            File iaas = new File("/iaas");
+            String path = iaas.exists() ? iaas.getAbsolutePath() : new File(System.getProperty("user.home")).getAbsolutePath();
+            return Arrays.asList(new XmppURI("gateway." + uri.getDomain() , path),
+                    new XmppURI("exchange." + uri.getDomain(), path),
+                    new XmppURI("root." + uri.getDomain(), path));
         } catch (URISyntaxException e) {
             return new ArrayList<>();
         }
